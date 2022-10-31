@@ -1,5 +1,6 @@
-Template dan percobaan untuk aplikasi eapd disgulkarmat menggunakan laravel
+Aplikasi eapd disgulkarmat menggunakan laravel 9
 
+req :
 -   laravel 9.37.0
 -   laravel breeze
 -   php 8+
