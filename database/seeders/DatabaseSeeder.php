@@ -165,6 +165,16 @@ class DatabaseSeeder extends Seeder
             'id_grup' => 'B'
         ]);
 
+        DB::table('pegawai')->insert([
+            'nrk' => '80182810',
+            'nip' => '3174093012890004',
+            'nama' => 'Indra Purwoko',
+            'id_jabatan' => 'L001',
+            'id_wilayah' => '1',
+            'id_penempatan' => '1.11',
+            'id_grup' => 'B'
+        ]);
+
         DB::table('user')->insert([
             'nrk' => '80182881',
             'password' => Hash::make('123456')
