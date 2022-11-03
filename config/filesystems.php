@@ -39,7 +39,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
@@ -70,7 +70,15 @@ return [
     */
 
     'links' => [
-        public_path('storage') => storage_path('app/public'),
+        public_path('storage') => storage_path('app'),
+
+        // disini diatur symbolic link untuk organisir file yang diupload oleh user
+        // lakukan php artisan storage:link di terminal
+        // ref : https://laravel.com/docs/9.x/filesystem#the-public-disk
+
+        // public_path('storage/avatar/p') => storage_path('app/img/avatar/placeholder'),
+        // public_path('storage/avatar/u') => storage_path('app/img/avatar/user'),
+        // public_path('storage/apd/item') => storage_path('app/img/apd/item'),
     ],
 
 ];
