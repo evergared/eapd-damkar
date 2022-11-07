@@ -11,17 +11,30 @@ use Mediconesystems\LivewireDatatables\Column;
 use Mediconesystems\LivewireDatatables\Http\Livewire\LivewireDatatable;
 use Mediconesystems\LivewireDatatables\NumberColumn;
 
+/**
+ * Contoh tabel menggunakan MedicOneSystems/livewire-datatable
+ * dokumentasi : https://github.com/MedicOneSystems/livewire-datatables
+ * demo : https://livewire-datatables.com/
+ */
 class ContohTabel extends LivewireDatatable
 {
 
     public $searchable = ['nama', 'email'];
     public $exportable = true;
-    /**
-     * untuk export sementara otomatis dari LivewireDatatable
-     * workaround untuk edit file yang akan dieksport dapat dilihat dari contoh : 
-     * https://github.com/MedicOneSystems/livewire-datatables/issues/93
-     */
 
+
+    /**
+     * Fungsi override dari render() untuk mengganti default table.
+     * Pada dasarnya fungsi render ini tidak perlu dioverride,
+     * namun jika ingin mengubah style dari tabel, fungsi ini perlu dioverride
+     * dengan view buatan kita sendiri.
+     * sumber : https://github.com/MedicOneSystems/livewire-datatables#styling
+     */
+    public function render()
+    {
+        parent::render();
+        return view('livewire.tabel.contoh-tabel')->with('title', 'contoh-tabel');
+    }
 
     public function builder()
     {
@@ -61,4 +74,10 @@ class ContohTabel extends LivewireDatatable
                 ->excludeFromExport()
         ];
     }
+
+    /**
+     * untuk export sementara otomatis dari LivewireDatatable
+     * workaround untuk edit file yang akan dieksport dapat dilihat dari contoh : 
+     * https://github.com/MedicOneSystems/livewire-datatables/issues/93
+     */
 }

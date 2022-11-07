@@ -1,0 +1,16 @@
+Disini adalah directory publish bawaan dari livewire-datatables.
+Pada folder ini komponen dasar untuk template disimpan oleh livewire-datatables agar dapat diedit.
+Harap untuk tidak memindahkan / merubah nama file apapun di folder ini.
+
+File-file yang ada dapat diedit untuk style, namun livewire-datatables telah menyediakan
+tempat alternatif yang mungkin lebih mudah, yaitu di app\config\livewire-datatables.php.
+
+Untuk dokumentasi, dapat dilihat di :
+https://github.com/MedicOneSystems/livewire-datatables#optional
+
+Tabel dari datatable bawaan dapat diedit dengan cara meng-override fungsi render() di livewire component datatable tersebut
+dengan view baru yang dibuat berdasarkan file view template bawaan.
+Template datatable bawaan ada di resources\views\livewire\datatables\datatable.php
+sumber : https://github.com/MedicOneSystems/livewire-datatables#styling
+
+Untuk template datatable yang telah dimodifikasi harap di letakan di folder resources\views\livewire\tabel.
