@@ -13,4 +13,16 @@
         {{ $message }}
     </div>
     @endif
+
+    @push('head-js')
+    <script type="module">
+        Echo.channel('tes').listen('.ContohEvent',(e)=>{
+            console.log('contoh event triggered by pusher web');
+        })
+
+        Echo.channel('tes').listen('ContohEvent',(e)=>{
+            console.log('contoh event triggered by pusher laravel');
+        })
+    </script>
+    @endpush
 </div>

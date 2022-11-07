@@ -17,6 +17,6 @@ class ContohFormModal extends Component
 
     public function ubahTest($pesan = "-")
     {
-        $this->test = 'Seharusnya keluar modal, tapi saat ini hanya keluar nama : ' . $pesan;
+        $this->test =  $pesan;
     }
 }

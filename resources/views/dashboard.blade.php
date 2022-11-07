@@ -38,6 +38,8 @@
         </div>
     </div>
 
+    @push('body-js')
     @livewireScripts
+    @endpush
 
 </x-app-layout>

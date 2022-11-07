@@ -4,17 +4,26 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use App\Events\ContohEvent;
+use Illuminate\Support\Facades\Auth;
 
 class ContohProgress extends Component
 {
 
     public $email, $telpon, $profil, $emailPersen, $telponPersen, $profilPersen, $totalRow, $message;
+    public $nrkPenggunaSekarang;
 
 
-    public $listener = [
-        'pegawaiUpdated' => 'update',
-        'echo:tes,InputDilakukan' => 'writeMessage'
+    protected $listeners = [
+        "echo:tes,ContohEvent" => 'writeMessage'
     ];
+
+    // public function getListeners()
+    // {
+    //     return [
+    //         "private-echo:tes.{$this->nrkPenggunaSekarang},ContohEvent" => 'writeMessage'
+    //     ];
+    // }
 
     public function render()
     {
@@ -34,8 +43,10 @@ class ContohProgress extends Component
         $this->telpon = DB::table('pegawai')->whereNot('telpon', '=', '')->whereNotNull('telpon')->count();
     }
 
-    public function writeMessage()
+    public function writeMessage($event)
     {
+        error_log('Livewire listened to event broadcast! ' . $event['nrk']);
+        $this->update();
         $this->message = "Update Pegawai Telah berhasil dilakukan!";
     }
 }

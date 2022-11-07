@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithFileUploads;
 use App\Models\DataPegawai;
+use App\Events\ContohEvent;
 
 class ContohForm extends Component
 {
@@ -71,18 +72,30 @@ class ContohForm extends Component
             $path = $this->foto->storeAs('img/avatar/user', $feed);
         }
 
+        $pegawai = DataPegawai::find($this->nrk);
 
-        if (is_null($feed))
-            DataPegawai::where('nrk', $this->nrk)->update(['telpon' => $this->telpon, 'email' => $this->email]);
-        else
-            DataPegawai::where('nrk', $this->nrk)->update(['telpon' => $this->telpon, 'email' => $this->email, 'foto' => $feed]);
+        if (is_null($feed)) {
+            $pegawai->telpon = $this->telpon;
+            $pegawai->email = $this->email;
+        } else {
+            $pegawai->telpon = $this->telpon;
+            $pegawai->email = $this->email;
+            $pegawai->foto = $this->feed;
+        }
+        $pegawai->save();
 
         if (!is_null($this->foto)   || $this->foto != "")
-            $this->emit('ubahTest', 'SUKSES! tersimpan sebagai : ' . $path);
+            $this->emit('ubahTest',  'SUKSES! tersimpan sebagai : ' . $path . "\r\n Eloquent : " . $pegawai);
         else
-            $this->emit('ubahTest', "Data berhasil diubah");
+            $this->emit('ubahTest', "Data berhasil diubah" . "\r\n Eloquent : " . $pegawai);
 
         $this->resetData();
         $this->emit('refreshLivewireDatatable');
+    }
+
+    public function testEvent()
+    {
+        // ContohEvent::dispatch('test');
+        event(new ContohEvent('123'));
     }
 }

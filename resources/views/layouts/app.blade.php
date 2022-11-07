@@ -13,6 +13,8 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- @vite('resources/js/app.js') --}}
+    @stack('head-js')
 </head>
 
 <body class="font-sans antialiased">
@@ -33,6 +35,7 @@
             {{ $slot }}
         </main>
     </div>
+    @stack('body-js')
 </body>
 
 </html>

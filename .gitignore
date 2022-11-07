@@ -1,10 +1,9 @@
 /vendor
+/node_modules
 vendor/laravel/framework/src/Illuminate/Validation/Rules/!Password.php
 /public/build
 /public/hot
 /public/storage
-!public/storage/img/apd/placeholder
-public/storage/img/avatar/placeholder/!avatar.jpg
 /storage/*.key
 .env.backup
 .env.production

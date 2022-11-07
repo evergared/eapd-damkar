@@ -43,6 +43,7 @@ return new class extends Migration
                 $t->text('nama_jabatan');
                 $t->text('tipe_jabatan');
                 $t->text('keterangan')->nullable();
+                $t->timestamps();
             });
         }
 
@@ -51,6 +52,7 @@ return new class extends Migration
                 $t->string('id_wilayah', 4)->primary();
                 $t->text('nama_wilayah');
                 $t->text('keterangan')->nullable();
+                $t->timestamps();
             });
         }
 
@@ -59,6 +61,7 @@ return new class extends Migration
                 $t->string('id_penempatan', 10)->primary();
                 $t->text('nama_penempatan');
                 $t->text('keterangan')->nullable();
+                $t->timestamps();
             });
         }
 
@@ -67,13 +70,13 @@ return new class extends Migration
                 $t->string('id_grup', 2)->primary();
                 $t->text('nama_grup');
                 $t->text('keterangan')->nullable();
+                $t->timestamps();
             });
         }
 
         if (!Schema::hasTable('pegawai')) {
             Schema::create('pegawai', function (Blueprint $table) {
-                $table->id();
-                $table->string('nrk', 10);
+                $table->string('nrk', 10)->primary();
                 $table->string('nip', 20);
                 $table->text('nama');
                 $table->text('foto')->nullable();
@@ -84,6 +87,7 @@ return new class extends Migration
                 $table->string('id_penempatan', 10);
                 $table->string('id_grup', 2);
                 $table->integer('kurang', 2)->autoIncrement(false)->nullable()->default(0)->comment('berapa apd yang belum diinput');
+                $table->timestamps();
             });
         }
 
@@ -92,6 +96,7 @@ return new class extends Migration
                 $t->string('id_jenis', 4)->primary();
                 $t->text('nama_jenis');
                 $t->text('keterangan')->nullable();
+                $t->timestamps();
             });
         }
 
@@ -105,6 +110,7 @@ return new class extends Migration
                 $t->boolean('ingub', 1)->default(0)->comment('apakah apd sudah sesuai ingub');
                 $t->text('pengadaan')->nullable()->default('Sebelum 2022');
                 $t->text('keterangan')->nullable();
+                $t->timestamps();
             });
         }
 
@@ -121,6 +127,7 @@ return new class extends Migration
                 $t->string('id_size', 4)->primary();
                 $t->text('keterangan')->nullable();
                 $t->text('list')->nullable();
+                $t->timestamps();
             });
         }
 

@@ -40,4 +40,6 @@
         @endif
 
     </form>
+
+    <button wire:click='testEvent'>tes event</button>
 </div>
