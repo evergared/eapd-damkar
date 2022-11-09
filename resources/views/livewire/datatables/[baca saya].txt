@@ -1,6 +1,7 @@
 Disini adalah directory publish bawaan dari livewire-datatables.
 Pada folder ini komponen dasar untuk template disimpan oleh livewire-datatables agar dapat diedit.
-Harap untuk tidak memindahkan / merubah nama file apapun di folder ini.
+Harap untuk tidak memindahkan / merubah nama file apapun di folder ini,
+namun di copy ke dalam folder yang terjangkau oleh fungsi view dan lalu edit jika dibutuhkan.
 
 File-file yang ada dapat diedit untuk style, namun livewire-datatables telah menyediakan
 tempat alternatif yang mungkin lebih mudah, yaitu di app\config\livewire-datatables.php.

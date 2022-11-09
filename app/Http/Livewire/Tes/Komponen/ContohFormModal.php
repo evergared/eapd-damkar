@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Form;
+namespace App\Http\Livewire\Tes\Komponen;
 
 use Livewire\Component;
 
@@ -12,7 +12,7 @@ class ContohFormModal extends Component
 
     public function render()
     {
-        return view('livewire.contoh-form-modal');
+        return view('tes.livewire.komponen.contoh-form-modal');
     }
 
     public function ubahTest($pesan = "-")

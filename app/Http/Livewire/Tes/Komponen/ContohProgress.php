@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Tes\Komponen;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -27,7 +27,7 @@ class ContohProgress extends Component
 
     public function render()
     {
-        return view('livewire.contoh-progress');
+        return view('tes.livewire.komponen.contoh-progress');
     }
 
     public function update()

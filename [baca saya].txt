@@ -1,0 +1,28 @@
+Disini adalah root folder laravel.
+
+Sebelum memulai aplikasi, jalankan perintah ini di terminal :
+- composer install              <----- untuk menginstal komponen aplikasi berdasarkan file composer.json (folder vendor akan muncul dengan perintah ini)
+- npm install                   <----- untuk menginstal package node aplikasi berdasarkan package.json (folder node_modules akan muncul dengan perintah ini)
+- npm run dev                   <----- untuk menginisiasi dan menjalankan komponen node_modules (dev berarti untuk mode development / pengembangan)
+
+beberapa penjelasan mengenai file di root folder ini:
+- .env          <--- file pengaturan environment laravel, berisi data-data kunci, harap dibuat kembali jika proses pengembangan telah selesai dengan kunci-kunci baru
+- .gitignore    <--- file dari github, berisi file/folder apa saja yang tidak diupload saat push
+- composer.json <--- file pengaturan package dari composer, berisi package apa saja yang diinstall oleh composer
+- package.json  <--- file pengaturan package dari node, berisi package apa saja yang diinstall oleh npm
+- tailwind.config.js    <--- file pengaturan dari tailwind css
+- vite.config.js        <--- file pengaturan dari vite untuk npm
+
+Struktur folder laravel :
+- app           <--- berisi file-file inti aplikasi web laravel yang dapat diatur
+- bootstrap     <--- berisi file-file tambahan dari proses laravel, cache disimpan disini secara default
+- config        <--- berisi file-file pengaturan aplikasi web laravel
+- database      <--- berisi file-file database untuk keperluan testing dan otomasi data, dummy database atur disini
+- lang          <--- berisi file-file terjemahan untuk pesan otomatis, atur disini untuk menerjemahkan pesan bawaan dari laravel
+- node_modules  <--- berisi package yang diinstal oleh npm
+- public        <--- berisi file-file yang dapat diakses oleh pengguna secara manual (dari web browser) seperti logo web dan media
+- resources     <--- berisi file-file yang digunakan untuk tampilan front end web
+- routes        <--- berisi pengaturan untuk url dan api aplikasi, berperan juga dalam pemanggilan komponen/file melalui browser
+- storage       <--- folder file penyimpanan, log dan media yang tidak boleh diakses oleh pengguna secara manual ditempatkan disini
+- tests         <--- berisi file-file pengaturan untuk mode testing dari laravel, opsional dan jarang dipakai kecuali mode testing dijalankan
+- vendor        <--- berisi package yang diinstal oleh composer

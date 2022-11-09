@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Datatable;
+namespace App\Http\Livewire\Tes\Datatable;
 
 use App\Models\DataPegawai;
 use App\Models\User;
@@ -33,7 +33,7 @@ class ContohTabel extends LivewireDatatable
     public function render()
     {
         parent::render();
-        return view('livewire.tabel.contoh-tabel')->with('title', 'contoh-tabel');
+        return view('tes.livewire.datatable.contoh-tabel')->with('title', 'contoh-tabel');
     }
 
     public function builder()
@@ -46,7 +46,7 @@ class ContohTabel extends LivewireDatatable
         return [
 
             Column::callback('foto', function ($foto) {
-                return view('kolom-tambahan-datatable.profil-contoh-tabel', ['img' =>  $foto]);
+                return view('tes.livewire.datatable.kolom-tambahan-datatable.profil-contoh-tabel', ['img' =>  $foto]);
             })
                 ->unsortable()
                 ->excludeFromExport()
@@ -67,7 +67,7 @@ class ContohTabel extends LivewireDatatable
                 ->label('E-Mail'),
 
             Column::callback(['nama', 'nrk'], function ($nama, $nrk) {
-                return view('kolom-tambahan-datatable.tindakan-contoh-tabel', ['nama' => $nama, 'nrk' => $nrk]);
+                return view('tes.livewire.datatable.kolom-tambahan-datatable.tindakan-contoh-tabel', ['nama' => $nama, 'nrk' => $nrk]);
             })
                 ->unsortable()
                 ->label("Tindakan")

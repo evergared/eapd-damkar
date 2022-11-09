@@ -13,12 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+require __DIR__ . '/auth.php';
+
 Route::get('/', function () {
-    return view('welcome');
+    return view('tes/welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::middleware('auth')->group(function () {
 
-require __DIR__ . '/auth.php';
+    Route::get('/tes/dashboard', function () {
+        return view('tes/dashboard');
+    })->name('dashboard');
+
+    Route::get('/tes/multi-upload', function () {
+        return view('tes/multi');
+    })->name('multi');
+});

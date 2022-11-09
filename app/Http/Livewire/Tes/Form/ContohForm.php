@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Form;
+namespace App\Http\Livewire\Tes\Form;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +23,7 @@ class ContohForm extends Component
 
     public function render()
     {
-        return view('livewire.form.contoh-form');
+        return view('tes.livewire.form.contoh-form');
     }
 
     public function editData($nrk)

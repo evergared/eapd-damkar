@@ -7,11 +7,12 @@ Requirement :
 -   [node 16+](https://nodejs.org/en/download/)
 -   composer
 
-Rencana pengembangan :
+Package :
 
--   tampilan front end menggunakan [tailwind css v2](https://tailwindcss.com/) dan [bootstrap v5.2](https://getbootstrap.com/)
--   framework back end to front end menggunakan [livewire](https://laravel-livewire.com/)
--   datatable menggunakan [livewire-datatable](https://livewire-datatables.com/)
+-   [tailwind css v2](https://tailwindcss.com/)
+-   [livewire](https://laravel-livewire.com/)
+-   [livewire-datatable](https://livewire-datatables.com/)
+-   Laravel Echo
 
 Notes pengembangan :
 

@@ -1,0 +1,8 @@
+Disini dimana tampilan web ditempatkan secara default oleh laravel.
+
+folder : 
+- auth          <--- tampilan login bawaan dari laravel/breeze
+- components    <--- komponen web dari schaffolding laravel, dibiarkan saja karena penggunaan komponen kurang praktis dan tiap komponen perlu di daftarkan di app\view
+- eapd          <--- tampilan utk web eapd taruh di sini
+- livewire      <--- secara default, tampilan view dari komponen livewire ditaruh disini saat perintah make:livewire dijalankan, saat ini berisi folder datatable dari vendor MedicOneSystems\livewire-datatables yang sudah dipublish untuk bisa custom sendiri.
+- tes           <--- tampilan utk testing dan percobaan taruh disini, utk mengaksesnya dapat diatur di routes\web.php
