@@ -60,7 +60,7 @@ class ContohTabel extends LivewireDatatable
             Column::name('nama')
                 ->label('Nama Pegawai'),
 
-            Column::name('telpon')
+            Column::name('no_telp')
                 ->label('Nomer Telepon'),
 
             Column::name('email')

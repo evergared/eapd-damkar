@@ -3,6 +3,8 @@ Disini adalah root folder laravel.
 Sebelum memulai aplikasi, jalankan perintah ini di terminal :
 - composer install              <----- untuk menginstal komponen aplikasi berdasarkan file composer.json (folder vendor akan muncul dengan perintah ini)
 - npm install                   <----- untuk menginstal package node aplikasi berdasarkan package.json (folder node_modules akan muncul dengan perintah ini)
+- php artisan cache:clear       <----- jaga-jaga cache lama terbawa
+- php artisan storage:link      <----- menghubungkan directory storage dengan path dimana aplikasi berada, jalankan ini agar lokasi aset gambar terbaca dengan benar.
 - npm run dev                   <----- untuk menginisiasi dan menjalankan komponen node_modules (dev berarti untuk mode development / pengembangan)
 
 beberapa penjelasan mengenai file di root folder ini:

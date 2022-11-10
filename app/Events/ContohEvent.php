@@ -18,17 +18,15 @@ class ContohEvent implements ShouldBroadcast
 
     // data yang dimiliki oleh event, bisa diatur bebas
     public $nrk;
-    public $model;
 
     /**
      * Create a new event instance. (Konstruktor)
      *
      * @return void
      */
-    public function __construct($nrk = null, ContohModel $contoh = null)
+    public function __construct($nrk)
     {
         $this->nrk = $nrk;
-        $this->model = $contoh;
     }
 
     /**
@@ -38,7 +36,7 @@ class ContohEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        error_log('broadcast on evoked');
+        error_log('broadcast on evoked' . $this->nrk);
         return new Channel('tes');                  //<--publik channel
         // return new PrivateChannel('tes.' . $this->nrk);
     }
@@ -46,12 +44,12 @@ class ContohEvent implements ShouldBroadcast
     /**
      * Menyamarkan event pada saat broadcast
      */
-    public function broadcastAs()
-    {
-        error_log('broadcast as evoked');
-        // return 'tes';            
-        // return 'ContohEvent';                 //<--tidak dapat mengirim data, hanya menyamarkan event ini sebagai ContohEvent di webhook
-    }
+    // public function broadcastAs()
+    // {
+    //     error_log('broadcast as evoked');
+    //     // return 'tes';            
+    //     // return 'ContohEvent';                 //<--tidak dapat mengirim data, hanya menyamarkan event ini sebagai ContohEvent di webhook
+    // }
 
     /**
      * Sangkutkan data tambahan pada saat broadcast

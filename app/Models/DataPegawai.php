@@ -13,14 +13,13 @@ class DataPegawai extends Model
 
     protected $table = 'pegawai';
 
-    protected $primaryKey = 'nrk';
 
     protected $fillable = [
         'nrk',
         'nip',
         'foto',
         'email',
-        'telpon'
+        'no_telp'
     ];
 
     protected static function booted()
@@ -28,8 +27,9 @@ class DataPegawai extends Model
         parent::boot();
 
         static::updated(function ($DataPegawai) {
+            error_log("TEst : " . $DataPegawai->nrk);
             // ContohEvent::dispatch($DataPegawai);
-            event(new ContohEvent($DataPegawai->nrk));
+            event(new ContohEvent("test"));
         });
 
         static::created(function ($DataPegawai) {

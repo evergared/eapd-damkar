@@ -1,0 +1,31 @@
+disini file seeder disimpan
+
+seeder merupakan file yang berperan dalam mengisi atau mempopulasikan database yang telah dibuat dengan data random untuk keperluan testing.
+secara default ketika perintah php artisan migrate --seed dijalankan, hanya file DatabaseSeeder.php lah yang menjadi dasar untuk mengisi.
+
+untuk menjalankan seeder pada database yang telah dibuat, gunakan perintah :
+php artisan db:seed
+
+atau bersamaan saat proses migration, gunakan perintah :
+php artisan migrate --seed
+
+jika ingin menjalankan seeder dengan file tertentu, contoh nama file seeder EapdSeeder, gunakan perintah :
+php artisan db:seed --class=EapdSeeder
+atau
+php artisan migrate --seed --class EapdSeeder
+
+
+perlu diingat seeder perlu diatur terlebih dahulu sebelum digunakan,
+jadi pastikan logic atau code untuk pengisian data secara otomatis telah diatur.
+
+dalam pengisian seeder ada 2 tipe :
+- menggunakan logic manual      (mengisi layaknya insert biasa dengan query builder)
+- menggunakan logic eloquent    (mengisi menggunakan factory)
+
+jika menggunakan factory, perbedaannya kita hanya menyebutkan mau berapa dan seperti apa jenis data yang dibuat (numeric, name, email, phone number, dsb)
+sisa nya tergantung dari logic model kita, seperti 
+- apa relasi antara model 1 dengan yang lain
+- adakah foreign key dalam model tsb, jika ada, dari model apa dan apa tabel nya
+dsb
+
+perlu memahami laravel eloquent model lebih dalam, tetapi jika lancar, data bisa digenerate secara otomatis.

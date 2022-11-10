@@ -36,11 +36,11 @@ class ContohProgress extends Component
 
         $this->emailPersen = number_format((DB::table('pegawai')->whereNot('email', '=', '')->whereNotNull('email')->count() / $this->totalRow) * 100, 3);
         $this->profilPersen = number_format((DB::table('pegawai')->whereNot('foto', '=', '')->whereNotNull('foto')->count() / $this->totalRow) * 100, 3);
-        $this->telponPersen = number_format((DB::table('pegawai')->whereNot('telpon', '=', '')->whereNotNull('telpon')->count() / $this->totalRow) * 100, 3);
+        $this->telponPersen = number_format((DB::table('pegawai')->whereNot('no_telp', '=', '')->whereNotNull('no_telp')->count() / $this->totalRow) * 100, 3);
 
         $this->email = DB::table('pegawai')->whereNot('email', '=', '')->whereNotNull('email')->count();
         $this->profil = DB::table('pegawai')->whereNot('foto', '=', '')->whereNotNull('foto')->count();
-        $this->telpon = DB::table('pegawai')->whereNot('telpon', '=', '')->whereNotNull('telpon')->count();
+        $this->telpon = DB::table('pegawai')->whereNot('no_telp', '=', '')->whereNotNull('no_telp')->count();
     }
 
     public function writeMessage($event)

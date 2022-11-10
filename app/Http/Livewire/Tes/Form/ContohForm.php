@@ -16,10 +16,11 @@ class ContohForm extends Component
     protected $listeners = ['edit' => 'editData'];
 
 
-    public  $nrk,
-        $telpon,
-        $email,
-        $foto;
+    public  $nrk = "",
+        $telpon = "",
+        $email = "",
+        $foto = null,
+        $upload = null;
 
     public function render()
     {
@@ -31,7 +32,7 @@ class ContohForm extends Component
         $this->resetData();
         $query = DB::table('pegawai')->where('nrk', '=', $nrk)->first();
 
-        $this->telpon = $query->telpon;
+        $this->telpon = $query->no_telp;
         $this->email = $query->email;
         $this->nrk = $nrk;
 
@@ -64,26 +65,29 @@ class ContohForm extends Component
             ]
         );
 
-        $feed = null;
+        error_log('first');
+
 
         if (!is_null($this->foto) || $this->foto != "") {
             error_log('git');
-            $feed = $this->nrk . '_ava.jpg';
-            $path = $this->foto->storeAs('img/avatar/user', $feed);
+            $this->upload = $this->nrk . '_ava.jpg';
+            $path = $this->foto->storeAs('img/avatar/user', $this->upload);
         }
 
-        $pegawai = DataPegawai::find($this->nrk);
+        $pegawai = DataPegawai::where('nrk', '=', $this->nrk)->first();
 
-        if (is_null($feed)) {
-            $pegawai->telpon = $this->telpon;
+        if (is_null($this->upload)) {
+            error_log('second 1' . $this->telpon);
+            $pegawai->no_telp = $this->telpon;
             $pegawai->email = $this->email;
         } else {
-            $pegawai->telpon = $this->telpon;
+            error_log('second 2' . $this->telpon);
+            $pegawai->no_telp = $this->telpon;
             $pegawai->email = $this->email;
-            $pegawai->foto = $this->feed;
+            $pegawai->foto = $this->upload;
         }
         $pegawai->save();
-
+        error_log('third' . $this->upload);
         if (!is_null($this->foto)   || $this->foto != "")
             $this->emit('ubahTest',  'SUKSES! tersimpan sebagai : ' . $path . "\r\n Eloquent : " . $pegawai);
         else
