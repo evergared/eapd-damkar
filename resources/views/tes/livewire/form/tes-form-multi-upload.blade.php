@@ -1,7 +1,7 @@
 <div>
     <form wire:submit.prevent>
         @error('foto.*')
-        <span class="error">Gambar error : </span>
+        <span class="error">Gambar error : {{ $message }}</span>
         @enderror
         <div>
             nama pegawai : {{ $nama }}

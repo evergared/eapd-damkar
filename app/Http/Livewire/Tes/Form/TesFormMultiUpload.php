@@ -46,7 +46,6 @@ class TesFormMultiUpload extends Component
 
     public function simpanProfil()
     {
-
         $this->validate([
             "foto.*" => "image|max:10240"
         ]);
@@ -58,7 +57,6 @@ class TesFormMultiUpload extends Component
         foreach ($this->foto as $f) {
             $namaFile = $namaRandom . '_' . $iterasi . '.jpg';
             error_log($namaFile);
-
             $f->storeAs(FileController::$testUploadBasePath, $namaFile);
             array_push($listFoto, $namaFile);
             $iterasi++;
