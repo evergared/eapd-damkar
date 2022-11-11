@@ -20,7 +20,7 @@ return new class extends Migration
         Schema::create('tes_multi_uploads', function (Blueprint $table) {
             $table->id();
             $table->text('nama');
-            $table->text('foto')->nullable();
+            $table->longText('foto')->nullable();
             $table->timestamps();
         });
     }

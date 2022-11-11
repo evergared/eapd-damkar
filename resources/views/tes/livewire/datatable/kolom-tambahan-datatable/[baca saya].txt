@@ -1,0 +1,7 @@
+anjuran untuk pemberian nama kolom tambahan :
+
+[kolom]-[nama tabel].blade.php
+
+contoh untuk kolom profil di tabel bernama contoh tabel :
+
+profil-contoh-tabel.blade.php
