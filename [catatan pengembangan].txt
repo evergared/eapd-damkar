@@ -1,0 +1,50 @@
+aplikasi ini memiliki 2 sisi :
+- sisi tes  (untuk keperluan testing tanpa mengganggu proses kerja aplikasi kedepannya saat post production / atau sudah di up ke server)
+- sisi eapd (inti dari aplikasi dan merupakan bagian utama yang bekerja untuk memproses, menampilkan, dan memanggil saat user eapd membuka web)
+
+maka dari itu, telah disiapkan struktur untuk menopang hal-hal tersebut agar meminimalisir terjadinya struktur aplikasi yang berantakan akibat file yang tidak teratur.
+setidaknya dari sisi penempatan dan penamaan file dan folder aplikasi agar dapat dipahami oleh diri sendiri dan jika bisa oleh orang lain yang akan men develop di masa depan.
+karena itu, telah disediakan "sandbox" untuk kegiatan tes dan percobaan, dan telah disediakan pula tempat penyimpanan file utama untuk fungsi inti eapd
+
+
+nantinya akan ada folder masing-masing untuk tes dan eapd, seperti di view atau di model contohnya,
+gunanya untuk memisahkan agar meminimalisir kebingungan akibat struktur aplikasi yang terus bertambah
+
+
+dari penggunaan modul livewire, sebagai contohnya.
+livewire memiliki 2 bagian, yaitu :
+- bagian component
+- bagian view / tampilan
+
+
+untuk bagian component livewire, disimpan di app\http\livewire 
+dan secara default ketika perintah php artisan make:livewire  atau perintah php artisan make:livewire-datatable,
+component akan secara otomatis disimpat di path tersebut.
+
+dianjurkan agar komponen yang di generate tersebut untuk dipindah terlebih dahulu ke folder yang bersangkutan,
+misalnya generate komponen untuk mencoba fungsi,
+setelah di generate dengan perintah tadi, file yang muncul untuk dipindah ke folder tes, karena tujuan nya untuk mencoba fungsi.
+
+
+untuk bagian view / tampilan, secara default livewire (jika) membuat file tersebut akan tersimpan di resources\views\livewire,
+dianjurkan kembali, untuk di pindah ke folder sisi yang bersangkutan, lalu mulai membangun.
+
+
+tak luput pula, dalam oop tidak asing lagi dengan istilah pemanggilan,
+dan biasanya pemanggilan itu melihat namespace dari file class untuk memanggil class tersebut,
+pastikan jika suatu file class dipindah ke folder atau path yang berbeda dari sebelumnya,
+namespace dari class tersebut untuk diubah sesuai dengan tempat dia berada
+agar pemanggilan class tersebut tidak terganggu.
+
+
+
+
+catatan untuk penamaan :
+
+untuk penamaan secara general diutamakan mementingkan kemudahan untuk sortir, dianjurkan menggunakan kata kerja bahasa indonesia untuk membedakan file buatan sendiri dan file bawaan laravel.
+kedepankan konsistensi dalam penamaan dan struktur penamaan variable dan fungsi yang berinteraksi dengan variable tersebut, contohnya 
+
+di satu class, ada variable public $namaFileApd, 
+maka untuk fungsi yang berinteraksi dengan variable tersebut contohnya
+
+prosesNamaFileApd(), ubahNamaFileApd(), dan semacamnya

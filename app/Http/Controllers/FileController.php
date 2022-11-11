@@ -37,17 +37,22 @@ class FileController extends Controller
     /**
      * Path dasar penyimpanan gambar apd yang diinput oleh user
      */
-    public $apdUploadBasePath = 'img/apd/input';
+    public static $apdUploadBasePath = 'img/apd/input';
 
     /**
      * Path dasar penyimpanan gambar apd oleh admin
      */
-    public $apdItemBasePath = 'img/apd/item';
+    public static $apdItemBasePath = 'img/apd/item';
 
     /**
      * Path dasar penyimpanan gambar foto profil yang diupload oleh user
      */
-    public $avatarUploadBasePath = 'img/avatar/user';
+    public static $avatarUploadBasePath = 'img/avatar/user';
+
+    /**
+     * Path dasar penyimpanan gambar untuk keperluan tes
+     */
+    public static $testUploadBasePath = 'img/tes';
 
     /**
      * Mengganti nama file gambar dari foto apd yang diupload user

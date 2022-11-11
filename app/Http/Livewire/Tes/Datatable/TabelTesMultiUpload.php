@@ -19,7 +19,7 @@ class TabelTesMultiUpload extends LivewireDatatable
     {
         return [
             Column::callback('foto', function ($foto) {
-                return view('tes.livewire.datatable.kolom-tambahan-datatable.profil-contoh-tabel')->with(['img' => $foto]);
+                return view('tes.livewire.datatable.kolom-tambahan-datatable.profil-tabel-tes-multi-upload')->with(['img' => json_decode($foto, true)]);
             })
                 ->unsortable()
                 ->excludeFromExport()
