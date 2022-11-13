@@ -28,3 +28,9 @@ Struktur folder laravel :
 - storage       <--- folder file penyimpanan, log dan media yang tidak boleh diakses oleh pengguna secara manual ditempatkan disini
 - tests         <--- berisi file-file pengaturan untuk mode testing dari laravel, opsional dan jarang dipakai kecuali mode testing dijalankan
 - vendor        <--- berisi package yang diinstal oleh composer
+
+Telah disediakan pula database migration untuk aplikasi ini.
+Migration adalah fitur laravel untuk membuat struktur database berdasarkan file migration.
+File migration ada di folder database, dapat diatur sesuai dengan keperluan.
+Selain itu telah disediakan seeder dan factory untuk mengisi database dengan data dummy.
+Dapat dilihat pula di folder database.

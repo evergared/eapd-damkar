@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\WithFileUploads;
 use App\Models\Tes\DataPegawai;
 use App\Events\ContohEvent;
+use App\Models\ContohModel;
 
 class ContohForm extends Component
 {
@@ -30,7 +31,7 @@ class ContohForm extends Component
     public function editData($nrk)
     {
         $this->resetData();
-        $query = DB::table('tes_pegawai')->where('nrk', '=', $nrk)->first();
+        $query = ContohModel::where('nrk', '=', $nrk)->first();
 
         $this->telpon = $query->no_telp;
         $this->email = $query->email;
@@ -55,7 +56,7 @@ class ContohForm extends Component
             [
                 'foto' => 'image|max:1024|nullable',
                 'email' => 'email|nullable',
-                'telpon' => 'numeric|nullable'
+                'telpon' => 'nullable'
             ],
             [
                 'foto.image' => 'Harus berupa file gambar.',

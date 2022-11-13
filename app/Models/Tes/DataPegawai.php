@@ -11,13 +11,13 @@ class DataPegawai extends Model
 {
     use HasFactory;
 
-    protected $table = 'tes_pegawai';
+    protected $table = 'pegawai';
 
 
     protected $fillable = [
         'nrk',
         'nip',
-        'foto',
+        'profile_img',
         'email',
         'no_telp'
     ];

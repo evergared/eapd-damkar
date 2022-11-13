@@ -178,7 +178,7 @@ class TesEapdSeeder extends Seeder
         PeriodeInputApd::create($periode);
 
         error_log('populating pegawai');
-        Pegawai::factory()->count(2)->create();
+        Pegawai::factory()->count(50)->create();
 
         Pegawai::create([
             'nrk' => '80182881',
@@ -210,8 +210,9 @@ class TesEapdSeeder extends Seeder
             'id_grup' => 'B'
         ]);
 
-        error_log('populating list');
-        ApdList::factory()->count(10)->create();
+
+        error_log('populating list, sering error disini karena id sering duplicate, bisa cek file ApdListFactory.php jika error');
+        ApdList::factory()->count(20)->create();
 
         error_log('populating user');
         User::create([

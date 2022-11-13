@@ -45,7 +45,7 @@ class ContohTabel extends LivewireDatatable
     {
         return [
 
-            Column::callback('foto', function ($foto) {
+            Column::callback('profile_img', function ($foto) {
                 return view('tes.livewire.datatable.kolom-tambahan-datatable.profil-contoh-tabel', ['img' =>  $foto]);
             })
                 ->unsortable()

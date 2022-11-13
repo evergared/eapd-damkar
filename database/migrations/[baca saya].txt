@@ -1,10 +1,11 @@
 Disini untuk pengaturan migration, perintah laravel untuk membuat tabel db otomatis.
 
 beberapa perintah yang biasa dijalankan berkaitan dengan migration :
-- php artisan migrate           <--- migration membuat database dan struktur tabel nya berdasarkan file-file yang ada di folder migrations
-- php artisan migrate --seed    <--- migration buat db dan tabel, dan isi dengan data sesuai dengan file DatabaseSeeder.php di folder seeders
-- php artisan migrate:rollback  <--- mengundur migration, artinya meng-undo migration berdasarkan urutan migration nya (urutan migration dapat dilihat di tabel migrations di db dan dapat diatur secara manual dengan mengubah tgl di nama file migration)
-- php artisan db:wipe           <--- menghapus bersih database
+- php artisan migrate                   <--- migration membuat database dan struktur tabel nya berdasarkan file-file yang ada di folder migrations
+- php artisan migrate --seed            <--- migration buat db dan tabel, dan isi dengan data sesuai dengan file DatabaseSeeder.php di folder seeders
+- php artisan migrate:rollback          <--- mengundur migration, artinya meng-undo migration berdasarkan urutan migration nya (urutan migration dapat dilihat di tabel migrations di db dan dapat diatur secara manual dengan mengubah tgl di nama file migration)
+- php artisan db:wipe                   <--- menghapus bersih database
+- php artisan migrate:refresh --seed    <--- menghapus dan membuat kembali database dan mengisinya
 
 pada saat perintah php artisan migrate dijalankan, laravel akan melakukan migration berdasarkan file-file yang ada di folder migrations, tetapi sub folder nya tidak dijalankan,
 trik agar laravel melakukan migration berdasarkan file yang diinginkan, yaitu menyembunyikan file-file migrations yang tidak dibutuhkan ke dalam sub folder.
