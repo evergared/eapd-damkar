@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Tes\Datatable;
 
-use App\Models\DataPegawai;
+use App\Models\Tes\DataPegawai;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;

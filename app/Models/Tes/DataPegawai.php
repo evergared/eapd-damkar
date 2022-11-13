@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Tes;
 
 use App\Events\ContohEvent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +11,7 @@ class DataPegawai extends Model
 {
     use HasFactory;
 
-    protected $table = 'pegawai';
+    protected $table = 'tes_pegawai';
 
 
     protected $fillable = [

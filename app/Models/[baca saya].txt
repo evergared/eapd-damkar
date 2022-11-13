@@ -1,0 +1,6 @@
+disini model disimpan
+
+model merupakan representasi tabel database dalam bentuk file class
+
+penggunaan model diperlukan untuk trigger pada saat user melakukan crud
+trigger hanya dapat dipakai dalam penggunaan model, dan tidak bisa melalui query builder.

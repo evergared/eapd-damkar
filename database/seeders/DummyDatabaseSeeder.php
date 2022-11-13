@@ -93,7 +93,7 @@ class DummyDatabaseSeeder extends Seeder
         ];
 
         foreach ($dataJenisItem as $data) {
-            DB::table('jenis_item')->insert($data);
+            DB::table('tes_jenis_item')->insert($data);
 
             $item1 = str_replace(" ", "", $data['nama_jenis']) . '_1';
             $item1 = strtolower($item1);
@@ -101,7 +101,7 @@ class DummyDatabaseSeeder extends Seeder
             $item2 = str_replace(" ", "", $data['nama_jenis']) . '_2';
             $item2 = strtolower($item2);
 
-            DB::table('list_item')->insert([
+            DB::table('tes_list_item')->insert([
                 'id_item' => Str::random(4),
                 'id_jenis' => $data['id_jenis'],
                 'nama_item' => $data['nama_jenis'] . ' 1',
@@ -109,7 +109,7 @@ class DummyDatabaseSeeder extends Seeder
                 'merk' => fake('en_US')->word,
             ]);
 
-            DB::table('list_item')->insert([
+            DB::table('tes_list_item')->insert([
                 'id_item' => Str::random(4),
                 'id_jenis' => $data['id_jenis'],
                 'nama_item' => $data['nama_jenis'] . ' 1',
@@ -121,23 +121,23 @@ class DummyDatabaseSeeder extends Seeder
         }
 
         foreach ($dataJabatan as $data) {
-            DB::table('jabatan')->insert($data);
+            DB::table('tes_jabatan')->insert($data);
         }
 
         foreach ($dataWilayah as $data) {
-            DB::table('wilayah')->insert($data);
+            DB::table('tes_wilayah')->insert($data);
         }
 
         foreach ($dataPenempatan as $data) {
-            DB::table('penempatan')->insert($data);
+            DB::table('tes_penempatan')->insert($data);
         }
 
         foreach ($dataGrup as $data) {
-            DB::table('grup')->insert($data);
+            DB::table('tes_grup')->insert($data);
         }
 
         for ($i = 0; $i < 30; $i++) {
-            DB::table('pegawai')->insert([
+            DB::table('tes_pegawai')->insert([
                 'nrk' => Str::random(8),
                 'nip' => Str::random(16),
                 'nama' => fake('id_ID')->name,
@@ -148,7 +148,7 @@ class DummyDatabaseSeeder extends Seeder
             ]);
         }
 
-        DB::table('pegawai')->insert([
+        DB::table('tes_pegawai')->insert([
             'nrk' => '80182881',
             'nip' => '3174060110950006',
             'nama' => 'Irawan Maulana',
@@ -158,7 +158,7 @@ class DummyDatabaseSeeder extends Seeder
             'id_grup' => 'B'
         ]);
 
-        DB::table('pegawai')->insert([
+        DB::table('tes_pegawai')->insert([
             'nrk' => '80182810',
             'nip' => '3174093012890004',
             'nama' => 'Indra Purwoko',
@@ -168,12 +168,12 @@ class DummyDatabaseSeeder extends Seeder
             'id_grup' => 'B'
         ]);
 
-        DB::table('user')->insert([
+        DB::table('tes_user')->insert([
             'nrk' => '80182881',
             'password' => Hash::make('123456')
         ]);
 
-        DB::table('user')->insert([
+        DB::table('tes_user')->insert([
             'nrk' => '80182810',
             'password' => Hash::make('123456')
         ]);

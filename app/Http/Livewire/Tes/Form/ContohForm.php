@@ -5,7 +5,7 @@ namespace App\Http\Livewire\Tes\Form;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithFileUploads;
-use App\Models\DataPegawai;
+use App\Models\Tes\DataPegawai;
 use App\Events\ContohEvent;
 
 class ContohForm extends Component
@@ -30,7 +30,7 @@ class ContohForm extends Component
     public function editData($nrk)
     {
         $this->resetData();
-        $query = DB::table('pegawai')->where('nrk', '=', $nrk)->first();
+        $query = DB::table('tes_pegawai')->where('nrk', '=', $nrk)->first();
 
         $this->telpon = $query->no_telp;
         $this->email = $query->email;

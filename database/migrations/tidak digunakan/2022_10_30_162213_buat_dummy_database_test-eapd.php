@@ -26,9 +26,9 @@ return new class extends Migration
          * atau dengan perintah php artisan migrate:reset
          */
 
-        if (!Schema::hasTable('user')) {
+        if (!Schema::hasTable('tes_user')) {
 
-            Schema::create('user', function (Blueprint $table) {
+            Schema::create('tes_user', function (Blueprint $table) {
                 $table->id();
                 $table->string('nrk', 10);
                 $table->string('password');
@@ -37,8 +37,8 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('jabatan')) {
-            Schema::create('jabatan', function (Blueprint $t) {
+        if (!Schema::hasTable('tes_jabatan')) {
+            Schema::create('tes_jabatan', function (Blueprint $t) {
                 $t->string('id_jabatan', 8)->primary();
                 $t->text('nama_jabatan');
                 $t->text('tipe_jabatan');
@@ -47,8 +47,8 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('wilayah')) {
-            Schema::create('wilayah', function (Blueprint $t) {
+        if (!Schema::hasTable('tes_wilayah')) {
+            Schema::create('tes_wilayah', function (Blueprint $t) {
                 $t->string('id_wilayah', 4)->primary();
                 $t->text('nama_wilayah');
                 $t->text('keterangan')->nullable();
@@ -56,8 +56,8 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('penempatan')) {
-            Schema::create('penempatan', function (Blueprint $t) {
+        if (!Schema::hasTable('tes_penempatan')) {
+            Schema::create('tes_penempatan', function (Blueprint $t) {
                 $t->string('id_penempatan', 10)->primary();
                 $t->text('nama_penempatan');
                 $t->text('keterangan')->nullable();
@@ -65,8 +65,8 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('grup')) {
-            Schema::create('grup', function (Blueprint $t) {
+        if (!Schema::hasTable('tes_grup')) {
+            Schema::create('tes_grup', function (Blueprint $t) {
                 $t->string('id_grup', 2)->primary();
                 $t->text('nama_grup');
                 $t->text('keterangan')->nullable();
@@ -74,8 +74,8 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('pegawai')) {
-            Schema::create('pegawai', function (Blueprint $table) {
+        if (!Schema::hasTable('tes_pegawai')) {
+            Schema::create('tes_pegawai', function (Blueprint $table) {
                 $table->id();
                 $table->string('nrk', 10);
                 $table->string('nip', 20)->nullable();
@@ -92,8 +92,8 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('jenis_item')) {
-            Schema::create('jenis_item', function (Blueprint $t) {
+        if (!Schema::hasTable('tes_jenis_item')) {
+            Schema::create('tes_jenis_item', function (Blueprint $t) {
                 $t->string('id_jenis', 4);
                 $t->text('nama_jenis');
                 $t->text('keterangan')->nullable();
@@ -101,8 +101,8 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('list_item')) {
-            Schema::create('list_item', function (Blueprint $t) {
+        if (!Schema::hasTable('tes_list_item')) {
+            Schema::create('tes_list_item', function (Blueprint $t) {
                 $t->string('id_item', 4)->primary();
                 $t->string('id_jenis', 4);
                 $t->text('nama_item');
@@ -115,8 +115,8 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('master_kondisi')) {
-            Schema::create('master_kondisi', function (Blueprint $t) {
+        if (!Schema::hasTable('tes_master_kondisi')) {
+            Schema::create('tes_master_kondisi', function (Blueprint $t) {
                 $t->string('id_kondisi', 4)->primary();
                 $t->text('keterangan')->nullable();
                 $t->text('list')->nullable();
@@ -132,7 +132,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('daftar_input_apd')) {
+        if (!Schema::hasTable('tes_daftar_input_apd')) {
             Schema::create('daftar_input_apd', function (Blueprint $t) {
                 $t->id();
                 $t->string('nrk', 10);
@@ -150,7 +150,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('daftar_input_apd_non-pegawai')) {
+        if (!Schema::hasTable('tes_daftar_input_apd_non-pegawai')) {
             Schema::create('daftar_input_apd_non-pegawai', function (Blueprint $t) {
                 $t->id();
                 $t->string('nrk', 10);
@@ -176,17 +176,17 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user');
-        Schema::dropIfExists('jabatan');
-        Schema::dropIfExists('wilayah');
-        Schema::dropIfExists('penempatan');
-        Schema::dropIfExists('grup');
-        Schema::dropIfExists('pegawai');
-        Schema::dropIfExists('jenis_item');
-        Schema::dropIfExists('list_item');
-        Schema::dropIfExists('master_kondisi');
-        Schema::dropIfExists('master_size');
-        Schema::dropIfExists('daftar_input_apd');
-        Schema::dropIfExists('daftar_input_apd_non-pegawai');
+        Schema::dropIfExists('tes_user');
+        Schema::dropIfExists('tes_jabatan');
+        Schema::dropIfExists('tes_wilayah');
+        Schema::dropIfExists('tes_penempatan');
+        Schema::dropIfExists('tes_grup');
+        Schema::dropIfExists('tes_pegawai');
+        Schema::dropIfExists('tes_jenis_item');
+        Schema::dropIfExists('tes_list_item');
+        Schema::dropIfExists('tes_master_kondisi');
+        Schema::dropIfExists('tes_master_size');
+        Schema::dropIfExists('tes_daftar_input_apd');
+        Schema::dropIfExists('tes_daftar_input_apd_non-pegawai');
     }
 };
