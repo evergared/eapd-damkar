@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Route;
 require __DIR__ . '/auth.php';
 
 Route::get('/', function () {
-    return view('tes/welcome');
+    return view('eapd/halaman-depan');
+    // return view('tes/welcome');
 });
 
 Route::middleware('auth')->group(function () {
@@ -29,3 +30,5 @@ Route::middleware('auth')->group(function () {
         return view('tes/multi');
     })->name('multi');
 });
+
+Route::get('/sementara', [\App\Http\Controllers\DashboardController::class, 'tampilLogin']);
