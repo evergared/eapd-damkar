@@ -65,7 +65,7 @@ return new class extends Migration
                 $t->string('id_penempatan', 12)->nullable();
                 $t->string('id_grup', 2);
                 $t->boolean('aktif')->default(true);
-                $t->text('plt')->nullable();
+                $t->boolean('plt')->default(false);
                 $t->integer('kurang', 2)->autoIncrement(false)->nullable()->default(0)->comment('berapa apd yang belum diinput');
                 $t->timestamps();
             });
@@ -97,6 +97,7 @@ return new class extends Migration
                 $t->string('id_jabatan', 6)->unique();
                 $t->text('nama_jabatan');
                 $t->text('tipe_jabatan');
+                $t->enum('level_user', ['anggota', 'danton', 'admin_sektor', 'admin_sudin', 'admin_dinas', 'admin_super']);
                 $t->text('keterangan')->nullable();
                 $t->timestamps();
             });

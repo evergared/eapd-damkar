@@ -31,7 +31,7 @@ class ApdListFactory extends Factory
         $id_kondisi = (str_contains($id_jenis, 'H') ?? false) ? ApdKondisi::find(2)->id : ApdKondisi::find(1)->id;
         $id = substr($id_jenis, 0, 1) . '-' . substr($merk, 0, 3);
         // error_log('id item : ' . $id);
-        $jumlahApdSerupa = ApdList::where('id_jenis', 'like', "'%" . $id . "-%'")->count(); // sering error disini untuk men-generate id
+        $jumlahApdSerupa = ApdList::where('id_apd', 'like', "'" . $id . "-%'")->count(); // sering error disini untuk men-generate id
         $id_apd = $id . '-' . str_pad($jumlahApdSerupa, 4, '0', STR_PAD_LEFT);
 
         return [
