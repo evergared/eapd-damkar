@@ -18,10 +18,10 @@
 <body>
     <div class="wrapper">
         <!-- Preloader -->
-        <div class="preloader flex-column justify-content-center align-items-center">
+        {{-- <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__shake" src="{{ asset('damkar/logo_damkar_dki.png')}}" alt="Damkar" height="60"
                 width="60">
-        </div>
+        </div> --}}
 
         @include('eapd.layouts.navigasi.adminlte-dashboard-topnav')
 
@@ -34,7 +34,9 @@
 
         @include('eapd.layouts.footer.adminlte-dashboard-footer')
     </div>
-
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
 
     @vite('resources/js/adminlte-dashboard.js')
     @stack('stack-body')
