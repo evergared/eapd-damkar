@@ -26,6 +26,21 @@ class Pegawai extends Model
         'kurang',
     ];
 
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class, 'id_jabatan', 'id_jabatan');
+    }
+
+    public function penempatan()
+    {
+        return $this->belongsTo(Penempatan::class, 'id_penempatan', 'id_penempatan');
+    }
+
+    public function wilayah()
+    {
+        return $this->belongsTo(Wilayah::class, 'id_wilayah', 'id_wilayah');
+    }
+
     public function apd_terinput()
     {
         return $this->hasMany(InputApd::class, 'nrk', 'nrk');

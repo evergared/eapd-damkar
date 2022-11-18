@@ -16,6 +16,16 @@ class DashboardController extends Controller
 
     public function tampilDashboardPegawai(Request $r)
     {
-        return view("dashboard.pegawai");
+        return view("eapd.dashboard.main-pegawai");
+    }
+
+    public function tampilProfil(Request $r)
+    {
+        return view('eapd.dashboard.profil');
+    }
+
+    public function tampilRequestItem(Request $r)
+    {
+        return view('eapd.dashboard.request-item');
     }
 }

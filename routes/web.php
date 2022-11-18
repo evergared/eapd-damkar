@@ -24,11 +24,14 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/tes/dashboard', function () {
         return view('tes/dashboard');
-    })->name('dashboard');
+    });
 
     Route::get('/tes/multi-upload', function () {
         return view('tes/multi');
     })->name('multi');
-});
 
-Route::get('/sementara', [\App\Http\Controllers\DashboardController::class, 'tampilLogin']);
+    // Halaman Dashboard
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'tampilDashboardPegawai'])->name('dashboard');
+    Route::get('/profil', [\App\Http\Controllers\DashboardController::class, 'tampilprofil'])->name('profil');
+    Route::get('/request-item', [\App\Http\Controllers\DashboardController::class, 'tampilRequestItem'])->name('request-item');
+});
