@@ -3,7 +3,7 @@
 @section('content')
 
 
-@include('eapd.dashboard.komponen.breadcrumbs')
+@include('eapd.dashboard.komponen.breadcrumbs',[ 'halamanJudul'=>'Dashboard','halaman'=>'dashboard'])
 @include('eapd.dashboard.komponen.marquee-informasi')
 
 <section class="content">

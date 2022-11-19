@@ -4,7 +4,7 @@
 
 @section('content')
 
-@include('eapd.dashboard.komponen.breadcrumbs')
+@include('eapd.dashboard.komponen.breadcrumbs',['halamanJudul'=>'Profil User','halaman'=>'profil'])
 
 <section class="content">
     <div class="container-fluid">

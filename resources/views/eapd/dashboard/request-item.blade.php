@@ -4,7 +4,7 @@
 
 @section('content')
 
-@include('eapd.dashboard.komponen.breadcrumbs')
+@include('eapd.dashboard.komponen.breadcrumbs',['halamanJudul'=>'Request Item','halaman'=>'request-item'])
 @include('eapd.dashboard.komponen.marquee-informasi')
 
 <section class="content">

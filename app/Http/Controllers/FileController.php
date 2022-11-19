@@ -54,6 +54,8 @@ class FileController extends Controller
      */
     public static $testUploadBasePath = 'img/tes';
 
+    public static $avatarPlaceholder = 'storage/img/avatar/placeholder/avatar.jpg';
+
     /**
      * Mengganti nama file gambar dari foto apd yang diupload user
      * 

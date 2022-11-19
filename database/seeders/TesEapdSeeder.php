@@ -184,7 +184,7 @@ class TesEapdSeeder extends Seeder
             'nrk' => '80182881',
             'nip' => '3174060110950006',
             'nama' => 'Irawan Maulana',
-            'id_jabatan' => 'L001',
+            'id_jabatan' => 'L004',
             'id_wilayah' => '1',
             'id_penempatan' => '1.11',
             'id_grup' => 'B'
