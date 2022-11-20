@@ -41,7 +41,7 @@
                                         -tervalidasi
                                         -tertolak
                                         -update -->
-                                                    <img src="/dist/img/image/fire-gloves.jpg"
+                                                    <img src="{{asset('storage/img/apd/placeholder/firejacket_1.jpg')}}"
                                                         class="img-fluid mb-2 h-75 w-100" alt="white sample"><span
                                                         class="bg-secondary color-palette h6">Proses Input</span>
                                                 </a>
@@ -54,7 +54,7 @@
                                                             Baik
                                                         </div>
                                                     </div>
-                                                    <img src="/dist/img/image/fire-jumsuit.jpg"
+                                                    <img src="{{asset('storage/img/apd/placeholder/firejacket_1.jpg')}}"
                                                         class="img-fluid mb-2 h-75 w-100" alt="white sample"><span
                                                         class="bg-secondary color-palette h6">Proses Input</span>
                                                 </a>
@@ -67,7 +67,7 @@
                                                             Baik
                                                         </div>
                                                     </div>
-                                                    <img src="/dist/img/image/firejacket.jpg"
+                                                    <img src="{{asset('storage/img/apd/placeholder/firejacket_1.jpg')}}"
                                                         class="img-fluid mb-2 h-75 w-100" alt="white sample"><span
                                                         class="bg-secondary color-palette h6">Proses Input</span>
                                                 </a>
@@ -80,7 +80,7 @@
                                                             Ringan
                                                         </div>
                                                     </div>
-                                                    <img src="/dist/img/image/rescue-boots-pyros.jpg"
+                                                    <img src="{{asset('storage/img/apd/placeholder/firejacket_1.jpg')}}"
                                                         class="img-fluid mb-2 h-75 w-100" alt="white sample"><span
                                                         class="bg-secondary color-palette h6">Proses Input</span>
                                                 </a>
@@ -110,14 +110,18 @@
                                     <div class="col-12 col-sm-6">
                                         <h3 class="d-inline-block d-sm-none"></h3>
                                         <div class="col-12">
-                                            <img src="/dist/img/prod-1.jpg" class="product-image" alt="Product Image">
+                                            <img src="{{asset('storage/img/apd/placeholder/firejacket_1.jpg')}}"
+                                                class="product-image" alt="Product Image">
                                         </div>
                                         <div class="col-12 product-image-thumbs">
-                                            <div class="product-image-thumb active"><img src="/dist/img/prod-1.jpg"
+                                            <div class="product-image-thumb active"><img
+                                                    src="{{asset('storage/img/apd/placeholder/firejacket_1.jpg')}}"
                                                     alt="Product Image"></div>
-                                            <div class="product-image-thumb"><img src="/dist/img/prod-2.jpg"
+                                            <div class="product-image-thumb"><img
+                                                    src="{{asset('storage/img/apd/placeholder/firejacket_2.jpg')}}"
                                                     alt="Product Image"></div>
-                                            <div class="product-image-thumb"><img src="/dist/img/prod-3.jpg"
+                                            <div class="product-image-thumb"><img
+                                                    src="{{asset('storage/img/apd/placeholder/firejacket_2.jpg')}}"
                                                     alt="Product Image"></div>
                                         </div>
                                     </div>
