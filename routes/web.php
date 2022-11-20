@@ -34,4 +34,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'tampilDashboardPegawai'])->name('dashboard');
     Route::get('/profil', [\App\Http\Controllers\DashboardController::class, 'tampilprofil'])->name('profil');
     Route::get('/request-item', [\App\Http\Controllers\DashboardController::class, 'tampilRequestItem'])->name('request-item');
+    Route::get('/apdku', [\App\Http\Controllers\DashboardController::class, 'tampilApdKu'])->name('apdku');
 });

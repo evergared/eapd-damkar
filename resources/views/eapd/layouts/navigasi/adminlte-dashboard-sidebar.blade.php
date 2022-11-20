@@ -17,43 +17,61 @@
             </div>
             <div class="info">
                 <a class="d-block">{{ (auth()->user()->data->nama ?? null ) ? : 'Anonim' }}</a>
-                <a class="d-block">{{ (auth()->user()->data->jabatan->nama_jabatan ?? null) ? : 'Guest' }}</a>
+            </div>
+        </div>
+
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="info">
+                <a class="d-block">
+                    {{ (auth()->user()->data->jabatan->nama_jabatan ?? null) ? : 'Guest' }}
+                </a>
+                <a class="d-block">
+                    {{
+                    (auth()->user()->data->id_grup == 'A') ? 'Grup Ambon' :
+                    ((auth()->user()->data->id_grup == 'B') ? 'Grup Bandung' :
+                    ((auth()->user()->data->id_grup == 'C') ? 'Grup Cepu' :
+                    ''))
+                    }}
+                </a>
                 <a class="d-block">{{ auth()->user()->data->penempatan->id_penempatan}}
                     {{auth()->user()->data->penempatan->nama_penempatan }}</a>
                 <a class="d-block">{{auth()->user()->data->wilayah->nama_wilayah }}</a>
             </div>
-
         </div>
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item menu-open">
-                    <a href="{{route('dashboard')}}" class="nav-link active">
+                <li class="nav-item {{ (Route::currentRouteName() == 'dashboard')? 'menu-open' :''}}">
+                    <a href="{{route('dashboard')}}"
+                        class="nav-link {{ (Route::currentRouteName() == 'dashboard')? 'active' :''}}">
                         <i class="nav-icon fas fas fa-home"></i>
                         <p>
                             Dashboard
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="apdku.html" class="nav-link">
+                <li class="nav-item  {{ (Route::currentRouteName() =='apdku')? 'menu-open' :''}}">
+                    <a href="{{route('apdku')}}"
+                        class="nav-link {{ (Route::currentRouteName() =='apdku')? 'active' :''}}">
                         <i class="nav-icon fas fa-tshirt"></i>
                         <p>
                             APDku
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('request-item') }}" class="nav-link">
+                <li class="nav-item  {{ (Route::currentRouteName() =='request-item')? 'menu-open' :''}}">
+                    <a href="{{ route('request-item') }}"
+                        class="nav-link {{ (Route::currentRouteName() =='request-item')? 'active' :''}}">
                         <i class="nav-icon fab fa-stack-exchange"></i>
                         <p>
                             Request Item
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{route('profil')}}" class="nav-link">
+                <li class="nav-item {{ (Route::currentRouteName() =='profil')? 'menu-open' :''}}">
+                    <a href="{{route('profil')}}"
+                        class="nav-link {{ (Route::currentRouteName() =='profil')? 'active' :''}}">
                         <i class="nav-icon fas fa-user-circle"></i>
                         <p>
                             Profile

@@ -12,16 +12,18 @@
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     @vite('resources/css/adminlte-dashboard.css')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     @stack('stack-head')
 </head>
 
-<body>
+<body class="hold-transition sidebar-mini layout-fixed sidebar-mini layout-fixed  layout-navbar-fixed"
+    style="height: auto;">
     <div class="wrapper">
         <!-- Preloader -->
-        {{-- <div class="preloader flex-column justify-content-center align-items-center">
+        <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__shake" src="{{ asset('damkar/logo_damkar_dki.png')}}" alt="Damkar" height="60"
                 width="60">
-        </div> --}}
+        </div>
 
         @include('eapd.layouts.navigasi.adminlte-dashboard-topnav')
 
@@ -38,8 +40,12 @@
         $.widget.bridge('uibutton', $.ui.button)
     </script>
 
-    @vite('resources/js/adminlte-dashboard.js')
     @stack('stack-body')
-</body>
+
+    @vite('resources/js/adminlte-dashboard.js')
+    <script src="{{asset('admin-lte/adminlte.min.js')}}">
+    </script>
+    <script src="{{asset('admin-lte/demo.js')}}">
+        </body>
 
 </html>

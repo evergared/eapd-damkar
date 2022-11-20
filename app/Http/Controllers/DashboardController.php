@@ -28,4 +28,9 @@ class DashboardController extends Controller
     {
         return view('eapd.dashboard.request-item');
     }
+
+    public function tampilApdKu(Request $r)
+    {
+        return view('eapd.dashboard.apdku');
+    }
 }

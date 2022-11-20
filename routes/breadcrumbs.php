@@ -44,3 +44,8 @@ Breadcrumbs::for('request-item', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('Request Item', route('request-item'));
 });
+
+Breadcrumbs::for('apdku', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('APDku', route('apdku'));
+});
