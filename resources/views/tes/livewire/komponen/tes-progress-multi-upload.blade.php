@@ -1,3 +1,4 @@
 <div>
-    {{-- If you look to others for fulfillment, you will never truly be fulfilled. --}}
+    <button wire:click="$emit('openModal','tesmodal')">modal</button>
+
 </div>
