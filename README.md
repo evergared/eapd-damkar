@@ -9,9 +9,10 @@ Requirement :
 
 Package :
 
+-   [admin lte](https://adminlte.io/themes/v3/)
 -   [tailwind css v2](https://tailwindcss.com/)
 -   [livewire](https://laravel-livewire.com/)
--   [livewire-datatable](https://livewire-datatables.com/)
+-   [rappasoft livewire-datatable](https://github.com/rappasoft/laravel-livewire-tables)
 -   Laravel Echo
 
 Notes pengembangan :
@@ -22,6 +23,7 @@ Notes pengembangan :
 
 useful links :
 
+-   Dokumentasi admin lte (github en) : https://github.com/ColorlibHQ/AdminLTE
 -   Dokumentasi tailwind css (official en) : https://v2.tailwindcss.com/docs
--   Dokumentasi livewire-datatable (github en) : https://github.com/MedicOneSystems/livewire-datatables
+-   Dokumentasi livewire-datatable (official rappasoft en) : https://rappasoft.com/docs/laravel-livewire-tables/v2/introduction
 -   Screencast livewire (en) : https://laravel-livewire.com/screencasts
