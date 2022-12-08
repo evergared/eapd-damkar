@@ -169,9 +169,10 @@
 
                             @push('stack-body')
                             @livewireScripts
+                            @livewire('livewire-ui-modal')
                             @endpush
 
-                            <livewire:tabel-anggota-katon />
+                            <livewire:eapd.datatable.tabel-anggota-katon />
 
                         </div>
                     </div>
@@ -179,7 +180,7 @@
                 </div>
             </div>
 
-
+            @livewire('eapd.modal.profil-anggota-katon')
 
 
             <div class="modal fade" id="modal-lg">
