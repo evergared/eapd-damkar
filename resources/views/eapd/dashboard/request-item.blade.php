@@ -10,7 +10,7 @@
 <section class="content">
     <div class="container-fluid">
         @include('eapd.dashboard.komponen.statbox')
-        @include('eapd.dashboard.komponen.progress-inputan')
+        
 
         <!-- Main row -->
         <div class="modal-dialog modal-lg">
