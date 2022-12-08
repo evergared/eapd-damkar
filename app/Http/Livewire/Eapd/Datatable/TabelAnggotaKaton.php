@@ -40,6 +40,10 @@ class TabelAnggotaKaton extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->hideIf(true),
+            Column::make("Progress")
+                ->label(function () {
+                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-katon", ['max' => 300, 'min' => 0, 'value' => 200]);
+                })
         ];
     }
 }
