@@ -180,7 +180,7 @@
                 </div>
             </div>
 
-            @livewire('eapd.modal.profil-anggota-katon')
+            @livewire('eapd.modal.modal-kolom-profil-tabel-anggota-katon')
             @livewire('eapd.modal.modal-kolom-progress-tabel-anggota-katon')
 
 

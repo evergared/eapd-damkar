@@ -5,7 +5,7 @@ namespace App\Http\Livewire\Eapd\Modal;
 use App\Models\Eapd\Pegawai;
 use Livewire\Component;
 
-class ProfilAnggotaKaton extends Component
+class ModalKolomProfilTabelAnggotaKaton extends Component
 {
 
     public  $nrk,
@@ -22,7 +22,7 @@ class ProfilAnggotaKaton extends Component
 
     public function render()
     {
-        return view('eapd.livewire.modal.profil-anggota-katon');
+        return view('eapd.livewire.modal.modal-kolom-profil-tabel-anggota-katon');
     }
 
     public function tampilProfil($value)

@@ -42,7 +42,7 @@ class TabelAnggotaKaton extends DataTableComponent
                 ->hideIf(true),
             Column::make("Progress")
                 ->label(function () {
-                    @todo #3 buat metode pemanggilan progress dari database dan compare dengan jumlah input
+                    //@todo #3 buat metode pemanggilan progress dari database dan compare dengan jumlah input
                     return view("eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-katon", ['max' => 300, 'min' => 0, 'value' => 200]);
                 })
         ];
