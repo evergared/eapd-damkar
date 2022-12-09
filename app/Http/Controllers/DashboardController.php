@@ -14,6 +14,8 @@ class DashboardController extends Controller
         return ($pesan ?? null) ? $view->with('pesan', $pesan) : $view;
     }
 
+    // @todo buat logic untuk generate thumbnail dari apd yang perlu diinput
+    // @todo buat controller baru untuk menampung logic generate, kemungkinan akan dinamai ApdTemplateController
     public function tampilDashboardPegawai(Request $r)
     {
         return view("eapd.dashboard.main-pegawai");
