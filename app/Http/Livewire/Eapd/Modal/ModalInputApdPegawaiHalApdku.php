@@ -210,7 +210,7 @@ class ModalInputApdPegawaiHalApdku extends Component
 
     public function simpan()
     {
-
+        // error_log('simpan');
         $this->validate(
             [
                 'id_apd_user' => 'required'
@@ -333,6 +333,7 @@ class ModalInputApdPegawaiHalApdku extends Component
             session()->flash('success', 'Data Apd berhasil diinput.');
 
             $this->ambilDataUser();
+            $this->gambar_apd_user = null;
         } catch (Throwable $e) {
             error_log('gagal simpan data input apd  ' . $e);
             report('gagal simpan data input apd  ' . $e);
