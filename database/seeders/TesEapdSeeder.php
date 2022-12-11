@@ -27,6 +27,13 @@ class TesEapdSeeder extends Seeder
     public function run()
     {
 
+        /**
+         * H - Helmet
+         * T - Tubuh/Trouser
+         * G - Gloves
+         * B - Boots
+         * A - Additionals
+         */
         $dataJenisItem = [
             ['id_jenis' => 'H001', 'nama_jenis' => 'Fire Helmet', 'keterangan' => null],
             ['id_jenis' => 'H002', 'nama_jenis' => 'Rescue Helmet', 'keterangan' => null],
@@ -38,6 +45,47 @@ class TesEapdSeeder extends Seeder
             ['id_jenis' => 'B002', 'nama_jenis' => 'Rescue Boots', 'keterangan' => null],
             ['id_jenis' => 'A001', 'nama_jenis' => 'Respirator', 'keterangan' => null],
             ['id_jenis' => 'A002', 'nama_jenis' => 'Fire Goggles', 'keterangan' => null],
+            ['id_jenis' => 'A003', 'nama_jenis' => 'Kapak', 'keterangan' => null],
+            ['id_jenis' => 'A004', 'nama_jenis' => 'Senter', 'keterangan' => null],
+        ];
+
+        $dataContohApd = [
+            ['id_apd' => 'H-bro-0000', 'nama_apd' => 'Protect Red', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' => '2', 'id_kondisi' => '2', 'image' => 'firehelmet_1.jpg||firehelmet_2.jpg||firehelmet_3.jpg'],
+            ['id_apd' => 'H-bro-0001', 'nama_apd' => 'Alpha Head', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' => '2', 'id_kondisi' => '2', 'image' => 'firehelmet_4.jpg||firehelmet_5.jpg'],
+            ['id_apd' => 'H-fir-0000', 'nama_apd' => 'Helmet Fire', 'merk' => 'Fire Protect', 'id_jenis' => 'H001', 'id_size' => '2', 'id_kondisi' => '2', 'image' => 'firehelmet_6.jpg'],
+
+            ['id_apd' => 'H-fir-0001', 'nama_apd' => 'Red Helmet', 'merk' => 'Fire Protect', 'id_jenis' => 'H002', 'id_size' => '2', 'id_kondisi' => '2'],
+
+            ['id_apd' => 'G-glo-0000', 'nama_apd' => 'Red Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' => '2', 'id_kondisi' => '1'],
+            ['id_apd' => 'G-glo-0001', 'nama_apd' => 'Yellow Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' => '2', 'id_kondisi' => '1'],
+            ['id_apd' => 'G-alt-0000', 'nama_apd' => 'Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G001', 'id_size' => '2', 'id_kondisi' => '1'],
+
+            ['id_apd' => 'G-alt-0001', 'nama_apd' => 'Rescue Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' => '2', 'id_kondisi' => '1'],
+            ['id_apd' => 'G-alt-0002', 'nama_apd' => 'Slightly More Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' => '2', 'id_kondisi' => '1'],
+
+
+            ['id_apd' => 'T-fir-0000', 'nama_apd' => 'Fire Jacket', 'merk' => 'Fire Protect', 'id_jenis' => 'T001', 'id_size' => '2', 'id_kondisi' => '1'],
+            ['id_apd' => 'T-pol-0000', 'nama_apd' => 'Fire Suit', 'merk' => 'Poland Inc', 'id_jenis' => 'T001', 'id_size' => '2', 'id_kondisi' => '1'],
+
+            ['id_apd' => 'T-pol-0001', 'nama_apd' => 'Jump Suit Poland', 'merk' => 'Poland Inc', 'id_jenis' => 'T002', 'id_size' => '2', 'id_kondisi' => '1'],
+            ['id_apd' => 'T-yoh-0000', 'nama_apd' => 'Jump Suit', 'merk' => 'Yohanes Safety Accredited', 'id_jenis' => 'T002', 'id_size' => '2', 'id_kondisi' => '1'],
+
+            ['id_apd' => 'B-yoh-0000', 'nama_apd' => 'Fire Hazard Boots', 'merk' => 'Yohanes Safety Accredited', 'id_jenis' => 'B001', 'id_size' => '3', 'id_kondisi' => '1'],
+            ['id_apd' => 'B-ari-0000', 'nama_apd' => 'Fire Safety Boots', 'merk' => 'Arian Protection', 'id_jenis' => 'B001', 'id_size' => '3', 'id_kondisi' => '1'],
+
+            ['id_apd' => 'B-ari-0001', 'nama_apd' => 'Rescue Boots', 'merk' => 'Arian Protection', 'id_jenis' => 'B002', 'id_size' => '3', 'id_kondisi' => '1'],
+
+            ['id_apd' => 'A-dar-0000', 'nama_apd' => 'Sandstorm', 'merk' => 'Darude', 'id_jenis' => 'A001', 'id_size' => '1', 'id_kondisi' => '1'],
+
+            ['id_apd' => 'A-ari-0000', 'nama_apd' => 'Arian Visor', 'merk' => 'Arian Protection', 'id_jenis' => 'A002', 'id_size' => '1', 'id_kondisi' => '1'],
+
+            ['id_apd' => 'A-tho-0000', 'nama_apd' => 'Handaxe', 'merk' => 'Thorsson and Asgard Production', 'id_jenis' => 'A003', 'id_size' => '1', 'id_kondisi' => '1'],
+
+            ['id_apd' => 'A-uni-0000', 'nama_apd' => 'Flashlight', 'merk' => 'Universal Lightning', 'id_jenis' => 'A004', 'id_size' => '1', 'id_kondisi' => '1'],
+
+
+
+
         ];
 
         $kondisiUmum = [
@@ -73,6 +121,7 @@ class TesEapdSeeder extends Seeder
             '44',
             '45',
         );
+
 
         $grup = [
             ['id_grup' => 'A', 'nama_grup' => 'Ambon', 'keterangan' => null],
@@ -132,26 +181,32 @@ class TesEapdSeeder extends Seeder
         ApdKondisi::create(
             [
                 'nama_kondisi' => 'umum',
-                'opsi' => json_encode($kondisiUmum)
+                'opsi' => $kondisiUmum
             ]
         );
 
         error_log('populating kondisi helm');
         ApdKondisi::create([
             'nama_kondisi' => 'helm umum',
-            'opsi' => json_encode($kondisiHelmUmum)
+            'opsi' => $kondisiHelmUmum
+        ]);
+
+        error_log('populating size kosong');
+        ApdSize::create([
+            'nama_size' => 'kosong',
+            'opsi' => []
         ]);
 
         error_log('populating size umum');
         ApdSize::create([
             'nama_size' => 'umum',
-            'opsi' => json_encode($sizeUmum)
+            'opsi' => $sizeUmum
         ]);
 
         error_log('populating size sepatu');
         ApdSize::create([
             'nama_size' => 'sepatu umum',
-            'opsi' => json_encode($sizeSepatu)
+            'opsi' => $sizeSepatu
         ]);
 
         error_log('populating grup');
@@ -221,8 +276,12 @@ class TesEapdSeeder extends Seeder
         ]);
 
 
-        error_log('populating list, sering error disini karena id sering duplicate, bisa cek file ApdListFactory.php jika error');
-        ApdList::factory()->count(20)->create();
+        // error_log('populating list, sering error disini karena id sering duplicate, bisa cek file ApdListFactory.php jika error');
+        // ApdList::factory()->count(20)->create();
+
+        foreach ($dataContohApd as $item) {
+            ApdList::create($item);
+        }
 
         error_log('populating user');
         User::create([

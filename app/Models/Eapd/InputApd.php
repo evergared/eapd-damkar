@@ -4,12 +4,15 @@ namespace App\Models\Eapd;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class InputApd extends Model
 {
     use HasFactory;
 
+    public $incrementing = false;
     protected $table = "input_apd";
+    protected $keyType = 'string';
 
     // butuh kolom status verified? boolean atau enum?
     protected $fillable = [
@@ -40,8 +43,14 @@ class InputApd extends Model
     }
 
     // trigger
-    protected static function booted()
+    protected static function boot()
     {
+        parent::boot();
+
+        static::creating(function ($InputApd) {
+            $InputApd->{$InputApd->getKeyName()} = (string) Str::uuid();
+        });
+
         static::updated(function ($InputApd) {
             // event
         });

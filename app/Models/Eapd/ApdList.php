@@ -31,21 +31,16 @@ class ApdList extends Model
     // relationship
     public function jenis()
     {
-        return $this->belongsTo(ApdJenis::class, 'id_jenis', 'id_jenis');
+        return $this->belongsTo(ApdJenis::class, 'id_jenis');
     }
 
     public function size()
     {
-        return $this->belongsTo(ApdSize::class, 'id_size', 'id_size');
+        return $this->belongsTo(ApdSize::class, 'id_size');
     }
 
     public function kondisi()
     {
-        return $this->belongsTo(ApdKondisi::class, 'id_kondisi', 'id_kondisi');
-    }
-
-    public function periode()
-    {
-        return $this->belongsTo(PeriodeInputApd::class, 'id_kondisi', 'id_kondisi');
+        return $this->belongsTo(ApdKondisi::class, 'id_kondisi');
     }
 }
