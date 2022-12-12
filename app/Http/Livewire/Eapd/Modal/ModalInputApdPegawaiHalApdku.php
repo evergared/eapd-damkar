@@ -22,10 +22,10 @@ class ModalInputApdPegawaiHalApdku extends Component
     public  $id_jenis,
         $nama_jenis,
         $data_apd,
-        $nama_apd,
+        $list_apd,
         $size_apd,
         $kondisi_apd,
-        $gambar_apd_template = [];
+        $gambar_apd_template = null;
 
 
     // untuk diisi oleh user
@@ -54,6 +54,9 @@ class ModalInputApdPegawaiHalApdku extends Component
     // path untuk tes 
     public $mock = "storage/img/apd/placeholder";
 
+    //temp
+    public $opsi_apd;
+
 
     protected $listeners = [
         'modalInputApdPegawai'
@@ -78,11 +81,14 @@ class ModalInputApdPegawaiHalApdku extends Component
         $tes = $adc->muatSatuContohDaftarInputApd();
 
         $this->id_jenis = $tes['id_jenis'];
+        $this->opsi_apd = $tes['opsi_apd'];
         $this->data_apd = $adc->bangunItemModalInputApd($tes['opsi_apd']);
         $this->nama_jenis = ApdJenis::where('id_jenis', '=', $this->id_jenis)->value('nama_jenis');
 
+        $this->hidrasiListApd();
         $this->ambilDataUser();
         $this->hidrasiDataOpsi();
+        $this->refreshGambarTemplate();
 
         // untuk cek data
         // return dd($this->data_apd);
@@ -94,7 +100,12 @@ class ModalInputApdPegawaiHalApdku extends Component
         //error_log('id_apd_user updated');
 
         $this->kosongkanDataInput();
+        $this->hidrasiListApd();
         $this->hidrasiDataOpsi();
+        $this->refreshGambarTemplate();
+
+        error_log('id_apd_user : ' . $this->id_apd_user);
+        error_log('list gambar template : ' . implode('||', $this->gambar_apd_template));
     }
 
     public function updated($property)
@@ -145,6 +156,36 @@ class ModalInputApdPegawaiHalApdku extends Component
         return $warna;
     }
 
+    public function refreshGambarTemplate()
+    {
+        $this->gambar_apd_template = array();
+
+        try {
+
+            $this->gambar_apd_template = explode('||', ApdList::where('id_apd', '=', $this->id_apd_user)->value('image'));
+            // dd($this->gambar_apd_template);
+        } catch (Throwable $e) {
+
+            error_log('Gagal mengambil gambar template apd untuk id jenis "' . $this->id_jenis . '" dengan id apd "' . $this->id_apd_user . '". ' . $e);
+            report('Gagal mengambil gambar template apd untuk id jenis "' . $this->id_jenis . '" dengan id apd "' . $this->id_apd_user . '". ' . $e);
+            session()->flash('gambar_apd_template_error', 'Gagal memuat gambar template apd.');
+        }
+    }
+
+    public function refreshGambarUser()
+    {
+        $this->gambar_apd = array();
+
+        try {
+            $this->gambar_apd = explode('||', InputApd::where('nrk', '=', Auth::user()->nrk)->where('id_jenis', '=', $this->id_jenis)->value('image'));
+        } catch (Throwable $e) {
+
+            error_log('Gagal mengambil gambar apd user untuk id jenis "' . $this->id_jenis .  '". ' . $e);
+            report('Gagal mengambil gambar apd user untuk id jenis "' . $this->id_jenis . '". ' . $e);
+            session()->flash('gambar_apd_user_error', 'Gagal memuat gambar apd inputan user.');
+        }
+    }
+
     public function kosongkanDataInput()
     {
         // size
@@ -158,14 +199,21 @@ class ModalInputApdPegawaiHalApdku extends Component
         $this->gambar_apd_user = null;
     }
 
+    public function hidrasiListApd()
+    {
+        $this->list_apd = [];
+        foreach ($this->opsi_apd as $opsi) {
+            array_push($this->list_apd, ['id_apd' => $opsi, 'nama_apd' => ApdList::where('id_apd', '=', $opsi)->value('nama_apd')]);
+        }
+    }
 
     public function hidrasiDataOpsi()
     {
-        $this->size_apd = $this->data_apd[array_search($this->id_apd_user, $this->data_apd)]['size_apd'];
+        $this->size_apd = $this->data_apd[array_search($this->id_apd_user, $this->data_apd, true)]['size_apd'];
 
-        $this->gambar_apd_template = $this->data_apd[array_search($this->id_apd_user, $this->data_apd)]['gambar_apd'];
+        // $this->gambar_apd_template = $this->data_apd[array_search($this->id_apd_user, $this->data_apd)]['gambar_apd'];
 
-        $this->kondisi_apd = $this->data_apd[array_search($this->id_apd_user, $this->data_apd)]['kondisi_apd'];
+        $this->kondisi_apd = $this->data_apd[array_search($this->id_apd_user, $this->data_apd, true)]['kondisi_apd'];
         // return dd($this->kondisi_apd);
     }
 
@@ -176,12 +224,6 @@ class ModalInputApdPegawaiHalApdku extends Component
         $this->pathGbr = "storage/" . $fc->buatPathFileApdUpload(Auth::user()->nrk, $this->id_jenis);
     }
 
-    public function ambilGambar(string $value)
-    {
-
-        $this->gambar_apd = explode('||', $value);
-    }
-
     public function ambilDataUser()
     {
         if ($inputan_user = InputApd::where('nrk', '=', Auth::user()->nrk)->where('id_jenis', '=', $this->id_jenis)->first()) {
@@ -189,18 +231,18 @@ class ModalInputApdPegawaiHalApdku extends Component
             return;
         }
 
-        $this->id_apd_user = $this->id_apd_cache = $inputan_user->id_apd;
-        $this->size_apd_user = $this->size_apd_cache = $inputan_user->size;
-        $this->kondisi_apd_user = $this->kondisi_apd_cache = $inputan_user->kondisi;
-        $this->komentar_apd_user = $this->komentar_apd_cache = $inputan_user->komentar_pengupload;
+        $this->id_apd_user = $inputan_user->id_apd;
+        $this->size_apd_user = $inputan_user->size;
+        $this->kondisi_apd_user = $inputan_user->kondisi;
+        $this->komentar_apd_user = $inputan_user->komentar_pengupload;
         $this->komentar_verif_user = $inputan_user->komentar_verifikator;
         $this->status_verif_user = verif::tryFrom($inputan_user->verifikasi_status)->value;
         $this->label_verif_user = verif::tryFrom($inputan_user->verifikasi_status)->label;
 
-        // $this->nama_apd_user = ApdList::where('id_apd', '=', $this->id_apd_cache)->value('nama_apd');
+        $this->nama_apd_user = ApdList::where('id_apd', '=', $this->id_apd_cache)->value('nama_apd');
 
         $this->sesuaikanPathGambar();
-        $this->ambilGambar($inputan_user->image);
+        $this->refreshGambarUser();
 
 
         // return dd(verif::tryFrom($inputan_user->verifikasi_status));

@@ -41,7 +41,6 @@ class ApdDataController extends Controller
         foreach ($opsi_apd as $apd) {
             $id_apd = $apd;
 
-            error_log('id apd : ' . $id_apd);
             $model = ApdList::where('id_apd', '=', $id_apd)->first();
 
             $nama_apd = $model->nama_apd;
@@ -49,6 +48,9 @@ class ApdDataController extends Controller
             $size_apd = $model->size->opsi;
             $kondisi_apd = $model->kondisi->opsi;
             $gambar_apd = $model->image;
+
+            error_log('id apd : ' . $id_apd . ' nama apd : ' . $nama_apd);
+
 
             // gambar apd harus berupa array untuk mempermudah pengecekan
             if (is_null($gambar_apd)) {
@@ -70,8 +72,49 @@ class ApdDataController extends Controller
             ]);
         }
 
+        // dd($array);
         return $array;
     }
+
+    public function bangunItemModalInputApdById(string $id_apd): array
+    {
+        $array = [];
+
+
+        $model = ApdList::where('id_apd', '=', $id_apd)->first();
+
+        $nama_apd = $model->nama_apd;
+        $merk_apd = $model->merk_apd;
+        $size_apd = $model->size->opsi;
+        $kondisi_apd = $model->kondisi->opsi;
+        $gambar_apd = $model->image;
+
+        error_log('id apd : ' . $id_apd . ' nama apd : ' . $nama_apd);
+
+
+        // gambar apd harus berupa array untuk mempermudah pengecekan
+        if (is_null($gambar_apd)) {
+            $gambar_apd = [];
+        } else if (str_contains($gambar_apd, '||')) {
+            $gambar_apd = explode('||', $gambar_apd);
+        } else {
+            $gambar = $gambar_apd;
+            $gambar_apd = [$gambar];
+        }
+
+        array_push($array, [
+            'id_apd' => $id_apd,
+            'nama_apd' => $nama_apd,
+            'merk_apd' => $merk_apd,
+            'size_apd' => $size_apd,
+            'kondisi_apd' => $kondisi_apd,
+            'gambar_apd' => $gambar_apd
+        ]);
+
+        // dd($array);
+        return $array;
+    }
+
 
     /**
      * @todo Fungsi untuk ambil id periode

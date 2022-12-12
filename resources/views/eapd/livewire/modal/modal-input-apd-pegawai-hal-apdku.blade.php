@@ -37,7 +37,12 @@
                                 <div class="tab-pane fade active show" id="gambar-apd-template-content" role="tabpanel"
                                     aria-labelledby="gambar-apd-template-tab">
 
-
+                                    {{-- Jika gambar template gagal dimuat --}}
+                                    @if (session()->has('gambar_apd_template_error'))
+                                    <div class="text-danger">
+                                        <small>{{session('gambar_apd_template_error')}}</small>
+                                    </div>
+                                    @endif
 
                                     {{-- Kondisi Gambar Template Start --}}
 
@@ -78,18 +83,23 @@
                                             @endforeach
                                         </div>
 
+
+
                                         {{-- Saat Gambar Template Ada 1 --}}
                                         @elseif(count($gambar_apd_template)==1)
+                                        {{error_log("count apd template ".count($gambar_apd_template));}}
                                         <img class="product-image" src="{{$mock.'/'.$gambar_apd_template[0]}}"
                                             alt="Gambar APD">
 
+                                        {{-- Saat Tidak Diberikan Gambar Template --}}
+                                        @else
+                                        <div class="jumbotron jumbotron-fluid text-center">
+                                            Tidak disediakan gambar untuk APD ini.
+                                        </div>
+
                                         @endif
                                     </div>
-                                    {{-- Saat Tidak Diberikan Gambar Template --}}
-                                    @else
-                                    <div class="jumbotron jumbotron-fluid text-center">
-                                        Tidak disediakan gambar untuk APD ini.
-                                    </div>
+
                                     @endif
                                     {{-- Kondisi Gambar Template End --}}
                                 </div>
@@ -97,6 +107,12 @@
                                 <div class="tab-pane fade" id="gambar-apd-user-content" role="tabpanel"
                                     aria-labelledby="gambar-apd-user-tab">
 
+                                    {{-- Jika gambar user gagal dimuat --}}
+                                    @if (session()->has('gambar_apd_user_error'))
+                                    <div class="text-danger">
+                                        <small>{{session('gambar_apd_user_error')}}</small>
+                                    </div>
+                                    @endif
 
 
 
@@ -253,8 +269,8 @@
                                 <label>Model</label>
                                 <select class="form-control" wire:model='id_apd_user'>
                                     <option value="" disabled selected>Pilih model APD</option>
-                                    @if (!is_null($data_apd))
-                                    @foreach ($data_apd as $apd)
+                                    @if (!is_null($list_apd))
+                                    @foreach ($list_apd as $apd)
                                     <option value="{{$apd['id_apd']}}">{{$apd['nama_apd']}}</option>
                                     @endforeach
                                     @endif
