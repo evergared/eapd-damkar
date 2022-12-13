@@ -10,13 +10,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-
-
-
-
-
-
-
                     <div class="row">
                         <div class="col-12 col-sm-6" wire:key='tampil-gambar'>
                             <h3 class="d-inline-block d-sm-none">{{$nama_jenis}}</h3>
@@ -48,53 +41,71 @@
 
                                     @if ($gambar_apd_template)
 
-                                    {{-- Script untuk preview gambar apd Start--}}
-                                    <script>
-                                        $(document).ready(function() {
-                                        $('.product-image-thumb').on('click', function () {
-                                            console.log('kepanggil')
-                                            var $image_element = $(this).find('img')
-                                            $('.product-image').prop('src', $image_element.attr('src'))
-                                            $('.product-image-thumb.active').removeClass('active')
-                                            $(this).addClass('active')
-                                            })
-                                        })
-                                    </script>
-                                    {{-- Script untuk preview gambar apd End--}}
+                                    <div wire:loading='selectModelApdDirubah'>
+                                        <div class="spinner-border text-info" role="status">
+                                            <span class="sr-only">Memuat...</span>
+                                        </div><span class="mx-2 text-info">Memuat...</span>
+                                    </div>
 
                                     <div class="col-12">
+
+
+
+
+
                                         {{-- Saat Gambar Template Lebih Dari 1 --}}
                                         @if(count($gambar_apd_template)>1)
 
-                                        <img class="product-image" src="{{asset($mock.'/'.$gambar_apd_template[0])}}"
-                                            alt="Gambar Apd Anda">
+
+
+                                        <img class="product-image" id="apd_template"
+                                            src="{{asset($mock.'/'.$gambar_apd_template[0])}}" alt="Gambar Apd Anda">
                                         <div class="col-12 product-image-thumbs">
 
                                             @foreach ($gambar_apd_template as $key => $gbr)
                                             @if($key === array_key_first($gambar_apd_template))
-                                            <div class="product-image-thumb active"><img src="{{asset($mock.'/'.$gbr)}}"
-                                                    alt="Product Image">
+                                            <div class="apd-template product-image-thumb active"><img
+                                                    src="{{asset($mock.'/'.$gbr)}}" alt="Product Image">
                                             </div>
                                             @else
-                                            <div class="product-image-thumb"><img src="{{asset($mock.'/'.$gbr)}}"
-                                                    alt="Product Image">
+                                            <div class="apd-template  product-image-thumb"><img
+                                                    src="{{asset($mock.'/'.$gbr)}}" alt="Product Image">
                                             </div>
                                             @endif
                                             @endforeach
+
+                                            {{-- Script untuk preview gambar apd Start--}}
+                                            <script>
+                                                $(document).ready(function() {
+                                        $('.apd-template.product-image-thumb').on('click', function () {
+                                            var $image_element = $(this).find('img')
+                                            $('.product-image#apd-template').prop('src', $image_element.attr('src'))
+                                            $('.apd-template.product-image-thumb.active').removeClass('active')
+                                            $(this).addClass('active')
+                                            })
+                                        })
+                                            </script>
+                                            {{-- Script untuk preview gambar apd End--}}
+
                                         </div>
 
-
-
                                         {{-- Saat Gambar Template Ada 1 --}}
-                                        @elseif(count($gambar_apd_template)==1)
-                                        {{error_log("count apd template ".count($gambar_apd_template));}}
+                                        @elseif($gambar_apd_template[0] != [] && (!is_null($list_apd) && $id_apd_user
+                                        != ''))
                                         <img class="product-image" src="{{$mock.'/'.$gambar_apd_template[0]}}"
                                             alt="Gambar APD">
 
                                         {{-- Saat Tidak Diberikan Gambar Template --}}
-                                        @else
+                                        @elseif($gambar_apd_template[0]!=[] && (!is_null($list_apd) && $id_apd_user !=
+                                        ''))
                                         <div class="jumbotron jumbotron-fluid text-center">
                                             Tidak disediakan gambar untuk APD ini.
+                                        </div>
+
+                                        @elseif(!is_null($list_apd) && $id_apd_user ==
+                                        '')
+                                        <div class="jumbotron jumbotron-fluid text-center">
+                                            Silahkan pilih apd di dropdown model.
                                         </div>
 
                                         @endif
@@ -266,15 +277,20 @@
                                 {{-- Pesan Setelah Input End --}}
 
                                 {{-- @todo #5 --}}
-                                <label>Model</label>
-                                <select class="form-control" wire:model='id_apd_user'>
-                                    <option value="" disabled selected>Pilih model APD</option>
-                                    @if (!is_null($list_apd))
-                                    @foreach ($list_apd as $apd)
-                                    <option value="{{$apd['id_apd']}}">{{$apd['nama_apd']}}</option>
-                                    @endforeach
-                                    @endif
-                                </select>
+                                <div class="form-group" wire:init='hidrasiListApd'>
+                                    <label>Model</label>
+                                    <select class="form-control" wire:model='id_apd_user'
+                                        wire:change='selectModelApdDirubah'>
+                                        <option value="" disabled>Pilih model APD</option>
+                                        @if (!is_null($list_apd))
+                                        @foreach ($list_apd as $apd)
+                                        <option wire:key="opsi-apd-{{$apd['nama_apd']}}" value="{{$apd['id_apd']}}">
+                                            {{$apd['nama_apd']}}</option>
+                                        @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+
                                 @error('id_apd_user')
                                 <small class="error text-danger">{{$message}}</small>
                                 @enderror
@@ -284,7 +300,7 @@
                             <div class="form-group">
                                 <label>Ukuran</label>
                                 <select class="form-control" wire:model.defer='size_apd_user'>
-                                    <option value="" disabled selected>Pilih ukuran APD</option>
+                                    <option value="" disabled>Pilih ukuran APD</option>
                                     @if (!is_null($size_apd))
                                     @foreach ($size_apd as $size)
                                     <option>{{$size}}</option>
@@ -301,7 +317,7 @@
                             <div class="form-group">
                                 <label>Kondisi</label>
                                 <select class="form-control" wire:model.defer='kondisi_apd_user'>
-                                    <option value="" disabled selected>Pilih jenis kondisi APD</option>
+                                    <option value="" disabled>Pilih jenis kondisi APD</option>
                                     @if (!is_null($kondisi_apd))
                                     @foreach ($kondisi_apd as $kondisi)
                                     <option value="{{$kondisi['value']}}">{{$kondisi['text']}}</option>
@@ -366,9 +382,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div>
 
-                        </div>
 
                         {{-- Saat User Upload gambar --}}
                         @if ($gambar_apd_user && !($errors->has('gambar_apd_user.*')))

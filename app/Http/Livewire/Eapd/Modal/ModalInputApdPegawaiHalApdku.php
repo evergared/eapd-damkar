@@ -23,9 +23,10 @@ class ModalInputApdPegawaiHalApdku extends Component
         $nama_jenis,
         $data_apd,
         $list_apd,
+        $opsi_apd,
         $size_apd,
         $kondisi_apd,
-        $gambar_apd_template = null;
+        $gambar_apd_template = [];
 
 
     // untuk diisi oleh user
@@ -51,11 +52,8 @@ class ModalInputApdPegawaiHalApdku extends Component
     // path gambar
     public $pathGbr = "storage";
 
-    // path untuk tes 
+    // path untuk placeholder 
     public $mock = "storage/img/apd/placeholder";
-
-    //temp
-    public $opsi_apd;
 
 
     protected $listeners = [
@@ -64,21 +62,24 @@ class ModalInputApdPegawaiHalApdku extends Component
 
     public function render()
     {
-        error_log('rendered');
-        // $this->status_verif_user = verif::tryFrom(1)->value;
-        // $this->label_verif_user = verif::tryFrom(1)->label;
+        // untuk cek render. Lihat terminal
+        // error_log('komponen rendered');
+        // error_log('id_apd_user saat render : ' . $this->id_apd_user);
+
+
         return view('eapd.livewire.modal.modal-input-apd-pegawai-hal-apdku');
     }
 
     /**
-     * @param Array $value Item dari list templateInputApd, memiliki id_jenis dan opsi_apd
+     * @param string $value Item dari list templateInputApd, memiliki id_jenis dan opsi_apd
      */
     public function modalInputApdPegawai($value)
     {
         $adc = new ApdDataController;
 
         // untuk tes, load satu jenis apd dan apd-apd opsi nya
-        $tes = $adc->muatSatuContohDaftarInputApd();
+        // $tes = $adc->muatSatuContohDaftarInputApd();
+        $tes = $adc->muatContohDaftarInputApd($value);
 
         $this->id_jenis = $tes['id_jenis'];
         $this->opsi_apd = $tes['opsi_apd'];
@@ -92,20 +93,6 @@ class ModalInputApdPegawaiHalApdku extends Component
 
         // untuk cek data
         // return dd($this->data_apd);
-    }
-
-    public function updatingIdApdUser()
-    {
-        // untuk cek terpanggil atau tidak
-        //error_log('id_apd_user updated');
-
-        $this->kosongkanDataInput();
-        $this->hidrasiListApd();
-        $this->hidrasiDataOpsi();
-        $this->refreshGambarTemplate();
-
-        error_log('id_apd_user : ' . $this->id_apd_user);
-        error_log('list gambar template : ' . implode('||', $this->gambar_apd_template));
     }
 
     public function updated($property)
@@ -126,11 +113,34 @@ class ModalInputApdPegawaiHalApdku extends Component
         );
     }
 
+    public function selectModelApdDirubah()
+    {
+        try {
+            sleep(1);
+            $this->perbaruiDataModal();
+        } catch (Throwable $e) {
+        }
+    }
+
+    public function perbaruiDataModal()
+    {
+        // untuk cek terpanggil atau tidak
+        error_log('id_apd_user updated');
+
+        $this->kosongkanDataInput();
+        $this->hidrasiListApd();
+        $this->hidrasiDataOpsi();
+        $this->refreshGambarTemplate();
+
+        error_log('id_apd_user : ' . $this->id_apd_user);
+        error_log('list gambar template : ' . implode('||', $this->gambar_apd_template));
+    }
+
     public function ubahKeWarnaBootstrap(int $item): string
     {
         $warna = '';
 
-        error_log('valeu : ' . $item);
+        error_log('value status verifikasi : ' . $item);
 
         switch ($item) {
             case 1:
@@ -201,9 +211,16 @@ class ModalInputApdPegawaiHalApdku extends Component
 
     public function hidrasiListApd()
     {
-        $this->list_apd = [];
-        foreach ($this->opsi_apd as $opsi) {
-            array_push($this->list_apd, ['id_apd' => $opsi, 'nama_apd' => ApdList::where('id_apd', '=', $opsi)->value('nama_apd')]);
+        try {
+            $this->list_apd = [];
+            foreach ($this->opsi_apd as $opsi) {
+                // $apd = "";
+                // $apd->id_apd = $opsi;
+                // $apd->nama_apd = ApdList::where('id_apd', '=', $opsi)->value('nama_apd');
+                // array_push($this->list_apd, $apd);
+                array_push($this->list_apd, ['id_apd' => $opsi, 'nama_apd' => ApdList::where('id_apd', '=', $opsi)->value('nama_apd')]);
+            }
+        } catch (Throwable $e) {
         }
     }
 

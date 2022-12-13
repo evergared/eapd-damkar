@@ -10,10 +10,10 @@ class ApdDataController extends Controller
 
     public static $jumlahBatasUploadGambar = 3;
 
-    public function muatContohDaftarInputApd(): array
+    public function muatContohDaftarInputApd(string $id_jenis): array
     {
         // digunakan untuk contoh
-        return [
+        $list = [
             ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000', 'H-fir-0000', 'H-bro-0001']],
             ['id_jenis' => 'H002', 'opsi_apd' => ['H-fir-0001']],
             ['id_jenis' => 'G001', 'opsi_apd' => ['G-glo-0000', 'G-glo-0001', 'G-alt-0000']],
@@ -27,6 +27,8 @@ class ApdDataController extends Controller
             ['id_jenis' => 'A003', 'opsi_apd' => ['B-tho-0000']],
             ['id_jenis' => 'A004', 'opsi_apd' => ['B-uni-0000']],
         ];
+
+        return $list[array_search($id_jenis, $list, true)];
     }
 
     public function muatSatuContohDaftarInputApd(): array
