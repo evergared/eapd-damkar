@@ -12,6 +12,7 @@
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     @vite('resources/css/adminlte-dashboard.css')
+    @vite('resources/css/filter.css')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <!-- Alpine v3 -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -56,6 +57,7 @@
     <script src="{{asset('admin-lte/adminlte.min.js')}}">
     </script>
     <script src="{{asset('admin-lte/demo.js')}}"></script>
+    <script src="{{asset('admin-lte/filter.js')}}"></script>
     @include('helper.script-modal')
 </body>
 

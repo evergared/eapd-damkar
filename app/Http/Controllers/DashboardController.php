@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\ApdDataController;
 
 class DashboardController extends Controller
 {
+
 
     public function tampilLogin($pesan = null)
     {
@@ -18,6 +20,7 @@ class DashboardController extends Controller
     // @todo buat controller baru untuk menampung logic generate, kemungkinan akan dinamai ApdTemplateController
     public function tampilDashboardPegawai(Request $r)
     {
+
         return view("eapd.dashboard.main-pegawai");
     }
 
@@ -33,6 +36,8 @@ class DashboardController extends Controller
 
     public function tampilApdKu(Request $r)
     {
+        $adc = new ApdDataController;
+        // return view('eapd.dashboard.apdku')->with('list_apd', $adc->bangunItemModalInputApd($adc->muatContohDaftarInputApd()[1]));
         return view('eapd.dashboard.apdku');
     }
 }

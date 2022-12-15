@@ -19,6 +19,7 @@
         "pusher/pusher-php-server": "^7.2",
         "ramsey/uuid": "^4.6",
         "rappasoft/laravel-livewire-tables": "^2.8",
+        "spatie/enum": "^3.13",
         "wire-elements/modal": "^1.0"
     },
     "require-dev": {

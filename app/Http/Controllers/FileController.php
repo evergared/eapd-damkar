@@ -54,6 +54,9 @@ class FileController extends Controller
      */
     public static $testUploadBasePath = 'img/tes';
 
+    /**
+     * File placeholder untuk avatar / foto profil user
+     */
     public static $avatarPlaceholder = 'storage/img/avatar/placeholder/avatar.jpg';
 
     /**
@@ -87,5 +90,10 @@ class FileController extends Controller
             Log::error('Gagal memproses nama file avatar upload, ' . $e);
             return;
         }
+    }
+
+    public function buatPathFileApdUpload($nrk, $id_jenis)
+    {
+        return self::$apdUploadBasePath . '/' . $nrk . '/' . $id_jenis;
     }
 }

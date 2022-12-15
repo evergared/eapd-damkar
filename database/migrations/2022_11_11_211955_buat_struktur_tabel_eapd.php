@@ -167,15 +167,19 @@ return new class extends Migration
 
                 $t->uuid('id')->primary()->comment('dari laravel, dibutuhkan untuk serialization');
                 $t->string('nrk', 10);
+                $t->string('id_jenis', 6);
                 $t->string('id_apd', 10)->nullable();
                 $t->text('size')->nullable();
                 $t->text('status_barang')->nullable();
                 $t->text('kondisi')->nullable();
                 $t->longText('image')->nullable();
+                $t->text('komentar_pengupload')->nullable();
                 $t->text('keterangan')->nullable();
                 $t->timestamps();
                 $t->foreignId('id_periode', 8)->nullable();
-                $t->text('verified_by')->nullable();
+                $t->text('verifikasi_oleh')->nullable();
+                $t->string('verifikasi_status', 2)->nullable();
+                $t->text('komentar_verifikator')->nullable();
             });
         }
 
@@ -275,6 +279,7 @@ return new class extends Migration
 
                 $t->foreign('nrk')->references('nrk')->on('pegawai')->cascadeOnUpdate();
                 $t->foreign('id_apd')->references('id_apd')->on('apd_list')->cascadeOnUpdate()->nullOnDelete();
+                $t->foreign('id_jenis')->references('id_jenis')->on('apd_jenis')->cascadeOnUpdate();
                 $t->foreign('id_periode')->references('id')->on('periode_input_apd')->cascadeOnUpdate()->nullOnDelete();
             });
         }
@@ -351,6 +356,7 @@ return new class extends Migration
 
                 $t->dropForeign('input_apd_nrk_foreign');
                 $t->dropForeign('input_apd_id_periode_foreign');
+                $t->dropForeign('input_apd_id_jenis_foreign');
                 $t->dropForeign('input_apd_id_apd_foreign');
             });
         }

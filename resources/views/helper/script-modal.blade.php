@@ -22,9 +22,20 @@ agar modal tidak hilang sendiri dan layar dapat diklik setelah modal dipanggil.
 
 
 <script>
+    //     $(document).on('hidden.bs.modal', '.modal',
+//   () => $('.modal:visible').length && $(document.body).addClass('modal-open'));
+
+// $(document).on('show.bs.modal', '.modal', function() {
+//   const zIndex = 1040 + 10 * $('.modal:visible').length;
+//   $(this).css('z-index', zIndex);
+//   setTimeout(() => $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack'));
+// });
+
     function modal(modalId,data = null, eventName = modalId)
     {
         Livewire.emit(eventName,data)
         $('#'+modalId).modal('show')
     }
+
+
 </script>
