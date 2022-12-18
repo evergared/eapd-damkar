@@ -41,7 +41,7 @@
 
                                     @if ($gambar_apd_template)
 
-                                    <div wire:loading='selectModelApdDirubah'>
+                                    <div wire:loading wire:target='selectModelApdDirubah'>
                                         <div class="spinner-border text-info" role="status">
                                             <span class="sr-only">Memuat...</span>
                                         </div><span class="mx-2 text-info">Memuat...</span>
@@ -54,11 +54,22 @@
 
 
                                         {{-- Saat Gambar Template Lebih Dari 1 --}}
-                                        @if(count($gambar_apd_template)>1)
+                                        @if(count($gambar_apd_template)>1 && $userTelahMemilih)
 
+                                        {{-- Script untuk preview gambar apd Start--}}
+                                        <script>
+                                            $(document).ready(function() {
+                                        $('.apd-template.product-image-thumb').on('click', function () {
+                                            var $image_element = $(this).find('img')
+                                            $('.apd-template-preview.product-image').prop('src', $image_element.attr('src'))
+                                            $('.apd-template.product-image-thumb.active').removeClass('active')
+                                            $(this).addClass('active')
+                                            })
+                                        })
+                                        </script>
+                                        {{-- Script untuk preview gambar apd End--}}
 
-
-                                        <img class="product-image" id="apd_template"
+                                        <img class="apd-template-preview product-image" id="apd_template"
                                             src="{{asset($mock.'/'.$gambar_apd_template[0])}}" alt="Gambar Apd Anda">
                                         <div class="col-12 product-image-thumbs">
 
@@ -74,36 +85,25 @@
                                             @endif
                                             @endforeach
 
-                                            {{-- Script untuk preview gambar apd Start--}}
-                                            <script>
-                                                $(document).ready(function() {
-                                        $('.apd-template.product-image-thumb').on('click', function () {
-                                            var $image_element = $(this).find('img')
-                                            $('.product-image#apd-template').prop('src', $image_element.attr('src'))
-                                            $('.apd-template.product-image-thumb.active').removeClass('active')
-                                            $(this).addClass('active')
-                                            })
-                                        })
-                                            </script>
-                                            {{-- Script untuk preview gambar apd End--}}
+
 
                                         </div>
 
                                         {{-- Saat Gambar Template Ada 1 --}}
-                                        @elseif($gambar_apd_template[0] != [] && (!is_null($list_apd) && $id_apd_user
-                                        != ''))
+                                        @elseif($adaGambarTemplate && (!is_null($list_apd) && $id_apd_user
+                                        != '') && $userTelahMemilih)
                                         <img class="product-image" src="{{$mock.'/'.$gambar_apd_template[0]}}"
                                             alt="Gambar APD">
 
                                         {{-- Saat Tidak Diberikan Gambar Template --}}
-                                        @elseif($gambar_apd_template[0]!=[] && (!is_null($list_apd) && $id_apd_user !=
-                                        ''))
+                                        @elseif(!($adaGambarTemplate) && (!is_null($list_apd) && $id_apd_user !=
+                                        '') && $userTelahMemilih)
                                         <div class="jumbotron jumbotron-fluid text-center">
                                             Tidak disediakan gambar untuk APD ini.
                                         </div>
 
                                         @elseif(!is_null($list_apd) && $id_apd_user ==
-                                        '')
+                                        '' && !($userTelahMemilih))
                                         <div class="jumbotron jumbotron-fluid text-center">
                                             Silahkan pilih apd di dropdown model.
                                         </div>
@@ -131,18 +131,7 @@
                                     {{-- Saat User Sudah Pernah Upload Gambar --}}
                                     @if($gambar_apd)
 
-                                    {{-- Script untuk preview gambar apd Start--}}
-                                    <script>
-                                        $(document).ready(function() {
-                                        $('.product-image-thumb').on('click', function () {
-                                            var $image_element = $(this).find('img')
-                                            $('.product-image#apd_user').prop('src', $image_element.attr('src'))
-                                            $('.product-image-thumb.active').removeClass('active')
-                                            $(this).addClass('active')
-                                            })
-                                        })
-                                    </script>
-                                    {{-- Script untuk preview gambar apd End--}}
+
 
                                     <div class="col-12">
                                         <div class="text-info my-2">
@@ -153,18 +142,32 @@
                                         </div>
                                         {{-- Pernah Upload Lebih Dari 1 --}}
                                         @if (count($gambar_apd)>1)
-                                        <img class="product-image" id="apd_user"
+
+                                        {{-- Script untuk preview gambar apd Start--}}
+                                        <script>
+                                            $(document).ready(function() {
+                                        $('.apd-user.product-image-thumb').on('click', function () {
+                                            var $image_element = $(this).find('img')
+                                            $('.apd-user-preview.product-image').prop('src', $image_element.attr('src'))
+                                            $('.apd-user.product-image-thumb.active').removeClass('active')
+                                            $(this).addClass('active')
+                                            })
+                                        })
+                                        </script>
+                                        {{-- Script untuk preview gambar apd End--}}
+
+                                        <img class="apd-user-preview product-image"
                                             src="{{asset($pathGbr.'/'.$gambar_apd[0])}}" alt="Gambar Apd Anda">
-                                        <div class="col-12 product-image-thumbs">
+                                        <div class="col-12 apd-user product-image-thumbs">
 
                                             @foreach ($gambar_apd as $key => $gbr)
                                             @if($key === array_key_first($gambar_apd))
-                                            <div class="product-image-thumb active"><img
+                                            <div class="apd-user product-image-thumb active"><img
                                                     src="{{asset($pathGbr.'/'.$gbr)}}" alt="Product Image">
                                             </div>
                                             @else
-                                            <div class="product-image-thumb"><img src="{{asset($pathGbr.'/'.$gbr)}}"
-                                                    alt="Product Image">
+                                            <div class="apd-user product-image-thumb"><img
+                                                    src="{{asset($pathGbr.'/'.$gbr)}}" alt="Product Image">
                                             </div>
                                             @endif
                                             @endforeach
@@ -172,8 +175,8 @@
 
                                         {{-- Pernah Upload Gambar 1 --}}
                                         @elseif (count($gambar_apd) == 1)
-                                        <img class="product-image" id="apd_user" src="{{$pathGbr.'/'.$gambar_apd[0]}}"
-                                            alt="Gambar Apd Anda">
+                                        <img class="apd-user product-image" id="apd_user"
+                                            src="{{$pathGbr.'/'.$gambar_apd[0]}}" alt="Gambar Apd Anda">
 
                                         @endif
 
@@ -389,19 +392,34 @@
                         <div class="col-12">
                             <span class="text-warning">Gambar berikut merupakan preview gambar yang anda upload,
                                 pastikan anda menyimpan perubahan.</span>
+
+                            {{-- Script untuk preview gambar apd Start--}}
+                            <script>
+                                $(document).ready(function() {
+                                        $('.upload-preview.product-image-thumb').on('click', function () {
+                                            var $image_element = $(this).find('img')
+                                            $('.upload-preview.product-image').prop('src', $image_element.attr('src'))
+                                            $('.upload-preview.product-image-thumb.active').removeClass('active')
+                                            $(this).addClass('active')
+                                            })
+                                        })
+                            </script>
+                            {{-- Script untuk preview gambar apd End--}}
+
+
                             {{-- Upload Gambar lebih dari 1 --}}
                             @if (count($gambar_apd_user)>1)
-                            <img class="product-image" src="{{ $gambar_apd_user[0]->temporaryUrl() }}"
+                            <img class="upload-preview product-image" src="{{ $gambar_apd_user[0]->temporaryUrl() }}"
                                 alt="Gambar Apd Anda">
-                            <div class="col-12 product-image-thumbs">
+                            <div class="col-12 upload-preview product-image-thumbs">
 
                                 @foreach ($gambar_apd_user as $key => $gbr)
                                 @if($key === array_key_first($gambar_apd_user))
-                                <div class="product-image-thumb active">
+                                <div class="upload-preview product-image-thumb active">
                                     <img src="{{$gbr->temporaryUrl()}}" alt="List Gambar Apd">
                                 </div>
                                 @else
-                                <div class="product-image-thumb">
+                                <div class="upload-preview product-image-thumb">
                                     <img src="{{$gbr->temporaryUrl()}}" alt="List Gambar Apd">
                                 </div>
 
@@ -411,7 +429,7 @@
 
                             {{-- Upload Gambar 1 --}}
                             @elseif (count($gambar_apd_user) == 1)
-                            <img class="product-image" src="{{$gambar_apd_user[0]->temporaryUrl()}}"
+                            <img class="upload-preview product-image" src="{{$gambar_apd_user[0]->temporaryUrl()}}"
                                 alt="Gambar Apd Anda">
 
 
