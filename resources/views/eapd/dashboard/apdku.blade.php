@@ -23,15 +23,20 @@
 
                                         <h1></h1>
                                         <hr>
-                                        
+
                                         <h2></h2>
-                                        
+
                                         <div id="myBtnContainer">
-                                          <button class="btn active" onclick="filterSelection('all')"> Show all</button>
-                                          <button class="btn" onclick="filterSelection('nature')"> Proses Input</button>
-                                          <button class="btn" onclick="filterSelection('cars')"> Proses Validasi</button>
-                                          <button class="btn" onclick="filterSelection('people')"> Tervalidasi</button>
+                                            <button class="btn active" onclick="filterSelection('all')"> Show
+                                                all</button>
+                                            <button class="btn" onclick="filterSelection('nature')"> Proses
+                                                Input</button>
+                                            <button class="btn" onclick="filterSelection('cars')"> Proses
+                                                Validasi</button>
+                                            <button class="btn" onclick="filterSelection('people')">
+                                                Tervalidasi</button>
                                         </div>
+
                                         
                                         <div class="card-body">
                                             <div class="row">
@@ -188,6 +193,7 @@
                                             
                                         </div>
                                         
+
                                     </div>
                                 </div>
                             </div>
