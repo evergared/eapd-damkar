@@ -205,9 +205,8 @@ return new class extends Migration
         if (!Schema::hasTable('input_apd_template')) {
             Schema::create('input_apd_template', function (Blueprint $t) {
                 // mungkin tabel ini tidak dibutuhkan
-                $t->uuid('id', 8)->comment('dari laravel, dibutuhkan untuk serialization');
-                $t->text('tipe_jabatan');
-                $t->string('id_apd', 10)->nullable();
+                $t->uuid('id', 8)->primary()->comment('dari laravel, dibutuhkan untuk serialization');
+                $t->longText('template_json');
                 $t->foreignId('id_periode', 8)->nullable();
                 $t->timestamps();
             });
@@ -237,6 +236,17 @@ return new class extends Migration
             });
         }
 
+
+        // join table
+        // penamaan : jt_table1_dan_table2
+        // urutan table mengikuti urutan abjad
+
+        if (!Schema::hasTable('jt_input_apd_template_dan_jabatan')) {
+            Schema::create('jt_input_apd_template_dan_jabatan', function (Blueprint $t) {
+                $t->uuid('id_template', 8)->nullable();
+                $t->string('id_jabatan', 6)->nullable();
+            });
+        }
 
 
 
@@ -296,7 +306,7 @@ return new class extends Migration
         if (Schema::hasTable('input_apd_template')) {
             Schema::table('input_apd_template', function (Blueprint $t) {
 
-                $t->foreign('id_apd')->references('id_apd')->on('apd_list')->cascadeOnDelete()->cascadeOnUpdate();
+                // $t->foreign('id_apd')->references('id_apd')->on('apd_list')->cascadeOnDelete()->cascadeOnUpdate();
                 $t->foreign('id_periode')->references('id')->on('periode_input_apd')->cascadeOnDelete()->cascadeOnUpdate();
             });
         }
@@ -314,6 +324,14 @@ return new class extends Migration
             Schema::table('input_sewaktu_waktu_ongoing', function (Blueprint $t) {
 
                 $t->foreign('id_input_sewaktu_waktu')->references('id')->on('input_sewaktu_waktu')->cascadeOnDelete()->cascadeOnUpdate();
+            });
+        }
+
+        // join table
+        if (Schema::hasTable('jt_input_apd_template_dan_jabatan')) {
+            Schema::table('jt_input_apd_template_dan_jabatan', function (Blueprint $t) {
+                $t->foreign('id_template')->references('id')->on('input_apd_template')->cascadeOnDelete()->cascadeOnUpdate();
+                $t->foreign('id_jabatan')->references('id_jabatan')->on('jabatan')->cascadeOnDelete()->cascadeOnUpdate();
             });
         }
     }
@@ -374,7 +392,6 @@ return new class extends Migration
             Schema::table('input_apd_template', function (Blueprint $t) {
 
                 $t->dropForeign('input_apd_template_id_periode_foreign');
-                $t->dropForeign('input_apd_template_id_apd_foreign');
             });
         }
 
@@ -390,6 +407,14 @@ return new class extends Migration
             Schema::table('input_sewaktu_waktu_ongoing', function (Blueprint $t) {
 
                 $t->dropForeign('input_sewaktu_waktu_ongoing_id_input_sewaktu_waktu_foreign');
+            });
+        }
+
+        // join table
+        if (Schema::hasTable('jt_input_apd_template_dan_jabatan')) {
+            Schema::table('jt_input_apd_template_dan_jabatan', function (Blueprint $t) {
+                $t->dropForeign('jt_input_apd_template_dan_jabatan_id_template_foreign');
+                $t->dropForeign('jt_input_apd_template_dan_jabatan_id_jabatan_foreign');
             });
         }
 
