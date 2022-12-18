@@ -205,8 +205,9 @@ return new class extends Migration
         if (!Schema::hasTable('input_apd_template')) {
             Schema::create('input_apd_template', function (Blueprint $t) {
                 // mungkin tabel ini tidak dibutuhkan
-                $t->uuid('id', 8)->primary()->comment('dari laravel, dibutuhkan untuk serialization');
-                $t->longText('template_json');
+                $t->id('id', 8)->comment('dari laravel, dibutuhkan untuk serialization');
+                $t->text('nama')->nullable()->default('Template EAPD')->comment('nama dari template');
+                $t->longText('template')->comment('json');
                 $t->foreignId('id_periode', 8)->nullable();
                 $t->timestamps();
             });
@@ -243,7 +244,7 @@ return new class extends Migration
 
         if (!Schema::hasTable('jt_input_apd_template_dan_jabatan')) {
             Schema::create('jt_input_apd_template_dan_jabatan', function (Blueprint $t) {
-                $t->uuid('id_template', 8)->nullable();
+                $t->foreignId('id_template', 8)->nullable();
                 $t->string('id_jabatan', 6)->nullable();
             });
         }
@@ -330,8 +331,9 @@ return new class extends Migration
         // join table
         if (Schema::hasTable('jt_input_apd_template_dan_jabatan')) {
             Schema::table('jt_input_apd_template_dan_jabatan', function (Blueprint $t) {
-                $t->foreign('id_template')->references('id')->on('input_apd_template')->cascadeOnDelete()->cascadeOnUpdate();
+                $t->foreign('id_template')->references('id')->on('input_apd_template')->cascadeOnDelete();
                 $t->foreign('id_jabatan')->references('id_jabatan')->on('jabatan')->cascadeOnDelete()->cascadeOnUpdate();
+                $t->comment('Join table input_apd_template - Jabatan');
             });
         }
     }

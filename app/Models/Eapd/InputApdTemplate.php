@@ -5,27 +5,22 @@ namespace App\Models\Eapd;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 
 class InputApdTemplate extends Model
 {
     use HasFactory;
 
-    protected $incrementing = false;
-    protected $keyType = 'string';
+
     protected $table = 'input_apd_template';
 
-    // trigger
-    protected static function boot()
+
+    public function template(): Attribute
     {
-        parent::boot();
-
-        static::creating(function ($InputApdTemplate) {
-            $InputApdTemplate->{$InputApdTemplate->getKeyName()} = (string) Str::uuid();
-        });
-
-        static::updated(function ($InputApdtemplate) {
-            // event
-        });
+        return Attribute::make(
+            get: fn ($value) => json_decode($value, true),
+            set: fn ($value) => json_encode($value),
+        );
     }
 }

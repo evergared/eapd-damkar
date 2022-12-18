@@ -7,6 +7,7 @@ use App\Models\Eapd\ApdKondisi;
 use App\Models\Eapd\ApdList;
 use App\Models\Eapd\ApdSize;
 use App\Models\Eapd\Grup;
+use App\Models\Eapd\InputApdTemplate;
 use App\Models\Eapd\Jabatan;
 use App\Models\Eapd\Pegawai;
 use App\Models\Eapd\Penempatan;
@@ -16,6 +17,7 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class TesEapdSeeder extends Seeder
 {
@@ -172,6 +174,21 @@ class TesEapdSeeder extends Seeder
             'tgl_akhir' => '2023-04-01'
         ];
 
+        $template = [
+            ['id_jenis' => 'H002', 'opsi_apd' => ['H-fir-0001']],
+            ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000', 'H-fir-0000', 'H-bro-0001']],
+            ['id_jenis' => 'G001', 'opsi_apd' => ['G-glo-0000', 'G-glo-0001', 'G-alt-0000']],
+            ['id_jenis' => 'G002', 'opsi_apd' => ['G-alt-0001', 'G-alt-0002']],
+            ['id_jenis' => 'T001', 'opsi_apd' => ['T-fir-0000', 'T-pol-0000']],
+            ['id_jenis' => 'T002', 'opsi_apd' => ['T-yoh-0000', 'T-pol-0001']],
+            ['id_jenis' => 'B001', 'opsi_apd' => ['B-yoh-0000', 'B-ari-0000']],
+            ['id_jenis' => 'B002', 'opsi_apd' => ['B-ari-0001']],
+            ['id_jenis' => 'A001', 'opsi_apd' => ['A-dar-0000']],
+            ['id_jenis' => 'A002', 'opsi_apd' => ['A-ari-0000']],
+            ['id_jenis' => 'A003', 'opsi_apd' => ['A-tho-0000']],
+            ['id_jenis' => 'A004', 'opsi_apd' => ['A-uni-0000']],
+        ];
+
         error_log('populating jenis');
         foreach ($dataJenisItem as $item) {
             ApdJenis::create($item);
@@ -231,6 +248,36 @@ class TesEapdSeeder extends Seeder
 
         error_log('populating periode');
         PeriodeInputApd::create($periode);
+
+        error_log('populating template');
+        InputApdTemplate::create([
+            'template' => $template,
+            'id_periode' => '1'
+        ]);
+
+        error_log('menyambungkan template dengan jabatan');
+
+        DB::table('jt_input_apd_template_dan_jabatan')->insert([
+            'id_template' => '1',
+            'id_jabatan' => 'L001'
+        ]);
+
+        DB::table('jt_input_apd_template_dan_jabatan')->insert([
+            'id_template' => '1',
+            'id_jabatan' => 'L002'
+        ]);
+
+        DB::table('jt_input_apd_template_dan_jabatan')->insert([
+            'id_template' => '1',
+            'id_jabatan' => 'L003'
+        ]);
+
+        DB::table('jt_input_apd_template_dan_jabatan')->insert([
+            'id_template' => '1',
+            'id_jabatan' => 'L004'
+        ]);
+
+
 
         error_log('populating pegawai');
         Pegawai::factory()->count(50)->create();
