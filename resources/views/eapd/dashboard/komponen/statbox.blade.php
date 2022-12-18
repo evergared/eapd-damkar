@@ -2,11 +2,11 @@
 <div class="row">
     <div class="col-lg-3 col-6">
         <!-- small box -->
-        <div class="small-box bg-primary">
+        <div class="small-box bg-danger">
             <div class="inner">
-                <h3>12</h3>
+                <h3>2</h3>
 
-                <p>Jumlah APD</p>
+                <p>Jumlah APD Tertolak</p>
             </div>
             <div class="icon">
                 <i class="ion ion-filing"></i>
@@ -51,7 +51,7 @@
             <div class="inner">
                 <h3>100<sup style="font-size: 20px">%</sup></h3>
 
-                <p>Validasi</p>
+                <p>Tervalidasi</p>
             </div>
             <div class="icon">
                 <i class="fa fa-thumbs-up"></i>
@@ -65,19 +65,51 @@
 {{-- modal jumlah apd--}}
 <div class="modal fade" id="modal-jumlah">
     <div class="modal-dialog">
-      <div class="modal-content bg-primary">
+      <div class="modal-content bg-danger">
         <div class="modal-header">
-          <h4 class="modal-title">Jumlah APD</h4>
+          <h4 class="modal-title">Jumlah Tertolak</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <p>One fine body&hellip;</p>
+          <div class="row">
+            <div class="col-12">
+              <div class="card bg-danger">
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 300px;">
+                  <table class="table table-head-fixed text-nowrap">
+                    <thead >
+                      <tr>
+                        <th class="bg-danger">Jenis APD</th>
+                        <th class="bg-danger">Keterangan</th>
+                        <th class="bg-danger">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Fire Googgles</td>
+                        <td>Rusak</td>
+                        <td>Tertolak</td>
+                        
+                      </tr>
+                      <tr>
+                        <td>Kampak</td>
+                        <td>Rusak</td>
+                        <td>Tertolak</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-outline-light">Save changes</button>
+          
         </div>
       </div>
       <!-- /.modal-content -->
@@ -96,11 +128,47 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>One fine body&hellip;</p>
+          <div class="row">
+            <div class="col-12">
+              <div class="card bg-warning">
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 300px;">
+                  <table class="table table-head-fixed text-nowrap">
+                    <thead >
+                      <tr>
+                        <th class="bg-warning">Jenis APD</th>
+                        <th class="bg-warning">Keterangan</th>
+                        <th class="bg-warning">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Fire Helemet</td>
+                        <td>Rusak</td>
+                        <td>Menunggu Verifikasi</td>
+                      </tr>
+                      <tr>
+                        <td>Fire Boots</td>
+                        <td>Rusak</td>
+                        <td>Tervalidasi</td>
+                      </tr>
+                      <tr>
+                        <td>Fire Gloves</td>
+                        <td>Rusak</td>
+                        <td>Tervalidasi</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-outline-dark">Save changes</button>
+          
         </div>
       </div>
       <!-- /.modal-content -->
@@ -119,11 +187,47 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>One fine body&hellip;</p>
+          <div class="row">
+            <div class="col-12">
+              <div class="card bg-success">
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 300px;">
+                  <table class="table table-head-fixed text-nowrap">
+                    <thead >
+                      <tr>
+                        <th class="bg-success">Jenis APD</th>
+                        <th class="bg-success">Keterangan</th>
+                        <th class="bg-success">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Fire Helemet</td>
+                        <td>Rusak</td>
+                        <td>Menunggu Verifikasi</td>
+                      </tr>
+                      <tr>
+                        <td>Fire Boots</td>
+                        <td>Rusak</td>
+                        <td>Tervalidasi</td>
+                      </tr>
+                      <tr>
+                        <td>Fire Gloves</td>
+                        <td>Rusak</td>
+                        <td>Menunggu Verifikasi</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-outline-light">Save changes</button>
+          
         </div>
       </div>
       <!-- /.modal-content -->
@@ -142,11 +246,47 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>One fine body&hellip;</p>
+          <div class="row">
+            <div class="col-12">
+              <div class="card bg-info">
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 300px;">
+                  <table class="table table-head-fixed text-nowrap">
+                    <thead >
+                      <tr>
+                        <th class="bg-info">Jenis APD</th>
+                        <th class="bg-info">Keterangan</th>
+                        <th class="bg-info">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Fire Helemet</td>
+                        <td>Rusak</td>
+                        <td>Menunggu Verifikasi</td>
+                      </tr>
+                      <tr>
+                        <td>Fire Boots</td>
+                        <td>Rusak</td>
+                        <td>Tervalidasi</td>
+                      </tr>
+                      <tr>
+                        <td>Fire Gloves</td>
+                        <td>Rusak</td>
+                        <td>Menunggu Verifikasi</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-outline-light">Save changes</button>
+          
         </div>
       </div>
       <!-- /.modal-content -->
