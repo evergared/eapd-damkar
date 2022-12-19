@@ -22,4 +22,15 @@ class Jabatan extends Model
     {
         return $this->hasMany(Pegawai::class, 'id_jabatan', 'id_jabatan');
     }
+
+    public function template()
+    {
+        return $this->belongsToMany(InputApdTemplate::class, 'pivot_input_apd_template');
+    }
+
+    // https://laravel.com/docs/9.x/eloquent-relationships#filtering-queries-via-intermediate-table-columns
+    public function templatePadaPeriode($id_periode)
+    {
+        return $this->belongsToMany(InputApdTemplate::class, 'pivot_input_apd_template', 'id_jabatan', 'id_template', 'id_jabatan', 'id')->wherePivot('id_periode', '=', $id_periode);
+    }
 }

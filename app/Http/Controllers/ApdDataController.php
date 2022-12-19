@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Eapd\ApdList;
+use App\Models\Eapd\InputApdTemplate;
+use App\Models\Eapd\Jabatan;
 use Throwable;
 
 class ApdDataController extends Controller
@@ -40,6 +43,25 @@ class ApdDataController extends Controller
     public function muatSatuContohDaftarInputApd(): array
     {
         return ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000', 'H-fir-0000', 'H-bro-0001']];
+    }
+
+    public function bangunListInputApdDariTemplate($id_periode = 1, $id_jabatan = "")
+    {
+        try {
+
+            if ($id_jabatan == "") {
+                $id_jabatan = Auth::user()->data->id_jabatan;
+            }
+
+            $list = Jabatan::where('id_jabatan', '=', $id_jabatan)->first()->templatePadaPeriode($id_periode)->value('template');
+
+            // return dd([$id_jabatan, $list]);
+            return $list;
+        } catch (Throwable $e) {
+            error_log("Gagal membangun item template input " . $e);
+            report("Gagal membangun item template input " . $e);
+            // return [];
+        }
     }
 
     public function bangunItemModalInputApd(array $opsi_apd): array

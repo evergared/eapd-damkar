@@ -27,4 +27,9 @@ class PeriodeInputApd extends Model
     {
         return $this->hasMany(InputApd::class, 'id_periode', 'id_periode');
     }
+
+    public function template()
+    {
+        return $this->belongsToMany(InputApdTemplate::class, 'pivot_input_apd_template');
+    }
 }

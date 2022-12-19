@@ -208,7 +208,6 @@ return new class extends Migration
                 $t->id('id', 8)->comment('dari laravel, dibutuhkan untuk serialization');
                 $t->text('nama')->nullable()->default('Template EAPD')->comment('nama dari template');
                 $t->longText('template')->comment('json');
-                $t->foreignId('id_periode', 8)->nullable();
                 $t->timestamps();
             });
         }
@@ -239,13 +238,14 @@ return new class extends Migration
 
 
         // join table
-        // penamaan : jt_table1_dan_table2
+        // penamaan : pivot_table1_dan_table2
         // urutan table mengikuti urutan abjad
 
-        if (!Schema::hasTable('jt_input_apd_template_dan_jabatan')) {
-            Schema::create('jt_input_apd_template_dan_jabatan', function (Blueprint $t) {
+        if (!Schema::hasTable('pivot_input_apd_template')) {
+            Schema::create('pivot_input_apd_template', function (Blueprint $t) {
                 $t->foreignId('id_template', 8)->nullable();
                 $t->string('id_jabatan', 6)->nullable();
+                $t->foreignId('id_periode', 8)->nullable();
             });
         }
 
@@ -308,7 +308,7 @@ return new class extends Migration
             Schema::table('input_apd_template', function (Blueprint $t) {
 
                 // $t->foreign('id_apd')->references('id_apd')->on('apd_list')->cascadeOnDelete()->cascadeOnUpdate();
-                $t->foreign('id_periode')->references('id')->on('periode_input_apd')->cascadeOnDelete()->cascadeOnUpdate();
+                // $t->foreign('id_periode')->references('id')->on('periode_input_apd')->cascadeOnDelete()->cascadeOnUpdate();
             });
         }
 
@@ -329,11 +329,12 @@ return new class extends Migration
         }
 
         // join table
-        if (Schema::hasTable('jt_input_apd_template_dan_jabatan')) {
-            Schema::table('jt_input_apd_template_dan_jabatan', function (Blueprint $t) {
+        if (Schema::hasTable('pivot_input_apd_template')) {
+            Schema::table('pivot_input_apd_template', function (Blueprint $t) {
                 $t->foreign('id_template')->references('id')->on('input_apd_template')->cascadeOnDelete();
                 $t->foreign('id_jabatan')->references('id_jabatan')->on('jabatan')->cascadeOnDelete()->cascadeOnUpdate();
-                $t->comment('Join table untuk tabel input_apd_template - tabel Jabatan');
+                $t->foreign('id_periode')->references('id')->on('periode_input_apd')->cascadeOnDelete()->cascadeOnUpdate();
+                $t->comment('Untuk Many-to-Many tabel input_apd_template, jabatan, periode_input_apd');
             });
         }
     }
@@ -393,7 +394,7 @@ return new class extends Migration
         if (Schema::hasTable('input_apd_template')) {
             Schema::table('input_apd_template', function (Blueprint $t) {
 
-                $t->dropForeign('input_apd_template_id_periode_foreign');
+                // $t->dropForeign('input_apd_template_id_periode_foreign');
             });
         }
 
@@ -413,10 +414,11 @@ return new class extends Migration
         }
 
         // join table
-        if (Schema::hasTable('jt_input_apd_template_dan_jabatan')) {
-            Schema::table('jt_input_apd_template_dan_jabatan', function (Blueprint $t) {
-                $t->dropForeign('jt_input_apd_template_dan_jabatan_id_template_foreign');
-                $t->dropForeign('jt_input_apd_template_dan_jabatan_id_jabatan_foreign');
+        if (Schema::hasTable('pivot_input_apd_template')) {
+            Schema::table('pivot_input_apd_template', function (Blueprint $t) {
+                $t->dropForeign('pivot_input_apd_template_id_template_foreign');
+                $t->dropForeign('pivot_input_apd_template_id_jabatan_foreign');
+                $t->dropForeign('pivot_input_apd_template_id_periode_foreign');
             });
         }
 
@@ -438,6 +440,6 @@ return new class extends Migration
         Schema::dropIfExists('input_sewaktu_waktu_ongoing');
 
         // join table
-        Schema::dropIfExists('jt_input_apd_template_dan_jabatan');
+        Schema::dropIfExists('pivot_input_apd_template');
     }
 };

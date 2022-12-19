@@ -252,29 +252,33 @@ class TesEapdSeeder extends Seeder
         error_log('populating template');
         InputApdTemplate::create([
             'template' => $template,
-            'id_periode' => '1'
         ]);
 
         error_log('menyambungkan template dengan jabatan');
 
-        DB::table('jt_input_apd_template_dan_jabatan')->insert([
+        DB::table('pivot_input_apd_template')->insert([
             'id_template' => '1',
-            'id_jabatan' => 'L001'
+            'id_jabatan' => 'L001',
+            'id_periode' => '1'
+
         ]);
 
-        DB::table('jt_input_apd_template_dan_jabatan')->insert([
+        DB::table('pivot_input_apd_template')->insert([
             'id_template' => '1',
-            'id_jabatan' => 'L002'
+            'id_jabatan' => 'L002',
+            'id_periode' => '1'
         ]);
 
-        DB::table('jt_input_apd_template_dan_jabatan')->insert([
+        DB::table('pivot_input_apd_template')->insert([
             'id_template' => '1',
-            'id_jabatan' => 'L003'
+            'id_jabatan' => 'L003',
+            'id_periode' => '1'
         ]);
 
-        DB::table('jt_input_apd_template_dan_jabatan')->insert([
+        DB::table('pivot_input_apd_template')->insert([
             'id_template' => '1',
-            'id_jabatan' => 'L004'
+            'id_jabatan' => 'L004',
+            'id_periode' => '1'
         ]);
 
 

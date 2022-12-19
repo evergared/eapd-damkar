@@ -20,7 +20,8 @@ class DashboardController extends Controller
     // @todo buat controller baru untuk menampung logic generate, kemungkinan akan dinamai ApdTemplateController
     public function tampilDashboardPegawai(Request $r)
     {
-
+        $apd = new ApdDataController;
+        $apd->bangunListInputApdDariTemplate('1');
         return view("eapd.dashboard.main-pegawai");
     }
 
