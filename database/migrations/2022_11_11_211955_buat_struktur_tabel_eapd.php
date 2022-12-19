@@ -333,7 +333,7 @@ return new class extends Migration
             Schema::table('jt_input_apd_template_dan_jabatan', function (Blueprint $t) {
                 $t->foreign('id_template')->references('id')->on('input_apd_template')->cascadeOnDelete();
                 $t->foreign('id_jabatan')->references('id_jabatan')->on('jabatan')->cascadeOnDelete()->cascadeOnUpdate();
-                $t->comment('Join table input_apd_template - Jabatan');
+                $t->comment('Join table untuk tabel input_apd_template - tabel Jabatan');
             });
         }
     }
@@ -436,5 +436,8 @@ return new class extends Migration
         Schema::dropIfExists('input_apd_template');
         Schema::dropIfExists('input_sewaktu_waktu');
         Schema::dropIfExists('input_sewaktu_waktu_ongoing');
+
+        // join table
+        Schema::dropIfExists('jt_input_apd_template_dan_jabatan');
     }
 };
