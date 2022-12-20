@@ -17,7 +17,7 @@ class LayoutDaftarInputApdHalApdku extends Component
         $listKosong = true;
 
     protected $listeners = [
-        'LayoutDaftarInputApdHalApdku' => 'bangunDaftarInputApd'
+        'LayoutDaftarInputApdHalApdku' => 'render'
     ];
 
     public function render()

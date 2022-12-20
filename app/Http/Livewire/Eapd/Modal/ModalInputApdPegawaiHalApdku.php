@@ -279,6 +279,11 @@ class ModalInputApdPegawaiHalApdku extends Component
         try {
             if ($inputan_user = InputApd::where('nrk', '=', Auth::user()->nrk)->where('id_jenis', '=', $this->id_jenis)->first()) {
             } else {
+                $this->status_verif_user = verif::input()->value;
+                $this->label_verif_user = verif::input()->label;
+                $this->size_apd_user = "";
+                $this->kondisi_apd_user = "";
+                $this->gambar_apd = [];
                 return;
             }
 
@@ -433,6 +438,8 @@ class ModalInputApdPegawaiHalApdku extends Component
 
             $this->ambilDataUser();
             $this->gambar_apd_user = null;
+
+            $this->emit('LayoutDaftarInputApdHalApdku');
         } catch (Throwable $e) {
             error_log('gagal simpan data input apd untuk user "' . Auth::user()->nrk . '"  ' . $e);
             report('gagal simpan data input apd untuk user "' . Auth::user()->nrk . '"  ' . $e);

@@ -211,7 +211,7 @@ class TesEapdSeeder extends Seeder
         error_log('populating size kosong');
         ApdSize::create([
             'nama_size' => 'kosong',
-            'opsi' => []
+            'opsi' => ['Tidak Memiliki Standar Ukuran']
         ]);
 
         error_log('populating size umum');

@@ -80,7 +80,7 @@ class ApdDataController extends Controller
                     'warna_kerusakan' => $warnaKerusakan
                 ]);
             }
-            // return dd($template);
+            // return dd([$template, $list]);
             return $template;
         } catch (Throwable $e) {
             error_log("Gagal membangun item template input " . $e);
@@ -238,7 +238,7 @@ class ApdDataController extends Controller
             if ($nrk == "")
                 $nrk = Auth::user()->nrk;
 
-            return verif::tryFrom(InputApd::where('nrk', '=', $nrk)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->value('verifikasi_status'));
+            return verif::tryFrom(InputApd::where('nrk', '=', $nrk)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->verifikasi_status);
         } catch (Throwable $e) {
             // error_log("Gagal mengambil status verifikasi untuk id jenis  '" . $id_jenis . "' " . $e);
             // report("Gagal mengambil status verifikasi untuk id jenis  '" . $id_jenis . "' " . $e);
@@ -253,7 +253,7 @@ class ApdDataController extends Controller
             if ($nrk == "")
                 $nrk = Auth::user()->nrk;
 
-            return InputApd::where('nrk', '=', $nrk)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->value('kondisi');
+            return InputApd::where('nrk', '=', $nrk)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->kondisi;
         } catch (Throwable $e) {
             // error_log("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);
             // report("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);

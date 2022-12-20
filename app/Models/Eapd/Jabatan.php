@@ -23,10 +23,6 @@ class Jabatan extends Model
         return $this->hasMany(Pegawai::class, 'id_jabatan', 'id_jabatan');
     }
 
-    public function template()
-    {
-        return $this->belongsToMany(InputApdTemplate::class, 'pivot_input_apd_template');
-    }
 
     // https://laravel.com/docs/9.x/eloquent-relationships#filtering-queries-via-intermediate-table-columns
     // https://laracasts.com/discuss/channels/eloquent/how-to-filterselect-on-intermediate-pivot-table-columns-in-laravel-54
