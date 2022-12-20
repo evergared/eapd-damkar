@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApdDataController;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -21,8 +22,14 @@ class DashboardController extends Controller
     public function tampilDashboardPegawai(Request $r)
     {
         $apd = new ApdDataController;
-        $apd->bangunListInputApdDariTemplate('1');
-        return view("eapd.dashboard.main-pegawai");
+        // $apd->bangunListInputApdDariTemplate('1');
+
+        // return dd(Auth::user()->data->jabatan->level_user);
+
+        if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
+            return view("eapd.dashboard.main-admin-sektor");
+        else
+            return view("eapd.dashboard.main-pegawai");
     }
 
     public function tampilProfil(Request $r)
