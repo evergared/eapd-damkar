@@ -9,6 +9,7 @@ use App\Models\Eapd\ApdList;
 use App\Models\Eapd\InputApdTemplate;
 use App\Models\Eapd\Jabatan;
 use App\Enum\VerifikasiApd as verif;
+use App\Models\Eapd\ApdJenis;
 use App\Models\Eapd\InputApd;
 use Error;
 use Throwable;
@@ -67,9 +68,11 @@ class ApdDataController extends Controller
                 $warnaVerifikasi = $this->ubahVerifikasiApdKeWarnaBootstrap($statusVerifikasi->value);
                 $statusKerusakan = $this->ambilStatusKerusakan($item['id_jenis'], "", $id_periode);
                 $warnaKerusakan = $this->ubahKondisiApdKeWarnaBootstrap($statusKerusakan);
+                $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
 
                 array_push($template, [
                     'id_jenis' => $item['id_jenis'],
+                    'nama_jenis' => $nama_jenis,
                     'gambar_thumbnail' => $this->ambilGambarPertamaUntukThumbnail($item['id_jenis'], $item['opsi_apd']),
                     'status_verifikasi' => $statusVerifikasi->label,
                     'warna_verifikasi' => $warnaVerifikasi,
@@ -77,8 +80,8 @@ class ApdDataController extends Controller
                     'warna_kerusakan' => $warnaKerusakan
                 ]);
             }
-            return dd($template);
-            return $list;
+            // return dd($template);
+            return $template;
         } catch (Throwable $e) {
             error_log("Gagal membangun item template input " . $e);
             report("Gagal membangun item template input " . $e);
