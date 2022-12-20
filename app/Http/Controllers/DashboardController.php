@@ -22,14 +22,14 @@ class DashboardController extends Controller
     public function tampilDashboardPegawai(Request $r)
     {
         $apd = new ApdDataController;
-        // $apd->bangunListInputApdDariTemplate('1');
+        $apd->bangunListInputApdDariTemplate('1');
 
         // return dd(Auth::user()->data->jabatan->level_user);
 
-        if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
-            return view("eapd.dashboard.main-admin-sektor");
-        else
-            return view("eapd.dashboard.main-pegawai");
+        // if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
+        //     return view("eapd.dashboard.main-admin-sektor");
+        // else
+        return view("eapd.dashboard.main-pegawai");
     }
 
     public function tampilProfil(Request $r)

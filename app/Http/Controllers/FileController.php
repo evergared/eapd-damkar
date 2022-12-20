@@ -45,6 +45,11 @@ class FileController extends Controller
     public static $apdItemBasePath = 'img/apd/item';
 
     /**
+     * Path dasar penyimpanan placeholder apd untuk keperluan tes.
+     */
+    public static $apdPlaceholderBasePath = 'img/apd/placeholder';
+
+    /**
      * Path dasar penyimpanan gambar foto profil yang diupload oleh user
      */
     public static $avatarUploadBasePath = 'img/avatar/user';
@@ -58,6 +63,11 @@ class FileController extends Controller
      * File placeholder untuk avatar / foto profil user
      */
     public static $avatarPlaceholder = 'storage/img/avatar/placeholder/avatar.jpg';
+
+    /**
+     * File placeholder untuk tamplate apd, ketika tidak ditemukan file gambar apd
+     */
+    public static $apdPlaceholder = 'storage/img/apd/apd_no-image.png';
 
     /**
      * Mengganti nama file gambar dari foto apd yang diupload user
@@ -95,5 +105,10 @@ class FileController extends Controller
     public function buatPathFileApdUpload($nrk, $id_jenis)
     {
         return self::$apdUploadBasePath . '/' . $nrk . '/' . $id_jenis;
+    }
+
+    public function buatPathFileApdItem($id_jenis, $id_apd)
+    {
+        return self::$apdItemBasePath . '/' . $id_jenis . '/' . $id_apd;
     }
 }

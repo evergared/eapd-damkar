@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Eapd\ApdList;
 use App\Models\Eapd\InputApdTemplate;
 use App\Models\Eapd\Jabatan;
+use App\Enum\VerifikasiApd as verif;
+use App\Models\Eapd\InputApd;
+use Error;
 use Throwable;
 
 class ApdDataController extends Controller
@@ -34,8 +38,8 @@ class ApdDataController extends Controller
 
         $index = array_search($id_jenis, array_column($list, 'id_jenis'));
 
-        error_log('id_jenis ApdDataController : ' . $id_jenis);
-        error_log('index list dari id_jenis ApdDataController : ' . $index);
+        // error_log('id_jenis ApdDataController : ' . $id_jenis);
+        // error_log('index list dari id_jenis ApdDataController : ' . $index);
 
         return $list[$index];
     }
@@ -55,12 +59,30 @@ class ApdDataController extends Controller
 
             $list = Jabatan::where('id_jabatan', '=', $id_jabatan)->first()->templatePadaPeriode($id_periode)->value('template');
 
-            // return dd([$id_jabatan, $list]);
+            $template = [];
+
+            foreach ($list as $item) {
+
+                $statusVerifikasi = $this->ambilStatusVerifikasi($item['id_jenis'], "", $id_periode);
+                $warnaVerifikasi = $this->ubahVerifikasiApdKeWarnaBootstrap($statusVerifikasi->value);
+                $statusKerusakan = $this->ambilStatusKerusakan($item['id_jenis'], "", $id_periode);
+                $warnaKerusakan = $this->ubahKondisiApdKeWarnaBootstrap($statusKerusakan);
+
+                array_push($template, [
+                    'id_jenis' => $item['id_jenis'],
+                    'gambar_thumbnail' => $this->ambilGambarPertamaUntukThumbnail($item['id_jenis'], $item['opsi_apd']),
+                    'status_verifikasi' => $statusVerifikasi->label,
+                    'warna_verifikasi' => $warnaVerifikasi,
+                    'status_kerusakan' => $statusKerusakan,
+                    'warna_kerusakan' => $warnaKerusakan
+                ]);
+            }
+            return dd($template);
             return $list;
         } catch (Throwable $e) {
             error_log("Gagal membangun item template input " . $e);
             report("Gagal membangun item template input " . $e);
-            // return [];
+            return 'Pengambilan Gagal';
         }
     }
 
@@ -82,7 +104,6 @@ class ApdDataController extends Controller
                 $kondisi_apd = $model->kondisi->opsi;
                 $gambar_apd = $model->image;
 
-                error_log('id apd : ' . $id_apd . ' nama apd : ' . $nama_apd);
 
 
                 // gambar apd harus berupa array untuk mempermudah pengecekan
@@ -161,5 +182,132 @@ class ApdDataController extends Controller
     public function ambilIdPeriodeInput($tanggal)
     {
         // where tanggal awal < $tanggal < tanggal akhir -> value('id')
+    }
+
+    /**
+     * @param string $stringGambar
+     */
+    public function ambilGambarPertama($stringGambar)
+    {
+        try {
+
+            if (str_contains($stringGambar, "||")) {
+                $gbr = explode("||", $stringGambar);
+                return $gbr[0];
+            }
+
+            return $stringGambar;
+        } catch (Throwable $e) {
+            return "apd_no-image.png";
+        }
+    }
+
+    /**
+     * @param array $opsiApd
+     */
+    public function ambilGambarPertamaUntukThumbnail($id_jenis, $opsiApd)
+    {
+        try {
+            $fc = new FileController;
+
+            $targetApd = $opsiApd[0];
+
+            $gambarApd = ApdList::where('id_apd', '=', $targetApd)->first()->image;
+
+            $gbr = $this->ambilGambarPertama($gambarApd);
+
+            $path = $fc::$apdPlaceholderBasePath; //<-- sementara untuk tes, gambar di tempatkan di placeholder
+            // $path = $fc->buatPathFileApdItem($id_jenis,$targetApd);
+
+            if (strlen($gbr) < 1)
+                $gbr = "apd_no-image.png";
+
+            return 'storage/' . $path . '/' . $gbr;
+        } catch (Throwable $e) {
+            return $fc::$apdPlaceholder;
+        }
+    }
+
+    public function ambilStatusVerifikasi($id_jenis, $nrk = "", $periode = 1)
+    {
+        try {
+
+            if ($nrk == "")
+                $nrk = Auth::user()->nrk;
+
+            return verif::tryFrom(InputApd::where('nrk', '=', $nrk)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->value('verifikasi_status'));
+        } catch (Throwable $e) {
+            // error_log("Gagal mengambil status verifikasi untuk id jenis  '" . $id_jenis . "' " . $e);
+            // report("Gagal mengambil status verifikasi untuk id jenis  '" . $id_jenis . "' " . $e);
+            return verif::input();
+        }
+    }
+
+    public function ambilStatusKerusakan($id_jenis, $nrk = "", $periode = 1)
+    {
+        try {
+
+            if ($nrk == "")
+                $nrk = Auth::user()->nrk;
+
+            return InputApd::where('nrk', '=', $nrk)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->value('kondisi');
+        } catch (Throwable $e) {
+            // error_log("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);
+            // report("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);
+            return 'Proses';
+        }
+    }
+
+    public function ubahVerifikasiApdKeWarnaBootstrap(int $item): string
+    {
+        $warna = '';
+
+        switch ($item) {
+            case 1:
+                $warna = 'secondary';
+                break;
+            case 2:
+                $warna = 'info';
+                break;
+            case 3:
+                $warna = 'success';
+                break;
+            case 4:
+                $warna = 'danger';
+                break;
+            case 5:
+                $warna = 'warning';
+                break;
+            default:
+                $warna = 'secondary';
+                break;
+        }
+
+        return $warna;
+    }
+
+    public function ubahKondisiApdKeWarnaBootstrap(string $item, string $tipe = 'umum'): string
+    {
+        $warna = '';
+
+        switch ($item) {
+            case 'baik':
+                $warna = 'success';
+                break;
+            case 'rusak ringan':
+                $warna = 'warning';
+                break;
+            case 'rusak sedang':
+                $warna = 'warning';
+                break;
+            case 'rusak berat':
+                $warna = 'danger';
+                break;
+            default:
+                $warna = 'secondary';
+                break;
+        }
+
+        return $warna;
     }
 }

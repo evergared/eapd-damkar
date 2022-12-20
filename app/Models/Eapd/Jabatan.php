@@ -29,6 +29,7 @@ class Jabatan extends Model
     }
 
     // https://laravel.com/docs/9.x/eloquent-relationships#filtering-queries-via-intermediate-table-columns
+    // https://laracasts.com/discuss/channels/eloquent/how-to-filterselect-on-intermediate-pivot-table-columns-in-laravel-54
     public function templatePadaPeriode($id_periode)
     {
         return $this->belongsToMany(InputApdTemplate::class, 'pivot_input_apd_template', 'id_jabatan', 'id_template', 'id_jabatan', 'id')->wherePivot('id_periode', '=', $id_periode);

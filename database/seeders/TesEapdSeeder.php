@@ -56,14 +56,14 @@ class TesEapdSeeder extends Seeder
             ['id_apd' => 'H-bro-0001', 'nama_apd' => 'Alpha Head', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' => '2', 'id_kondisi' => '2', 'image' => 'firehelmet_4.jpg||firehelmet_5.jpg'],
             ['id_apd' => 'H-fir-0000', 'nama_apd' => 'Helmet Fire', 'merk' => 'Fire Protect', 'id_jenis' => 'H001', 'id_size' => '2', 'id_kondisi' => '2', 'image' => 'firehelmet_6.jpg'],
 
-            ['id_apd' => 'H-fir-0001', 'nama_apd' => 'Red Helmet', 'merk' => 'Fire Protect', 'id_jenis' => 'H002', 'id_size' => '2', 'id_kondisi' => '2'],
+            ['id_apd' => 'H-fir-0001', 'nama_apd' => 'Red Helmet', 'merk' => 'Fire Protect', 'id_jenis' => 'H002', 'id_size' => '2', 'id_kondisi' => '2', 'image' => 'rescuehelmet_1.jpg'],
 
-            ['id_apd' => 'G-glo-0000', 'nama_apd' => 'Red Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' => '2', 'id_kondisi' => '1'],
-            ['id_apd' => 'G-glo-0001', 'nama_apd' => 'Yellow Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' => '2', 'id_kondisi' => '1'],
-            ['id_apd' => 'G-alt-0000', 'nama_apd' => 'Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G001', 'id_size' => '2', 'id_kondisi' => '1'],
+            ['id_apd' => 'G-glo-0000', 'nama_apd' => 'Red Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' => '2', 'id_kondisi' => '1', 'image' => 'firegloves_1.jpg'],
+            ['id_apd' => 'G-glo-0001', 'nama_apd' => 'Yellow Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' => '2', 'id_kondisi' => '1', 'image' => 'firegloves_2.jpg'],
+            ['id_apd' => 'G-alt-0000', 'nama_apd' => 'Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G001', 'id_size' => '2', 'id_kondisi' => '1', 'image' => 'firegloves_1.jpg||firegloves_2.jpg'],
 
-            ['id_apd' => 'G-alt-0001', 'nama_apd' => 'Rescue Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' => '2', 'id_kondisi' => '1'],
-            ['id_apd' => 'G-alt-0002', 'nama_apd' => 'Slightly More Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' => '2', 'id_kondisi' => '1'],
+            ['id_apd' => 'G-alt-0001', 'nama_apd' => 'Rescue Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' => '2', 'id_kondisi' => '1', 'image' => 'rescuegloves_1.jpg'],
+            ['id_apd' => 'G-alt-0002', 'nama_apd' => 'Slightly More Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' => '2', 'id_kondisi' => '1', 'image' => 'rescuegloves_2.jpg'],
 
 
             ['id_apd' => 'T-fir-0000', 'nama_apd' => 'Fire Jacket', 'merk' => 'Fire Protect', 'id_jenis' => 'T001', 'id_size' => '2', 'id_kondisi' => '1'],
