@@ -440,6 +440,7 @@ class ModalInputApdPegawaiHalApdku extends Component
             $this->gambar_apd_user = null;
 
             $this->emit('LayoutDaftarInputApdHalApdku');
+            $this->emit('refreshStatbox');
             $this->dispatchBrowserEvent('pilihFilterSemua');
         } catch (Throwable $e) {
             error_log('gagal simpan data input apd untuk user "' . Auth::user()->nrk . '"  ' . $e);

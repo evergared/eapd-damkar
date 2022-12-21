@@ -31,11 +31,16 @@ class LayoutStatbox extends Component
 
     public function render()
     {
+        $this->kalkulasiSemua();
+        return view('eapd.livewire.layout.layout-statbox');
+    }
+
+    public function kalkulasiSemua()
+    {
         $this->kalkulasiTertolak();
         $this->kalkulasiRusak();
         $this->kalkulasiCapaian();
         $this->kalkulasiTervalidasi();
-        return view('eapd.livewire.layout.layout-statbox');
     }
 
     public function kalkulasiTertolak()
@@ -140,7 +145,7 @@ class LayoutStatbox extends Component
                         ]);
                     }
                 }
-                $this->persentaseCapaian = (($terisi / count($butuhInput)) * 100);
+                $this->persentaseCapaian = round(($terisi / count($butuhInput)) * 100, 2);
             }
         } catch (Throwable $e) {
             $this->persentaseCapaian = '-';
@@ -178,7 +183,7 @@ class LayoutStatbox extends Component
                         }
                     }
                 }
-                $this->persentaseTervalidasi = (($tervalidasi / count($butuhInput)) * 100);
+                $this->persentaseTervalidasi = round(($tervalidasi / count($butuhInput)) * 100, 2);
             }
         } catch (Throwable $e) {
             $this->persentaseTervalidasi = '-';
