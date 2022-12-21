@@ -82,43 +82,51 @@
                         <div class="card bg-danger">
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0" style="height: 300px;">
-                                <table class="table table-head-fixed text-nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th class="bg-danger">Jenis APD</th>
-                                            <th class="bg-danger">Keterangan</th>
-                                            <th class="bg-danger">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Fire Googgles</td>
-                                            <td>Rusak</td>
-                                            <td>Tertolak</td>
 
-                                        </tr>
-                                        <tr>
-                                            <td>Kampak</td>
-                                            <td>Rusak</td>
-                                            <td>Tertolak</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                {{-- Buat tabel informasi apd tertolak start --}}
+
+                                @if (count($infoTertolak)<1) <div class="d-flex justify-content-center">
+                                    <strong>Belum ada apd yang ditolak.</strong>
                             </div>
-                            <!-- /.card-body -->
+                            @else
+                            <table class="table table-head-fixed text-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-danger">Jenis APD</th>
+                                        <th class="bg-danger">Keterangan</th>
+                                        <th class="bg-danger">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($infoTertolak as $item)
+                                    <tr>
+                                        <td>{{$item['jenis_apd']}}</td>
+                                        <td>{{$item['keterangan']}}</td>
+                                        <td>{{$item['status']}}</td>
+
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            @endif
+
+
+                            {{-- Buat tabel inforamsi apd tertolak end --}}
                         </div>
-                        <!-- /.card -->
+                        <!-- /.card-body -->
                     </div>
+                    <!-- /.card -->
                 </div>
             </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-
-            </div>
         </div>
-        <!-- /.modal-content -->
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+
+        </div>
     </div>
-    <!-- /.modal-dialog -->
+    <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
 {{-- modal apd rusak--}}
@@ -137,47 +145,47 @@
                         <div class="card bg-warning">
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0" style="height: 300px;">
-                                <table class="table table-head-fixed text-nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th class="bg-warning">Jenis APD</th>
-                                            <th class="bg-warning">Keterangan</th>
-                                            <th class="bg-warning">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Fire Helemet</td>
-                                            <td>Rusak</td>
-                                            <td>Menunggu Verifikasi</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Fire Boots</td>
-                                            <td>Rusak</td>
-                                            <td>Tervalidasi</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Fire Gloves</td>
-                                            <td>Rusak</td>
-                                            <td>Tervalidasi</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+
+                                @if (count($infoRusak)<1) <div class="d-flex justify-content-center">
+                                    <strong>Belum ada apd yang diinput sebagai rusak.</strong>
                             </div>
-                            <!-- /.card-body -->
+                            @else
+                            <table class="table table-head-fixed text-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-warning">Jenis APD</th>
+                                        <th class="bg-warning">Keterangan</th>
+                                        <th class="bg-warning">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($infoRusak as $item)
+                                    <tr>
+                                        <td>{{$item['jenis_apd']}}</td>
+                                        <td>{{$item['keterangan']}}</td>
+                                        <td>{{$item['status']}}</td>
+
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            @endif
+
                         </div>
-                        <!-- /.card -->
+                        <!-- /.card-body -->
                     </div>
+                    <!-- /.card -->
                 </div>
             </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
-
-            </div>
         </div>
-        <!-- /.modal-content -->
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+
+        </div>
     </div>
-    <!-- /.modal-dialog -->
+    <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
 {{-- modal capaian--}}
@@ -196,47 +204,47 @@
                         <div class="card bg-success">
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0" style="height: 300px;">
-                                <table class="table table-head-fixed text-nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th class="bg-success">Jenis APD</th>
-                                            <th class="bg-success">Keterangan</th>
-                                            <th class="bg-success">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Fire Helemet</td>
-                                            <td>Rusak</td>
-                                            <td>Menunggu Verifikasi</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Fire Boots</td>
-                                            <td>Rusak</td>
-                                            <td>Tervalidasi</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Fire Gloves</td>
-                                            <td>Rusak</td>
-                                            <td>Menunggu Verifikasi</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+
+
+                                @if (count($infoCapaian)<1) <div class="d-flex justify-content-center">
+                                    <strong>Belum ada apd yang diinput.</strong>
                             </div>
-                            <!-- /.card-body -->
+                            @else
+                            <table class="table table-head-fixed text-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-success">Jenis APD</th>
+                                        <th class="bg-success">Keterangan</th>
+                                        <th class="bg-success">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($infoCapaian as $item)
+                                    <tr>
+                                        <td>{{$item['jenis_apd']}}</td>
+                                        <td>{{$item['keterangan']}}</td>
+                                        <td>{{$item['status']}}</td>
+
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            @endif
                         </div>
-                        <!-- /.card -->
+                        <!-- /.card-body -->
                     </div>
+                    <!-- /.card -->
                 </div>
             </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-
-            </div>
         </div>
-        <!-- /.modal-content -->
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+
+        </div>
     </div>
-    <!-- /.modal-dialog -->
+    <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
 {{-- modal validasi--}}
@@ -255,46 +263,47 @@
                         <div class="card bg-info">
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0" style="height: 300px;">
-                                <table class="table table-head-fixed text-nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th class="bg-info">Jenis APD</th>
-                                            <th class="bg-info">Keterangan</th>
-                                            <th class="bg-info">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Fire Helemet</td>
-                                            <td>Rusak</td>
-                                            <td>Menunggu Verifikasi</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Fire Boots</td>
-                                            <td>Rusak</td>
-                                            <td>Tervalidasi</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Fire Gloves</td>
-                                            <td>Rusak</td>
-                                            <td>Menunggu Verifikasi</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+
+                                @if (count($infoTervalidasi)<1) <div class="d-flex justify-content-center">
+                                    <strong>Belum ada apd yang di validasi oleh admin.</strong>
                             </div>
-                            <!-- /.card-body -->
+                            @else
+
+                            <table class="table table-head-fixed text-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-info">Jenis APD</th>
+                                        <th class="bg-info">Keterangan</th>
+                                        <th class="bg-info">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($infoTervalidasi as $item)
+                                    <tr>
+                                        <td>{{$item['jenis_apd']}}</td>
+                                        <td>{{$item['keterangan']}}</td>
+                                        <td>{{$item['status']}}</td>
+
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            @endif
+
                         </div>
-                        <!-- /.card -->
+                        <!-- /.card-body -->
                     </div>
+                    <!-- /.card -->
                 </div>
             </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-
-            </div>
         </div>
-        <!-- /.modal-content -->
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+
+        </div>
     </div>
-    <!-- /.modal-dialog -->
+    <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
