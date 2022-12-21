@@ -50,6 +50,23 @@ class ApdDataController extends Controller
         return ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000', 'H-fir-0000', 'H-bro-0001']];
     }
 
+    public function muatListInputApdDariTemplate($id_periode = 1, $id_jabatan = "")
+    {
+        try {
+
+            if ($id_jabatan == "") {
+                $id_jabatan = Auth::user()->data->id_jabatan;
+            }
+
+            $list = Jabatan::where('id_jabatan', '=', $id_jabatan)->first()->templatePadaPeriode($id_periode)->value('template');
+
+            // return dd($list);
+            return $list;
+        } catch (Throwable $e) {
+            error_log('gagal memuat list ' . $e);
+        }
+    }
+
     public function bangunListInputApdDariTemplate($id_periode = 1, $id_jabatan = "")
     {
         try {
@@ -58,6 +75,10 @@ class ApdDataController extends Controller
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
 
+            /**
+             * @todo ganti pemanggilan jangan menggunakan value('template')
+             *  penggunaan ini hanya mengambil query pertama dari db, bukan query yang dituju
+             */
             $list = Jabatan::where('id_jabatan', '=', $id_jabatan)->first()->templatePadaPeriode($id_periode)->value('template');
 
             $template = [];

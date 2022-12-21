@@ -81,6 +81,11 @@
             modal('modal-input-apd-pegawai-hal-apdku',event.detail.id_jenis,'modalInputApdPegawai')
         })
 
+        window.addEventListener('pilihFilterSemua', ()=> {
+                    console.log('pilih filter semua nya')
+                    $(this).filterSelection('all')
+        })
+
         $(function () {
       $(document).on('click', '[data-toggle="lightbox"]', function(event) {
         event.preventDefault();

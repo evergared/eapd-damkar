@@ -251,8 +251,8 @@ class ModalInputApdPegawaiHalApdku extends Component
                 array_push($this->list_apd, ['id_apd' => $opsi, 'nama_apd' => ApdList::where('id_apd', '=', $opsi)->value('nama_apd')]);
             }
         } catch (Throwable $e) {
-            error_log('Gagal melakukan hidrasi list apd untuk id jenis "' . $this->id_jenis .  $e);
-            report('Gagal melakukan hidrasi list apd untuk id jenis "' . $this->id_jenis .  $e);
+            // error_log('Gagal melakukan hidrasi list apd untuk id jenis "' . $this->id_jenis .  $e);
+            // report('Gagal melakukan hidrasi list apd untuk id jenis "' . $this->id_jenis .  $e);
             session()->flash('fail', 'Kesalahan dalam pengambilan data model apd.');
         }
     }
@@ -440,6 +440,7 @@ class ModalInputApdPegawaiHalApdku extends Component
             $this->gambar_apd_user = null;
 
             $this->emit('LayoutDaftarInputApdHalApdku');
+            $this->dispatchBrowserEvent('pilihFilterSemua');
         } catch (Throwable $e) {
             error_log('gagal simpan data input apd untuk user "' . Auth::user()->nrk . '"  ' . $e);
             report('gagal simpan data input apd untuk user "' . Auth::user()->nrk . '"  ' . $e);
