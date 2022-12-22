@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Eapd\Modal;
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\FileController;
 use App\Enum\VerifikasiApd as verif;
+use App\Http\Controllers\StatusDisplayController;
 use App\Models\Eapd\ApdJenis;
 use App\Models\Eapd\ApdList;
 use Illuminate\Support\Facades\Auth;
@@ -165,32 +166,9 @@ class ModalInputApdPegawaiHalApdku extends Component
 
     public function ubahKeWarnaBootstrap(int $item): string
     {
-        $warna = '';
 
-        error_log('value status verifikasi : ' . $item);
-
-        switch ($item) {
-            case 1:
-                $warna = 'secondary';
-                break;
-            case 2:
-                $warna = 'info';
-                break;
-            case 3:
-                $warna = 'success';
-                break;
-            case 4:
-                $warna = 'danger';
-                break;
-            case 5:
-                $warna = 'warning';
-                break;
-            default:
-                $warna = 'secondary';
-                break;
-        }
-
-        return $warna;
+        $sdc = new StatusDisplayController;
+        return $sdc->ubahVerifikasiApdKeWarnaBootstrap($item);
     }
 
     public function refreshGambarTemplate()
