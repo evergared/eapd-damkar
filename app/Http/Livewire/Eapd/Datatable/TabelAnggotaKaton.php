@@ -21,6 +21,12 @@ class TabelAnggotaKaton extends DataTableComponent
         // $this->setDebugEnabled();
     }
 
+    // public function builder(): Builder
+    // {
+    //     return Pegawai::query()
+    //     ->join()
+    // }
+
     public function columns(): array
     {
         return [
@@ -43,7 +49,10 @@ class TabelAnggotaKaton extends DataTableComponent
             Column::make("Progress")
                 ->label(function () {
                     //@todo #3 buat metode pemanggilan progress dari database dan compare dengan jumlah input
-                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-katon", ['max' => 300, 'min' => 0, 'value' => 200]);
+                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-katon", ['max' => 300, 'min' => 0, 'value' => 300]);
+                })
+                ->secondaryHeader(function () {
+                    return 'Klik batang dibawah untuk melihat progress anggota.';
                 })
         ];
     }

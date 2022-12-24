@@ -79,16 +79,17 @@ class ApdDataController extends Controller
              * @todo ganti pemanggilan jangan menggunakan value('template')
              *  penggunaan ini hanya mengambil query pertama dari db, bukan query yang dituju
              */
-            $list = Jabatan::where('id_jabatan', '=', $id_jabatan)->first()->templatePadaPeriode($id_periode)->value('template');
+            $list = Jabatan::where('id_jabatan', '=', $id_jabatan)->first()->templatePadaPeriode($id_periode)->first()->template;
+            $sdc = new StatusDisplayController;
 
             $template = [];
 
             foreach ($list as $item) {
 
                 $statusVerifikasi = $this->ambilStatusVerifikasi($item['id_jenis'], "", $id_periode);
-                $warnaVerifikasi = $this->ubahVerifikasiApdKeWarnaBootstrap($statusVerifikasi->value);
+                $warnaVerifikasi = $sdc->ubahVerifikasiApdKeWarnaBootstrap($statusVerifikasi->value);
                 $statusKerusakan = $this->ambilStatusKerusakan($item['id_jenis'], "", $id_periode);
-                $warnaKerusakan = $this->ubahKondisiApdKeWarnaBootstrap($statusKerusakan);
+                $warnaKerusakan = $sdc->ubahKondisiApdKeWarnaBootstrap($statusKerusakan);
                 $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
 
                 array_push($template, [
@@ -280,58 +281,5 @@ class ApdDataController extends Controller
             // report("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);
             return 'Proses';
         }
-    }
-
-    public function ubahVerifikasiApdKeWarnaBootstrap(int $item): string
-    {
-        $warna = '';
-
-        switch ($item) {
-            case 1:
-                $warna = 'secondary';
-                break;
-            case 2:
-                $warna = 'info';
-                break;
-            case 3:
-                $warna = 'success';
-                break;
-            case 4:
-                $warna = 'danger';
-                break;
-            case 5:
-                $warna = 'warning';
-                break;
-            default:
-                $warna = 'secondary';
-                break;
-        }
-
-        return $warna;
-    }
-
-    public function ubahKondisiApdKeWarnaBootstrap(string $item, string $tipe = 'umum'): string
-    {
-        $warna = '';
-
-        switch ($item) {
-            case 'baik':
-                $warna = 'success';
-                break;
-            case 'rusak ringan':
-                $warna = 'warning';
-                break;
-            case 'rusak sedang':
-                $warna = 'warning';
-                break;
-            case 'rusak berat':
-                $warna = 'danger';
-                break;
-            default:
-                $warna = 'secondary';
-                break;
-        }
-
-        return $warna;
     }
 }
