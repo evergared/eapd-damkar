@@ -1,5 +1,6 @@
 <div>
-    <a onclick="modal('modal-kolom-progress-tabel-anggota-katon','')" style="cursor: pointer;">
+    <a onclick="modal('modal-kolom-progress-tabel-anggota-katon',['{{$nrk}}','{{$periode}}'],'panggilModalKolomProgress')"
+        style="cursor: pointer;">
         <div class="my-2">
             <div class="row">
                 <div class="col">

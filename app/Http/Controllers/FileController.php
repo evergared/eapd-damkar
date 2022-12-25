@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Eapd\PeriodeInputApd;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Throwable;
 
 /**
@@ -102,9 +104,11 @@ class FileController extends Controller
         }
     }
 
-    public function buatPathFileApdUpload($nrk, $id_jenis)
+    public function buatPathFileApdUpload($nrk, $id_jenis, $id_periode)
     {
-        return self::$apdUploadBasePath . '/' . $nrk . '/' . $id_jenis;
+        $periode = Str::slug(PeriodeInputApd::where('id', '=', $id_periode)->first()->nama_periode);
+
+        return self::$apdUploadBasePath . '/' . $nrk . '/' . $periode . '/' . $id_jenis;
     }
 
     public function buatPathFileApdItem($id_jenis, $id_apd)

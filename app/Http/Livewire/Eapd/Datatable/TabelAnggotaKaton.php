@@ -51,17 +51,16 @@ class TabelAnggotaKaton extends DataTableComponent
                 ->hideIf(true),
             Column::make("Progress")
                 ->label(function ($row) {
-                    //@todo #3 buat metode pemanggilan progress dari database dan compare dengan jumlah input
                     $adc = new ApdDataController;
                     $nrk = $row->nrk;
                     $id_jabatan = Pegawai::where('nrk', '=', $nrk)->first()->id_jabatan;
-                    $tw = 1;
+                    $tw = 1; //<-- ini untuk contoh dan test
                     // $tw = $adc->ambilIdPeriodeInput();
                     $maks = count($adc->muatListInputApdDariTemplate($tw, $id_jabatan));
-                    $terinput = count($adc->muatStatusVerifikasiDariInputanPegawai($tw, $nrk));
-                    $tervalidasi = count($adc->muatStatusVerifikasiDariInputanPegawai($tw, $nrk, verif::terverifikasi()->value));
+                    $terinput = count($adc->muatInputanPegawai($tw, $nrk));
+                    $tervalidasi = count($adc->muatInputanPegawai($tw, $nrk, verif::terverifikasi()->value));
 
-                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-katon", ['max' => $maks, 'min' => 0, 'valueInput' => $terinput, 'valueValid' => $tervalidasi]);
+                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-katon", ['nrk' => $nrk, 'periode' => $tw, 'max' => $maks, 'min' => 0, 'valueInput' => $terinput, 'valueValid' => $tervalidasi]);
                 })
                 ->secondaryHeader(function () {
                     return 'Klik batang dibawah untuk melihat progress anggota.';

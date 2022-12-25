@@ -15,11 +15,22 @@ use App\Models\Eapd\Pegawai;
 use Error;
 use Throwable;
 
+/**
+ * Kontroller yang membantu mengatur masukan data input user ke db dan keluaran data input untuk ditampilkan di berbagai komponen aplikasi web
+ */
 class ApdDataController extends Controller
 {
 
+    /**
+     * @var int Berapa banyak gambar yang dapat diupload oleh user dan admin
+     */
     public static $jumlahBatasUploadGambar = 3;
 
+    /**
+     * Digunakan untuk contoh, muat mock list untuk digunakan sebagai template inputan
+     * @param string $id_jenis jenis apd yang akan digunakan
+     * @return array opsi apd yang dicari dari template contoh
+     */
     public function muatContohDaftarInputApd(string $id_jenis): array
     {
         // digunakan untuk contoh
@@ -46,11 +57,19 @@ class ApdDataController extends Controller
         return $list[$index];
     }
 
+    /**
+     * Buat satu item dari untuk list contoh template
+     */
     public function muatSatuContohDaftarInputApd(): array
     {
         return ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000', 'H-fir-0000', 'H-bro-0001']];
     }
 
+    /**
+     * Ambil template untuk input apd dari database berdasarkan periode dan jabatan
+     * @param int $id_periode periode untuk template yang dicari, dalam bentuk id periode
+     * @param string $id_jabatan jabatan untuk template yang dicari, dalam bentuk id jabatan
+     */
     public function muatListInputApdDariTemplate($id_periode = 1, $id_jabatan = "")
     {
         try {
@@ -70,7 +89,14 @@ class ApdDataController extends Controller
         }
     }
 
-    public function muatStatusVerifikasiDariInputanPegawai($id_periode = 1, $nrk = "", $target_verifikasi = 0): array
+    /**
+     * Muat apa saja yang telah diinput oleh pegawai pada periode yang dicari
+     * @param int $id_periode periode yang dicari, dalam bentuk id periode
+     * @param string $nrk pegawai yang dicari, dalam bentuk nrk pegawai
+     * @param int $target_verifikasi jika ada status verifikasi yang dicari, masukan value dari enum /App/Enum/VerifikasiApd.php atau integer 1~5
+     * @return array list apa saja yang telah diinput oleh pegawai, di dapat dari tabel input_apd
+     */
+    public function muatInputanPegawai($id_periode = 1, $nrk = "", $target_verifikasi = 0): array
     {
         try {
 
@@ -90,37 +116,73 @@ class ApdDataController extends Controller
             // ambil template dari database
             $template = $this->muatListInputApdDariTemplate($id_periode, $id_jabatan);
 
+
             // pengulangan untuk mengisi $list berdasarkan template yang telah diambil
             foreach ($template as $item) {
                 // apa tipe apdnya
                 $id_jenis = $item['id_jenis'];
 
                 // cek apakah user telah menginput apd tersebut
-                if ($input = InputApd::where('nrk', '=', $nrk)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first())
+                if ($input = InputApd::where('nrk', '=', $nrk)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first()) {
                     // user telah menginput
+
+                    // panggil untuk mambantu mengubah warna status
+                    $sdc = new StatusDisplayController;
 
                     // apakah ada status verifikasi yang dicari?
                     if ($target_verifikasi != 0) {
                         // ada status verifikasi tertentu yang dicari
 
                         // apakah inputan user memiliki verifikasi yang sesuai
-                        if (verif::tryFrom($input->verifikasi_status)->value == $target_verifikasi)
+                        if (verif::tryFrom($input->verifikasi_status)->value == $target_verifikasi) {
                             // inputan user memiliki verifikasi yang dicari
+
+                            $verifikasi_status = "";
+                            $verifikasi_label = "";
+
+                            $this->ekstrakStatusVerifikasi(verif::tryFrom($input->verifikasi_status), $verifikasi_label, $verifikasi_status);
 
                             // masukan ke $list
                             array_push($list, [
                                 'id_jenis' => $id_jenis,
-                                'status' => verif::tryFrom($input->verifikasi_status)->label
+                                'id_apd' => $input->id_apd,
+                                'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $nrk, $id_jenis, $id_periode),
+                                'status_verifikasi' => $verifikasi_label,
+                                'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
+                                'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $nrk, $id_periode),
+                                'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $nrk, $id_periode)),
+                                'komentar_pengupload' => $input->komentar_pengupload,
+                                'nrk_verifikator' => $input->verifikasi_oleh,
+                                'komentar_verifikator' => $input->komentar_verifikator
+
+
                             ]);
+                        }
                     } else {
                         // tidak ada status verifikasi tertentu yang dicari
+
+                        $verifikasi_status = "";
+                        $verifikasi_label = "";
+
+                        $this->ekstrakStatusVerifikasi(verif::tryFrom($input->verifikasi_status), $verifikasi_label, $verifikasi_status);
 
                         // masukan ke $list
                         array_push($list, [
                             'id_jenis' => $id_jenis,
-                            'status' => verif::tryFrom($input->verifikasi_status)->label
+                            'id_apd' => $input->id_apd,
+                            'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $nrk, $id_jenis, $id_periode),
+                            'status_verifikasi' => $verifikasi_label,
+                            'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
+                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $nrk, $id_periode),
+                            'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $nrk, $id_periode)),
+                            'komentar_pengupload' => $input->komentar_pengupload,
+                            'nrk_verifikator' => $input->verifikasi_oleh,
+                            'komentar_verifikator' => $input->komentar_verifikator
+
+
                         ]);
                     }
+                }
             }
 
             // berikan daftar yang telah diisi dari pengulangan
@@ -131,6 +193,12 @@ class ApdDataController extends Controller
         }
     }
 
+    /**
+     * Bangun list yang akan digunakan untuk thumbnail di halaman apdku.
+     * @param int $id_periode periode yang dicari, dalam bentuk id periode
+     * @param string $id_jabatan jabatan yang dicari, dalam bentuk id jabatan
+     * @return array|string apa saja yang akan ditampilkan untuk thumbnail
+     */
     public function bangunListInputApdDariTemplate($id_periode = 1, $id_jabatan = "")
     {
         try {
@@ -177,6 +245,11 @@ class ApdDataController extends Controller
         }
     }
 
+    /**
+     * Bangun data yang akan digunakan pada modal untuk user menginput data apd mereka.
+     * @param array $opsi_apd pilihan apd yang tersedia, didapat dari template dalam bentuk array opsi_apd
+     * @return array data yang akan digunakan pada input list option pada modal input apd
+     */
     public function bangunItemModalInputApd(array $opsi_apd): array
     {
         try {
@@ -274,6 +347,35 @@ class ApdDataController extends Controller
         return $array;
     }
 
+    public function siapkanGambarInputanBesertaPathnya(string $stringGambar, $nrk, $id_jenis, $id_periode): array|string
+    {
+        try {
+            // jika gambar banyak
+            if (str_contains($stringGambar, "||")) {
+                // jadikan string gambar tersebut ke bentuk array
+                $gbr = explode("||", $stringGambar);
+            } else
+                $gbr = $stringGambar;
+
+            $fc = new FileController;
+
+            if (is_array($gbr)) {
+                $gambar = [];
+                foreach ($gbr as $g) {
+                    array_push($gambar, 'storage/' . $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $g);
+                }
+                return $gambar;
+            } else {
+                if ($gbr == "")
+                    return "";
+                else
+                    return 'storage/' . $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $gbr;
+            }
+        } catch (Throwable $e) {
+            error_log('Gagal menyiapkan gambar inputan user ' . $e);
+            return "";
+        }
+    }
 
     /**
      * @todo Fungsi untuk ambil id periode
@@ -285,7 +387,9 @@ class ApdDataController extends Controller
     }
 
     /**
-     * @param string $stringGambar
+     * Helper untuk membantu mengambil gambar pertama dari value string gambar yang disimpan di db
+     * @param string $stringGambar value kolom image atau gambar langsung dari db
+     * @return string Nama gambar yang akan digunakan
      */
     public function ambilGambarPertama($stringGambar)
     {
@@ -329,6 +433,9 @@ class ApdDataController extends Controller
             $gbr = $this->ambilGambarPertama($gambarApd);
 
             // ubah path agar dapat ditampilkan di .blade.php
+            /**
+             * @todo ganti agar tidak menggunakan path placeholder
+             */
             $path = $fc::$apdPlaceholderBasePath; //<-- sementara untuk tes, gambar di tempatkan di placeholder
             // $path = $fc->buatPathFileApdItem($id_jenis,$targetApd);
 
@@ -372,6 +479,27 @@ class ApdDataController extends Controller
             // error_log("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);
             // report("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);
             return 'Proses';
+        }
+    }
+
+    /**
+     * Ambil status verifikasi dan lempar nilai beserta label mereka ke value lain
+     * @param int|verif $status integer atau enum yang digunakan untuk mengambil status
+     * @param string $label label yang akan dilempar ke value baru
+     * @param int $value nilai yang akan dilempar ke value baru
+     */
+    public function ekstrakStatusVerifikasi(int|verif $status, string &$label, int|string &$value)
+    {
+        try {
+
+            $tes = verif::tryFrom($status);
+
+            $label = $tes->label;
+            $value = $tes->value;
+        } catch (Throwable $e) {
+            error_log('gagal ambil status verifikasi ' . $e);
+            $value = 1;
+            $label = verif::tryFrom($status)->label;
         }
     }
 }

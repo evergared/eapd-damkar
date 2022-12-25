@@ -248,8 +248,10 @@ class ModalInputApdPegawaiHalApdku extends Component
     public function sesuaikanPathGambar()
     {
         $fc = new FileController;
-
-        $this->pathGbr = "storage/" . $fc->buatPathFileApdUpload(Auth::user()->nrk, $this->id_jenis);
+        $adc = new ApdDataController;
+        // $periode = $adc->ambilIdPeriodeInput();
+        $periode = 1;
+        $this->pathGbr = "storage/" . $fc->buatPathFileApdUpload(Auth::user()->nrk, $this->id_jenis, $periode);
     }
 
     public function ambilDataUser()
@@ -354,7 +356,8 @@ class ModalInputApdPegawaiHalApdku extends Component
             /**
              * @todo ambil id dari fungsi pada kelas ApdDataController
              */
-            $apd->id_periode = '1';
+            $periode = 1;
+            $apd->id_periode = $periode;
 
             /**
              * @todo buat enum untuk status verifikasi
@@ -384,7 +387,7 @@ class ModalInputApdPegawaiHalApdku extends Component
                     $gbr_temp = $fc->prosesNamaFileApdUpload($nrk, $this->id_apd_user, 'jpg', $i);
 
                     $this->gambar_apd_user[$i]->storeAs(
-                        $fc->buatPathFileApdUpload($nrk, $this->id_jenis),
+                        $fc->buatPathFileApdUpload($nrk, $this->id_jenis, $periode),
                         $gbr_temp
                     );
 
@@ -397,7 +400,7 @@ class ModalInputApdPegawaiHalApdku extends Component
                 $gbr_temp = $fc->prosesNamaFileApdUpload($nrk, $this->id_apd_user, 'jpg', 0);
 
                 $this->gambar_apd_user[0]->storeAs(
-                    $fc->buatPathFileApdUpload($nrk, $this->id_jenis),
+                    $fc->buatPathFileApdUpload($nrk, $this->id_jenis, $periode),
                     $gbr_temp
                 );
 

@@ -2,9 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"> Progress Input dfasfadsfdasfdasfda fd fdafadfadfa dfdafdsfdf ad fdfdafa df
-                    dsfds fsf
-                    adsf adsf dasfasfafa </h4>
+                <h4 class="modal-title"> Progress Input {{$nama_pegawai}}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -14,7 +12,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Triwulan ke-</h3>
+                                <h3 class="card-title">{{$nama_periode}}</h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0" style="height: 300px;">
