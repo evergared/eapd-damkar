@@ -36,7 +36,7 @@ class ModalInputApdPegawaiHalApdku extends Component
         $size_apd_user = '',
         $kondisi_apd_user = '',
         $gambar_apd_user,
-        $komentar_apd_user;
+        $komentar_apd_user ="";
 
     // didapat dari db
     public  $gambar_apd = [],
@@ -90,6 +90,7 @@ class ModalInputApdPegawaiHalApdku extends Component
         $this->userTelahMemilih = false;
         $this->adaGambarTemplate = false;
         $this->id_apd_user = "";
+        $this->komentar_apd_user = "";
 
         $this->id_jenis = null;
         $this->nama_jenis = null;

@@ -145,6 +145,7 @@ class ApdDataController extends Controller
                             // masukan ke $list
                             array_push($list, [
                                 'id_jenis' => $id_jenis,
+                                'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
                                 'id_apd' => $input->id_apd,
                                 'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $nrk, $id_jenis, $id_periode),
                                 'status_verifikasi' => $verifikasi_label,
@@ -169,6 +170,7 @@ class ApdDataController extends Controller
                         // masukan ke $list
                         array_push($list, [
                             'id_jenis' => $id_jenis,
+                            'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
                             'id_apd' => $input->id_apd,
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $nrk, $id_jenis, $id_periode),
                             'status_verifikasi' => $verifikasi_label,

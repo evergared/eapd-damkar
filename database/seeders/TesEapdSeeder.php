@@ -310,10 +310,10 @@ class TesEapdSeeder extends Seeder
             'nrk' => '12345678',
             'nip' => '198501242010011005',
             'nama' => 'Rizky Gufara, S.Kom',
-            'id_jabatan' => 'K001',
+            'id_jabatan' => 'L001',
             'id_wilayah' => '1',
             'id_penempatan' => '1.11',
-            'id_grup' => 'S'
+            'id_grup' => 'B'
         ]);
 
         Pegawai::create([

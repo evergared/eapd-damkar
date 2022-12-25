@@ -17,10 +17,10 @@ class StatusDisplayController extends Controller
                 $warna = 'secondary';
                 break;
             case 2:
-                $warna = 'info';
+                $warna = 'success';
                 break;
             case 3:
-                $warna = 'success';
+                $warna = 'info';
                 break;
             case 4:
                 $warna = 'danger';
