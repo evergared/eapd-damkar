@@ -78,7 +78,17 @@
                         </p>
                     </a>
                 </li>
-
+                @if (auth()->user()->data->jabatan->level_user == 'admin_sektor')
+                <li class="nav-item {{ (Route::currentRouteName() =='laporan')? 'menu-open' :''}}">
+                    <a href="{{route('laporan')}}"
+                        class="nav-link {{ (Route::currentRouteName() =='laporan')? 'active' :''}}">
+                        <i class="nav-icon fas fa-database"></i>
+                        <p>
+                            Report
+                        </p>
+                    </a>
+                </li>
+                @endif
                 <li class="nav-header border-bottom"><i class="nav-icon fas fa-book"></i><span></span> Manual Book</li>
                 <li class="nav-item">
                     <a href="" onclick="alert('Coming soon'); return false" target="_blank" class="nav-link">
