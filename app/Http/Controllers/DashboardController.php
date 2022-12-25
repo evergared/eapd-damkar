@@ -26,26 +26,35 @@ class DashboardController extends Controller
 
         // return dd(Auth::user()->data->jabatan->level_user);
 
-        // if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
-        //     return view("eapd.dashboard.main-admin-sektor");
-        // else
-        return view("eapd.dashboard.main-pegawai");
+        if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
+            return view("eapd.dashboard.admin.admin-main-pegawai");
+        else
+            return view("eapd.dashboard.main-pegawai");
     }
 
     public function tampilProfil(Request $r)
     {
-        return view('eapd.dashboard.profil');
+        if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
+            return view("eapd.dashboard.admin.admin-profil");
+        else
+            return view('eapd.dashboard.profil');
     }
 
     public function tampilRequestItem(Request $r)
     {
-        return view('eapd.dashboard.request-item');
+        if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
+            return view("eapd.dashboard.admin.admin-request-item");
+        else
+            return view('eapd.dashboard.request-item');
     }
 
     public function tampilApdKu(Request $r)
     {
         $adc = new ApdDataController;
         // return view('eapd.dashboard.apdku')->with('list_apd', $adc->bangunItemModalInputApd($adc->muatContohDaftarInputApd()[1]));
-        return view('eapd.dashboard.apdku');
+        if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
+            return view("eapd.dashboard.admin.admin-apdku");
+        else
+            return view('eapd.dashboard.apdku');
     }
 }
