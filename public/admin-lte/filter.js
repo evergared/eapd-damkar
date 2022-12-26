@@ -42,3 +42,86 @@ for (var i = 0; i < btns.length; i++) {
     this.className += " active";
   });
 }
+
+function showDetail(Id,Filter){
+  //alert("Tester") console.
+  //alert(Filter)
+  console.log("Id",Id)
+  $("#vert-tabs-home").hide(500)
+  $("#userdetail").show(500)
+}
+
+function backToList(){
+  $("#vert-tabs-home").show(500)
+  $("#userdetail").hide(500)
+}
+
+function rekapDetail(Id,Filter){
+  //alert("Tester") console.
+  //alert(Filter)
+  console.log("Id",Id)
+  $("#rekap-tabel").hide(500)
+  $("#rekapdetail").show(500)
+}
+
+function backToRekap(){
+  $("#rekap-tabel").show(500)
+  $("#rekapdetail").hide(500)
+}
+
+function filterJaket(Id,Filter){
+  //alert("Tester") console.
+  //alert(Filter)
+  console.log("Id",Id)
+  $("#fire-troser").hide(500)
+  $("#fire-helmet").hide(500)
+  $("#fire-jacket").show(500)
+}
+function filterTroser(Id,Filter){
+  //alert("Tester") console.
+  //alert(Filter)
+  console.log("Id",Id)
+  $("#fire-jacket").hide(500)
+  $("#fire-troser").show(500)
+  $("#fire-helmet").hide(500)
+}
+function filterHelmet(Id,Filter){
+  //alert("Tester") console.
+  //alert(Filter)
+  console.log("Id",Id)
+  $("#fire-jacket").hide(500)
+  $("#fire-troser").hide(500)
+  $("#fire-helmet").show(500)
+}
+function filterAll(Id,Filter){
+  //alert("Tester") console.
+  //alert(Filter)
+  console.log("Id",Id)
+  $("#fire-jacket").show(500)
+  $("#fire-troser").show(500)
+  $("#fire-helmet").show(500)
+}
+function filterBerat(Id,Filter){
+  //alert("Tester") console.
+  //alert(Filter)
+  console.log("Id",Id)
+  $(".rusak-berat").show(500)
+  $(".baik").hide(500)
+  $(".rusak-ringan").hide(500)
+}
+function filterJaketBaik(Id,Filter){
+  //alert("Tester") console.
+  //alert(Filter)
+  console.log("Id",Id)
+  $(".rusak-berat").hide(500)
+  $(".baik").show(500)
+  $(".rusak-ringan").hide(500)
+}
+function filterRingan(Id,Filter){
+  //alert("Tester") console.
+  //alert(Filter)
+  console.log("Id",Id)
+  $(".rusak-berat").hide(500)
+  $(".baik").hide(500)
+  $(".rusak-ringan").show(500)
+}
