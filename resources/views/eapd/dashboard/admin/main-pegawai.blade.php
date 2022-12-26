@@ -153,7 +153,10 @@
                         <div class="card-header p-0 border-bottom-0">
                           <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                             <li class="nav-item">
-                              <a class="nav-link active" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-pos" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Progres Pos</a>
+                              <a class="nav-link active" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-grafik" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Progres Sektor</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-anggota" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Progres Inputan</a>
                             </li>
                             <li class="nav-item">
                               <a class="nav-link" id="custom-tabs-four-settings-tab" data-toggle="pill" href="#tabel-rekap" role="tab" aria-controls="custom-tabs-four-settings" aria-selected="false">Tabel Rekap</a>
@@ -162,7 +165,27 @@
                         </div>
                         <div class="card-body">
                           <div class="tab-content" id="custom-tabs-four-tabContent">
-                            <div class="tab-pane fade show active" id="progres-pos" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
+                            <div class="tab-pane fade show active" id="progres-grafik" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
+                              <div class="container">
+                               <h4>Capaian Inputan Sektor I Kebayoran Lama</h4>
+                                  <div class="progress progress-sm">
+                                      <div class="progress-bar bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 10%">
+                                      </div>
+                                  </div>
+                                  <small>
+                                      10% Complete
+                                  </small><br><br><br>
+                                <h4>Capaian Validasi Sektor I Kebayoran Lama</h4>
+                                  <div class="progress progress-sm">
+                                      <div class="progress-bar bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 10%">
+                                      </div>
+                                  </div>
+                                  <small>
+                                      10% Complete
+                                  </small>
+                              </div>
+                            </div>
+                            <div class="tab-pane fade" id="progres-anggota" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
                               <div class="card-body">
                                 <div class="tab-pane text-left fade show active" id="vert-tabs-home" role="tabpanel" aria-labelledby="vert-tabs-home-tab">
                                   <div class="card card-primary card-outline card-outline-tabs">
@@ -755,22 +778,22 @@
                                                                       <a onclick="rekapDetail(filterJaketBaik())" href="#rekap-tabel">1</a>
                                                                     </td>
                                                                     <td class="text-center align-middle">
-                                                                      <a onclick="rekapDetail([filterJaket()],[filterRingan()])" href="#rekap-tabel">2</a>
+                                                                      <a onclick="rekapDetail(filterJaketRingan())" href="#rekap-tabel">2</a>
                                                                     </td>
                                                                     <td class="text-center align-middle">
-                                                                      <a href="#">3</a>
+                                                                      <a onclick="rekapDetail(filterJaketSedang())" href="#rekap-tabel">3</a>
                                                                     </td>
                                                                     <td class="text-center align-middle">
-                                                                      <a href="#">4</a>
+                                                                      <a onclick="rekapDetail(filterJaketBerat())" href="#rekap-tabel">4</a>
                                                                     </td>
                                                                     <td class="text-center align-middle">
-                                                                      <a href="#">5</a>
+                                                                      <a onclick="rekapDetail(filterJaketBelumTerima())" href="#rekap-tabel">5</a>
                                                                     </td>
                                                                     <td class="text-center align-middle">
-                                                                      <a href="#">6</a>
+                                                                      <a onclick="rekapDetail(filterJaketHilang())" href="#rekap-tabel">6</a>
                                                                     </td>
                                                                     <td class="text-center align-middle">
-                                                                      <a href="#">7</a>
+                                                                      <a onclick="rekapDetail(filterJaket())" href="#rekap-tabel">7</a>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -882,7 +905,7 @@
                                                                   </tr>
                                                               </thead>
                                                               <tbody>
-                                                                  <tr id="fire-jacket" class="rusak-berat">
+                                                                  <tr class="fire-jacket rusak-berat">
                                                                       <td class="text-center text-wrap my-auto align-middle">1</td>
                                                                       <td class="text-center text-wrap my-auto align-middle">Fire Jacket
                                                                       </td>
@@ -947,7 +970,7 @@
                                                                         </a>
                                                                       </td>
                                                                   </tr>
-                                                                  <tr id="fire-troser" class="baik">
+                                                                  <tr  class="fire-troser baik">
                                                                     <td class="text-center text-wrap my-auto align-middle">2</td>
                                                                     <td class="text-center text-wrap my-auto align-middle">Fire Troser
                                                                     </td>
@@ -1012,7 +1035,7 @@
                                                                       </a>
                                                                     </td>
                                                                   </tr>
-                                                                  <tr id="fire-helmet" class="rusak-ringan">
+                                                                  <tr  class="fire-helmet rusak-ringan">
                                                                     <td class="text-center text-wrap my-auto align-middle">3</td>
                                                                     <td class="text-center text-wrap my-auto align-middle">Fire Helmet
                                                                     </td>
@@ -1077,7 +1100,7 @@
                                                                     </a>
                                                                   </td>
                                                                   </tr>
-                                                                  <tr id="fire-helmet" class="baik">
+                                                                  <tr  class="fire-helmet baik">
                                                                     <td class="text-center text-wrap my-auto align-middle">3</td>
                                                                     <td class="text-center text-wrap my-auto align-middle">Fire Helmet
                                                                     </td>
@@ -1142,7 +1165,7 @@
                                                                     </a>
                                                                   </td>
                                                                   </tr>
-                                                                  <tr id="fire-helmet" class="baik">
+                                                                  <tr  class="fire-helmet baik">
                                                                     <td class="text-center text-wrap my-auto align-middle">3</td>
                                                                     <td class="text-center text-wrap my-auto align-middle">Fire Helmet
                                                                     </td>
@@ -1207,7 +1230,7 @@
                                                                     </a>
                                                                   </td>
                                                                   </tr>
-                                                                  <tr id="fire-troser" class="baik">
+                                                                  <tr  class="fire-troser baik">
                                                                     <td class="text-center text-wrap my-auto align-middle">2</td>
                                                                     <td class="text-center text-wrap my-auto align-middle">Fire Troser
                                                                     </td>
