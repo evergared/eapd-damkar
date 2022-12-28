@@ -65,4 +65,11 @@ class DashboardController extends Controller
         else
             return view('eapd.dashboard.main-pegawai');
     }
+    public function tampilKepegawaian(Request $r)
+    {
+        if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
+            return view("eapd.dashboard.admin.kepegawaian");
+        else
+            return view('eapd.dashboard.main-pegawai');
+    }
 }
