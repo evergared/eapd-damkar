@@ -43,6 +43,7 @@ class User extends Authenticatable
 
     public function getNamaAttribute()
     {
-        return Pegawai::where('nrk', '=', $this->nrk)->value('nama');
+        return Pegawai::where('nrk', '=', $this->nrk)->first()->nama;
     }
+
 }

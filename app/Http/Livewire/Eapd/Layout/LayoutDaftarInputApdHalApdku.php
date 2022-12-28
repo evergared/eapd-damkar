@@ -30,7 +30,9 @@ class LayoutDaftarInputApdHalApdku extends Component
     {
         try {
             $adc = new ApdDataController;
-            $this->daftarApd =  $adc->bangunListInputApdDariTemplate(1);
+            $periode = 1;
+            // $periode = $adc->ambilIdPeriodeInput();
+            $this->daftarApd =  $adc->bangunListInputApdDariTemplate($periode);
         } catch (Throwable $e) {
             session()->flash('apdku_page_error', 'Kesalahan dalam pengambilan data.');
         }

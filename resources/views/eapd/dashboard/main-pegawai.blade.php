@@ -13,7 +13,7 @@
             <div class="row">
 
 
-                @include('eapd.dashboard.komponen.progress-inputan')
+                {{-- @include('eapd.dashboard.komponen.progress-inputan') --}}
 
                 <section class="d-flex justify-content-center col-lg-12 connectedSortable">
                     <div class="col-lg-12">

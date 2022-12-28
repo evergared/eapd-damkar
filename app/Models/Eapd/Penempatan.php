@@ -4,6 +4,7 @@ namespace App\Models\Eapd;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Penempatan extends Model
 {
@@ -21,4 +22,5 @@ class Penempatan extends Model
     {
         return $this->hasMany(Pegawai::class, 'id_penempatan', 'id_penempatan');
     }
+
 }

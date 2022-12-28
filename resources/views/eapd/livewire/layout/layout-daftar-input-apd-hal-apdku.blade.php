@@ -3,6 +3,12 @@
         <div class="row">
             <div class="col-12">
                 <div class="card card-primary">
+
+                    {{-- generate thumbnail Start --}}
+
+                    {{-- Saat list memiliki isi--}}
+                    @if(is_array($daftarApd))
+
                     <div class="card-header">
 
                         {{-- Status loading Start --}}
@@ -29,10 +35,7 @@
 
 
 
-                            {{-- generate thumbnail Start --}}
 
-                            {{-- Saat list memiliki isi--}}
-                            @if($daftarApd[0]['id_jenis'] != "")
 
                             {{--
                             onclick="modal('modal-input-apd-pegawai-hal-apdku',{{$item['id_jenis']}},'modalInputApdPegawai')"
@@ -57,17 +60,26 @@
                             </div>
                             @endforeach
 
-                            {{-- Saat list kosong --}}
-                            @else
 
-                            @endif
-
-
-                            {{-- generate thumbnail End --}}
 
                         </div>
                     </div>
                     <!-- /.card-body -->
+
+                    {{-- Saat list kosong --}}
+                    @else
+
+                    <div class="card-body">
+                        <div class="jumbotron text-center">
+                            Tidak ada yang perlu diinput.
+                        </div>
+                    </div>
+
+                    @endif
+
+
+                    {{-- generate thumbnail End --}}
+
                 </div>
                 <!-- /.card -->
             </div>

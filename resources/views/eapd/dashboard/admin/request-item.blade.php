@@ -10,7 +10,6 @@
 <section class="content">
     <div class="container-fluid">
         <livewire:eapd.layout.layout-statbox>
-            {{-- @include('eapd.dashboard.komponen.statbox') --}}
 
 
             <!-- Main row -->

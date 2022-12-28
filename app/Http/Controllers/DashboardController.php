@@ -17,17 +17,30 @@ class DashboardController extends Controller
         return ($pesan ?? null) ? $view->with('pesan', $pesan) : $view;
     }
 
-    // @todo buat logic untuk generate thumbnail dari apd yang perlu diinput
-    // @todo buat controller baru untuk menampung logic generate, kemungkinan akan dinamai ApdTemplateController
     public function tampilDashboardPegawai(Request $r)
     {
-        $apd = new ApdDataController;
-        $apd->bangunListInputApdDariTemplate('1');
 
         // return dd(Auth::user()->data->jabatan->level_user);
 
         if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
-            return view("eapd.dashboard.admin.main-pegawai");
+        {
+            $adc = new ApdDataController;
+            $periode = 1;
+            // $periode = $adc->ambilIdPeriodeInput();
+
+            $maks_inputan = 0;
+            $value_inputan = 0;
+            $value_tervalidasi = 0;
+
+            $adc->hitungCapaianInputSektor(Auth::user()->data->sektor,$maks_inputan,$value_inputan,$periode);
+            $adc->hitungCapaianInputSektor(Auth::user()->data->sektor,$maks_inputan,$value_tervalidasi,$periode,3);
+
+            return view("eapd.dashboard.admin.main-sektor",[
+                'maks_inputan' => $maks_inputan,
+                'value_inputan' => $value_inputan,
+                'value_tervalidasi' =>$value_tervalidasi
+            ]);
+        }
         else
             return view("eapd.dashboard.main-pegawai");
     }
@@ -50,7 +63,6 @@ class DashboardController extends Controller
 
     public function tampilApdKu(Request $r)
     {
-        $adc = new ApdDataController;
         // return view('eapd.dashboard.apdku')->with('list_apd', $adc->bangunItemModalInputApd($adc->muatContohDaftarInputApd()[1]));
         if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
             return view("eapd.dashboard.admin.apdku");

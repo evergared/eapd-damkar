@@ -4,6 +4,7 @@ namespace App\Models\Eapd;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Throwable;
 
 class Pegawai extends Model
 {
@@ -49,5 +50,35 @@ class Pegawai extends Model
     public function apd_terlapor()
     {
         return $this->hasMany(InputSewaktuWaktu::class, 'nrk', 'nrk');
+    }
+
+    public function getSektorAttribute()
+    {
+        try{
+            /**
+             * pisahkan id_penempatan berdasarkan titik
+             * contoh : 4.19.01
+             * menjadi :
+             * - $penempatan[0] = 4
+             * - $penempatan[1] = 19
+             * - $penempatan[2] = 01
+             */
+            $penempatan = explode('.',$this->id_penempatan);
+            return $penempatan[0] . '.'.$penempatan[1];
+        }
+        catch(Throwable $e){
+            /**
+             * Jika struktur id_penempatan berbeda atau jika pemanggilan tidak berhasil,
+             * return "-".
+             * Gunanya adalah agar komponen lain yang memanggil function ini
+             * tau bahwa ada kesalahan atau ada kegagalan saat pemanggilan function
+             * karena function mereturn "-"
+             * maka dari itu pastikan komponen lain yang memanggil function ini
+             * dapat me-mitigasi ketika terjadi kegagalan pemanggilan
+             * contohnya melalui if( == "-"), lalu dapat menggantinya dengan value lain.
+             */
+            return "-";
+        }
+
     }
 }

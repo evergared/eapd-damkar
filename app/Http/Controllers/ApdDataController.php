@@ -80,12 +80,17 @@ class ApdDataController extends Controller
             }
 
             // ambil template penginputan apd dari database menggunakan pivot table yang telah di buat di model
-            $list = Jabatan::where('id_jabatan', '=', $id_jabatan)->first()->templatePadaPeriode($id_periode)->first()->template;
+            if($list = Jabatan::where('id_jabatan', '=', $id_jabatan)->first()->templatePadaPeriode($id_periode)->first()->template)
+            {
+                // return dd($list);
+                return $list;
+            }
+            else
+                return [];
 
-            // return dd($list);
-            return $list;
         } catch (Throwable $e) {
-            error_log('gagal memuat list ' . $e);
+            error_log('gagal memuat list template input ' . $e);
+            return [];
         }
     }
 
@@ -192,6 +197,77 @@ class ApdDataController extends Controller
         } catch (Throwable $e) {
             error_log('Gagal memuat status verifikasi dari list input apd ' . $e);
             return [];
+        }
+    }
+
+    public function hitungCapaianInputSektor($sektor, &$maks, &$capaian,$id_periode = 1, $target_verifikasi = 0)
+    {
+        try{
+
+            // ambil daftar seluruh pegawai di sektor (termasuk staff dan kasie sektor)
+            $array_pegawai = Pegawai::where('id_penempatan','like',$sektor.'%');
+
+            // siapkan array untuk proses penghitungan
+            $yang_harus_diinput = [];
+            $yang_telah_diinput = [];
+
+            // menghitung apa yg harus diinput dan apa yang telah diinput oleh tiap pegawai
+            foreach($array_pegawai as $pegawai)
+            {
+                // ambil apa saja yang harus diinput oleh pegawai
+                $template =  $this->muatListInputApdDariTemplate($id_periode,$pegawai->id_jabatan);
+
+                // apakah template kosong? (tidak ada yang perlu diinput oleh pegawai tersebut)
+                if(!(count($template) === 0))
+                {
+                    // template tidak kosong (ada yang perlu diinput oleh pegawai tersebut)
+
+                    // query apa saja yang perlu diinput oleh pegawai tersebut
+                    foreach($template as $t)
+                    {
+                        array_push($yang_harus_diinput,[
+                            'nrk' => $pegawai->nrk,
+                            'id_jabatan' => $pegawai->id_jabatan,
+                            'id_jenis' => $t['id_jenis'],
+                            'id_periode' => $id_periode
+                        ]);
+                    }
+
+                    // muat apa saja yang telah diinput oleh si pegawai
+                    $inputan = $this->muatInputanPegawai($id_periode,$pegawai->nrk,$target_verifikasi);
+
+                    // apakah pegawai pernah menginput
+                    if(!(count($inputan) === 0))
+                    {
+                        // pegawai pernah menginput
+
+                        // query apa saja yang telah diinput oleh pegawai tersebut
+                        foreach($inputan as $i)
+                        {
+                            array_push($yang_telah_diinput, [
+                                'nrk' => $pegawai->nrk,
+                                'id_jabatan' => $pegawai->id_jabatan,
+                                'id_jenis' => $i['id_jenis'],
+                                'id_apd' => $i['id_apd'],
+                                'id_periode' => $id_periode,
+                                'status' => $i['status_verifikasi']
+                            ]);
+                        }
+
+                    }
+
+                }
+            }
+
+            $maks = count($yang_harus_diinput);
+            $capaian = count($yang_telah_diinput);
+
+        }
+        catch(Throwable $e)
+        {
+            error_log('Gagal menghitung capaian input sektor '.$sektor.' '.$e);
+            $maks = 0;
+            $capaian = 0;
         }
     }
 
