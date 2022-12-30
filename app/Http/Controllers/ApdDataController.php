@@ -291,8 +291,12 @@ class ApdDataController extends Controller
                         {
                             if($target_verifikasi != 0)
                             {
-                                if($i['status_verifikasi'] == $target_verifikasi)
+                                if($i['status_verifikasi'] == verif::tryFrom($target_verifikasi)->label)
+                                {
                                     $yang_telah_diinput++;   
+                                    error_log('terinput sekarang '.$yang_telah_diinput);
+
+                                }
                             }
                             else
                                 $yang_telah_diinput++;
