@@ -31,7 +31,7 @@
                             </ul>
                             <div class="tab-content" id="gambar-apd-nav-tabsContent">
                                 <div class="tab-pane fade active show" id="gambar-apd-template-content" role="tabpanel"
-                                    aria-labelledby="gambar-apd-template-tab">
+                                    aria-labelledby="gambar-apd-template-tab" wire:key='apd-template'>
 
                                     {{-- Jika gambar template gagal dimuat --}}
                                     @if (session()->has('gambar_apd_template_error'))
@@ -119,7 +119,7 @@
                                 </div>
 
                                 <div class="tab-pane fade" id="gambar-apd-user-content" role="tabpanel"
-                                    aria-labelledby="gambar-apd-user-tab">
+                                    aria-labelledby="gambar-apd-user-tab" wire:key='apd-user'>
 
                                     {{-- Jika gambar user gagal dimuat --}}
                                     @if (session()->has('gambar_apd_user_error'))

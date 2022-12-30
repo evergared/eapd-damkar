@@ -100,6 +100,8 @@ class ModalInputApdPegawaiHalApdku extends Component
         $this->kondisi_apd = null;
         $this->gambar_apd_template = null;
 
+        $this->telahDiverifAdmin = false;
+
         $adc = new ApdDataController;
 
         // untuk tes, load satu jenis apd dan apd-apd opsi nya
@@ -428,6 +430,8 @@ class ModalInputApdPegawaiHalApdku extends Component
             $apd->save();
 
             session()->flash('success', 'Data Apd berhasil diinput.');
+
+            $this->gambar_apd = [];
 
             $this->ambilDataUser();
             $this->gambar_apd_user = null;
