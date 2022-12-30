@@ -84,7 +84,16 @@
                         class="nav-link {{ (Route::currentRouteName() =='laporan')? 'active' :''}}">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
-                            Report
+                            Laporan
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item {{ (Route::currentRouteName() =='kepegawaian')? 'menu-open' :''}}">
+                    <a href="{{route('kepegawaian')}}"
+                        class="nav-link {{ (Route::currentRouteName() =='kepegawaian')? 'active' :''}}">
+                        <i class="nav-icon fas fa-user-edit"></i>
+                        <p>
+                            Kepegawaian
                         </p>
                     </a>
                 </li>

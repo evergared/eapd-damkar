@@ -290,3 +290,5 @@ for (var i = 0; i < btns.length; i++) {
     $(".senter").hide(500)
   }
 // script untuk section progres pos dan tabel rekap Admin Sektor End
+
+// script untuk toast notif edit data pegawai
