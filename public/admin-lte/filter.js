@@ -40,16 +40,28 @@ window.addEventListener('jsShowDetail',event =>{
 
 // @todo #13
 // Add active class to the current button (highlight it)
-var btnContainer = document.getElementById("myBtnContainer");
-var btns = btnContainer.getElementsByClassName("btn");
-for (var i = 0; i < btns.length; i++) {
-  btns[i].addEventListener("click", function(){
-    var current = document.getElementsByClassName("active");
-    current[0].className = current[0].className.replace(" active", "");
-    this.className += " active";
-  });
-}
+// var btnContainer = document.getElementById("myBtnContainer");
+// var btns = btnContainer.getElementsByClassName("btn1");
+// for (var i = 0; i < btns.length; i++) {
+//   btns[i].addEventListener("click", function(){
+//     var current = document.getElementsByClassName("active");
+//     current[0].className = current[0].className.replace(" active", "");
+//     this.className += " active";
+//   });
+// }
 
+
+// var header = document.getElementById("myBtnContainer");
+// var btns = header.getElementsByClassName("btn1");
+// for (var i = 0; i < btns.length; i++) {
+//   btns[i].addEventListener("click", function() {
+//   var current = document.getElementsByClassName("active");
+//   if (current.length > 0) { 
+//     current[0].className = current[0].className.replace(" active", "");
+//   }
+//   this.className += " active";
+//   });
+// }
 // script untuk section progres pos dan tabel rekap Admin Sektor Start
 
 

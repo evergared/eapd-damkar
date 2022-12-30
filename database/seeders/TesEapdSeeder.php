@@ -326,6 +326,26 @@ class TesEapdSeeder extends Seeder
             'id_grup' => 'S'
         ]);
 
+        Pegawai::create([
+            'nrk' => '2222',
+            'nip' => '2222',
+            'nama' => 'Admin Sektor',
+            'id_jabatan' => 'K001',
+            'id_wilayah' => '2',
+            'id_penempatan' => '2.11',
+            'id_grup' => 'S'
+        ]);
+
+        Pegawai::create([
+            'nrk' => '3333',
+            'nip' => '3333',
+            'nama' => 'Test Pegawai',
+            'id_jabatan' => 'L001',
+            'id_wilayah' => '2',
+            'id_penempatan' => '2.11',
+            'id_grup' => 'B'
+        ]);
+
 
         // error_log('populating list, sering error disini karena id sering duplicate, bisa cek file ApdListFactory.php jika error');
         // ApdList::factory()->count(20)->create();
@@ -347,6 +367,16 @@ class TesEapdSeeder extends Seeder
 
         User::create([
             'nrk' => '12345678',
+            'password' => Hash::make('123456')
+        ]);
+
+        User::create([
+            'nrk' => '2222',
+            'password' => Hash::make('123456')
+        ]);
+
+        User::create([
+            'nrk' => '3333',
             'password' => Hash::make('123456')
         ]);
     }
