@@ -2,9 +2,12 @@
 
 namespace App\Http\Livewire\Eapd\Datatable;
 
+use App\Http\Controllers\ApdDataController;
+use App\Models\Eapd\Jabatan;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Eapd\Pegawai;
+use App\Models\Eapd\Penempatan;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,11 +38,11 @@ class TabelAnggotaAdminSektor extends DataTableComponent
         // tambahkan jika perlu
         // https://laravel.com/docs/9.x/queries#or-where-clauses
         ->where(function ($q) {
-            $q  ->where('id_jabatan','=','L001')    // pjlp damkar
-                ->orWhere('id_jabatan','=','L002')  // ASN damkar
-                ->orWhere('id_jabatan','=','L003')  // Kepala Regu
-                ->orWhere('id_jabatan','=','L004')  // Kepala Pleton
-                ->orWhere('id_jabatan','=','S001');  // Staff Sektor
+            $q  ->where('pegawai.id_jabatan','=','L001')    // pjlp damkar
+                ->orWhere('pegawai.id_jabatan','=','L002')  // ASN damkar
+                ->orWhere('pegawai.id_jabatan','=','L003')  // Kepala Regu
+                ->orWhere('pegawai.id_jabatan','=','L004')  // Kepala Pleton
+                ->orWhere('pegawai.id_jabatan','=','S001');  // Staff Sektor
         })
 
         // ambil pegawai yang masih aktif
@@ -57,31 +60,94 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                     return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-anggota-katon", ['img' => $value, 'nrk' => $row->nrk]);
                 }),
             Column::make("Nrk", "nrk")
-                ->sortable(),
-            Column::make("Nip", "nip")
-                ->sortable(),
+                ->sortable()
+                ->hideIf(true),
             Column::make("Nama", "nama")
                 ->sortable(),
-            Column::make("No telp", "no_telp")
+            Column::make("Jabatan", "id_jabatan")
+                ->format(function($value){
+                    return Jabatan::where('id_jabatan','=',$value)->first()->nama_jabatan;
+                })
                 ->sortable(),
-            Column::make("Id jabatan", "id_jabatan")
+            Column::make("Penempatan", "id_penempatan")
+                ->format(function($value){
+                    return Penempatan::where('id_penempatan','=',$value)->first()->nama_penempatan;
+                })
                 ->sortable(),
-            Column::make("Id wilayah", "id_wilayah")
-                ->sortable(),
-            Column::make("Id penempatan", "id_penempatan")
-                ->sortable(),
-            Column::make("Id grup", "id_grup")
-                ->sortable(),
-            Column::make("Aktif", "aktif")
-                ->sortable(),
-            Column::make("Plt", "plt")
-                ->sortable(),
-            Column::make("Kurang", "kurang")
-                ->sortable(),
-            Column::make("Created at", "created_at")
-                ->sortable(),
-            Column::make("Updated at", "updated_at")
-                ->sortable(),
+            Column::make("Inputan")
+                ->label(function($row){
+                    // panggil ApdDataController
+                    $adc = new ApdDataController;
+
+                    // ambil nrk dari baris
+                    $nrk = $row->nrk;
+
+                    // dapatkan jabatan 
+                    $id_jabatan = $row->id_jabatan;
+
+                    // set periode input
+                    $tw = 1; //<-- ini untuk contoh dan test
+                    // $tw = $adc->ambilIdPeriodeInput();  //<--- gunakan ini jika periode input sudah dimasukkan dengan benar di database
+
+                    // muat template inputan untuk jabatan tertentu
+                    $templateInputan = $adc->muatListInputApdDariTemplate($tw, $id_jabatan);
+
+                    // muat apa saja yang telah diinput oleh si pegawai
+                    $inputan = $adc->muatInputanPegawai($tw, $nrk);
+
+                    // hitung jumlah maksimal inputan
+                    $maks = (is_null($templateInputan))? 0 : count($templateInputan);
+
+                    // hitung berapa item inputan
+                    $value = (is_null($inputan))? 0 : count($inputan);
+
+                    return view('eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-admin',[
+                        'nrk' => $nrk, 'maks' => $maks, 'value'=>$value, 'caption' => 'Inputan', 'warna' => 'success'
+                    ]);
+                }),
+                Column::make("Validasi")
+                ->label(function($row){
+                    // panggil ApdDataController
+                    $adc = new ApdDataController;
+
+                    // ambil nrk dari baris
+                    $nrk = $row->nrk;
+
+                    // dapatkan jabatan 
+                    $id_jabatan = $row->id_jabatan;
+
+                    // set periode input
+                    $tw = 1; //<-- ini untuk contoh dan test
+                    // $tw = $adc->ambilIdPeriodeInput();  //<--- gunakan ini jika periode input sudah dimasukkan dengan benar di database
+
+                    // muat template inputan untuk jabatan tertentu
+                    $templateInputan = $adc->muatListInputApdDariTemplate($tw, $id_jabatan);
+
+                    // muat apa saja yang telah diinput oleh si pegawai
+                    $inputan = $adc->muatInputanPegawai($tw, $nrk,3);
+
+                    // hitung jumlah maksimal inputan
+                    $maks = (is_null($templateInputan))? 0 : count($templateInputan);
+
+                    // hitung berapa item inputan
+                    $value = (is_null($inputan))? 0 : count($inputan);
+
+                    return view('eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-admin',[
+                        'nrk' => $nrk, 'maks' => $maks, 'value'=>$value, 'caption' => 'Validasi', 'warna' => 'info'
+                    ]);
+                }),
+                Column::make("")
+                ->label(function($row){
+
+                    $adc = new ApdDataController;
+
+                    $tw = 1;
+                    // $tw = $adc->ambilIdPeriodeInput();
+
+                    return view('eapd.livewire.kolom-tambahan-datatable.kolom-show-detail-tabel-anggota-admin',[
+                        'nrk' => $row->nrk, 'periode' => $tw
+                    ]);
+                })
         ];
     }
 }

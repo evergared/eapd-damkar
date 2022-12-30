@@ -64,7 +64,7 @@ class ModalInputApdPegawaiHalApdku extends Component
      * dalam logic if else untuk array kosong.
      */
     public $userTelahMemilih = false,
-        $adaGambarUser = false, //belum dipakai
+        $telahDiverifAdmin = false, //belum dipakai
         $adaGambarTemplate = false;
 
 
@@ -276,6 +276,11 @@ class ModalInputApdPegawaiHalApdku extends Component
             $this->status_verif_user = verif::tryFrom($inputan_user->verifikasi_status)->value;
             $this->label_verif_user = verif::tryFrom($inputan_user->verifikasi_status)->label;
 
+            if($this->status_verif_user == verif::terverifikasi()->value)
+            {
+                $this->telahDiverifAdmin = true;
+            }
+
             $this->nama_apd_user = ApdList::where('id_apd', '=', $this->id_apd_cache)->value('nama_apd');
 
             $this->sesuaikanPathGambar();
@@ -411,6 +416,12 @@ class ModalInputApdPegawaiHalApdku extends Component
 
             $gbr = implode("||", $list_gbr);
 
+            // if(!is_null($gbr))
+            // {
+            //     inputApd
+            // }
+
+            $apd->image = "";
             $apd->image = $gbr;
             $apd->verifikasi_status = verif::verifikasi();
 

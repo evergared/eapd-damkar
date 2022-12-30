@@ -113,6 +113,7 @@ class FileController extends Controller
 
     public function buatPathFileApdItem($id_jenis, $id_apd)
     {
-        return self::$apdItemBasePath . '/' . $id_jenis . '/' . $id_apd;
+        // return self::$apdItemBasePath . '/' . $id_jenis . '/' . $id_apd;
+        return self::$apdPlaceholderBasePath;
     }
 }

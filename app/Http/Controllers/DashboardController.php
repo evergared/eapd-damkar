@@ -28,9 +28,9 @@ class DashboardController extends Controller
             $periode = 1;
             // $periode = $adc->ambilIdPeriodeInput();
 
-            $maks_inputan = 0;
+            $maks_inputan = 200;
             $value_inputan = 0;
-            $value_tervalidasi = 0;
+            $value_tervalidasi = 4;
 
             $adc->hitungCapaianInputSektor(Auth::user()->data->sektor,$maks_inputan,$value_inputan,$periode);
             $adc->hitungCapaianInputSektor(Auth::user()->data->sektor,$maks_inputan,$value_tervalidasi,$periode,3);

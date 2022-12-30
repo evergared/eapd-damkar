@@ -14,7 +14,6 @@ class InputApd extends Model
     protected $table = "input_apd";
     protected $keyType = 'string';
 
-    // butuh kolom status verified? boolean atau enum?
     protected $fillable = [
         "nrk",
         "id_apd",
@@ -24,7 +23,9 @@ class InputApd extends Model
         "image",
         "keterangan",
         "id_periode",
-        "verified_by",
+        "verifikasi_oleh",
+        "verifikasi_status",
+        "komentar_verifikator"
     ];
 
     public function nrk()

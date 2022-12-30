@@ -10,6 +10,9 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                @if($telahDiverifAdmin)
+                    <span class="text-info"><strong>Data anda telah diverifikasi oleh admin.<br>Jika ada perubahan data, ubah data anda lalu klik "Ajukan Perubahan".</strong></span>
+                @endif                    
                     <div class="row">
                         <div class="col-12 col-sm-6" wire:key='tampil-gambar'>
                             <h3 class="d-inline-block d-sm-none">{{$nama_jenis}}</h3>
@@ -161,15 +164,15 @@
                                         <div class="col-12 apd-user product-image-thumbs">
 
                                             @foreach ($gambar_apd as $key => $gbr)
-                                            @if($key === array_key_first($gambar_apd))
-                                            <div class="apd-user product-image-thumb active"><img
-                                                    src="{{asset($pathGbr.'/'.$gbr)}}" alt="Product Image">
-                                            </div>
-                                            @else
-                                            <div class="apd-user product-image-thumb"><img
-                                                    src="{{asset($pathGbr.'/'.$gbr)}}" alt="Product Image">
-                                            </div>
-                                            @endif
+                                                @if($key === array_key_first($gambar_apd))
+                                                <div class="apd-user product-image-thumb active"><img
+                                                        src="{{asset($pathGbr.'/'.$gbr)}}" alt="Product Image">
+                                                </div>
+                                                @else
+                                                <div class="apd-user product-image-thumb"><img
+                                                        src="{{asset($pathGbr.'/'.$gbr)}}" alt="Product Image">
+                                                </div>
+                                                @endif
                                             @endforeach
                                         </div>
 
@@ -351,15 +354,24 @@
                                     wire:model='komentar_apd_user'></textarea>
                             </div>
 
+
                         </div>
                     </div>
                 </div>
                 <!-- /.card-body -->
                 <div class="modal-footer">
-                    <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='simpan' style="cursor: pointer;">
-                        <i class="fas fa-save fa-lg mr-2"></i>
-                        Simpan Data APD
-                    </a>
+
+                    @if($telahDiverifAdmin)
+                        <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='updateSetelahTerverifikasi' style="cursor: pointer;">
+                            <i class="fas fa-save fa-lg mr-2"></i>
+                            Ajukan Perubahan
+                        </a>                        
+                    @else
+                        <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='simpan' style="cursor: pointer;">
+                            <i class="fas fa-save fa-lg mr-2"></i>
+                            Simpan Data APD
+                        </a>
+                    @endif
                 </div>
 
             </div>

@@ -73,10 +73,10 @@ class LayoutStatbox extends Component
                         }
                     }
                 }
-                $this->persentaseTertolak = $tertolak;
+                $this->tertolak = $tertolak;
             }
         } catch (Throwable $e) {
-            error_log('kalkulasi tertolak fail  ' . $e);
+            error_log('kalkulasi tertolak fail  ');
             $this->tertolak = '-';
             $this->infoTertolak = [];
         }
@@ -112,7 +112,7 @@ class LayoutStatbox extends Component
                 $this->rusak = $rusak;
             }
         } catch (Throwable $e) {
-            error_log('kalkulasi rusak fail  ' . $e);
+            error_log('kalkulasi rusak fail  ');
             $this->rusak = '-';
             $this->infoRusak = [];
         }

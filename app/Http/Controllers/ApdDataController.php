@@ -89,7 +89,7 @@ class ApdDataController extends Controller
                 return [];
 
         } catch (Throwable $e) {
-            error_log('gagal memuat list template input ' . $e);
+            error_log('gagal memuat list template input ');
             return [];
         }
     }
@@ -200,16 +200,63 @@ class ApdDataController extends Controller
         }
     }
 
-    public function hitungCapaianInputSektor($sektor, &$maks, &$capaian,$id_periode = 1, $target_verifikasi = 0)
+    public function muatSatuInputanPegawai($id_jenis, $id_apd, $id_periode = 1, $nrk = "")
+    {
+        try{
+
+            // jika parameter nrk kosong, ambil nrk dan jabatan user
+            if ($nrk == "") {
+                $nrk = Auth::user()->nrk;
+                $id_jabatan = Auth::user()->data->id_jabatan;
+            }
+            // jika paramter nrk diisi, cukup ambil jabatan user
+            else {
+                $id_jabatan = Pegawai::where('nrk', '=', $nrk)->first()->id_jabatan;
+            }
+
+            // cek apakah user telah menginput apd tersebut
+            if ($input = InputApd::where('nrk', '=', $nrk)->where('id_jenis', '=', $id_jenis)->where('id_apd','=',$id_apd)->where('id_periode', '=', $id_periode)->first())
+            {
+                $verifikasi_status = "";
+                $verifikasi_label = "";
+
+                $this->ekstrakStatusVerifikasi(verif::tryFrom($input->verifikasi_status), $verifikasi_label, $verifikasi_status);
+                
+                // panggil untuk mambantu mengubah warna status
+                $sdc = new StatusDisplayController;
+
+                return [
+                            'id_jenis' => $id_jenis,
+                            'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
+                            'id_apd' => $input->id_apd,
+                            'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $nrk, $id_jenis, $id_periode),
+                            'status_verifikasi' => $verifikasi_label,
+                            'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
+                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $nrk, $id_periode),
+                            'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $nrk, $id_periode)),
+                            'komentar_pengupload' => $input->komentar_pengupload,
+                            'nrk_verifikator' => $input->verifikasi_oleh,
+                            'komentar_verifikator' => $input->komentar_verifikator
+                        ];
+            }
+
+        }
+        catch(Throwable $e)
+        {
+
+        }
+    }
+
+    public function hitungCapaianInputSektor($sektor, int|array &$maks, int|array &$capaian,$id_periode = 1, $target_verifikasi = 0)
     {
         try{
 
             // ambil daftar seluruh pegawai di sektor (termasuk staff dan kasie sektor)
-            $array_pegawai = Pegawai::where('id_penempatan','like',$sektor.'%');
+            $array_pegawai = Pegawai::where('id_penempatan','like',$sektor.'%')->get();
 
             // siapkan array untuk proses penghitungan
-            $yang_harus_diinput = [];
-            $yang_telah_diinput = [];
+            $yang_harus_diinput = 0;
+            $yang_telah_diinput = 0;
 
             // menghitung apa yg harus diinput dan apa yang telah diinput oleh tiap pegawai
             foreach($array_pegawai as $pegawai)
@@ -217,41 +264,39 @@ class ApdDataController extends Controller
                 // ambil apa saja yang harus diinput oleh pegawai
                 $template =  $this->muatListInputApdDariTemplate($id_periode,$pegawai->id_jabatan);
 
+
                 // apakah template kosong? (tidak ada yang perlu diinput oleh pegawai tersebut)
-                if(!(count($template) === 0))
+                if(!(is_null($template)))
                 {
                     // template tidak kosong (ada yang perlu diinput oleh pegawai tersebut)
 
                     // query apa saja yang perlu diinput oleh pegawai tersebut
                     foreach($template as $t)
                     {
-                        array_push($yang_harus_diinput,[
-                            'nrk' => $pegawai->nrk,
-                            'id_jabatan' => $pegawai->id_jabatan,
-                            'id_jenis' => $t['id_jenis'],
-                            'id_periode' => $id_periode
-                        ]);
+                        $yang_harus_diinput++;
+
                     }
 
                     // muat apa saja yang telah diinput oleh si pegawai
                     $inputan = $this->muatInputanPegawai($id_periode,$pegawai->nrk,$target_verifikasi);
 
                     // apakah pegawai pernah menginput
-                    if(!(count($inputan) === 0))
+                    if(is_array($inputan) && count($inputan) !== 0)
                     {
+
                         // pegawai pernah menginput
 
                         // query apa saja yang telah diinput oleh pegawai tersebut
                         foreach($inputan as $i)
                         {
-                            array_push($yang_telah_diinput, [
-                                'nrk' => $pegawai->nrk,
-                                'id_jabatan' => $pegawai->id_jabatan,
-                                'id_jenis' => $i['id_jenis'],
-                                'id_apd' => $i['id_apd'],
-                                'id_periode' => $id_periode,
-                                'status' => $i['status_verifikasi']
-                            ]);
+                            if($target_verifikasi != 0)
+                            {
+                                if($i['status_verifikasi'] == $target_verifikasi)
+                                    $yang_telah_diinput++;   
+                            }
+                            else
+                                $yang_telah_diinput++;
+
                         }
 
                     }
@@ -259,8 +304,9 @@ class ApdDataController extends Controller
                 }
             }
 
-            $maks = count($yang_harus_diinput);
-            $capaian = count($yang_telah_diinput);
+
+            $maks = $yang_harus_diinput;
+            $capaian = $yang_telah_diinput;
 
         }
         catch(Throwable $e)
@@ -423,6 +469,36 @@ class ApdDataController extends Controller
 
         // dd($array);
         return $array;
+    }
+
+    public function siapkanGambarTemplateBesertaPathnya(string $stringGambar,$id_jenis, $id_apd)
+    {
+        try {
+            // jika gambar banyak
+            if (str_contains($stringGambar, "||")) {
+                // jadikan string gambar tersebut ke bentuk array
+                $gbr = explode("||", $stringGambar);
+            } else
+                $gbr = $stringGambar;
+
+            $fc = new FileController;
+
+            if (is_array($gbr)) {
+                $gambar = [];
+                foreach ($gbr as $g) {
+                    array_push($gambar, 'storage/' . $fc->buatPathFileApdItem($id_jenis, $id_apd) . '/' . $g);
+                }
+                return $gambar;
+            } else {
+                if ($gbr == "")
+                    return "";
+                else
+                    return 'storage/' . $fc->buatPathFileApdItem($id_jenis, $id_apd) . '/' . $gbr;
+            }
+        } catch (Throwable $e) {
+            error_log('Gagal menyiapkan gambar inputan user ' . $e);
+            return "";
+        }
     }
 
     public function siapkanGambarInputanBesertaPathnya(string $stringGambar, $nrk, $id_jenis, $id_periode): array|string

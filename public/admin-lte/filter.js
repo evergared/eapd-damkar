@@ -31,7 +31,14 @@ function w3RemoveClass(element, name) {
   element.className = arr1.join(" ");
 }
 
+// event untuk livewire start
+// @todo #12
+window.addEventListener('jsShowDetail',event =>{
+    $("#vert-tabs-home").hide(500)
+    $("#userdetail").show(500)
+})
 
+// @todo #13
 // Add active class to the current button (highlight it)
 var btnContainer = document.getElementById("myBtnContainer");
 var btns = btnContainer.getElementsByClassName("btn");
@@ -43,14 +50,17 @@ for (var i = 0; i < btns.length; i++) {
   });
 }
 
-// script untuk section progres pos dan tabel rekap Admin Sektor Start 
+// script untuk section progres pos dan tabel rekap Admin Sektor Start
+
+
+
+
+
   // hide and show progres pos start
-  function showDetail(Id,Filter){
+  function showDetail(nrk,periode){
     //alert("Tester") console.
     //alert(Filter)
-    console.log("Id",Id)
-    $("#vert-tabs-home").hide(500)
-    $("#userdetail").show(500)
+    Livewire.emit('showDetail',[nrk,periode])
   }
 
   function backToList(){
@@ -74,6 +84,7 @@ for (var i = 0; i < btns.length; i++) {
   }
 // hide and show tabel rekap end
 
+// @todo #11
 // function onClick filter di tabel rekap start
   // function filter All
   function filterAll(Id,Filter){
