@@ -284,7 +284,7 @@ class TesEapdSeeder extends Seeder
 
 
         error_log('populating pegawai');
-        Pegawai::factory()->count(50)->create();
+        // Pegawai::factory()->count(50)->create(); //<-- @evergared : di disable sementara karena tidak bisa di laptop saya (linux mint)
 
         Pegawai::create([
             'nrk' => '80182881',

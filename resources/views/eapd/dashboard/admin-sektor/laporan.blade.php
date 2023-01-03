@@ -1,9 +1,9 @@
-@extends('eapd.layouts.adminlte-dashboard',['title'=>'Dashboard Pegawai'])
+@extends('eapd.layouts.adminlte-dashboard',['title'=>'Laporan APD Admin Sektor'])
 
 @section('content')
 
 
-@include('eapd.dashboard.komponen.breadcrumbs',[ 'halamanJudul'=>'Dashboard','halaman'=>'dashboard'])
+@include('eapd.dashboard.komponen.breadcrumbs',[ 'halamanJudul'=>'Laporan','halaman'=>'laporan'])
 @include('eapd.dashboard.komponen.marquee-informasi')
 
 <section class="content">

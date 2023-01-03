@@ -1,10 +1,10 @@
-@extends('eapd.layouts.adminlte-dashboard',['title'=>'Profil'])
+@extends('eapd.layouts.adminlte-dashboard',['title'=>'Profil Admin Sudin'])
 
 
 
 @section('content')
 
-@include('eapd.dashboard.komponen.breadcrumbs',['halamanJudul'=>'Profil User','halaman'=>'profil'])
+@include('eapd.dashboard.komponen.breadcrumbs',['halamanJudul'=>'Profil Admin Sudin','halaman'=>'profil'])
 
 <section class="content">
     <div class="container-fluid">

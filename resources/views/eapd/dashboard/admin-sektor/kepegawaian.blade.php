@@ -1,14 +1,14 @@
-@extends('eapd.layouts.adminlte-dashboard',['title'=>'Dashboard Pegawai'])
+@extends('eapd.layouts.adminlte-dashboard',['title'=>'Kepegawaian Admin Sektor'])
 
 @section('content')
 
 
-@include('eapd.dashboard.komponen.breadcrumbs',[ 'halamanJudul'=>'Dashboard','halaman'=>'dashboard'])
+@include('eapd.dashboard.komponen.breadcrumbs',[ 'halamanJudul'=>'Kepegawaian','halaman'=>'kepegawaian'])
 @include('eapd.dashboard.komponen.marquee-informasi')
 
 <section class="content">
     <div class="container-fluid">
-        <livewire:eapd.layout.layout-statbox>
+        {{-- <livewire:eapd.layout.layout-statbox> --}}
             {{-- @include('eapd.dashboard.komponen.statbox') --}}
             <div class="row">
 
@@ -33,78 +33,9 @@
                               </div>
                             </div>
                             <div class="card-body table-responsive p-0" style="height: 400px;">
-                              <table class="table table-head-fixed text-nowrap">
-                                  <thead>
-                                      <tr>
-                                          <th style="width: 1%">
-                                              No
-                                          </th>
-                                          <th style="width: 20%">
-                                              Nama
-                                          </th>
-                                          <th style="width: 15%">
-                                              Pos
-                                          </th>
-                                          <th style="width: 10%">
-                                             Foto
-                                          </th>
-                                          <th style="width: 10%">
-                                          </th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <tr>
-                                          <td>
-                                              1
-                                          </td>
-                                          <td>
-                                              <a>
-                                                  Agus Suripto
-                                              </a>
-                                          </td>
-                                          <td>
-                                            <a>
-                                              Kantor Sektor I
-                                            </a>
-                                          </td>
-                                          <td>
-                                              <ul class="list-inline">
-                                                  <li class="list-inline-item">
-                                                      <img alt="Avatar" class="table-avatar h-100 w-100" src="../../dist/img/avatar.png">
-                                                  </li>
-                                              </ul>
-                                          </td>
-                                          <td class="project-actions text-right">
-                                            <a class="btn btn-primary" data-toggle="modal" data-target="#modal-kepegawaian">Edit</a>
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td>
-                                              1
-                                          </td>
-                                          <td>
-                                              <a>
-                                                  Reza
-                                              </a>
-                                          </td>
-                                          <td>
-                                            <a>
-                                              Pos Gandaria
-                                            </a>
-                                          </td>
-                                          <td>
-                                              <ul class="list-inline">
-                                                  <li class="list-inline-item">
-                                                      <img alt="Avatar" class="table-avatar h-100 w-100" src="../../dist/img/avatar.png">
-                                                  </li>
-                                              </ul>
-                                          </td>
-                                          <td class="project-actions text-right">
-                                            <a class="btn btn-primary" data-toggle="modal" data-target="#modal-kepegawaian">Edit</a>
-                                          </td>
-                                      </tr>  
-                                  </tbody>
-                              </table>
+                              
+                              @livewire('eapd.datatable.tabel-kepegawaian-admin-sektor')
+
                             </div>
                             <!-- /.card-body -->
                           </div>

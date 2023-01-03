@@ -31,6 +31,7 @@ Breadcrumbs::for('category', function (BreadcrumbTrail $trail, $category) {
 // ref : https://packagist.org/packages/diglactic/laravel-breadcrumbs
 
 // eapd
+// Pegawai Biasa
 Breadcrumbs::for('dashboard', function (BreadcrumbTrail $trail) {
     $trail->push('Dashboard', route('dashboard'));
 });
@@ -48,4 +49,14 @@ Breadcrumbs::for('request-item', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('apdku', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('APDku', route('apdku'));
+});
+
+// Admin Sektor
+Breadcrumbs::for('laporan', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Laporan', route('laporan'));
+});
+Breadcrumbs::for('kepegawaian', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Kepegawaian', route('kepegawaian'));
 });

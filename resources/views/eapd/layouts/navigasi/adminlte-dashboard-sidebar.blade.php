@@ -4,7 +4,13 @@
     <a href="{{route('dashboard')}}" class="brand-link">
         <img src="{{asset('damkar/logo_damkar_dki.png')}}" alt="Damkar" class="brand-image elevation-3"
             style="opacity: .8">
-        <span class="brand-text font-weight-light">User Pegawai</span>
+        <span class="brand-text font-weight-light">
+            @if (auth()->user()->data->jabatan->level_user == 'admin_sektor')
+                Admin Sektor
+            @else
+                User Pegawai
+            @endif
+            </span>
     </a>
 
     <!-- Sidebar -->

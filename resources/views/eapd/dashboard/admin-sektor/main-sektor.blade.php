@@ -1,4 +1,4 @@
- @extends('eapd.layouts.adminlte-dashboard',['title'=>'Dashboard Pegawai'])
+ @extends('eapd.layouts.adminlte-dashboard',['title'=>'Dashboard Admin Sektor'])
 
 @section('content')
 

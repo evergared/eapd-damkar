@@ -1,4 +1,4 @@
-@extends('eapd.layouts.adminlte-dashboard',['title'=>'Profil'])
+@extends('eapd.layouts.adminlte-dashboard',['title'=>'Profil Pegawai'])
 
 
 

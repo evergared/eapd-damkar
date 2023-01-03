@@ -1,4 +1,4 @@
-@extends('eapd.layouts.adminlte-dashboard',['title'=>'Request Item'])
+@extends('eapd.layouts.adminlte-dashboard',['title'=>'Request Item Admin Sektor'])
 
 
 
