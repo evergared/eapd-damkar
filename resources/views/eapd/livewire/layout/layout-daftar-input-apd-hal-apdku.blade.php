@@ -2,14 +2,14 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="card card-primary">
+                <div class="card">
 
                     {{-- generate thumbnail Start --}}
 
                     {{-- Saat list memiliki isi--}}
                     @if(is_array($daftarApd))
 
-                    <div class="card-header">
+                    <div class="card-header bg-gradient-teal">
 
                         {{-- Status loading Start --}}
                         <div wire:loading wire:target='bangunDaftarInputApd'>
@@ -20,13 +20,15 @@
 
                         <h3 class="card-title">Filter APD</h3> <br>
                         <div id="myBtnContainer">
-                            <button class="btn active" onclick="filterSelection('all')"> Semua</button>
-                            <button class="btn" onclick="filterSelection('proses-input')"> Proses Input</button>
-                            <button class="btn" onclick="filterSelection('proses-verifikasi')"> Proses Validasi</button>
-                            <button class="btn" onclick="filterSelection('Tervalidasi')"> Tervalidasi</button>
-                            <button class="btn" onclick="filterSelection('rusak')"> Rusak</button>
-                            <button class="btn" onclick="filterSelection('rusak-sedang')"> Rusak Sedang</button>
-                            <button class="btn" onclick="filterSelection('baik')"> Baik</button>
+                            <button class="btn btn-primary" onclick="filterSelection('all')" type="submit">All</button>
+                            <button class="btn btn-primary" onclick="filterSelection('proses-input')" type="submit">Input</button>
+                            <button class="btn btn-primary" onclick="filterSelection('proses-validasi')" type="submit">Validasi</button>
+                            <button class="btn btn-primary" onclick="filterSelection('telah-di-verif')" type="submit">Tervalidasi</button>
+                            <button class="btn btn-primary" onclick="filterSelection('baik')" type="submit">Baik</button>
+                            <button class="btn btn-primary" onclick="filterSelection('rusak')" type="submit">Rusak</button>
+                            <button class="btn btn-primary" onclick="filterSelection('rusak-ringan')" type="submit">Ringan</button>
+                            <button class="btn btn-primary" onclick="filterSelection('rusak-sedang')" type="submit">Sedang</button>
+                            <button class="btn btn-primary" onclick="filterSelection('rusak-berat')" type="submit">Berat</button>
                         </div>
                     </div>
                     <!-- /.card-header -->
