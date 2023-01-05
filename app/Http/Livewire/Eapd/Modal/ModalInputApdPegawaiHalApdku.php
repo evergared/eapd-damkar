@@ -65,7 +65,8 @@ class ModalInputApdPegawaiHalApdku extends Component
      */
     public $userTelahMemilih = false,
         $telahDiverifAdmin = false, //belum dipakai
-        $adaGambarTemplate = false;
+        $adaGambarTemplate = false,
+        $adaGambarUser = false;
 
 
     protected $listeners = [

@@ -42,6 +42,11 @@ class Pegawai extends Model
         return $this->belongsTo(Wilayah::class, 'id_wilayah', 'id_wilayah');
     }
 
+    public function grup()
+    {
+        return $this->belongsTo(Grup::class,'id_grup','id_grup');
+    }
+
     public function apd_terinput()
     {
         return $this->hasMany(InputApd::class, 'nrk', 'nrk');
