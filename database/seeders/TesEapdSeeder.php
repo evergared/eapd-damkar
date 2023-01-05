@@ -149,6 +149,10 @@ class TesEapdSeeder extends Seeder
 
         $penempatan = [
             ['id_penempatan' => '1.11', 'nama_penempatan' => 'Sektor I Gambir', 'keterangan' => 'sektor'],
+            ['id_penempatan' => '1.11.01', 'nama_penempatan' => 'Kantor Sektor I Gambir', 'keterangan' => 'pos'],
+            ['id_penempatan' => '1.11.2', 'nama_penempatan' => 'Pos Tanah Abang', 'keterangan' => 'pos'],
+            ['id_penempatan' => '1.11.3', 'nama_penempatan' => 'Pos Bendungan Hilir', 'keterangan' => 'pos'],
+            ['id_penempatan' => '1.11.4', 'nama_penempatan' => 'Pos Karet', 'keterangan' => 'pos'],
             ['id_penempatan' => '1.12', 'nama_penempatan' => 'Sektor II Tanah Abang', 'keterangan' => 'sektor'],
             ['id_penempatan' => '2.11', 'nama_penempatan' => 'Sektor I Cilincing', 'keterangan' => 'sektor'],
             ['id_penempatan' => '2.12', 'nama_penempatan' => 'Sektor II Koja', 'keterangan' => 'sektor'],

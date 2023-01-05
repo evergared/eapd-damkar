@@ -83,17 +83,20 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
                 ->sortable()
                 ->collapseOnMobile(),
             ButtonGroupColumn::make('Tindakan')
+                // ->attributes(function(){
+                //     return ;
+                //     })
                 ->buttons([
                     LinkColumn::make('ubah data')
                         ->title(function(){return 'Ubah Data';})
                         ->location(function(){return '#modal-kepegawaian';})
                         ->attributes(function ($row){
                             return [
-                                'class' => 'underline',
-                                'onclick' => "modal('modal-kepegawaian','".$row->nrk."','modalKepegawaian')"
+                                'class' => 'btn btn-link text-nowrap',
+                                'onclick' => "modal('modal-kepegawaian','".$row->nrk."','panggilModalKepegawaian')"
                             ];
-                        })
-                ])
+                        }),
+                    ])
         ];
     }
 
