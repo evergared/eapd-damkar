@@ -97,7 +97,7 @@ return new class extends Migration
                 $t->string('id_jabatan', 6)->unique();
                 $t->text('nama_jabatan');
                 $t->text('tipe_jabatan');
-                $t->enum('level_user', ['anggota', 'danton', 'admin_sektor', 'admin_sudin', 'admin_dinas', 'admin_super']);
+                $t->text('level_user');
                 $t->text('keterangan')->nullable();
                 $t->timestamps();
             });
