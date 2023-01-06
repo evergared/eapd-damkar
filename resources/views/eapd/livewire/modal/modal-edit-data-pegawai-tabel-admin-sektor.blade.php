@@ -33,7 +33,6 @@
                                 </button>
                               </div>
                           @endif
-                          
                           {{-- Form status end --}}
 
 
@@ -41,19 +40,19 @@
                             <div class="card-header p-0 pt-1 border-bottom-0">
                               <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
                                 <li class="nav-item">
-                                  <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Ubah Data</a>
+                                  <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true" wire:ignore.self>Ubah Data</a>
                                 </li>
                                 <li class="nav-item">
-                                  <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Ubah Password</a>
+                                  <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false" wire:ignore.self>Ubah Password</a>
                                 </li>
                                 
                               </ul>
                             </div>
                             <div class="card-body">
                               <div class="tab-content" id="custom-tabs-three-tabContent">
-                                <div class="tab-pane fade show active" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
 
-
+                                {{-- Bagian ubah data start --}}
+                                <div class="tab-pane fade show active" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab" wire:ignore.self>
 
                                     <div  class="accordion" id="accordion">
                                         <div class="card">
@@ -68,6 +67,7 @@
                                             <div id="accordion-data-pegawai" class="collapse" aria-labelledby="heading-accordion-data-pegawai" data-parent="#accordion" wire:ignore.self>
                                                     <div class="card-body">
                                                     <div class="row">
+
                                                         <div  class="card bg-secondary collapse fade show active" id="info-data-pegawai" wire:ignore.self>
                                                           <div class="card-body">
                                                             <div class="card-tools">
@@ -98,7 +98,7 @@
                                                                     <small class="text-warning"><strong>{{session('warning-nama')}}</strong></small> <br>
                                                                 @endif
                                                                 @error('nama')
-                                                                    <small class="text-danger"><strong>{{error('nama')}}</strong></small> <br>
+                                                                    <small class="text-danger"><strong>{{$message}}</strong></small> <br>
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group">
@@ -111,7 +111,7 @@
                                                                     <small class="text-warning"><strong>{{session('warning-nip')}}</strong></small> <br>
                                                                 @endif
                                                                 @error('nip')
-                                                                    <small class="text-danger"><strong>{{error('nip')}}</strong></small> <br>
+                                                                    <small class="text-danger"><strong>{{$message}}</strong></small> <br>
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group">
@@ -124,7 +124,7 @@
                                                                     <small class="text-warning"><strong>{{session('warning-nrk')}}</strong></small> <br>
                                                                 @endif
                                                                 @error('nrk')
-                                                                    <small class="text-danger"><strong>{{error('nrk')}}</strong></small> <br>
+                                                                    <small class="text-danger"><strong>{{$message}}</strong></small> <br>
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group">
@@ -137,7 +137,7 @@
                                                                     <small class="text-warning"><strong>{{session('warning-telp')}}</strong></small> <br>
                                                                 @endif
                                                                 @error('telp')
-                                                                    <small class="text-danger"><strong>{{error('telp')}}</strong></small> <br>
+                                                                    <small class="text-danger"><strong>{{$message}}</strong></small> <br>
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group">
@@ -150,7 +150,7 @@
                                                                     <small class="text-warning"><strong>{{session('warning-email')}}</strong></small> <br>
                                                                 @endif
                                                                 @error('email')
-                                                                    <small class="text-danger"><strong>{{error('email')}}</strong></small> <br>
+                                                                    <small class="text-danger"><strong>{{$message}}</strong></small> <br>
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group">
@@ -167,7 +167,7 @@
                                                                     <small class="text-warning"><strong>{{session('warning-aktif')}}</strong></small> <br>
                                                                 @endif
                                                                 @error('aktif')
-                                                                    <small class="text-danger"><strong>{{error('aktif')}}</strong></small> <br>
+                                                                    <small class="text-danger"><strong>{{$message}}</strong></small> <br>
                                                                 @enderror
                                                             </div>
                                                             @if ($this->dataPegawaiAdaYangDirubah())
@@ -186,7 +186,7 @@
                                     </div>
 
 
-                                  <div class="card card-default collapse fade show active">
+                                  <div class="card card-default collapse fade show active" wire:ignore.self>
                                     <div class="card-header">
                                       <h3 class="card-title">Data Penempatan</h3>
                                     </div>
@@ -202,25 +202,21 @@
                                           </div>
                                           <div class="form-group">
                                             <label>Pos</label>
-                                            <select wire:model='penempatan' wire:change='selectPenempatanDirubah' class="form-control select2bs4" style="width: 100%;">
+                                            <select wire:model='penempatan' wire:change='koreksiPenempatanDanGrup' class="form-control select2bs4" style="width: 100%;">
                                               <option disabled value="">Pilih Penempatan</option>
                                                     {{-- generate list pos penempatan start --}}
                                                     @forelse ($list_penempatan as $p)
 
-                                                        {{-- Khusus Pegawai yang tidak terikat dengan penempatan pos --}}
-                                                        {{-- Jika value = nama sektor --}}
-                                                        @if ($p['value'] == auth()->user()->data->sektor)
-
-                                                            {{-- Cek apakah pegawai merupakan petugas lapangan (grup != non grup) --}}
-                                                            @if (!in_array($grup,["A","B","C"]))
-                                                                {{-- Jika ya, maka tampilkan opsi untuk nama sektor --}}
-                                                                {{-- Jika tidak, maka lewati --}}
-                                                                <option value="{{$p['value']}}">{{$p['text']}}</option>
-                                                            @endif
-                                                        
-                                                        {{-- Jika value != nama sektor --}}
-                                                        @else
+                                                        @if($tipe_jabatan_user != $tipe_jabatan_personil)
+                                                        {{-- Jika user bukan personil, jangan tampilkan pos dan kantor sektor, tampilkan nama sektor saja --}}
+                                                          @if ($p['value'] == auth()->user()->data->sektor)
                                                             <option value="{{$p['value']}}">{{$p['text']}}</option>
+                                                          @endif
+                                                        @else
+                                                        {{-- Jika user personil, tampilkan pos dan kantor sektor, tapi tidak nama sektor --}}
+                                                          @if ($p['value'] != auth()->user()->data->sektor)
+                                                            <option value="{{$p['value']}}">{{$p['text']}}</option>
+                                                          @endif
                                                         @endif
                                                     @empty
                                     
@@ -235,18 +231,34 @@
                                                 <small class="text-warning"><strong>{{session('warning-penempatan')}}</strong></small> <br>
                                             @endif
                                             @error('penempatan')
-                                                <small class="text-danger"><strong>{{error('penempatan')}}</strong></small> <br>
+                                                <small class="text-danger"><strong>{{$message}}</strong></small> <br>
                                             @enderror
                                           </div>
                                           <div class="form-group">
                                             <label>Grup Jaga</label>
-                                            <select wire:model='grup' wire:change='selectGrupDirubah' class="form-control select2bs4" style="width: 100%;">
+                                            <select wire:model='grup' wire:change='koreksiPenempatanDanGrup' class="form-control select2bs4" style="width: 100%;">
                                               <option disabled value="">Pilih Grup</option>
+
+
+                                              {{-- Generate list grup jaga start --}}
                                               @forelse ($list_grup as $g)
-                                                  <option value="{{$g['value']}}">{{$g['text']}}</option>
+                                                  @if ( ($tipe_jabatan_user != $tipe_jabatan_personil) && ($tipe_jabatan_user != $tipe_jabatan_danton))
+                                                  {{-- Jika user bukan personil atau danton, jangan tampilkan grup abc, tapi tampilkan non grup saja --}}
+                                                      @if (!in_array($g['value'],['A','B','C']))
+                                                        <option value="{{$g['value']}}">{{$g['text']}}</option>
+                                                      @endif
+                                                  @else
+                                                  {{-- Jika user adalah personil atau danton, tampilkan grup abc, tapi jangan tampilkan non grup --}}
+                                                      @if (in_array($g['value'],['A','B','C']))
+                                                        <option value="{{$g['value']}}">{{$g['text']}}</option>
+                                                      @endif
+                                                  @endif
                                               @empty
                                                   
                                               @endforelse
+                                              {{-- Generate list grup jaga end --}}
+
+
                                             </select>
                                             @if ($grup != $cache_grup && $cache_grup != "")
                                               <small class="text-info">Sebelumnya <strong>{{$list_grup[array_search($cache_grup,array_column($list_grup,'value'))]['text']}}</strong></small> <br>
@@ -255,7 +267,7 @@
                                                 <small class="text-warning"><strong>{{session('warning-grup')}}</strong></small> <br>
                                             @endif
                                             @error('grup')
-                                                <small class="text-danger"><strong>{{error('grup')}}</strong></small> <br>
+                                                <small class="text-danger"><strong>{{$message}}</strong></small> <br>
                                             @enderror
                                           </div>
                                         </div>
@@ -268,28 +280,61 @@
                                   </div>
                                     <button type="button" class="btn btn-primary">Save changes</button>
                                 </div>
-                                <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
-                                  <div class="card card-default">
-                                    <div class="card-header">
-                                      <h3 class="card-title">Agus Suripto</h3>
-                                    </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body">
-                                      <div class="row">
-                                        <div class="col-md-6">
-                                          <div class="form-group">
-                                            <label>Password Baru</label>
-                                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Masukan Password">
-                                          </div>
-                                          <button type="button" class="btn btn-primary">Save changes</button>
+                                {{-- Bagian ubah data end --}}
+
+                                {{-- Bagian ubah password start --}}
+                                <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab" wire:ignore.self>
+
+                                  @if (!$user_ditemukan)
+                                        <div class="jumbotron text-center">
+                                          Akun user untuk <strong>{{$cache_nama}}</strong> tidak ditemukan. <br>
+                                          Pastikan pegawai tersebut memiliki akun di database, masih aktif atau belum pensiun. <br>
+                                          Koordinasikan dengan admin sudin dan admin dinas jika ada kesalahan data.
                                         </div>
+                                  @else
+                                      <div class="card card-default">
+                                        <div class="card-body">
+
+                                          <div  class="card bg-secondary collapse fade show active" id="info-data-password" wire:ignore.self>
+                                            <div class="card-body">
+                                              <div class="card-tools">
+                                                  <button type="button" class="close" data-toggle="collapse"
+                                                      data-target="#info-data-password" aria-label="Close">
+                                                      <span aria-hidden="true">×</span>
+                                                  </button>
+                                              </div>
+                                              <div>
+                                                Dibawah ini adalah kendali untuk mengubah password akun pegawai. <br>
+                                                Gunakan kendali dibawah untuk mengubah atau mereset password pegawai. <br>
+                                                Kendali ini hanya muncul untuk pegawai yang memiliki akun di web ini. <br>
+                                                Password default adalah <strong>123456</strong>.
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                          <div class="row">
+                                            <div class="col-md-6">
+                                              <div class="form-group">
+                                                <label>Password Baru</label>
+                                                <input type="text" class="form-control" wire:model.defer='password' placeholder="Masukan Password">
+                                                @error('password')
+                                                <small class="text-danger"><strong>{{$message}}</strong></small> <br>
+                                                @enderror
+                                              </div>
+                                              <button wire:click='simpanPerubahanPassword' type="button" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                          </div>
+                                          <!-- /.row -->
+                                        </div>
+                                        <!-- /.card-body -->
                                       </div>
-                                      <!-- /.row -->
-                                    </div>
-                                    <!-- /.card-body -->
-                                  </div>
+                                  @endif
+
+                                  
                                 </div>
-                                
+                                {{-- Bagian ubah password end --}}
+
+
                               </div>
                             </div>
                             <!-- /.card -->
@@ -297,7 +342,7 @@
                         </div>
                       </div>
                       <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
                       </div>
                     </div>
                     <!-- /.modal-content -->

@@ -5,7 +5,10 @@ namespace App\Http\Livewire\Eapd\Modal;
 use App\Models\Eapd\Grup;
 use App\Models\Eapd\Pegawai;
 use App\Models\Eapd\Penempatan;
+use App\Models\User;
+use App\Enum\TipeJabatan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Throwable;
 
@@ -29,7 +32,9 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         $email = "",
         $telp = "",
         $aktif = "",
-        $keterangan = "";
+        $password = "",
+        $keterangan = "",
+        $tipe_jabatan_user = "";
 
     public 
         $cache_nrk = "",
@@ -43,6 +48,13 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
 
     public 
         $jabatan_pegawai = "";
+
+    public
+        $user_ditemukan = false;
+
+    public 
+        $tipe_jabatan_personil = "",
+        $tipe_jabatan_danton = "";
 
     protected $listeners = [
         'panggilModalKepegawaian' => 'inisiasiModal'
@@ -83,6 +95,10 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             $this->aktif = $this->cache_aktif = $pegawai->aktif;
 
             $this->jabatan_pegawai = $pegawai->jabatan->nama_jabatan;
+            $this->tipe_jabatan_user = $pegawai->jabatan->tipe_jabatan;
+
+            $this->tipe_jabatan_personil = TipeJabatan::personil()->value;
+            $this->tipe_jabatan_danton = TipeJabatan::danton()->value;
 
             //ambil data pos sektor, kecuali nama sektor
             $this->list_penempatan = [];
@@ -112,7 +128,11 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
                 ]);
             }
 
-            $this->selectGrupDirubah();
+            // cek apakah ada user dengan nrk tersebut
+            $this->user_ditemukan = User::where('nrk','=',$this->cache_nrk)->first() != "";
+
+
+            $this->koreksiPenempatanDanGrup();
 
         }
         catch(Throwable $e)
@@ -144,75 +164,86 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         }
     }
 
-    public function selectGrupDirubah()
+    public function simpanPerubahanPassword()
     {
+        $this->validate(
+            ['password' => 'required|min:6'],
+            [
+                'password.required' => 'Field ini tidak boleh kosong untuk mengganti password.',
+                'password.min' => 'Demi keamanan, setidaknya password harus berisi :min karakter.'
+            ]
+        );
 
         try{
 
-            /**
-             * rules : 
-             * - pegawai yang tidak piket, tidak boleh ditempatkan di pos / kantor sektor, melainkan di nama sektor
-             * - pegawai yang piket, tidak boleh ditempatkan di nama sektor, melainkan di pos / kantor sektor
-             * - nama sektor khusus pegawai yang tidak piket atau pegawai yang baru pindah dan belum diberikan penempatan
-             */
+            $user = User::where('nrk','=',$this->cache_nrk)->first();
+            $user->password = Hash::make($this->password);
+            $user->save();
+            session()->flash('form-success','Berhasil mengganti password akun '.$this->cache_nama);
+            $this->password = "";
 
-            // jika pegawai punya grup jaga, tapi penempatan di nama sektor
-            if($this->penempatan == Auth::user()->data->sektor && in_array($this->grup,['A','B','C']))
-            {
-                $tempat = Penempatan::where('id_penempatan','=',Auth::user()->data->sektor)->first()->nama_penempatan;
-                // $this->list_penempatan = [];
-                $this->penempatan = "";
-                $this->grup = "";
-                session()->flash('warning-penempatan','Penempatan '.$tempat.' hanya untuk yang tidak memiliki grup jaga.');
-            }
-            else if($this->penempatan != Auth::user()->data->sektor && !in_array($this->grup,['A','B','C']))
-            {
-                $tempat = Penempatan::where('id_penempatan','=',Auth::user()->data->sektor)->first()->nama_penempatan;
-                // $this->list_penempatan = [];
-                $this->penempatan = "";
-                $this->grup = "";
-                session()->flash('warning-penempatan','Penempatan di pos / kantor sektor hanya untuk yang memiliki grup jaga atau piket.');
-            }
         }
         catch(Throwable $e)
         {
-            error_log('Terjadi kesalahan saat mengganti grup jaga. '.$e);
-            report('Terjadi kesalahan saat mengganti grup jaga. '.$e);
-            session()->flash('error-data-penempatan','Terjadi kesalahan saat mengganti grup jaga.');
-            $this->grup = "";
+            error_log('Gagal mengubah password '.$e);
+            report('Gagal mengubah password '.$e);
+            session()->flash('form-fail','Gagal melakukan perubahan password');
         }
-
-
     }
 
-    public function selectPenempatanDirubah()
+    public function koreksiPenempatanDanGrup()
     {
 
         try{
 
             /**
+             * Agar tidak ada pegawai yang seharusnya tidak termasuk anggota pos, tapi masuk pos
+             * Hal tersebut akan mempengaruhi perhitungan apd untuk pos-posan
+             * Pegawai tersebut harusnya ditempatkan di nama sektor saja, tidak perlu di kantor sektor atau pos
+             * Contoh pegawai tersebut seperti :
+             * staff, danton, kepala sektor
              * rules : 
              * - pegawai yang tidak piket, tidak boleh ditempatkan di pos / kantor sektor, melainkan di nama sektor
              * - pegawai yang piket, tidak boleh ditempatkan di nama sektor, melainkan di pos / kantor sektor
              * - nama sektor khusus pegawai yang tidak piket atau pegawai yang baru pindah dan belum diberikan penempatan
              */
 
-            // jika pegawai punya grup jaga, tapi penempatan di nama sektor
-            if($this->penempatan == Auth::user()->data->sektor && in_array($this->grup,['A','B','C']))
+            // cek penempatan dan grup tidak kosong
+            if($this->penempatan != "" && $this->grup != "")
             {
-                $tempat = Penempatan::where('id_penempatan','=',Auth::user()->data->sektor)->first()->nama_penempatan;
-                // $this->list_penempatan = [];
-                $this->penempatan = "";
-                $this->grup = "";
-                session()->flash('warning-penempatan','Penempatan '.$tempat.' hanya untuk yang tidak memiliki grup jaga.');
-            }
-            else if($this->penempatan != Auth::user()->data->sektor && !in_array($this->grup,['A','B','C']))
-            {
-                $tempat = Penempatan::where('id_penempatan','=',Auth::user()->data->sektor)->first()->nama_penempatan;
-                // $this->list_penempatan = [];
-                $this->penempatan = "";
-                $this->grup = "";
-                session()->flash('warning-penempatan','Penempatan di pos / kantor sektor hanya untuk yang memiliki grup jaga atau piket.');
+                // jika user merupakan petugas lapangan
+                if($this->tipe_jabatan_user == $this->tipe_jabatan_personil) // tambahkan jabatan dengan in_array jika perlu
+                {
+                    // jika penempatannya menggunakan nama sektor
+                    if($this->penempatan == Auth::user()->data->sektor)
+                    {
+                        $tempat = Penempatan::where('id_penempatan','=',Auth::user()->data->sektor)->first()->nama_penempatan;
+                        $this->penempatan = "";
+                        session()->flash('warning-penempatan','Penempatan '.$tempat.' hanya untuk yang tidak memiliki grup jaga.');
+                    }
+
+                    // jika grup jaganya bukan abc
+                    if(!in_array($this->grup,["A","B","C"]))
+                    {
+                        $this->grup = "";
+                        session()->flash('warning-grup','Pilih kembali grup jaga.');
+                    }
+                }
+                else
+                {
+                    if($this->penempatan != Auth::user()->data->sektor)
+                    {
+                        $tempat = Penempatan::where('id_penempatan','=',Auth::user()->data->sektor)->first()->nama_penempatan;
+                        $this->penempatan = "";
+                        session()->flash('warning-penempatan','Pilih penempatan '.$tempat.' untuk yang tidak memiliki grup jaga.');
+                    }
+
+                    if(in_array($this->grup,["A","B","C"]) && $this->tipe_jabatan_user != $this->tipe_jabatan_danton) // tambahkan jabatan dengan in_array jika perlu
+                    {
+                        $this->grup = "";
+                        session()->flash('warning-grup','Grup jaga ABC hanya untuk yang melaksanakan piket jaga.');
+                    }
+                }
             }
         }
         catch(Throwable $e)
