@@ -90,7 +90,7 @@
                                                         <div class="col-sm-6 col-md-8 col-lg-10">
                                                             <div class="form-group">
                                                                 <label>Nama</label>
-                                                                <input class="form-control" type="text" wire:model='nama'>
+                                                                <input class="form-control" type="text" wire:model.lazy='nama'>
                                                                 @if ($nama != $cache_nama && $cache_nama != "")
                                                                   <small class="text-info">Sebelumnya <strong>{{ ($cache_nama == "") ? 'kosong' : $cache_nama}}</strong></small> <br>
                                                                 @endif
@@ -103,7 +103,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>NIP / NIK</label>
-                                                                <input class="form-control" type="text" wire:model='nip'>
+                                                                <input class="form-control" type="text" wire:model.lazy='nip'>
                                                                 @if ($nip != $cache_nip)
                                                                   <small class="text-info">Sebelumnya <strong>{{($cache_nip == "") ? 'kosong' : $cache_nip}}</strong></small> <br>
                                                                 @endif
@@ -116,7 +116,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>NRK / No PJLP</label>
-                                                                <input class="form-control" type="text" wire:model='nrk'>
+                                                                <input class="form-control" type="text" wire:model.lazy='nrk'>
                                                                 @if ($nrk != $cache_nrk)
                                                                   <small class="text-info">Sebelumnya <strong>{{($cache_nrk == "")? 'kosong' : $cache_nrk }}</strong></small> <br>
                                                                 @endif
@@ -129,7 +129,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>No Telp</label>
-                                                                <input class="form-control" type="text" wire:model='telp'>
+                                                                <input class="form-control" type="text" wire:model.lazy='telp'>
                                                                 @if ($telp != $cache_telp)
                                                                   <small class="text-info">Sebelumnya <strong>{{($cache_telp == "")? 'kosong' : $cache_telp}}</strong></small> <br>
                                                                 @endif
@@ -142,7 +142,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Email</label>
-                                                                <input class="form-control" type="text" wire:model='email'>
+                                                                <input class="form-control" type="text" wire:model.lazy='email'>
                                                                 @if ($email != $cache_email)
                                                                   <small class="text-info">Sebelumnya <strong>{{($cache_email == "")? 'kosong' : $cache_email}}</strong></small> <br>
                                                                 @endif
@@ -278,7 +278,7 @@
                                     </div>
                                     <!-- /.card-body -->
                                   </div>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                    <button wire:click='simpanPerubahanData' type="button" class="btn btn-primary">Save changes</button>
                                 </div>
                                 {{-- Bagian ubah data end --}}
 

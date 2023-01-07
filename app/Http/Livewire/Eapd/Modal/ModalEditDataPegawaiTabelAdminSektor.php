@@ -91,7 +91,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             $this->grup = $this->cache_grup = $pegawai->id_grup;
             $this->penempatan = $this->cache_penempatan = $pegawai->id_penempatan;
             $this->email = $this->cache_email = $pegawai->email;
-            $this->telp = $this->cache_telp = $pegawai->telp;
+            $this->telp = $this->cache_telp = $pegawai->no_telp;
             $this->aktif = $this->cache_aktif = $pegawai->aktif;
 
             $this->jabatan_pegawai = $pegawai->jabatan->nama_jabatan;
@@ -155,11 +155,27 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             $pegawai->no_telp = $this->telp;
             $pegawai->aktif = $this->aktif;
 
+            $pegawai->save();
 
+            // ambil data pegawai
+            $pegawai = Pegawai::where('nrk','=',$this->nrk)->first();
+
+            // inisiasi data lainnya
+            $this->nrk = $this->cache_nrk = $pegawai->nrk;
+            $this->nama = $this->cache_nama = $pegawai->nama;
+            $this->nip = $this->cache_nip = $pegawai->nip;
+            $this->grup = $this->cache_grup = $pegawai->id_grup;
+            $this->penempatan = $this->cache_penempatan = $pegawai->id_penempatan;
+            $this->email = $this->cache_email = $pegawai->email;
+            $this->telp = $this->cache_telp = $pegawai->no_telp;
+            $this->aktif = $this->cache_aktif = $pegawai->aktif;
+
+            session()->flash('form-success','Berhasil melakukan perubahan data.');
 
         }
         catch(Throwable $e)
         {
+            session()->flash('form-fail','Gagal melakukan perubahan data.');
             error_log('Gagal melakukan perubahan data '.$e);
         }
     }

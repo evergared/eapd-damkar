@@ -53,7 +53,7 @@ return new class extends Migration
 
         if (!Schema::hasTable('pegawai')) {
             Schema::create('pegawai', function (Blueprint $t) {
-                $t->id('id')->comment('dari laravel, dibutuhkan untuk serialization');
+                $t->uuid('id')->primary()->comment('dari laravel, dibutuhkan untuk serialization');
                 $t->string('nrk', 10)->unique()->comment('no pjlp');
                 $t->string('nip', 20)->unique()->nullable()->comment('nik pjlp');
                 $t->text('nama');
@@ -237,15 +237,30 @@ return new class extends Migration
         }
 
 
-        // join table
-        // penamaan : pivot_table1_dan_table2
-        // urutan table mengikuti urutan abjad
+        // pivot table
 
         if (!Schema::hasTable('pivot_input_apd_template')) {
             Schema::create('pivot_input_apd_template', function (Blueprint $t) {
                 $t->foreignId('id_template', 8)->nullable();
                 $t->string('id_jabatan', 6)->nullable();
                 $t->foreignId('id_periode', 8)->nullable();
+            });
+        }
+
+
+        // tabel history untuk menunjukan perubahan data ke admin tingkat atas
+
+        if(!Schema::hasTable('history_tabel_pegawai')){
+            Schema::create('history_tabel_pegawai',function(Blueprint $t){
+                $t->foreignUuid('id');
+                $t->longText('data_sebelumnya')->nullable();
+                $t->longText('data_perubahan')->nullable();
+                $t->text('komentar_perubahan')->nullable();
+                $t->string('nrk_pengubah',10);
+                $t->boolean('dilihat_admin_sektor')->default(false);
+                $t->boolean('dilihat_admin_sudin')->default(false);
+                $t->boolean('dilihat_admin_dinas')->default(false);
+                $t->comment('tabel agar admin tingkat atas tau jika ada perubahan data pegawai');
             });
         }
 
@@ -257,8 +272,8 @@ return new class extends Migration
         /**
          * aturan : 
          * - tipe kolom harus sama
-         * - jika kolom asli bukan primary key, buat jadi unique
-         * - jika foreign key mendukung constraint null spt nullondelete, kolom asli harus nullable 
+         * - jika kolom asal bukan primary key, buat jadi unique
+         * - jika foreign key mendukung constraint null spt nullondelete, kolom asal harus nullable 
          */
 
         error_log('now setting foreign keys');
@@ -328,13 +343,22 @@ return new class extends Migration
             });
         }
 
-        // join table
+        // pivot table
         if (Schema::hasTable('pivot_input_apd_template')) {
             Schema::table('pivot_input_apd_template', function (Blueprint $t) {
                 $t->foreign('id_template')->references('id')->on('input_apd_template')->cascadeOnDelete();
                 $t->foreign('id_jabatan')->references('id_jabatan')->on('jabatan')->cascadeOnDelete()->cascadeOnUpdate();
                 $t->foreign('id_periode')->references('id')->on('periode_input_apd')->cascadeOnDelete()->cascadeOnUpdate();
                 $t->comment('Untuk Many-to-Many tabel input_apd_template, jabatan, periode_input_apd');
+            });
+        }
+
+        // tabel history
+
+        if(Schema::hasTable('history_tabel_pegawai')){
+            Schema::table('history_tabel_pegawai',function(Blueprint $t){
+                $t->foreign('id')->references('id')->on('pegawai')->cascadeOnDelete();
+                $t->foreign('nrk_pengubah')->references('nrk')->on('pegawai')->cascadeOnDelete()->cascadeOnUpdate();
             });
         }
     }
@@ -422,6 +446,15 @@ return new class extends Migration
             });
         }
 
+
+        // tabel history
+        if(Schema::hasTable('history_tabel_pegawai')){
+            Schema::table('history_tabel_pegawai',function(Blueprint $t){
+                $t->dropForeign('history_tabel_pegawai_id_foreign');
+                $t->dropForeign('history_tabel_pegawai_nrk_pengubah_foreign');
+            });
+        }
+
         Schema::dropIfExists('user');
         Schema::dropIfExists('pegawai');
         Schema::dropIfExists('grup');
@@ -441,5 +474,8 @@ return new class extends Migration
 
         // join table
         Schema::dropIfExists('pivot_input_apd_template');
+
+        // tabel history
+        Schema::dropIfExists('history_tabel_pegawai');
     }
 };

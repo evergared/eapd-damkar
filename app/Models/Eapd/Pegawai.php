@@ -4,6 +4,7 @@ namespace App\Models\Eapd;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Throwable;
 
 class Pegawai extends Model
@@ -85,5 +86,24 @@ class Pegawai extends Model
             return "-";
         }
 
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($Pegawai) {
+            $Pegawai->{$Pegawai->getKeyName()} = (string) Str::uuid();
+        });
+
+        static::updating(function ($Pegawai){
+            error_log('updating pegawai');
+            error_log('updating pegawai no telp : '.$Pegawai->getOriginal("no_telp"));
+        });
+
+        static::updated(function ($Pegawai) {
+            error_log('updated pegawai');
+            error_log('updated pegawai no telp : '.$Pegawai->getOriginal('no_telp'));
+        });
     }
 }
