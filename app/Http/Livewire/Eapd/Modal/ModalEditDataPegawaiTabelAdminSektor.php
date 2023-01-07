@@ -15,6 +15,7 @@ use Throwable;
 class ModalEditDataPegawaiTabelAdminSektor extends Component
 {
 
+    // data untuk option select
     public 
         $list_penempatan = [],
         $list_grup = [],
@@ -23,6 +24,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             ['value' => '0', 'text'=>"Tidak Aktif / Pensiun"],
         ];
 
+    // data pegawai yang dipanggil
     public 
         $nrk = "",
         $nip = "",
@@ -36,6 +38,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         $keterangan = "",
         $tipe_jabatan_user = "";
 
+    // untuk menyimpan data awal
     public 
         $cache_nrk = "",
         $cache_nip = "",
@@ -46,12 +49,15 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         $cache_telp = "",
         $cache_aktif = "";
 
+    // untuk ditampilkan di ubah penempatan
     public 
         $jabatan_pegawai = "";
 
+    // untuk menampilkan atau tidaknya ubah password
     public
         $user_ditemukan = false;
 
+    // untuk perbandingan tipe jabatan
     public 
         $tipe_jabatan_personil = "",
         $tipe_jabatan_danton = "";
@@ -79,8 +85,6 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         {
             // ambil nrk
             $this->nrk = $this->cache_nrk = $value;
-
-            error_log('nrk '.$this->nrk);
 
             // ambil data pegawai
             $pegawai = Pegawai::where('nrk','=',$this->nrk)->first();
@@ -137,7 +141,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         }
         catch(Throwable $e)
         {
-            error_log($e);
+            error_log('gagal inisiasi modal edit data pegawai '.$e);
         }
     }
 
@@ -145,7 +149,10 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
     {
         try{
 
+            // ambil data pegawai mana yang mau diubah
             $pegawai = Pegawai::where('nrk','=',$this->cache_nrk)->first();
+
+            // ambil perubahan dari input di modal
             $pegawai->id_grup = $this->grup;
             $pegawai->id_penempatan = $this->penempatan;
             $pegawai->nama = $this->nama;
@@ -155,12 +162,13 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             $pegawai->no_telp = $this->telp;
             $pegawai->aktif = $this->aktif;
 
+            // simpan atau update melalui eloquent model
             $pegawai->save();
 
             // ambil data pegawai
             $pegawai = Pegawai::where('nrk','=',$this->nrk)->first();
 
-            // inisiasi data lainnya
+            // inisiasi ulang data lainnya
             $this->nrk = $this->cache_nrk = $pegawai->nrk;
             $this->nama = $this->cache_nama = $pegawai->nama;
             $this->nip = $this->cache_nip = $pegawai->nip;
@@ -170,7 +178,11 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             $this->telp = $this->cache_telp = $pegawai->no_telp;
             $this->aktif = $this->cache_aktif = $pegawai->aktif;
 
+            // tampilkan pesan
             session()->flash('form-success','Berhasil melakukan perubahan data.');
+
+            // refresh datatable
+            $this->emit('refreshDatatable');
 
         }
         catch(Throwable $e)
@@ -182,6 +194,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
 
     public function simpanPerubahanPassword()
     {
+        // validasi password yang diinput
         $this->validate(
             ['password' => 'required|min:6'],
             [
@@ -192,10 +205,15 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
 
         try{
 
+            // ambil user mana yang akan diubah passwordnya
             $user = User::where('nrk','=',$this->cache_nrk)->first();
+            // buat password dari inputan
             $user->password = Hash::make($this->password);
+            // simpan perubahan
             $user->save();
+            // tampilkan pesan
             session()->flash('form-success','Berhasil mengganti password akun '.$this->cache_nama);
+            // hapus isi dari input password
             $this->password = "";
 
         }
@@ -205,6 +223,18 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             report('Gagal mengubah password '.$e);
             session()->flash('form-fail','Gagal melakukan perubahan password');
         }
+    }
+
+    public function resetPerubahanData()
+    {
+            $this->nrk = $this->cache_nrk;
+            $this->nama = $this->cache_nama;
+            $this->nip = $this->cache_nip;
+            $this->grup = $this->cache_grup;
+            $this->penempatan = $this->cache_penempatan;
+            $this->email = $this->cache_email;
+            $this->telp = $this->cache_telp;
+            $this->aktif = $this->cache_aktif;
     }
 
     public function koreksiPenempatanDanGrup()

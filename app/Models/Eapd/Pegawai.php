@@ -98,12 +98,70 @@ class Pegawai extends Model
 
         static::updating(function ($Pegawai){
             error_log('updating pegawai');
-            error_log('updating pegawai no telp : '.$Pegawai->getOriginal("no_telp"));
+
+            // kendala : belum bisa dapat id dari data yang diinput
+            
+            // // cek apakah ada data dengan id data yg dirubah di tabel history
+            // if($data = HistoryTabelPegawai::find($Pegawai->id))
+            // {
+            //     // jika ada, cek apakah para admin telah melihat perubahan sebelumnya
+
+            //     // jika sudah dilihat oleh para admin
+            //     if($data->dilihat_admin_sektor && $data->dilihat_admin_sudin && $data->dilihat_admin_dinas)
+            //     {
+            //         // ambil data original
+            //         $data_original = $Pegawai->getOriginal();
+
+            //         // ambil data yang diubah
+            //         $data_dirty = $Pegawai->getDirty();
+
+            //         // simpan data ke tabel history
+            //         $data->data_sebelumnya = $data_original;
+            //         $data->data_perubahan = $data_dirty;
+
+            //         // reset semua flag
+            //         $data->dilihat_admin_sektor = false;
+            //         $data->dilihat_admin_sudin = false;
+            //         $data->dilihat_admin_dinas = false;
+
+            //         // eloquent save
+            //         $data->save();
+            //     }
+            //     // jika para admin ada yang belum lihat
+            //     else
+            //     {
+            //         // ambil data yang diubah
+            //         $data_dirty = $Pegawai->getDirty();
+
+            //         // simpan ke tabel history
+            //         $data->data_perubahan = $data_dirty;
+
+            //         // eloquent save
+            //         $data->save();
+            //     }
+            // }
+            // // jika tidak ada data tersebut di tabel history
+            // else
+            // {
+            //     error_log('pegawai id : '.$Pegawai->getOriginal('id'));
+            //     $data_original = $Pegawai->getOriginal();
+
+            //     $data_dirty = $Pegawai->getDirty();
+
+            //     $history = new HistoryTabelPegawai;
+
+            //     $history->id = $Pegawai->getOriginal('id');
+            //     // $history->data_sebelumnya = $data_original;
+            //     // $history->data_perubahan = $data_dirty;
+
+            //     $history->save();
+            // }
         });
 
         static::updated(function ($Pegawai) {
             error_log('updated pegawai');
-            error_log('updated pegawai no telp : '.$Pegawai->getOriginal('no_telp'));
+
+            // kirim event untuk notifikasi disini
         });
     }
 }

@@ -2,10 +2,12 @@
 
 namespace App\Http\Livewire\Eapd\Datatable;
 
+use App\Models\Eapd\Grup;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use App\Models\Eapd\Pegawai;
+use App\Models\Eapd\Penempatan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
@@ -64,7 +66,7 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
                 ->searchable()
                 ->collapseOnMobile(),
             Column::make("Profile img", "profile_img")
-                ->isHidden(),
+                ->hideIf(true),
             Column::make("No telp", "no_telp")
                 ->deselected()
                 ->searchable()
@@ -73,6 +75,8 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
                 ->sortable()
                 ->collapseOnMobile()
                 ->searchable(),
+            Column::make('id_penempatan')
+                ->hideIf(true),
             Column::make("Penempatan", "penempatan.nama_penempatan")
                 ->searchable()
                 ->sortable(),
@@ -102,7 +106,40 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
 
     public function filters(): array
     {
+        // untuk filter penempatan
+        $penempatan = Penempatan::where('id_penempatan','like',Auth::user()->data->sektor.'%')
+                        ->get(['id_penempatan as value','nama_penempatan as text'])
+                        ->toArray();
+        $opsi_penempatan = [];
+        foreach($penempatan as $p)
+        {
+            $opsi_penempatan[$p['value']] = $p['text'];
+        }
+
+        // untuk filter grup
+        $grup = Grup::all(['id_grup as value','nama_grup as text'])
+                        ->toArray();
+        $opsi_grup = [];
+        foreach($grup as $p)
+        {
+            $opsi_grup[$p['value']] = $p['text'];
+        }
+
         return [
+            SelectFilter::make('Penempatan','id_penempatan')
+            ->setFilterPillTitle(' Penempatan di ')
+            ->setFilterPillValues($opsi_penempatan)
+            ->options($opsi_penempatan)
+            ->filter(function(Builder $b,string $val){
+                $b->where('pegawai.id_penempatan','=',$val);
+            }),
+            SelectFilter::make('Grup','grup')
+            ->setFilterPillTitle(' Grup Jaga ')
+            ->setFilterPillValues($opsi_grup)
+            ->options($opsi_grup)
+            ->filter(function(Builder $b,string $val){
+                $b->where('pegawai.id_grup','=',$val);
+            }),
             SelectFilter::make('Masih Aktif','aktif')
             ->setFilterPillTitle('Masih Aktif')
             ->setFilterPillValues([
@@ -119,7 +156,8 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
                     $b->where('pegawai.aktif',true);
                 elseif($val === '0')
                     $b->where('pegawai.aktif',false);
-            })
+            }),
+            
         ];
     }
 }

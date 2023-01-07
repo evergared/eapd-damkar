@@ -170,12 +170,10 @@
                                                                     <small class="text-danger"><strong>{{$message}}</strong></small> <br>
                                                                 @enderror
                                                             </div>
-                                                            @if ($this->dataPegawaiAdaYangDirubah())
-                                                              <div class="form-group">
+                                                              <div class="form-group collapse {{($this->dataPegawaiAdaYangDirubah())? " fade show active" : " fade hide"}}">
                                                                 <label>Keterangan Perubahan</label>
                                                                 <textarea class="form-control" wire:model='keterangan' cols="20" rows="10" placeholder="(Opsional) Beri keterangan terhadap perubahan data yang dilakukan."></textarea>
                                                               </div>                                                                
-                                                            @endif
                                                         </div>
                                                         {{-- Form input untuk data pegawai end --}}
 
@@ -279,6 +277,7 @@
                                     <!-- /.card-body -->
                                   </div>
                                     <button wire:click='simpanPerubahanData' type="button" class="btn btn-primary">Save changes</button>
+                                    <button wire:click='resetPerubahanData' type="button" class="btn btn-secondary">Reset</button>
                                 </div>
                                 {{-- Bagian ubah data end --}}
 

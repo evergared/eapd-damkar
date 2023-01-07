@@ -256,10 +256,11 @@ return new class extends Migration
                 $t->longText('data_sebelumnya')->nullable();
                 $t->longText('data_perubahan')->nullable();
                 $t->text('komentar_perubahan')->nullable();
-                $t->string('nrk_pengubah',10);
+                $t->string('nrk_pengubah',10)->nullable();
                 $t->boolean('dilihat_admin_sektor')->default(false);
                 $t->boolean('dilihat_admin_sudin')->default(false);
                 $t->boolean('dilihat_admin_dinas')->default(false);
+                $t->timestamps();
                 $t->comment('tabel agar admin tingkat atas tau jika ada perubahan data pegawai');
             });
         }
