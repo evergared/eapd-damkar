@@ -140,11 +140,11 @@ class Pegawai extends Model
                             $data->dilihat_admin_dinas = false;
 
                             // flag admin yang mengubah
-                            switch(Auth::user()->data->level_user)
+                            switch(Auth::user()->data->jabatan->level_user)
                             {
-                                case LevelUser::adminSektor(): $data->dilihat_admin_sektor = true; break;
-                                case LevelUser::adminSudin(): $data->dilihat_admin_sudin = true; break;
-                                case LevelUser::adminDinas(): $data->dilihat_admin_dinas = true; break;
+                                case LevelUser::adminSektor()->value: $data->dilihat_admin_sektor = true; break;
+                                case LevelUser::adminSudin()->value: $data->dilihat_admin_sudin = true; break;
+                                case LevelUser::adminDinas()->value: $data->dilihat_admin_dinas = true; break;
                                 default: break;
                             }
 
@@ -167,11 +167,11 @@ class Pegawai extends Model
                             $data->dilihat_admin_dinas = false;
 
                             // flag admin yang mengubah
-                            switch(Auth::user()->data->level_user)
+                            switch(Auth::user()->data->jabatan->level_user)
                             {
-                                case LevelUser::adminSektor(): $data->dilihat_admin_sektor = true; break;
-                                case LevelUser::adminSudin(): $data->dilihat_admin_sudin = true; break;
-                                case LevelUser::adminDinas(): $data->dilihat_admin_dinas = true; break;
+                                case LevelUser::adminSektor()->value: $data->dilihat_admin_sektor = true; break;
+                                case LevelUser::adminSudin()->value: $data->dilihat_admin_sudin = true; break;
+                                case LevelUser::adminDinas()->value: $data->dilihat_admin_dinas = true; break;
                                 default: break;
                             }
 
@@ -229,9 +229,9 @@ class Pegawai extends Model
 
     function gantiFlagAdminYangMerubah($eloquent)
     {
-        switch(Auth::user()->data->level_user)
+        switch(Auth::user()->data->jabatan->level_user)
         {
-            case LevelUser::adminSektor(): $eloquent->dilihat_admin_sektor = true; break;
+            case LevelUser::adminSektor()->value: $eloquent->dilihat_admin_sektor = true; break;
             case LevelUser::adminSudin(): $eloquent->dilihat_admin_sudin = true; break;
             case LevelUser::adminDinas(): $eloquent->dilihat_admin_dinas = true; break;
             default: break;
