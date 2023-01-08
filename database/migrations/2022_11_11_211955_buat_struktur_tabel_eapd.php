@@ -252,10 +252,10 @@ return new class extends Migration
 
         if(!Schema::hasTable('history_tabel_pegawai')){
             Schema::create('history_tabel_pegawai',function(Blueprint $t){
-                $t->foreignUuid('id');
-                $t->longText('data_sebelumnya')->nullable();
-                $t->longText('data_perubahan')->nullable();
-                $t->text('komentar_perubahan')->nullable();
+                $t->foreignUuid('id')->primary();
+                $t->longText('sebelumnya')->nullable();
+                $t->longText('perubahan')->nullable();
+                $t->text('keterangan_perubahan')->nullable();
                 $t->string('nrk_pengubah',10)->nullable();
                 $t->boolean('dilihat_admin_sektor')->default(false);
                 $t->boolean('dilihat_admin_sudin')->default(false);

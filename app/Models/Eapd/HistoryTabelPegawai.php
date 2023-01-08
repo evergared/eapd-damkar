@@ -14,8 +14,8 @@ class HistoryTabelPegawai extends Model
 
     protected $fillable = [
         'id',
-        'data_sebelumnya',
-        'data_perubahan',
+        'sebelumnya',
+        'perubahan',
         'komentar_perubahan',
         'nrk_pengubah',
         'dilihat_admin_sektor',
@@ -23,7 +23,7 @@ class HistoryTabelPegawai extends Model
         'dilihat_admin_dinas'
     ];
 
-    public function data_sebelumnya():Attribute
+    public function sebelumnya():Attribute
     {
         return Attribute::make(
             get : fn($value) => json_decode($value,true),
@@ -31,7 +31,7 @@ class HistoryTabelPegawai extends Model
         );
     }
 
-    public function data_perubahan():Attribute
+    public function perubahan():Attribute
     {
         return Attribute::make(
             get : fn($value) => json_decode($value,true),

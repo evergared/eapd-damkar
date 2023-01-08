@@ -7,6 +7,7 @@ use App\Models\Eapd\Pegawai;
 use App\Models\Eapd\Penempatan;
 use App\Models\User;
 use App\Enum\TipeJabatan;
+use App\Models\Eapd\HistoryTabelPegawai;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
@@ -147,6 +148,9 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
 
     public function simpanPerubahanData()
     {
+        $id_pegawai = "";
+
+        // proses menyimpan perubahan data
         try{
 
             // ambil data pegawai mana yang mau diubah
@@ -162,11 +166,17 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             $pegawai->no_telp = $this->telp;
             $pegawai->aktif = $this->aktif;
 
+            $id_pegawai = $pegawai->id;
+
             // simpan atau update melalui eloquent model
             $pegawai->save();
 
+            // ambil id pegawai yang barusan di update
+            // $id_pegawai = $pegawai->{$pegawai->getKeyName()};
+            error_log('id pegawai dari modal : '.$id_pegawai);
+
             // ambil data pegawai
-            $pegawai = Pegawai::where('nrk','=',$this->nrk)->first();
+            $pegawai = Pegawai::where('id','=',$id_pegawai)->first();
 
             // inisiasi ulang data lainnya
             $this->nrk = $this->cache_nrk = $pegawai->nrk;
@@ -187,8 +197,35 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         }
         catch(Throwable $e)
         {
-            session()->flash('form-fail','Gagal melakukan perubahan data.');
-            error_log('Gagal melakukan perubahan data '.$e);
+            if(is_null($pegawai) && $id_pegawai != "")
+            {
+                session()->flash('form-success','Berhasil melakukan perubahan data, namun terjadi kesalahan saat mengambil data yang telah diubah.');
+                error_log('Gagal mengambil data setelah perubahan berhasil '.$e);
+            }
+            else
+            {
+                session()->flash('form-fail','Gagal melakukan perubahan data.');
+                error_log('Gagal melakukan perubahan data '.$e);
+            }
+            
+        }
+
+        // proses menyimpan keterangan admin (bila ada)
+        if($this->keterangan != "" && $id_pegawai != "")
+        {
+            try{
+                error_log('hit keterangan edit user '.$id_pegawai);
+                $history = HistoryTabelPegawai::where('id','=',$id_pegawai)->first();
+                $history->keterangan_perubahan = $this->keterangan;
+                
+                $history->save();
+                $this->keterangan = "";
+
+            }
+            catch(Throwable $e)
+            {
+                error_log('Gagal menambahkan keterangan perubahan pada data pegawai yang telah diubah '.$e);
+            }
         }
     }
 
