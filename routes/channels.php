@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\LevelUser;
 use Illuminate\Support\Facades\Broadcast;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -35,3 +36,15 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 // Broadcast::channel('tes', function () {             // <---- contoh public channel, laravel-echo dan livewire otomatis handle ini walau tidak dibuat
 //     return true;
 // });
+
+Broadcast::channel('admin-sektor.{sender}',function($user, $sender){
+    return Auth::user()->data->jabatan->level_user == LevelUser::adminSektor();
+});
+
+Broadcast::channel('admin-sudin.{sender}',function($user, $sender){
+    return Auth::user()->data->jabatan->level_user == LevelUser::adminSudin();
+});
+
+Broadcast::channel('admin-dinas.{sender}',function($user, $sender){
+    return Auth::user()->data->jabatan->level_user == LevelUser::adminDinas();
+});

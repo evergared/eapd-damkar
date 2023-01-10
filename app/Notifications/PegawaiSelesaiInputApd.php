@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ContohNotifikasi extends Notification implements ShouldQueue
+class PegawaiSelesaiInputApd extends Notification
 {
     use Queueable;
 
@@ -18,7 +18,7 @@ class ContohNotifikasi extends Notification implements ShouldQueue
      */
     public function __construct()
     {
-        $this->broadcastOn();
+        //
     }
 
     /**
@@ -29,7 +29,7 @@ class ContohNotifikasi extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['mail'];
     }
 
     /**
@@ -41,9 +41,9 @@ class ContohNotifikasi extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -55,7 +55,7 @@ class ContohNotifikasi extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            "tipe" => ""
+            //
         ];
     }
 }
