@@ -30,7 +30,7 @@ class ModalKolomProfilTabelAnggotaKaton extends Component
         // error_log('value ; ' . $value);
         $this->nrk = $value;
 
-        $pegawai = Pegawai::where('nrk', '=', $value)->first();
+        $pegawai = Pegawai::where('id', '=', $value)->first();
 
         $this->nip = $pegawai->nip;
         $this->nama = $pegawai->nama;

@@ -26,7 +26,7 @@ class ContohEvent implements ShouldBroadcast
      */
     public function __construct($nrk)
     {
-        $this->nrk = $nrk;
+        $this->id_pegawai = $id_pegawai;
     }
 
     /**

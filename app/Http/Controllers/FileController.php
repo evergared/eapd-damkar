@@ -76,13 +76,13 @@ class FileController extends Controller
      * 
      * @return String nama file baru untuk di simpan di database
      */
-    public function prosesNamaFileApdUpload($nrk, $id_item = 'item', $tipe_file = 'jpg', $urutan = null)
+    public function prosesNamaFileApdUpload($id_pegawai, $id_item = 'item', $tipe_file = 'jpg', $urutan = null)
     {
         try {
             if (is_null($urutan))
-                return $nrk . '_' . $id_item . '.' . $tipe_file;
+                return $id_pegawai . '_' . $id_item . '.' . $tipe_file;
             else
-                return $nrk . '_' . $id_item . '_' . $urutan . '.' . $tipe_file;
+                return $id_pegawai . '_' . $id_item . '_' . $urutan . '.' . $tipe_file;
         } catch (Throwable $e) {
             Log::error('Gagal memproses nama file apd upload, ' . $e);
             return;
@@ -94,21 +94,21 @@ class FileController extends Controller
      * 
      * @return String nama file baru untuk di simpan di database
      */
-    public function prosesNamaFileAvatarUpload($nrk, $tipe_file = 'jpg')
+    public function prosesNamaFileAvatarUpload($id_pegawai, $tipe_file = 'jpg')
     {
         try {
-            return $nrk . '_ava' . '.' . $tipe_file;
+            return $id_pegawai . '_ava' . '.' . $tipe_file;
         } catch (Throwable $e) {
             Log::error('Gagal memproses nama file avatar upload, ' . $e);
             return;
         }
     }
 
-    public function buatPathFileApdUpload($nrk, $id_jenis, $id_periode)
+    public function buatPathFileApdUpload($id_pegawai, $id_jenis, $id_periode)
     {
         $periode = Str::slug(PeriodeInputApd::where('id', '=', $id_periode)->first()->nama_periode);
 
-        return self::$apdUploadBasePath . '/' . $nrk . '/' . $periode . '/' . $id_jenis;
+        return self::$apdUploadBasePath . '/' . $id_pegawai . '/' . $periode . '/' . $id_jenis;
     }
 
     public function buatPathFileApdItem($id_jenis, $id_apd)

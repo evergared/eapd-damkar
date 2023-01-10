@@ -18,6 +18,7 @@ class Pegawai extends Model
     public $incrementing = false;
 
     protected $table = 'pegawai';
+    protected $keyType = 'string';
 
     protected $fillable = [
         'nrk',
@@ -106,8 +107,8 @@ class Pegawai extends Model
             error_log('updating pegawai');
 
             try{
-                // cek apakah nrk yang diganti sama dengan nrk user saat ini
-                if($val->nrk == Auth::user()->nrk)
+                // cek apakah id_pegawai yang diganti sama dengan id_pegawai user saat ini
+                if($val->{$val->getKeyName()} == Auth::user()->userid)
                 {
                     // jika ya, maka tidak perlu dimasukan ke tabel history
                     // karena biasanya pada case ini,
@@ -193,7 +194,7 @@ class Pegawai extends Model
                             'id' => $val->{$val->getKeyName()},
                             'sebelumnya' => $data_original,
                             'perubahan' => $data_dirty,
-                            'nrk_pengubah' => Auth::user()->nrk
+                            'id_pengubah' => Auth::user()->userid
                         ]);
                     }
                 }

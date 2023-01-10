@@ -42,8 +42,7 @@ return new class extends Migration
 
         if (!Schema::hasTable('user')) {
             Schema::create('user', function (Blueprint $table) {
-                $table->id();
-                $table->string('nrk', 10);
+                $table->foreignUuid('userid')->primary()->comment('id pegawai dari tabel pegawai');
                 $table->string('password');
                 $table->rememberToken();
                 $table->timestamps();
@@ -53,8 +52,8 @@ return new class extends Migration
 
         if (!Schema::hasTable('pegawai')) {
             Schema::create('pegawai', function (Blueprint $t) {
-                $t->uuid('id')->primary()->comment('dari laravel, dibutuhkan untuk serialization');
-                $t->string('nrk', 10)->unique()->comment('no pjlp');
+                $t->uuid('id')->primary();
+                $t->string('nrk', 10)->unique()->nullable()->comment('no pjlp');
                 $t->string('nip', 20)->unique()->nullable()->comment('nik pjlp');
                 $t->text('nama');
                 $t->text('profile_img')->nullable();
@@ -163,10 +162,8 @@ return new class extends Migration
         if (!Schema::hasTable('input_apd')) {
             Schema::create('input_apd', function (Blueprint $t) {
 
-                // butuh tabel baru verified tipe boolean ? atau pakai enum ?
-
                 $t->uuid('id')->primary()->comment('dari laravel, dibutuhkan untuk serialization');
-                $t->string('nrk', 10);
+                $t->foreignUuid('id_pegawai');
                 $t->string('id_jenis', 6);
                 $t->string('id_apd', 10)->nullable();
                 $t->text('size')->nullable();
@@ -185,7 +182,7 @@ return new class extends Migration
 
         if (!Schema::hasTable('input_apd_ongoing')) {
             Schema::create('input_apd_ongoing', function (Blueprint $t) {
-                $t->foreignUuid('id_input_apd')->nullable();
+                $t->foreignUuid('id_input_apd')->primary();
                 $t->longText('cache')->comment('json value dari input');
                 $t->timestamps();
             });
@@ -204,7 +201,6 @@ return new class extends Migration
 
         if (!Schema::hasTable('input_apd_template')) {
             Schema::create('input_apd_template', function (Blueprint $t) {
-                // mungkin tabel ini tidak dibutuhkan
                 $t->id('id', 8)->comment('dari laravel, dibutuhkan untuk serialization');
                 $t->text('nama')->nullable()->default('Template EAPD')->comment('nama dari template');
                 $t->longText('template')->comment('json');
@@ -215,7 +211,7 @@ return new class extends Migration
         if (!Schema::hasTable('input_sewaktu_waktu')) {
             Schema::create('input_sewaktu_waktu', function (Blueprint $t) {
                 $t->uuid('id')->primary()->comment('dari laravel, dibutuhkan untuk serialization');
-                $t->string('nrk', 10);
+                $t->foreignUuid('id_pegawai');
                 $t->string('id_apd', 10)->nullable();
                 $t->text('size')->nullable();
                 $t->text('status_barang')->nullable();
@@ -252,11 +248,11 @@ return new class extends Migration
 
         if(!Schema::hasTable('history_tabel_pegawai')){
             Schema::create('history_tabel_pegawai',function(Blueprint $t){
-                $t->foreignUuid('id')->primary();
+                $t->foreignUuid('id_pegawai')->primary();
                 $t->longText('sebelumnya')->nullable();
                 $t->longText('perubahan')->nullable();
                 $t->text('keterangan_perubahan')->nullable();
-                $t->string('nrk_pengubah',10)->nullable();
+                $t->foreignUuid('id_pengubah')->nullable();
                 $t->boolean('dilihat_admin_sektor')->default(false);
                 $t->boolean('dilihat_admin_sudin')->default(false);
                 $t->boolean('dilihat_admin_dinas')->default(false);
@@ -278,6 +274,13 @@ return new class extends Migration
          */
 
         error_log('now setting foreign keys');
+
+        if(Schema::hasTable('user'))
+        {
+            Schema::table('user',function (Blueprint $t){
+                $t->foreign('userid')->references('id')->on('pegawai')->cascadeOnDelete()->cascadeOnUpdate();
+            });
+        }
 
         if (Schema::hasTable('pegawai')) {
             Schema::table('pegawai', function (Blueprint $t) {
@@ -304,7 +307,7 @@ return new class extends Migration
         if (Schema::hasTable('input_apd')) {
             Schema::table('input_apd', function (Blueprint $t) {
 
-                $t->foreign('nrk')->references('nrk')->on('pegawai')->cascadeOnUpdate();
+                $t->foreign('id_pegawai')->references('id')->on('pegawai')->cascadeOnUpdate();
                 $t->foreign('id_apd')->references('id_apd')->on('apd_list')->cascadeOnUpdate()->nullOnDelete();
                 $t->foreign('id_jenis')->references('id_jenis')->on('apd_jenis')->cascadeOnUpdate();
                 $t->foreign('id_periode')->references('id')->on('periode_input_apd')->cascadeOnUpdate()->nullOnDelete();
@@ -320,18 +323,10 @@ return new class extends Migration
 
 
 
-        if (Schema::hasTable('input_apd_template')) {
-            Schema::table('input_apd_template', function (Blueprint $t) {
-
-                // $t->foreign('id_apd')->references('id_apd')->on('apd_list')->cascadeOnDelete()->cascadeOnUpdate();
-                // $t->foreign('id_periode')->references('id')->on('periode_input_apd')->cascadeOnDelete()->cascadeOnUpdate();
-            });
-        }
-
         if (Schema::hasTable('input_sewaktu_waktu')) {
             Schema::table('input_sewaktu_waktu', function (Blueprint $t) {
 
-                $t->foreign('nrk')->references('nrk')->on('pegawai')->cascadeOnUpdate();
+                $t->foreign('id_pegawai')->references('id')->on('pegawai')->cascadeOnUpdate();
                 // $t->foreign('verified_by')->references('nrk')->on('pegawai')->cascadeOnUpdate();
                 $t->foreign('id_apd')->references('id_apd')->on('apd_list')->cascadeOnUpdate()->nullOnDelete();
             });
@@ -358,8 +353,8 @@ return new class extends Migration
 
         if(Schema::hasTable('history_tabel_pegawai')){
             Schema::table('history_tabel_pegawai',function(Blueprint $t){
-                $t->foreign('id')->references('id')->on('pegawai')->cascadeOnDelete();
-                $t->foreign('nrk_pengubah')->references('nrk')->on('pegawai')->cascadeOnDelete()->cascadeOnUpdate();
+                $t->foreign('id_pegawai')->references('id')->on('pegawai')->cascadeOnDelete();
+                $t->foreign('id_pengubah')->references('id')->on('pegawai')->cascadeOnDelete()->cascadeOnUpdate();
             });
         }
     }
@@ -376,6 +371,13 @@ return new class extends Migration
          * untuk dropForeign, gunakan nama constraint dari laravel
          * tabel_kolom_foreign
          */
+
+        if (Schema::hasTable('user')) {
+            Schema::table('user', function (Blueprint $t) {
+
+                $t->dropForeign('user_userid_foreign');
+            });
+        }
 
         if (Schema::hasTable('pegawai')) {
             Schema::table('pegawai', function (Blueprint $t) {
@@ -400,7 +402,7 @@ return new class extends Migration
         if (Schema::hasTable('input_apd')) {
             Schema::table('input_apd', function (Blueprint $t) {
 
-                $t->dropForeign('input_apd_nrk_foreign');
+                $t->dropForeign('input_apd_id_pegawai_foreign');
                 $t->dropForeign('input_apd_id_periode_foreign');
                 $t->dropForeign('input_apd_id_jenis_foreign');
                 $t->dropForeign('input_apd_id_apd_foreign');
@@ -426,7 +428,7 @@ return new class extends Migration
         if (Schema::hasTable('input_sewaktu_waktu')) {
             Schema::table('input_sewaktu_waktu', function (Blueprint $t) {
 
-                $t->dropForeign('input_sewaktu_waktu_nrk_foreign');
+                $t->dropForeign('input_sewaktu_waktu_id_pegawai_foreign');
                 $t->dropForeign('input_sewaktu_waktu_id_apd_foreign');
             });
         }
@@ -451,8 +453,8 @@ return new class extends Migration
         // tabel history
         if(Schema::hasTable('history_tabel_pegawai')){
             Schema::table('history_tabel_pegawai',function(Blueprint $t){
-                $t->dropForeign('history_tabel_pegawai_id_foreign');
-                $t->dropForeign('history_tabel_pegawai_nrk_pengubah_foreign');
+                $t->dropForeign('history_tabel_pegawai_id_pegawai_foreign');
+                $t->dropForeign('history_tabel_pegawai_id_pengubah_foreign');
             });
         }
 

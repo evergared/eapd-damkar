@@ -151,6 +151,8 @@ class TesEapdSeeder extends Seeder
         ];
 
         $penempatan = [
+            ['id_penempatan' => 'D_1', 'nama_penempatan' => 'Kantor Dinas DKI Jakarta', 'keterangan' => 'dinas'],
+            ['id_penempatan' => '11', 'nama_penempatan' => 'Sudin Jakarta Pusat', 'keterangan' => 'sudin'],
             ['id_penempatan' => '1.11', 'nama_penempatan' => 'Sektor I Gambir', 'keterangan' => 'sektor'],
             ['id_penempatan' => '1.11.01', 'nama_penempatan' => 'Kantor Sektor I Gambir', 'keterangan' => 'pos'],
             ['id_penempatan' => '1.11.2', 'nama_penempatan' => 'Pos Tanah Abang', 'keterangan' => 'pos'],
@@ -293,7 +295,9 @@ class TesEapdSeeder extends Seeder
         error_log('populating pegawai');
         // Pegawai::factory()->count(50)->create(); //<-- @evergared : di disable sementara karena tidak bisa di laptop saya (linux mint)
 
-        Pegawai::create([
+        $akun = [];
+
+        $akun[0] = Pegawai::create([
             'nrk' => '80182881',
             'nip' => '3174060110950006',
             'nama' => 'Irawan Maulana',
@@ -303,7 +307,7 @@ class TesEapdSeeder extends Seeder
             'id_grup' => 'B'
         ]);
 
-        Pegawai::create([
+        $akun[1] = Pegawai::create([
             'nrk' => '80182810',
             'nip' => '3174093012890004',
             'nama' => 'Indra Purwoko',
@@ -313,7 +317,7 @@ class TesEapdSeeder extends Seeder
             'id_grup' => 'B'
         ]);
 
-        Pegawai::create([
+        $akun[2] = Pegawai::create([
             'nrk' => '12345678',
             'nip' => '198501242010011005',
             'nama' => 'Rizky Gufara, S.Kom',
@@ -323,19 +327,29 @@ class TesEapdSeeder extends Seeder
             'id_grup' => 'B'
         ]);
 
-        Pegawai::create([
+        $akun[3] = Pegawai::create([
             'nrk' => '11',
             'nip' => '11111',
-            'nama' => 'Super Admin',
+            'nama' => 'Admin Dinas',
             'id_jabatan' => 'K005',
             'id_wilayah' => '1',
-            'id_penempatan' => '1.11',
+            'id_penempatan' => 'D_1',
             'id_grup' => 'S'
         ]);
 
-        Pegawai::create([
+        $akun[4] = Pegawai::create([
             'nrk' => '2222',
             'nip' => '2222',
+            'nama' => 'Admin Sudin',
+            'id_jabatan' => 'K003',
+            'id_wilayah' => '1',
+            'id_penempatan' => '11',
+            'id_grup' => 'S'
+        ]);
+
+        $akun[5] = Pegawai::create([
+            'nrk' => '3333',
+            'nip' => '3333',
             'nama' => 'Admin Sektor',
             'id_jabatan' => 'K001',
             'id_wilayah' => '2',
@@ -343,14 +357,24 @@ class TesEapdSeeder extends Seeder
             'id_grup' => 'S'
         ]);
 
-        Pegawai::create([
-            'nrk' => '3333',
-            'nip' => '3333',
+        $akun[6] = Pegawai::create([
+            'nrk' => '4444',
+            'nip' => '4444',
             'nama' => 'Test Pegawai',
             'id_jabatan' => 'L001',
             'id_wilayah' => '2',
             'id_penempatan' => '2.11',
             'id_grup' => 'B'
+        ]);
+
+        $akun[7] = Pegawai::create([
+            'nrk' => '12',
+            'nip' => '1122',
+            'nama' => 'Kasudin',
+            'id_jabatan' => 'K004',
+            'id_wilayah' => '1',
+            'id_penempatan' => '11',
+            'id_grup' => 'S'
         ]);
 
 
@@ -362,29 +386,14 @@ class TesEapdSeeder extends Seeder
         }
 
         error_log('populating user');
-        User::create([
-            'nrk' => '80182881',
-            'password' => Hash::make('123456')
-        ]);
 
-        User::create([
-            'nrk' => '80182810',
-            'password' => Hash::make('123456')
-        ]);
+        foreach($akun as $a){
+            error_log('id user : '.$a->id.' || '.'nama : '.$a->nama);
+            User::create([
+                'userid' => $a->id,
+                'password' => Hash::make('123456')
+            ]);
+        }
 
-        User::create([
-            'nrk' => '12345678',
-            'password' => Hash::make('123456')
-        ]);
-
-        User::create([
-            'nrk' => '2222',
-            'password' => Hash::make('123456')
-        ]);
-
-        User::create([
-            'nrk' => '3333',
-            'password' => Hash::make('123456')
-        ]);
     }
 }

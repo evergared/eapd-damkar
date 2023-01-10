@@ -13,7 +13,7 @@ class InputSewaktuWaktu extends Model
 
     // butuh kolom status verified? boolean atau enum?
     protected $fillable = [
-        "nrk",
+        "id_pegawai",
         "id_apd",
         "size",
         "status_barang",
@@ -24,9 +24,9 @@ class InputSewaktuWaktu extends Model
         "verified_by",
     ];
 
-    public function nrk()
+    public function pegawai()
     {
-        return $this->belongsTo(Pegawai::class);
+        return $this->belongsTo(Pegawai::class,'id_pegawai','id');
     }
 
     public function apd()

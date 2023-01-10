@@ -97,22 +97,22 @@ class ApdDataController extends Controller
     /**
      * Muat apa saja yang telah diinput oleh pegawai pada periode yang dicari
      * @param int $id_periode periode yang dicari, dalam bentuk id periode
-     * @param string $nrk pegawai yang dicari, dalam bentuk nrk pegawai
+     * @param string $id_pegawai pegawai yang dicari, dalam bentuk id pegawai
      * @param int $target_verifikasi jika ada status verifikasi yang dicari, masukan value dari enum /App/Enum/VerifikasiApd.php atau integer 1~5
      * @return array list apa saja yang telah diinput oleh pegawai, di dapat dari tabel input_apd
      */
-    public function muatInputanPegawai($id_periode = 1, $nrk = "", $target_verifikasi = 0): array
+    public function muatInputanPegawai($id_periode = 1, $id_pegawai = "", $target_verifikasi = 0): array
     {
         try {
 
-            // jika parameter nrk kosong, ambil nrk dan jabatan user
-            if ($nrk == "") {
-                $nrk = Auth::user()->nrk;
+            // jika parameter id_pegawai kosong, ambil nrk dan jabatan user
+            if ($id_pegawai == "") {
+                $id_pegawai = Auth::user()->userid;
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
-            // jika paramter nrk diisi, cukup ambil jabatan user
+            // jika paramter id_pegawai diisi, cukup ambil jabatan user
             else {
-                $id_jabatan = Pegawai::where('nrk', '=', $nrk)->first()->id_jabatan;
+                $id_jabatan = Pegawai::where('id', '=', $id_pegawai)->first()->id_jabatan;
             }
 
             // array kosong untuk return
@@ -128,7 +128,7 @@ class ApdDataController extends Controller
                 $id_jenis = $item['id_jenis'];
 
                 // cek apakah user telah menginput apd tersebut
-                if ($input = InputApd::where('nrk', '=', $nrk)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first()) {
+                if ($input = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first()) {
                     // user telah menginput
 
                     // panggil untuk mambantu mengubah warna status
@@ -152,11 +152,11 @@ class ApdDataController extends Controller
                                 'id_jenis' => $id_jenis,
                                 'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
                                 'id_apd' => $input->id_apd,
-                                'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $nrk, $id_jenis, $id_periode),
+                                'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                                 'status_verifikasi' => $verifikasi_label,
                                 'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
-                                'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $nrk, $id_periode),
-                                'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $nrk, $id_periode)),
+                                'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode),
+                                'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                                 'komentar_pengupload' => $input->komentar_pengupload,
                                 'nrk_verifikator' => $input->verifikasi_oleh,
                                 'komentar_verifikator' => $input->komentar_verifikator
@@ -177,11 +177,11 @@ class ApdDataController extends Controller
                             'id_jenis' => $id_jenis,
                             'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
                             'id_apd' => $input->id_apd,
-                            'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $nrk, $id_jenis, $id_periode),
+                            'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                             'status_verifikasi' => $verifikasi_label,
                             'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
-                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $nrk, $id_periode),
-                            'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $nrk, $id_periode)),
+                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode),
+                            'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                             'komentar_pengupload' => $input->komentar_pengupload,
                             'nrk_verifikator' => $input->verifikasi_oleh,
                             'komentar_verifikator' => $input->komentar_verifikator
@@ -200,22 +200,22 @@ class ApdDataController extends Controller
         }
     }
 
-    public function muatSatuInputanPegawai($id_jenis, $id_apd, $id_periode = 1, $nrk = "")
+    public function muatSatuInputanPegawai($id_jenis, $id_apd, $id_periode = 1, $id_pegawai = "")
     {
         try{
 
             // jika parameter nrk kosong, ambil nrk dan jabatan user
-            if ($nrk == "") {
-                $nrk = Auth::user()->nrk;
+            if ($id_pegawai == "") {
+                $id_pegawai = Auth::user()->userid;
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
             // jika paramter nrk diisi, cukup ambil jabatan user
             else {
-                $id_jabatan = Pegawai::where('nrk', '=', $nrk)->first()->id_jabatan;
+                $id_jabatan = Pegawai::where('id', '=', $id_pegawai)->first()->id_jabatan;
             }
 
             // cek apakah user telah menginput apd tersebut
-            if ($input = InputApd::where('nrk', '=', $nrk)->where('id_jenis', '=', $id_jenis)->where('id_apd','=',$id_apd)->where('id_periode', '=', $id_periode)->first())
+            if ($input = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_apd','=',$id_apd)->where('id_periode', '=', $id_periode)->first())
             {
                 $verifikasi_status = "";
                 $verifikasi_label = "";
@@ -229,11 +229,11 @@ class ApdDataController extends Controller
                             'id_jenis' => $id_jenis,
                             'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
                             'id_apd' => $input->id_apd,
-                            'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $nrk, $id_jenis, $id_periode),
+                            'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                             'status_verifikasi' => $verifikasi_label,
                             'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
-                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $nrk, $id_periode),
-                            'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $nrk, $id_periode)),
+                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode),
+                            'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                             'komentar_pengupload' => $input->komentar_pengupload,
                             'nrk_verifikator' => $input->verifikasi_oleh,
                             'komentar_verifikator' => $input->komentar_verifikator
@@ -610,14 +610,14 @@ class ApdDataController extends Controller
         }
     }
 
-    public function ambilStatusVerifikasi($id_jenis, $nrk = "", $periode = 1)
+    public function ambilStatusVerifikasi($id_jenis, $id_pegawai = "", $periode = 1)
     {
         try {
 
-            if ($nrk == "")
-                $nrk = Auth::user()->nrk;
+            if ($id_pegawai == "")
+                $id_pegawai = Auth::user()->userid;
 
-            return verif::tryFrom(InputApd::where('nrk', '=', $nrk)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->verifikasi_status);
+            return verif::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->verifikasi_status);
         } catch (Throwable $e) {
             // error_log("Gagal mengambil status verifikasi untuk id jenis  '" . $id_jenis . "' " . $e);
             // report("Gagal mengambil status verifikasi untuk id jenis  '" . $id_jenis . "' " . $e);
@@ -625,14 +625,14 @@ class ApdDataController extends Controller
         }
     }
 
-    public function ambilStatusKerusakan($id_jenis, $nrk = "", $periode = 1)
+    public function ambilStatusKerusakan($id_jenis, $id_pegawai = "", $periode = 1)
     {
         try {
 
-            if ($nrk == "")
-                $nrk = Auth::user()->nrk;
+            if ($id_pegawai == "")
+                $id_pegawai = Auth::user()->userid;
 
-            return InputApd::where('nrk', '=', $nrk)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->kondisi;
+            return InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->kondisi;
         } catch (Throwable $e) {
             // error_log("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);
             // report("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);

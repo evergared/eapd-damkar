@@ -15,7 +15,7 @@ class InputApd extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        "nrk",
+        "id_pegawai",
         "id_apd",
         "size",
         "status_barang",
@@ -28,9 +28,9 @@ class InputApd extends Model
         "komentar_verifikator"
     ];
 
-    public function nrk()
+    public function pegawai()
     {
-        return $this->belongsTo(Pegawai::class, 'nrk', 'nrk');
+        return $this->belongsTo(Pegawai::class, 'id_pegawai', 'id');
     }
 
     public function apd()

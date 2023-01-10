@@ -50,7 +50,7 @@ class FormProfil extends Component
 
         if (!is_null($this->uploadFoto)) {
             $fc = new FileController;
-            $this->foto = $fc->prosesNamaFileAvatarUpload(Auth::user()->nrk);
+            $this->foto = $fc->prosesNamaFileAvatarUpload(Auth::user()->userid);
         }
     }
 
@@ -74,7 +74,7 @@ class FormProfil extends Component
 
     public function inisiasi()
     {
-        $pegawai = Pegawai::where('nrk', '=', Auth::User()->nrk)->first();
+        $pegawai = Pegawai::where('id', '=', Auth::User()->userid)->first();
 
         if (is_null($pegawai->profile_img)) {
             $this->cacheFoto = $this->foto = asset(FileController::$avatarPlaceholder);
@@ -94,9 +94,9 @@ class FormProfil extends Component
         );
 
         if (!is_null($this->password) && $this->password == $this->ulangiPassword)
-            User::where('nrk', '=', Auth::User()->nrk)->update(['password' => Hash::make($this->password)]);
+            User::where('id', '=', Auth::User()->userid)->update(['password' => Hash::make($this->password)]);
 
-        $pegawai = Pegawai::where('nrk', '=', Auth::User()->nrk)->first();
+        $pegawai = Pegawai::where('id', '=', Auth::User()->userid)->first();
 
         if ($this->cacheEmail != $this->email)
             $pegawai->email = $this->email;

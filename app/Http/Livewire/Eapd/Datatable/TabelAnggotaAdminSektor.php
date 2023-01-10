@@ -57,9 +57,9 @@ class TabelAnggotaAdminSektor extends DataTableComponent
         return [
             Column::make("Foto", 'profile_img')
                 ->format(function ($value, $row) {
-                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-anggota-katon", ['img' => $value, 'nrk' => $row->nrk]);
+                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-anggota-katon", ['img' => $value, 'id_pegawai' => $row->id]);
                 }),
-            Column::make("Nrk", "nrk")
+            Column::make("id")
                 ->sortable()
                 ->hideIf(true),
             Column::make("Nama", "nama")
@@ -79,8 +79,8 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                     // panggil ApdDataController
                     $adc = new ApdDataController;
 
-                    // ambil nrk dari baris
-                    $nrk = $row->nrk;
+                    // ambil id_pegawai dari baris
+                    $id_pegawai = $row->id;
 
                     // dapatkan jabatan 
                     $id_jabatan = $row->id_jabatan;
@@ -93,7 +93,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                     $templateInputan = $adc->muatListInputApdDariTemplate($tw, $id_jabatan);
 
                     // muat apa saja yang telah diinput oleh si pegawai
-                    $inputan = $adc->muatInputanPegawai($tw, $nrk);
+                    $inputan = $adc->muatInputanPegawai($tw, $id_pegawai);
 
                     // hitung jumlah maksimal inputan
                     $maks = (is_null($templateInputan))? 0 : count($templateInputan);
@@ -102,7 +102,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                     $value = (is_null($inputan))? 0 : count($inputan);
 
                     return view('eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-admin',[
-                        'nrk' => $nrk, 'maks' => $maks, 'value'=>$value, 'caption' => 'Inputan', 'warna' => 'success'
+                        'id_pegawai' => $id_pegawai, 'maks' => $maks, 'value'=>$value, 'caption' => 'Inputan', 'warna' => 'success'
                     ]);
                 }),
                 Column::make("Validasi")
@@ -110,8 +110,8 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                     // panggil ApdDataController
                     $adc = new ApdDataController;
 
-                    // ambil nrk dari baris
-                    $nrk = $row->nrk;
+                    // ambil id_pegawai dari baris
+                    $id_pegawai = $row->id;
 
                     // dapatkan jabatan 
                     $id_jabatan = $row->id_jabatan;
@@ -124,7 +124,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                     $templateInputan = $adc->muatListInputApdDariTemplate($tw, $id_jabatan);
 
                     // muat apa saja yang telah diinput oleh si pegawai
-                    $inputan = $adc->muatInputanPegawai($tw, $nrk,3);
+                    $inputan = $adc->muatInputanPegawai($tw, $id_pegawai,3);
 
                     // hitung jumlah maksimal inputan
                     $maks = (is_null($templateInputan))? 0 : count($templateInputan);
@@ -133,7 +133,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                     $value = (is_null($inputan))? 0 : count($inputan);
 
                     return view('eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-admin',[
-                        'nrk' => $nrk, 'maks' => $maks, 'value'=>$value, 'caption' => 'Validasi', 'warna' => 'info'
+                        'id_pegawai' => $id_pegawai, 'maks' => $maks, 'value'=>$value, 'caption' => 'Validasi', 'warna' => 'info'
                     ]);
                 }),
                 Column::make("")
@@ -145,7 +145,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                     // $tw = $adc->ambilIdPeriodeInput();
 
                     return view('eapd.livewire.kolom-tambahan-datatable.kolom-show-detail-tabel-anggota-admin',[
-                        'nrk' => $row->nrk, 'periode' => $tw
+                        'id_pegawai' => $row->id, 'periode' => $tw
                     ]);
                 })
         ];

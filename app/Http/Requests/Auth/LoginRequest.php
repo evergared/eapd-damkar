@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\Eapd\Pegawai;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -45,7 +46,23 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (!Auth::attempt($this->only('nrk', 'password'), $this->boolean('remember'))) {
+        // agar user dapat login menggunakan nrk atau nip
+        $id = "";
+
+        // return dd($this->password);
+        if($pegawai = Pegawai::where('nrk','=',$this->only('nrk'))->first())
+            $id = $pegawai->id;
+        elseif($pegawai = Pegawai::where('nip','=',$this->only('nrk'))->first())
+            $id = $pegawai->id;
+
+        if($id == "")
+            throw ValidationException::withMessages([
+                    'nrk' => trans('auth.failed'),
+                ]);
+
+        $credential = [ 'userid' => $id, 'password' => $this->password];
+
+        if (!Auth::attempt($credential, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

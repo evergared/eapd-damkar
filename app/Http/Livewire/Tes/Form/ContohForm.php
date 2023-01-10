@@ -17,7 +17,7 @@ class ContohForm extends Component
     protected $listeners = ['edit' => 'editData'];
 
 
-    public  $nrk = "",
+    public  $id_pegawai = "",
         $telpon = "",
         $email = "",
         $foto = null,
@@ -28,14 +28,14 @@ class ContohForm extends Component
         return view('tes.livewire.form.contoh-form');
     }
 
-    public function editData($nrk)
+    public function editData($id_pegawai)
     {
         $this->resetData();
-        $query = ContohModel::where('nrk', '=', $nrk)->first();
+        $query = ContohModel::where('id', '=', $id_pegawai)->first();
 
         $this->telpon = $query->no_telp;
         $this->email = $query->email;
-        $this->nrk = $nrk;
+        $this->id_pegawai = $id_pegawai;
 
         // url foto tidak diambil, karena sering menyebabkan error
         // dan kebanyakan web tidak melakukan hal tsb
@@ -46,7 +46,7 @@ class ContohForm extends Component
     {
         $this->telpon = "";
         $this->email = "";
-        $this->nrk = "";
+        $this->id_pegawai = "";
         $this->foto = null;
     }
 

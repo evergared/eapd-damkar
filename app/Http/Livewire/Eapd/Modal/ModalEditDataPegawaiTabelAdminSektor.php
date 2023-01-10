@@ -27,7 +27,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
 
     // data pegawai yang dipanggil
     public 
-        $nrk = "",
+        $id_pegawai = "",
         $nip = "",
         $nama = "",
         $grup = "",
@@ -41,7 +41,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
 
     // untuk menyimpan data awal
     public 
-        $cache_nrk = "",
+        $cache_id_pegawai = "",
         $cache_nip = "",
         $cache_nama = "",
         $cache_grup = "",
@@ -84,11 +84,11 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
     {
         try
         {
-            // ambil nrk
-            $this->nrk = $this->cache_nrk = $value;
+            // ambil id_pegawai
+            $this->id_pegawai = $this->cache_id_pegawai = $value;
 
             // ambil data pegawai
-            $pegawai = Pegawai::where('nrk','=',$this->nrk)->first();
+            $pegawai = Pegawai::where('id','=',$this->id_pegawai)->first();
 
             // inisiasi data lainnya
             $this->nama = $this->cache_nama = $pegawai->nama;
@@ -133,8 +133,8 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
                 ]);
             }
 
-            // cek apakah ada user dengan nrk tersebut
-            $this->user_ditemukan = User::where('nrk','=',$this->cache_nrk)->first() != "";
+            // cek apakah ada user dengan id_pegawai tersebut
+            $this->user_ditemukan = User::where('id','=',$this->cache_id_pegawai)->first() != "";
 
 
             $this->koreksiPenempatanDanGrup();
@@ -154,13 +154,13 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         try{
 
             // ambil data pegawai mana yang mau diubah
-            $pegawai = Pegawai::where('nrk','=',$this->cache_nrk)->first();
+            $pegawai = Pegawai::where('id','=',$this->cache_id_pegawai)->first();
 
             // ambil perubahan dari input di modal
             $pegawai->id_grup = $this->grup;
             $pegawai->id_penempatan = $this->penempatan;
             $pegawai->nama = $this->nama;
-            $pegawai->nrk = $this->nrk;
+            $pegawai->id_pegawai = $this->id_pegawai;
             $pegawai->nip = $this->nip;
             $pegawai->email = $this->email;
             $pegawai->no_telp = $this->telp;
@@ -179,7 +179,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             $pegawai = Pegawai::where('id','=',$id_pegawai)->first();
 
             // inisiasi ulang data lainnya
-            $this->nrk = $this->cache_nrk = $pegawai->nrk;
+            $this->id_pegawai = $this->cache_id_pegawai = $pegawai->id_pegawai;
             $this->nama = $this->cache_nama = $pegawai->nama;
             $this->nip = $this->cache_nip = $pegawai->nip;
             $this->grup = $this->cache_grup = $pegawai->id_grup;
@@ -243,7 +243,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         try{
 
             // ambil user mana yang akan diubah passwordnya
-            $user = User::where('nrk','=',$this->cache_nrk)->first();
+            $user = User::where('id','=',$this->cache_id_pegawai)->first();
             // buat password dari inputan
             $user->password = Hash::make($this->password);
             // simpan perubahan
@@ -264,7 +264,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
 
     public function resetPerubahanData()
     {
-            $this->nrk = $this->cache_nrk;
+            $this->id_pegawai = $this->cache_id_pegawai;
             $this->nama = $this->cache_nama;
             $this->nip = $this->cache_nip;
             $this->grup = $this->cache_grup;
@@ -345,7 +345,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         return 
             ($this->nama != $this->cache_nama) ||
             ($this->nip != $this->cache_nip) ||
-            ($this->nrk != $this->cache_nrk) ||
+            ($this->id_pegawai != $this->cache_id_pegawai) ||
             ($this->email != $this->cache_email) ||
             ($this->telp != $this->cache_telp) ||
             ($this->aktif != $this->cache_aktif);

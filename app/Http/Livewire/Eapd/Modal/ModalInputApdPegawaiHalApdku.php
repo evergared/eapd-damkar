@@ -40,7 +40,7 @@ class ModalInputApdPegawaiHalApdku extends Component
 
     // didapat dari db
     public  $gambar_apd = [],
-        $komentar_verif_user,
+        $komentar_verif_user = "",
         $status_verif_user = 1,
         $label_verif_user = "Proses Input";
 
@@ -92,6 +92,7 @@ class ModalInputApdPegawaiHalApdku extends Component
         $this->adaGambarTemplate = false;
         $this->id_apd_user = "";
         $this->komentar_apd_user = "";
+        $this->komentar_verif_user = "";
 
         $this->id_jenis = null;
         $this->nama_jenis = null;
@@ -197,7 +198,7 @@ class ModalInputApdPegawaiHalApdku extends Component
         $this->gambar_apd = [];
 
         try {
-            $gbr = InputApd::where('nrk', '=', Auth::user()->nrk)->where('id_jenis', '=', $this->id_jenis)->value('image');
+            $gbr = InputApd::where('id_pegawai', '=', Auth::user()->userid)->where('id_jenis', '=', $this->id_jenis)->value('image');
             $this->adaGambarUser = $gbr == "" ? false : true;
             $this->gambar_apd = explode('||', $gbr);
         } catch (Throwable $e) {
@@ -255,13 +256,13 @@ class ModalInputApdPegawaiHalApdku extends Component
         $adc = new ApdDataController;
         // $periode = $adc->ambilIdPeriodeInput();
         $periode = 1;
-        $this->pathGbr = "storage/" . $fc->buatPathFileApdUpload(Auth::user()->nrk, $this->id_jenis, $periode);
+        $this->pathGbr = "storage/" . $fc->buatPathFileApdUpload(Auth::user()->userid, $this->id_jenis, $periode);
     }
 
     public function ambilDataUser()
     {
         try {
-            if ($inputan_user = InputApd::where('nrk', '=', Auth::user()->nrk)->where('id_jenis', '=', $this->id_jenis)->first()) {
+            if ($inputan_user = InputApd::where('id_pegawai', '=', Auth::user()->userid)->where('id_jenis', '=', $this->id_jenis)->first()) {
             } else {
                 $this->status_verif_user = verif::input()->value;
                 $this->label_verif_user = verif::input()->label;
@@ -295,8 +296,8 @@ class ModalInputApdPegawaiHalApdku extends Component
 
             // $this->hidrasiDataOpsi();
         } catch (Throwable $e) {
-            error_log('Gagal mengambil data user untuk id jenis "' . $this->id_jenis . '" dan nrk user "' . Auth::user()->nrk . '"' .  $e);
-            report('Gagal mengambil data user untuk id jenis "' . $this->id_jenis . '" dan nrk user "' . Auth::user()->nrk . '"' .  $e);
+            error_log('Gagal mengambil data user untuk id jenis "' . $this->id_jenis . '" dan id user "' . Auth::user()->userid . '"' .  $e);
+            report('Gagal mengambil data user untuk id jenis "' . $this->id_jenis . '" dan id user "' . Auth::user()->userid . '"' .  $e);
             session()->flash('fail', 'Kesalahan dalam pengambilan data inputan pengguna.');
         }
     }
@@ -353,9 +354,9 @@ class ModalInputApdPegawaiHalApdku extends Component
             $adc = new ApdDataController;
             $apd = new InputApd;
 
-            $nrk = Auth::user()->nrk;
+            $id_pegawai = Auth::user()->userid;
 
-            $apd->nrk = $nrk;
+            $apd->id_pegawai = $id_pegawai;
             $apd->id_jenis = $this->id_jenis;
             $apd->id_apd = $this->id_apd_user;
             $apd->size = $this->size_apd_user;
@@ -393,10 +394,10 @@ class ModalInputApdPegawaiHalApdku extends Component
 
                     error_log('isi : ' . $this->gambar_apd_user[$i]);
 
-                    $gbr_temp = $fc->prosesNamaFileApdUpload($nrk, $this->id_apd_user, 'jpg', $i);
+                    $gbr_temp = $fc->prosesNamaFileApdUpload($id_pegawai, $this->id_apd_user, 'jpg', $i);
 
                     $this->gambar_apd_user[$i]->storeAs(
-                        $fc->buatPathFileApdUpload($nrk, $this->id_jenis, $periode),
+                        $fc->buatPathFileApdUpload($id_pegawai, $this->id_jenis, $periode),
                         $gbr_temp
                     );
 
@@ -406,10 +407,10 @@ class ModalInputApdPegawaiHalApdku extends Component
 
                 error_log('isi : ' . $this->gambar_apd_user[0]);
 
-                $gbr_temp = $fc->prosesNamaFileApdUpload($nrk, $this->id_apd_user, 'jpg', 0);
+                $gbr_temp = $fc->prosesNamaFileApdUpload($id_pegawai, $this->id_apd_user, 'jpg', 0);
 
                 $this->gambar_apd_user[0]->storeAs(
-                    $fc->buatPathFileApdUpload($nrk, $this->id_jenis, $periode),
+                    $fc->buatPathFileApdUpload($id_pegawai, $this->id_jenis, $periode),
                     $gbr_temp
                 );
 
@@ -441,8 +442,8 @@ class ModalInputApdPegawaiHalApdku extends Component
             $this->emit('refreshStatbox');
             $this->dispatchBrowserEvent('pilihFilterSemua');
         } catch (Throwable $e) {
-            error_log('gagal simpan data input apd untuk user "' . Auth::user()->nrk . '"  ' . $e);
-            report('gagal simpan data input apd untuk user "' . Auth::user()->nrk . '"  ' . $e);
+            error_log('gagal simpan data input apd untuk user "' . Auth::user()->userid . '"  ' . $e);
+            report('gagal simpan data input apd untuk user "' . Auth::user()->userid . '"  ' . $e);
             session()->flash('fail', 'Data Apd gagal diinput. (internal error, cek log)');
         }
     }

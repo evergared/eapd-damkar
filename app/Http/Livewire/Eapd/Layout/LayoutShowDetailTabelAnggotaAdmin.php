@@ -16,7 +16,7 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
 {
 
     public  
-        $nrk = "",
+        $id_pegawai = "",
         $periode = "";
 
     // data normal untuk ditampilkan secara biasa
@@ -89,24 +89,24 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
         try
         {
             // ambil data dari event
-            $this->nrk = $data[0];
+            $this->id_pegawai = $data[0];
             $this->periode = $data[1];
 
 
             // ambil nama pegawai
-            $this->nama_pegawai = Pegawai::where('nrk', '=', $this->nrk)->first()->nama;
+            $this->nama_pegawai = Pegawai::where('id', '=', $this->id_pegawai)->first()->nama;
 
             // ambil nama periode input
             $this->nama_periode = PeriodeInputApd::where('id', '=', $this->periode)->first()->nama_periode;
 
             // ambil id jabatan si pengupload
-            $id_jabatan = Pegawai::where('nrk', '=', $this->nrk)->first()->id_jabatan;
+            $id_jabatan = Pegawai::where('id', '=', $this->id_pegawai)->first()->id_jabatan;
 
             // panggil ApdDataController
             $adc = new ApdDataController;
 
             // isi apa saja yang telah diinput oleh user
-            $this->list_inputan = $adc->muatInputanPegawai($this->periode, $this->nrk);
+            $this->list_inputan = $adc->muatInputanPegawai($this->periode, $this->id_pegawai);
 
             // sesuaikan flagnya
             if(is_array($this->list_inputan))
@@ -214,7 +214,7 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
 
         try
         {
-            $input = InputApd::where('nrk','=',$this->nrk)
+            $input = InputApd::where('id_pegawai','=',$this->id_pegawai)
                     ->where('id_jenis','=',$this->detail_id_jenis_apd)
                     ->where('id_apd','=',$this->detail_id_apd)
                     ->where('id_periode','=',$this->periode)
@@ -222,14 +222,14 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
 
 
                 
-            $input->verifikasi_oleh = Auth::user()->nrk;
+            $input->verifikasi_oleh = Auth::user()->userid;
             $input->verifikasi_status = verif::tryFrom($this->admin_verifikasi);
             $input->komentar_verifikator = $this->admin_komentar;
 
             $input->save();
                     
             // $input->update([
-            //     'verifikasi_oleh'=> Auth::user()->nrk,
+            //     'verifikasi_oleh'=> Auth::user()->userid,
             //     'verifikasi_status'=>$this->admin_verifikasi,
             //     'komentar_verifikator'=>$this->admin_komentar
             // ]);
@@ -237,10 +237,10 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
 
             $adc = new ApdDataController;
 
-            $this->muatDataDariArrayInputan($adc->muatSatuInputanPegawai($this->detail_id_jenis_apd,$this->detail_id_apd,$this->periode,$this->nrk));
+            $this->muatDataDariArrayInputan($adc->muatSatuInputanPegawai($this->detail_id_jenis_apd,$this->detail_id_apd,$this->periode,$this->id_pegawai));
             
             // isi apa saja yang telah diinput oleh user
-            $this->list_inputan = $adc->muatInputanPegawai($this->periode, $this->nrk);
+            $this->list_inputan = $adc->muatInputanPegawai($this->periode, $this->id_pegawai);
 
             session()->flash('success_simpan_data','Perubahan validasi berhasil dilakukan.');
         }

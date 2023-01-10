@@ -51,7 +51,7 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
         return [
             Column::make("Nama", 'nama')
                 ->format(function ($value, $row) {
-                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-kepegawaian-admin-sektor", ['img' => $row->profile_img, 'nrk' => $row->nrk, 'nama'=>$value]);
+                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-kepegawaian-admin-sektor", ['img' => $row->profile_img, 'id_pegawai' => $row->id, 'nama'=>$value]);
                 })
                 ->sortable()
                 ->searchable()

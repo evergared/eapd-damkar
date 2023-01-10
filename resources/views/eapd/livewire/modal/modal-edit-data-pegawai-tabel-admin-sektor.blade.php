@@ -117,8 +117,8 @@
                                                             <div class="form-group">
                                                                 <label>NRK / No PJLP</label>
                                                                 <input class="form-control" type="text" wire:model.lazy='nrk'>
-                                                                @if ($nrk != $cache_nrk)
-                                                                  <small class="text-info">Sebelumnya <strong>{{($cache_nrk == "")? 'kosong' : $cache_nrk }}</strong></small> <br>
+                                                                @if ($id_pegawai != $cache_id_pegawai)
+                                                                  <small class="text-info">Sebelumnya <strong>{{($cache_id_pegawai == "")? 'kosong' : $cache_id_pegawai }}</strong></small> <br>
                                                                 @endif
                                                                 @if (session()->has('warning-nrk'))
                                                                     <small class="text-warning"><strong>{{session('warning-nrk')}}</strong></small> <br>

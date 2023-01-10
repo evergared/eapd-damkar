@@ -48,23 +48,23 @@ class ModalKolomProgressTabelAnggotaKaton extends Component
     {
         try {
             // ambil data dari event
-            $nrk = $data[0];
+            $id = $data[0];
             $periode = $data[1];
 
             // ambil nama pegawai
-            $this->nama_pegawai = Pegawai::where('nrk', '=', $nrk)->first()->nama;
+            $this->nama_pegawai = Pegawai::where('id', '=', $id)->first()->nama;
 
             // ambil nama periode input
             $this->nama_periode = PeriodeInputApd::where('id', '=', $periode)->first()->nama_periode;
 
             // ambil id jabatan si pengupload
-            $id_jabatan = Pegawai::where('nrk', '=', $nrk)->first()->id_jabatan;
+            $id_jabatan = Pegawai::where('id', '=', $id)->first()->id_jabatan;
 
             // panggil ApdDataController
             $adc = new ApdDataController;
 
             // isi apa saja yang telah diinput oleh user
-            $this->list_inputan = $adc->muatInputanPegawai($periode, $nrk);
+            $this->list_inputan = $adc->muatInputanPegawai($periode, $id);
 
             // sesuaikan flagnya
             if(is_array($this->list_inputan))

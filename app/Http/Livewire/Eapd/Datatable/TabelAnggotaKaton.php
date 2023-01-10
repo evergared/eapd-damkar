@@ -34,12 +34,12 @@ class TabelAnggotaKaton extends DataTableComponent
         return [
             Column::make("Foto", 'profile_img')
                 ->format(function ($value, $row) {
-                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-anggota-katon", ['img' => $value, 'nrk' => $row->nrk]);
+                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-anggota-katon", ['img' => $value, 'id_pegawai' => $row->id]);
                 }),
             Column::make("Nama", "nama")
                 ->sortable()
                 ->searchable(),
-            Column::make("Nrk", "nrk")
+            Column::make("id")
                 ->sortable()
                 ->searchable()
                 ->hideIf(true),
@@ -59,11 +59,11 @@ class TabelAnggotaKaton extends DataTableComponent
                     // panggil ApdDataController
                     $adc = new ApdDataController;
 
-                    // ambil nrk dari baris
-                    $nrk = $row->nrk;
+                    // ambil id_pegawai dari baris
+                    $id_pegawai = $row->id;
 
-                    // dapatkan jabatan dari nrk 
-                    $id_jabatan = Pegawai::where('nrk', '=', $nrk)->first()->id_jabatan;
+                    // dapatkan jabatan dari id_pegawai 
+                    $id_jabatan = Pegawai::where('id', '=', $id_pegawai)->first()->id_jabatan;
 
                     // set periode input
                     $tw = 1; //<-- ini untuk contoh dan test
@@ -73,10 +73,10 @@ class TabelAnggotaKaton extends DataTableComponent
                     $templateInputan = $adc->muatListInputApdDariTemplate($tw, $id_jabatan);
 
                     // muat apa saja yang telah diinput oleh si pegawai
-                    $inputan = $adc->muatInputanPegawai($tw, $nrk);
+                    $inputan = $adc->muatInputanPegawai($tw, $id_pegawai);
 
                     // muat apa saja inputan yang telah diverifikasi
-                    $inputanTervalidasi = $adc->muatInputanPegawai($tw, $nrk, verif::terverifikasi()->value);
+                    $inputanTervalidasi = $adc->muatInputanPegawai($tw, $id_pegawai, verif::terverifikasi()->value);
 
                     // hitung jumlah maksimal yang harus diinput oleh pegawai
                     $maks = (is_null($templateInputan))? 0 : count($templateInputan);
@@ -91,7 +91,7 @@ class TabelAnggotaKaton extends DataTableComponent
                     return view("eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-katon",
 
                     // tembak data-data tersebut ke tampilan
-                    ['nrk' => $nrk, 'periode' => $tw, 'max' => $maks, 'min' => 0, 'valueInput' => $terinput, 'valueValid' => $tervalidasi]);
+                    ['id_pegawai' => $id_pegawai, 'periode' => $tw, 'max' => $maks, 'min' => 0, 'valueInput' => $terinput, 'valueValid' => $tervalidasi]);
                 })
                 ->secondaryHeader(function () {
                     return 'Klik batang dibawah untuk melihat progress anggota.';

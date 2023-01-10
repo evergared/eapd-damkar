@@ -18,7 +18,7 @@ class Jabatan extends Model
         'keterangan',
     ];
 
-    public function nrk()
+    public function pegawai()
     {
         return $this->hasMany(Pegawai::class, 'id_jabatan', 'id_jabatan');
     }

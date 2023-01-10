@@ -15,6 +15,8 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'user';
+    protected $keyType = 'string';
+    protected $primaryKey = 'userid';
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +24,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'nrk',
+        'userid',
         'password',
     ];
 
@@ -38,12 +40,12 @@ class User extends Authenticatable
 
     public function data()
     {
-        return $this->belongsTo(Pegawai::class, 'nrk', 'nrk');
+        return $this->belongsTo(Pegawai::class, 'userid', 'id');
     }
 
     public function getNamaAttribute()
     {
-        return Pegawai::where('nrk', '=', $this->nrk)->first()->nama;
+        return Pegawai::where('id', '=', $this->userid)->first()->nama;
     }
 
 }

@@ -16,11 +16,11 @@ class HistoryTabelPegawai extends Model
     protected $table = "history_tabel_pegawai";
 
     protected $fillable = [
-        'id',
+        'id_pegawai',
         'sebelumnya',
         'perubahan',
         'komentar_perubahan',
-        'nrk_pengubah',
+        'id_pengubah',
         'dilihat_admin_sektor',
         'dilihat_admin_sudin',
         'dilihat_admin_dinas'

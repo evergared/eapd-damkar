@@ -17,7 +17,8 @@ class LayoutStatbox extends Component
     public $tertolak = 0,
         $rusak = 0,
         $persentaseCapaian = 0,
-        $persentaseTervalidasi = 0;
+        $persentaseTervalidasi = 0,
+        $persentaseTertolak = 0;
 
     // untuk Tabel
     public $infoTertolak = [],
@@ -57,7 +58,7 @@ class LayoutStatbox extends Component
             } else {
                 $tertolak = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('nrk', '=', Auth::user()->nrk)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', 1)->first()) {
+                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->userid)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', 1)->first()) {
                         if (verif::tryFrom($input->verifikasi_status) == verif::tertolak()) {
                             $tertolak++;
 
@@ -96,7 +97,7 @@ class LayoutStatbox extends Component
             } else {
                 $rusak = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('nrk', '=', Auth::user()->nrk)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', 1)->where('kondisi', 'like', 'rusak %')->first()) {
+                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->userid)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', 1)->where('kondisi', 'like', 'rusak %')->first()) {
                         $rusak++;
                         $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
                         $kondisi = $input->kondisi;
@@ -131,7 +132,7 @@ class LayoutStatbox extends Component
             } else {
                 $terisi = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('nrk', '=', Auth::user()->nrk)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', 1)->first()) {
+                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->userid)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', 1)->first()) {
                         $terisi++;
 
                         $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
@@ -167,7 +168,7 @@ class LayoutStatbox extends Component
             } else {
                 $tervalidasi = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('nrk', '=', Auth::user()->nrk)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', 1)->first()) {
+                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->userid)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', 1)->first()) {
                         if (verif::tryFrom($input->verifikasi_status) == verif::terverifikasi()) {
                             $tervalidasi++;
 
