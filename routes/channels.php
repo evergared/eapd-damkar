@@ -37,14 +37,39 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 //     return true;
 // });
 
-Broadcast::channel('admin-sektor.{sender}',function($user, $sender){
-    return Auth::user()->data->jabatan->level_user == LevelUser::adminSektor();
+
+
+// private channel 
+
+// untuk mengirimkan ke pegawai tertentu
+Broadcast::channel('pegawai-{id_penerima}',function($user,$id_penerima){
+    return $user->id === $id_penerima;
 });
 
-Broadcast::channel('admin-sudin.{sender}',function($user, $sender){
-    return Auth::user()->data->jabatan->level_user == LevelUser::adminSudin();
+
+// channel admin umum, menjangkau semua admin
+Broadcast::channel('admin-sektor',function($user){
+    return $user->data->jabatan->level_user == LevelUser::adminSektor();
 });
 
-Broadcast::channel('admin-dinas.{sender}',function($user, $sender){
-    return Auth::user()->data->jabatan->level_user == LevelUser::adminDinas();
+Broadcast::channel('admin-sudin',function($user){
+    return $user->data->jabatan->level_user == LevelUser::adminSudin();
+});
+
+Broadcast::channel('admin-dinas',function($user){
+    return $user->data->jabatan->level_user == LevelUser::adminDinas();
+});
+
+
+// tingkat sektor
+Broadcast::channel('admin-sektor-{sektor}',function($user,$sektor){
+
+    return $user->data->jabatan->level_user == LevelUser::adminSektor() && $user->data->sektor == $sektor;
+
+});
+
+Broadcast::channel('danton-{sektor}-{kompi}',function($user,$sektor,$kompi){
+    return  $user->data->jabatan->level_user == LevelUser::danton() &&
+            $user->data->sektor == $sektor &&
+            $user->data->id_grup == $kompi;
 });
