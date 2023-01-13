@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Eapd\Modal;
 
+use App\Enum\StatusApd;
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\FileController;
 use App\Enum\VerifikasiApd as verif;
@@ -27,7 +28,12 @@ class ModalInputApdPegawaiHalApdku extends Component
         $opsi_apd,
         $size_apd,
         $kondisi_apd,
-        $gambar_apd_template = [];
+        $gambar_apd_template = [],
+        $opsi_keberadaan = [
+            ['value'=> 'ada', 'text' => 'Sudah Terima dan Ada'],
+            ['value'=> 'hilang', 'text' => 'Sudah Terima Tapi Hilang'],
+            ['value'=> 'belum', 'text' => 'APD Belum Diterima'],
+        ];
 
 
     // untuk diisi oleh user
@@ -35,8 +41,9 @@ class ModalInputApdPegawaiHalApdku extends Component
         $nama_apd_user = '',
         $size_apd_user = '',
         $kondisi_apd_user = '',
-        $gambar_apd_user,
-        $komentar_apd_user ="";
+        $gambar_apd_user = [],
+        $komentar_apd_user ="",
+        $status_keberadaan_apd_user = "ada";
 
     // didapat dari db
     public  $gambar_apd = [],
@@ -103,6 +110,7 @@ class ModalInputApdPegawaiHalApdku extends Component
         $this->gambar_apd_template = null;
 
         $this->telahDiverifAdmin = false;
+        $this->gambar_apd_user = [];
 
         $adc = new ApdDataController;
 
@@ -304,50 +312,53 @@ class ModalInputApdPegawaiHalApdku extends Component
 
     public function simpan()
     {
-        // error_log('simpan');
-        $this->validate(
-            [
-                'id_apd_user' => 'required'
-            ],
-            [
-                'id_apd_user.required' => 'Harap pilih model APD'
-            ]
-        );
-
-        if (!is_null($this->size_apd)) {
+        
+        if($this->status_keberadaan_apd_user == "ada")
+        {
             $this->validate(
                 [
-                    'size_apd_user' => 'required'
+                    'id_apd_user' => 'required'
                 ],
                 [
-                    'size_apd_user.required' => 'Harap pilih ukuran APD'
+                    'id_apd_user.required' => 'Harap pilih model APD'
+                ]
+            );
+
+            if (!is_null($this->size_apd)) {
+                $this->validate(
+                    [
+                        'size_apd_user' => 'required'
+                    ],
+                    [
+                        'size_apd_user.required' => 'Harap pilih ukuran APD'
+                    ]
+                );
+            }
+
+            if (!is_null($this->kondisi_apd)) {
+                $this->validate(
+                    [
+                        'kondisi_apd_user' => 'required'
+                    ],
+                    [
+                        'kondisi_apd_user.required' => 'Harap pilih jenis kondisi APD'
+                    ]
+                );
+            }
+
+            $this->validate(
+                [
+                    'gambar_apd_user' => 'required'
+                ],
+                [
+                    'gambar_apd_user.required' => 'Harap upload gambar APD'
                 ]
             );
         }
 
-        if (!is_null($this->kondisi_apd)) {
-            $this->validate(
-                [
-                    'kondisi_apd_user' => 'required'
-                ],
-                [
-                    'kondisi_apd_user.required' => 'Harap pilih jenis kondisi APD'
-                ]
-            );
-        }
-
-        $this->validate(
-            [
-                'gambar_apd_user' => 'required'
-            ],
-            [
-                'gambar_apd_user.required' => 'Harap upload gambar APD'
-            ]
-        );
-        // return dd($this->gambar_apd_user);
+        
 
         try {
-
 
             $fc = new FileController;
 
@@ -355,13 +366,8 @@ class ModalInputApdPegawaiHalApdku extends Component
             $apd = new InputApd;
 
             $id_pegawai = Auth::user()->userid;
-
             $apd->id_pegawai = $id_pegawai;
             $apd->id_jenis = $this->id_jenis;
-            $apd->id_apd = $this->id_apd_user;
-            $apd->size = $this->size_apd_user;
-            $apd->kondisi = $this->kondisi_apd_user;
-            $apd->komentar_pengupload = $this->komentar_apd_user;
 
             /**
              * @todo ambil id dari fungsi pada kelas ApdDataController
@@ -369,10 +375,30 @@ class ModalInputApdPegawaiHalApdku extends Component
             $periode = 1;
             $apd->id_periode = $periode;
 
-            /**
-             * @todo buat enum untuk status verifikasi
-             */
-            $apd->verifikasi_status = verif::verifikasi();
+            $apd->verifikasi_status = verif::verifikasi();            
+
+            if($this->status_keberadaan_apd_user != "ada")
+            {
+                if($this->status_keberadaan_apd_user == "belum")
+                    $apd->kondisi = StatusApd::belumTerima();
+                
+                if($this->status_keberadaan_apd_user == "hilang")
+                    $apd->kondisi = StatusApd::hilang();
+
+                $apd->save();
+                session()->flash('success', 'Data Apd berhasil diinput.');
+                $this->ambilDataUser();
+                $this->emit('LayoutDaftarInputApdHalApdku');
+                $this->emit('refreshStatbox');
+                return;
+            }
+
+            $apd->id_apd = $this->id_apd_user;
+            $apd->size = $this->size_apd_user;
+            $apd->kondisi = $this->kondisi_apd_user;
+            $apd->komentar_pengupload = $this->komentar_apd_user;
+
+
 
             $list_gbr = [];
 
@@ -427,7 +453,6 @@ class ModalInputApdPegawaiHalApdku extends Component
 
             $apd->image = "";
             $apd->image = $gbr;
-            $apd->verifikasi_status = verif::verifikasi();
 
             $apd->save();
 

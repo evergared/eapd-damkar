@@ -20,18 +20,18 @@
                                 <li class="nav-item">
                                     <a class="nav-link active" id="gambar-apd-template-tab" data-toggle="pill"
                                         role="tab" aria-controls="gambar-apd-template-content" aria-selected="true"
-                                        href="#gambar-apd-template-content">Gambar APD</a>
+                                        href="#gambar-apd-template-content" wire:ignore.self>Gambar APD</a>
 
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="gambar-apd-user-tab" data-toggle="pill" role="tab"
                                         aria-controls="gambar-apd-user-content" aria-selected="false"
-                                        href="#gambar-apd-user-content">Gambar APD Anda</a>
+                                        href="#gambar-apd-user-content" wire:ignore.self>Gambar APD Anda</a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="gambar-apd-nav-tabsContent">
                                 <div class="tab-pane fade active show" id="gambar-apd-template-content" role="tabpanel"
-                                    aria-labelledby="gambar-apd-template-tab" wire:key='apd-template'>
+                                    aria-labelledby="gambar-apd-template-tab" wire:key='apd-template' wire:ignore.self>
 
                                     {{-- Jika gambar template gagal dimuat --}}
                                     @if (session()->has('gambar_apd_template_error'))
@@ -119,7 +119,7 @@
                                 </div>
 
                                 <div class="tab-pane fade" id="gambar-apd-user-content" role="tabpanel"
-                                    aria-labelledby="gambar-apd-user-tab" wire:key='apd-user'>
+                                    aria-labelledby="gambar-apd-user-tab" wire:key='apd-user' wire:ignore.self>
 
                                     {{-- Jika gambar user gagal dimuat --}}
                                     @if (session()->has('gambar_apd_user_error'))
@@ -386,7 +386,7 @@
 
 
         {{-- Modal Preview Gambar Start --}}
-        <div class="modal fade" id="modal-upload-gambar">
+        <div class="modal fade" id="modal-upload-gambar" wire:ignore.self>
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">

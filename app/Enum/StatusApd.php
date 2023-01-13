@@ -5,26 +5,32 @@ namespace App\Enum;
 use Spatie\Enum\Enum;
 
 /**
+ * @method static self belumTerima()
+ * @method static self hilang()
  * @method static self baik()
  * @method static self rusakRingan()
  * @method static self rusakSedang()
  * @method static self rusakBerat()
  */
-class StatusKerusakan extends Enum
+class StatusApd extends Enum
 {
     protected static function values(): array
     {
         return [
-            'baik' => 1,
-            'rusakRingan' => 2,
-            'rusakSedang' => 3,
-            'rusakBerat' => 4,
+            'belumTerima' => 'belum terima',
+            'hilang' => 'hilang',
+            'baik' => 'baik',
+            'rusakRingan' => 'rusak ringan',
+            'rusakSedang' => 'rusak sedang',
+            'rusakBerat' => 'rusak berat',
         ];
     }
 
     protected static function labels(): array
     {
         return [
+            'belumTerima' => 'APD Belum Diterima',
+            'hilang' => 'APD Hilang',
             'baik' => 'Baik',
             'rusakRingan' => 'Rusak Ringan',
             'rusakSedang' => 'Rusak Sedang',

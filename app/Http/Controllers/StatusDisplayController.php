@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\StatusApd as status;
+
 /**
  * Untuk men-konvert data status untuk ditampilkan melalui bootstrap
  */
@@ -36,22 +38,33 @@ class StatusDisplayController extends Controller
         return $warna;
     }
 
-    public function ubahKondisiApdKeWarnaBootstrap(string $item, string $tipe = 'umum'): string
+    public function ubahKondisiApdKeWarnaBootstrap($item): string
     {
         $warna = '';
 
-        switch ($item) {
-            case 'baik':
+        if($item)
+            $status = status::tryFrom($item);
+        else
+            $status = "";
+
+        switch ($status) {
+            case status::baik():
                 $warna = 'success';
                 break;
-            case 'rusak ringan':
+            case status::rusakRingan():
                 $warna = 'warning';
                 break;
-            case 'rusak sedang':
-                $warna = 'warning';
+            case status::rusakSedang():
+                $warna = 'orange';
                 break;
-            case 'rusak berat':
+            case status::rusakBerat():
                 $warna = 'danger';
+                break;
+            case status::hilang():
+                $warna = 'dark';
+                break;
+            case status::belumTerima():
+                $warna = 'dark';
                 break;
             default:
                 $warna = 'secondary';

@@ -9,6 +9,7 @@ use App\Models\Eapd\ApdList;
 use App\Models\Eapd\InputApdTemplate;
 use App\Models\Eapd\Jabatan;
 use App\Enum\VerifikasiApd as verif;
+use App\Enum\StatusApd as status;
 use App\Models\Eapd\ApdJenis;
 use App\Models\Eapd\InputApd;
 use App\Models\Eapd\Pegawai;
@@ -180,7 +181,7 @@ class ApdDataController extends Controller
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                             'status_verifikasi' => $verifikasi_label,
                             'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
-                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode),
+                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)->label,
                             'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                             'komentar_pengupload' => $input->komentar_pengupload,
                             'nrk_verifikator' => $input->verifikasi_oleh,
@@ -232,7 +233,7 @@ class ApdDataController extends Controller
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                             'status_verifikasi' => $verifikasi_label,
                             'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
-                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode),
+                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)->label,
                             'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                             'komentar_pengupload' => $input->komentar_pengupload,
                             'nrk_verifikator' => $input->verifikasi_oleh,
@@ -632,7 +633,7 @@ class ApdDataController extends Controller
             if ($id_pegawai == "")
                 $id_pegawai = Auth::user()->userid;
 
-            return InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->kondisi;
+            return status::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->kondisi);
         } catch (Throwable $e) {
             // error_log("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);
             // report("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);
