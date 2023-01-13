@@ -4,11 +4,12 @@ namespace App\Models\Eapd;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
 class InputApd extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     public $incrementing = false;
     protected $table = "input_apd";
@@ -50,6 +51,7 @@ class InputApd extends Model
 
         static::creating(function ($InputApd) {
             $InputApd->{$InputApd->getKeyName()} = (string) Str::uuid();
+            
         });
 
         static::updated(function ($InputApd) {

@@ -313,7 +313,7 @@ class TesEapdSeeder extends Seeder
             'nama' => 'Indra Purwoko',
             'id_jabatan' => 'L001',
             'id_wilayah' => '1',
-            'id_penempatan' => '1.11',
+            'id_penempatan' => '1.11.01',
             'id_grup' => 'B'
         ]);
 
@@ -324,7 +324,7 @@ class TesEapdSeeder extends Seeder
             'id_jabatan' => 'K001',
             'id_wilayah' => '1',
             'id_penempatan' => '1.11',
-            'id_grup' => 'B'
+            'id_grup' => 'S'
         ]);
 
         $akun[3] = Pegawai::create([

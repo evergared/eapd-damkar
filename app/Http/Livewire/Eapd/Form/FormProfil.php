@@ -114,8 +114,9 @@ class FormProfil extends Component
         $pegawai->save();
 
         $this->resetData();
-        return redirect(request()->header('Referer'))->with('sukses', 'Data profil berhasil disimpan');
-        // $this->inisiasi();
+        session()->flash('sukses', 'Data profil berhasil disimpan');
+        // return redirect(request()->header('Referer'))->with('sukses', 'Data profil berhasil disimpan');
+         $this->inisiasi();
     }
 
 
