@@ -279,7 +279,7 @@ class ApdDataController extends Controller
                     }
 
                     // muat apa saja yang telah diinput oleh si pegawai
-                    $inputan = $this->muatInputanPegawai($id_periode,$pegawai->nrk,$target_verifikasi);
+                    $inputan = $this->muatInputanPegawai($id_periode,$pegawai->id,$target_verifikasi);
 
                     // apakah pegawai pernah menginput
                     if(is_array($inputan) && count($inputan) !== 0)
@@ -506,30 +506,38 @@ class ApdDataController extends Controller
         }
     }
 
-    public function siapkanGambarInputanBesertaPathnya(string $stringGambar, $nrk, $id_jenis, $id_periode): array|string
+    public function siapkanGambarInputanBesertaPathnya($stringGambar, $nrk, $id_jenis, $id_periode): array|string
     {
         try {
-            // jika gambar banyak
-            if (str_contains($stringGambar, "||")) {
-                // jadikan string gambar tersebut ke bentuk array
-                $gbr = explode("||", $stringGambar);
-            } else
-                $gbr = $stringGambar;
+            if(!is_null($stringGambar))
+            {
+                // jika gambar banyak
+                if (str_contains($stringGambar, "||")) {
+                    // jadikan string gambar tersebut ke bentuk array
+                    $gbr = explode("||", $stringGambar);
+                } else
+                    $gbr = $stringGambar;
 
-            $fc = new FileController;
+                $fc = new FileController;
 
-            if (is_array($gbr)) {
-                $gambar = [];
-                foreach ($gbr as $g) {
-                    array_push($gambar, 'storage/' . $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $g);
+                if (is_array($gbr)) {
+                    $gambar = [];
+                    foreach ($gbr as $g) {
+                        array_push($gambar, 'storage/' . $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $g);
+                    }
+                    return $gambar;
+                } else {
+                    if ($gbr == "")
+                        return "";
+                    else
+                        return 'storage/' . $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $gbr;
                 }
-                return $gambar;
-            } else {
-                if ($gbr == "")
-                    return "";
-                else
-                    return 'storage/' . $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $gbr;
             }
+            else
+            {
+                return "";
+            }
+            
         } catch (Throwable $e) {
             error_log('Gagal menyiapkan gambar inputan user ' . $e);
             return "";
@@ -640,6 +648,7 @@ class ApdDataController extends Controller
             return 'Proses';
         }
     }
+    
 
     /**
      * Ambil status verifikasi dan lempar nilai beserta label mereka ke value lain
