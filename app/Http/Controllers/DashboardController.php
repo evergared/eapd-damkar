@@ -20,6 +20,9 @@ class DashboardController extends Controller
     public function tampilDashboardPegawai(Request $r)
     {
 
+        $arc = new ApdRekapController;
+
+        // return dd($arc->bangunDataTabelRekapSektor());
         // return dd(Auth::user()->data->jabatan->level_user);
 
         if (Auth::user()->data->jabatan->level_user == 'admin_sektor')

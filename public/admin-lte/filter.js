@@ -86,13 +86,14 @@ window.addEventListener('jsShowDetail',event =>{
     //alert("Tester") console.
     //alert(Filter)
     console.log("Id",Id)
+    Livewire.emit('rekapDetail',[Id,Filter]);
     $("#rekap-tabel").hide(500)
-    $("#rekapdetail").show(500)
+    $("#rekapdetail").collapse('show')
   }
 
   function backToRekap(){
     $("#rekap-tabel").show(500)
-    $("#rekapdetail").hide(500)
+    $("#rekapdetail").collapse('hide')
   }
 // hide and show tabel rekap end
 

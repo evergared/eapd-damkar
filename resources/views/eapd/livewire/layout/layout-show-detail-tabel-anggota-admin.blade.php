@@ -161,7 +161,7 @@
                                             <div class="tab-pane fade active show" id="gambar-upload-user-content" role="tabpanel" aria-labelledby="gambar-upload-user-tab">
                                                 
                                                 @if (!is_null($gambar_template_apd))
-                                                    <span class="text-info">Dibawah ini merupakan gambar yang diupload oleh pegawai.</span>
+                                                    <span class="text-info">Dibawah ini merupakan gambar yang diupload oleh pegawai.</span><br>
                                                 @endif
 
                                                 {{-- generate gambar pegawai start --}}

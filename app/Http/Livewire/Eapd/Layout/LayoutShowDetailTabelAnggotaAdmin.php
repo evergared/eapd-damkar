@@ -28,7 +28,16 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
     // data array untuk ditampilkan menggunakan foreach
     public
         $list_inputan = [],
-        $opsi_verifikasi = [];
+        $opsi_verifikasi = [
+            [
+            'value' => 3,
+                'label' => 'Validasi Data'
+            ],
+            ['value' => 4,
+                'label' => 'Tolak Data'
+                ]
+        ],
+        $data_rekapan = [];
 
     // boolean sebagai pengganti flag array kosong
     public
@@ -127,17 +136,6 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
 
             // buat parameter inputan dari nilai saat ini dan nilai maksimal inputan
             $this->parameter_inputan = ($val !=0)? 'Terinput '.$val . ' dari '.$maks.' item.':'';
-
-            array_push($this->opsi_verifikasi, [
-                'value' => 3,
-                'label' => 'Validasi Data'
-            ]);
-            array_push($this->opsi_verifikasi, [
-                'value' => 4,
-                'label' => 'Tolak Data'
-            ]);            
-
-            
 
             $this->dispatchBrowserEvent('jsShowDetail');
         }
