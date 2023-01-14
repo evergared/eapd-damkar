@@ -24,9 +24,8 @@ class TabelAnggotaKaton extends DataTableComponent
 
     public function builder(): Builder
     {
-        $penempatan = Auth::user()->data->id_penempatan;
         $grup = Auth::user()->data->id_grup;
-        return Pegawai::query()->where('id_penempatan', '=', $penempatan)->where('id_grup', '=', $grup);
+        return Pegawai::query()->where('id_penempatan', 'like', Auth::user()->data->sektor.'%')->where('id_grup', '=', $grup);
     }
 
     public function columns(): array
