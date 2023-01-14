@@ -56,6 +56,8 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->excludeFromColumnSelect(),
+            Column::make('id')
+                ->hideIf(true),
             Column::make("Nrk", "nrk")
                 ->sortable()
                 ->searchable()
@@ -97,7 +99,7 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
                         ->attributes(function ($row){
                             return [
                                 'class' => 'btn btn-link text-nowrap',
-                                'onclick' => "modal('modal-kepegawaian','".$row->nrk."','panggilModalKepegawaian')"
+                                'onclick' => "modal('modal-kepegawaian','".$row->id."','panggilModalKepegawaian')"
                             ];
                         }),
                     ])
