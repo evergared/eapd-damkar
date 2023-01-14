@@ -363,19 +363,26 @@ class ModalInputApdPegawaiHalApdku extends Component
             $fc = new FileController;
 
             $adc = new ApdDataController;
-            $apd = new InputApd;
 
             $id_pegawai = Auth::user()->userid;
-            $apd->id_pegawai = $id_pegawai;
-            $apd->id_jenis = $this->id_jenis;
 
             /**
              * @todo ambil id dari fungsi pada kelas ApdDataController
              */
             $periode = 1;
-            $apd->id_periode = $periode;
 
-            $apd->verifikasi_status = verif::verifikasi();            
+            if($apd = InputApd::where('id_pegawai','=',$id_pegawai)->where('id_jenis','=',$this->id_jenis)->where('id_periode','=',$periode)->first())
+            {}
+            else
+            {
+                $apd = new InputApd;
+                $apd->id_pegawai = $id_pegawai;
+                $apd->id_jenis = $this->id_jenis;
+                $apd->id_periode = $periode;
+                $apd->verifikasi_status = verif::verifikasi();
+            }
+                        
+
 
             if($this->status_keberadaan_apd_user != "ada")
             {
