@@ -37,6 +37,7 @@ class LayoutRekapApdAdminSektor extends Component
 
     public function rekapDetail($value)
     {
+        $this->detail_data_rekap = [];
         try{
             $apr = new ApdRekapController;
             $id_jenis = $value[0];

@@ -163,7 +163,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             $pegawai->id_grup = $this->grup;
             $pegawai->id_penempatan = $this->penempatan;
             $pegawai->nama = $this->nama;
-            $pegawai->id_pegawai = $this->id_pegawai;
+            $pegawai->id = $this->id_pegawai;
             $pegawai->nip = $this->nip;
             $pegawai->email = $this->email;
             $pegawai->no_telp = $this->telp;
@@ -182,7 +182,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             $pegawai = Pegawai::where('id','=',$id_pegawai)->first();
 
             // inisiasi ulang data lainnya
-            $this->id_pegawai = $pegawai->id_pegawai;
+            $this->id_pegawai = $pegawai->id;
             $this->nrk = $this->cache_nrk = $pegawai->nrk;
             $this->nama = $this->cache_nama = $pegawai->nama;
             $this->nip = $this->cache_nip = $pegawai->nip;
@@ -219,7 +219,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         {
             try{
                 error_log('hit keterangan edit user '.$id_pegawai);
-                $history = HistoryTabelPegawai::where('id','=',$id_pegawai)->first();
+                $history = HistoryTabelPegawai::where('id_pegawai','=',$id_pegawai)->first();
                 $history->keterangan_perubahan = $this->keterangan;
                 
                 $history->save();

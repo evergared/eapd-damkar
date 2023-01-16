@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Enum\StatusApd;
+use App\Enum\VerifikasiApd;
 use App\Models\Eapd\ApdJenis;
 use App\Models\Eapd\ApdList;
 use App\Models\Eapd\InputApd;
 use App\Models\Eapd\Pegawai;
+use App\Models\Eapd\Penempatan;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
@@ -70,8 +72,11 @@ class ApdRekapController extends Controller
         }
     }
 
-    public function bangunListDetailRekapApdSektor($id_jenis, $id_periode = 1, $sektor = "", $target_status = null)
+    public function bangunListDetailRekapApdSektor($id_jenis, $id_periode = 1, $sektor = "", $target_status = "")
     {
+
+        error_log('data target status '.$target_status);
+
         if($sektor == "")
             $sektor = Auth::user()->data->sektor;
         
@@ -87,18 +92,54 @@ class ApdRekapController extends Controller
                     return $a->sektor == $sektor;
                 });
 
+                $adc = new ApdDataController;
+                $sdc = new StatusDisplayController;
+
                 foreach($inputan_anggota as $inputan)
                 {
-                    if(is_null($target_status))
+                    $pegawai = Pegawai::where('id','=',$inputan->id_pegawai)->first();
+                    $nama_jenis_apd = ApdJenis::where('id_jenis','=',$inputan->id_jenis)->first()->nama_jenis;
+                    $penempatan = Penempatan::where('id_penempatan','=',$pegawai->id_penempatan)->first();
+                    $gambar = $adc->siapkanGambarInputanBesertaPathnya($inputan->image,$inputan->id_pegawai,$inputan->id_jenis,$inputan->id_periode);
+
+                    if($target_status != "")
                     {
-                        $detail_rekap_apd->push($inputan);
+                        error_log('hit target status not null');
+
+                        if($inputan->kondisi == $target_status)
+                        {
+                            $detail_rekap_apd->push([
+                                'id_jenis' => $inputan->id_jenis,
+                                'nama_jenis' => $nama_jenis_apd,
+                                'nama_pegawai' => $pegawai->nama,
+                                'penempatan' => $penempatan->nama_penempatan,
+                                'gambar' => $gambar,
+                                'kondisi_status' => StatusApd::tryFrom($inputan->kondisi)->label,
+                                'kondisi_warna' => $sdc->ubahKondisiApdKeWarnaBootstrap($inputan->kondisi),
+                                'verifikasi_status' => VerifikasiApd::tryFrom($inputan->verifikasi_status)->label,
+                                'verifikasi_warna' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($inputan->verifikasi_status),
+                                'komentar_pengupload' => $inputan->komentar_pengupload,
+                                'komentar_verifikator' => $inputan->komentar_verifikator,
+                            ]);
+                        }
                     }
                     else
                     {
-                        if($inputan->kondisi == $target_status)
-                        {
-                            $detail_rekap_apd->push($inputan);
-                        }
+                        error_log('hit target status null');
+
+                            $detail_rekap_apd->push([
+                            'id_jenis' => $inputan->id_jenis,
+                            'nama_jenis' => $nama_jenis_apd,
+                            'nama_pegawai' => $pegawai->nama,
+                            'penempatan' => $penempatan->nama_penempatan,
+                            'gambar' => $gambar,
+                            'kondisi_status' => StatusApd::tryFrom($inputan->kondisi)->label,
+                            'kondisi_warna' => $sdc->ubahKondisiApdKeWarnaBootstrap($inputan->kondisi),
+                            'verifikasi_status' => VerifikasiApd::tryFrom($inputan->verifikasi_status)->label,
+                            'verifikasi_warna' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($inputan->verifikasi_status),
+                            'komentar_pengupload' => $inputan->komentar_pengupload,
+                            'komentar_verifikator' => $inputan->komentar_verifikator,
+                        ]);
                     }
                 }
             }

@@ -118,7 +118,7 @@ class Pegawai extends Model
                 else
                 {
                     // cek apakah data tersebut ada di tabel history
-                    if($data = HistoryTabelPegawai::find($val->{$val->getKeyName()}))
+                    if($data = HistoryTabelPegawai::where('id_pegawai','=',$val->{$val->getKeyName()})->first())
                     {
                         // jika ada, cek apakah para admin telah melihat perubahan sebelumnya
 
@@ -189,13 +189,14 @@ class Pegawai extends Model
 
                         $data_dirty = $val;
                         
-
-                        HistoryTabelPegawai::create([
-                            'id' => $val->{$val->getKeyName()},
+                        error_log('mulai buat entry history tabel pegawai baru');
+                        $status = HistoryTabelPegawai::create([
+                            'id_pegawai' => $val->{$val->getKeyName()},
                             'sebelumnya' => $data_original,
                             'perubahan' => $data_dirty,
                             'id_pengubah' => Auth::user()->userid
                         ]);
+                        error_log('status pembuatan : '.$status);
                     }
                 }
             }

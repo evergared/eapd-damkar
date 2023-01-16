@@ -14,6 +14,7 @@ class HistoryTabelPegawai extends Model
     use Notifiable;
     
     protected $table = "history_tabel_pegawai";
+    public $primaryKey = "id_pegawai";
 
     protected $fillable = [
         'id_pegawai',
