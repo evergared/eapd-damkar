@@ -94,7 +94,7 @@ class FormProfil extends Component
         );
 
         if (!is_null($this->password) && $this->password == $this->ulangiPassword)
-            User::where('id', '=', Auth::User()->userid)->update(['password' => Hash::make($this->password)]);
+            User::where('userid', '=', Auth::User()->userid)->update(['password' => Hash::make($this->password)]);
 
         $pegawai = Pegawai::where('id', '=', Auth::User()->userid)->first();
 
