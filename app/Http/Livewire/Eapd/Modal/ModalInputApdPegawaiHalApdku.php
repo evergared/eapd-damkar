@@ -116,7 +116,7 @@ class ModalInputApdPegawaiHalApdku extends Component
 
         // untuk tes, load satu jenis apd dan apd-apd opsi nya
         // $tes = $adc->muatSatuContohDaftarInputApd();
-        $tes = $adc->muatContohDaftarInputApd($value);
+        $tes = $adc->muatOpsiApd($value);
 
         $this->id_jenis = $tes['id_jenis'];
         $this->opsi_apd = $tes['opsi_apd'];

@@ -66,6 +66,21 @@ class ApdDataController extends Controller
         return ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000', 'H-fir-0000', 'H-bro-0001']];
     }
 
+    public function muatOpsiApd(string $id_jenis, $id_periode = 1, $id_jabatan = "")
+    {
+        try{
+
+            $list = $this->muatListInputApdDariTemplate($id_periode,$id_jabatan);
+            $index = array_search($id_jenis, array_column($list, 'id_jenis'));
+            return $list[$index];
+
+        }
+        catch(Throwable $e)
+        {
+            error_log('Gagal memuat daftar input apd '.$e);
+        }
+    }
+
     /**
      * Ambil template untuk input apd dari database berdasarkan periode dan jabatan
      * @param int $id_periode periode untuk template yang dicari, dalam bentuk id periode
