@@ -49,11 +49,24 @@ class LoginRequest extends FormRequest
         // agar user dapat login menggunakan nrk atau nip
         $id = "";
 
+        $c = implode("|",$this->only('nrk'));
+
+        error_log('request login nrk/nip : '.$c);
+
         // return dd($this->password);
-        if($pegawai = Pegawai::where('nrk','=',$this->only('nrk'))->first())
+        if($pegawai = Pegawai::where('nrk','=',$c)->first())
+        {
             $id = $pegawai->id;
-        elseif($pegawai = Pegawai::where('nip','=',$this->only('nrk'))->first())
+            error_log('login hit by nrk');
+        }
+        elseif($pegawai = Pegawai::where('nip','=',$c)->first())
+        {
             $id = $pegawai->id;
+            error_log('login hit by nip');
+        }
+
+        error_log('pegawai : '.$pegawai);
+        error_log('id pegawai : '.$id);
 
         if($id == "")
             throw ValidationException::withMessages([

@@ -95,6 +95,9 @@ class ApdDataController extends Controller
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
 
+            if(Jabatan::where('id_jabatan', '=', $id_jabatan)->first())
+                error_log('jabatan found');
+
             // ambil template penginputan apd dari database menggunakan pivot table yang telah di buat di model
             if($list = Jabatan::where('id_jabatan', '=', $id_jabatan)->first()->templatePadaPeriode($id_periode)->first()->template)
             {
@@ -105,7 +108,7 @@ class ApdDataController extends Controller
                 return [];
 
         } catch (Throwable $e) {
-            error_log('gagal memuat list template input ');
+            error_log('gagal memuat list template input '.$e);
             return [];
         }
     }

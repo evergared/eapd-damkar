@@ -5,7 +5,8 @@ namespace App\Models\Eapd;
 use App\Enum\LevelUser;
 use App\Enum\TipeJabatan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -100,7 +101,10 @@ class Pegawai extends Model
         parent::boot();
 
         static::creating(function ($val) {
-            $val->{$val->getKeyName()} = (string) Str::uuid();
+            $test = (string) Str::uuid();
+            error_log('nama key pegawai : '.$val->getKeyName());
+            error_log('value key pegawai : '.$test);
+            $val->id = $test;
         });
 
         static::updating(function ($val){
@@ -108,7 +112,7 @@ class Pegawai extends Model
 
             try{
                 // cek apakah id_pegawai yang diganti sama dengan id_pegawai user saat ini
-                if($val->{$val->getKeyName()} == Auth::user()->userid)
+                if($val->id == Auth::user()->userid)
                 {
                     // jika ya, maka tidak perlu dimasukan ke tabel history
                     // karena biasanya pada case ini,
@@ -118,7 +122,7 @@ class Pegawai extends Model
                 else
                 {
                     // cek apakah data tersebut ada di tabel history
-                    if($data = HistoryTabelPegawai::where('id_pegawai','=',$val->{$val->getKeyName()})->first())
+                    if($data = HistoryTabelPegawai::where('id_pegawai','=',$val->id)->first())
                     {
                         // jika ada, cek apakah para admin telah melihat perubahan sebelumnya
 
@@ -184,14 +188,14 @@ class Pegawai extends Model
                     // jika tidak ada data tersebut di tabel history
                     else
                     {
-                        error_log('pegawai id : '.$val->{$val->getKeyName()});
+                        error_log('pegawai id : '.$val->id);
                         $data_original = $val->getOriginal();
 
                         $data_dirty = $val;
                         
                         error_log('mulai buat entry history tabel pegawai baru');
                         $status = HistoryTabelPegawai::create([
-                            'id_pegawai' => $val->{$val->getKeyName()},
+                            'id_pegawai' => $val->id,
                             'sebelumnya' => $data_original,
                             'perubahan' => $data_dirty,
                             'id_pengubah' => Auth::user()->userid
