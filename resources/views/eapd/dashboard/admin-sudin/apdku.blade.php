@@ -1,4 +1,4 @@
-@extends('eapd.layouts.adminlte-dashboard',['title'=>'APDku Admin Sudin'])
+@extends('eapd.layouts.adminlte-dashboard',['title'=>'APDku Admin Sektor'])
 
 @section('content')
 

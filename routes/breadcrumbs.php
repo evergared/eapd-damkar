@@ -52,11 +52,27 @@ Breadcrumbs::for('apdku', function (BreadcrumbTrail $trail) {
 });
 
 // Admin Sektor
-Breadcrumbs::for('laporan', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('print-laporan', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
-    $trail->push('Laporan', route('laporan'));
+    $trail->push('Print Laporan', route('print-laporan'));
 });
 Breadcrumbs::for('kepegawaian', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('Kepegawaian', route('kepegawaian'));
+});
+Breadcrumbs::for('progres-sektor', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Progres Sektor', route('progres-sektor'));
+});
+Breadcrumbs::for('ukuran', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Daftar Ukuran APD', route('ukuran'));
+});
+Breadcrumbs::for('data-ukuran', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Data Ukuran APD', route('data-ukuran'));
+});
+Breadcrumbs::for('data-distribusi', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Data Distribusi', route('data-distribusi'));
 });
