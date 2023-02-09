@@ -98,6 +98,9 @@ class ApdDataController extends Controller
             if(Jabatan::where('id_jabatan', '=', $id_jabatan)->first())
                 error_log('jabatan found');
 
+            if(Jabatan::where('id_jabatan', '=', $id_jabatan)->first()->templatePadaPeriode($id_periode)->first())
+                error_log('template pada periode found');
+
             // ambil template penginputan apd dari database menggunakan pivot table yang telah di buat di model
             if($list = Jabatan::where('id_jabatan', '=', $id_jabatan)->first()->templatePadaPeriode($id_periode)->first()->template)
             {

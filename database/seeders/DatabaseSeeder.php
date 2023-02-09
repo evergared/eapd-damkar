@@ -27,8 +27,8 @@ class DatabaseSeeder extends Seeder
 
 
 
-        $this->call(TesMultiUploadSeeder::class);
+        // $this->call(TesMultiUploadSeeder::class);
         // $this->call(DummyDatabaseSeeder::class);
-        $this->call(TesEapdSeeder::class);
+        $this->call(TesMongodbSeeder::class);
     }
 }

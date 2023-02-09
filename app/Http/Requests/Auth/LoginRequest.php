@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Models\Eapd\Pegawai;
+use App\Models\Eapd\Mongodb\Pegawai;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -46,34 +46,31 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // agar user dapat login menggunakan nrk atau nip
+        #region Agar login dapat menggunakan nrk atau nip
         $id = "";
 
-        $c = implode("|",$this->only('nrk'));
+        // ambil data dari field 'nrk'
+        $inputed = implode("|",$this->only('nrk'));
 
-        error_log('request login nrk/nip : '.$c);
-
-        // return dd($this->password);
-        if($pegawai = Pegawai::where('nrk','=',$c)->first())
+        // cek apakah $inputed merupakan nrk / id pjlp
+        if($pegawai = Pegawai::where('nrk','=',$inputed)->first())
         {
             $id = $pegawai->id;
-            error_log('login hit by nrk');
         }
-        elseif($pegawai = Pegawai::where('nip','=',$c)->first())
+        // cek apakah $inputed merupakan nip / nik
+        elseif($pegawai = Pegawai::where('nip','=',$inputed)->first())
         {
             $id = $pegawai->id;
-            error_log('login hit by nip');
         }
 
-        error_log('pegawai : '.$pegawai);
-        error_log('id pegawai : '.$id);
-
+        // jika $inputed bukan nrk/id pjlp maupun nip/nik, maka gagalkan permintaan login
         if($id == "")
             throw ValidationException::withMessages([
                     'nrk' => trans('auth.failed'),
                 ]);
-
-        $credential = [ 'userid' => $id, 'password' => $this->password];
+        // jika id terisi, maka masukan data tsb dan password nya sebagai kredensial login
+        $credential = [ '_id' => $id, 'password' => $this->password];
+        #endregion
 
         if (!Auth::attempt($credential, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
