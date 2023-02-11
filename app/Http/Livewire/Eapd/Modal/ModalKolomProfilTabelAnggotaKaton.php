@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Eapd\Modal;
 
-use App\Models\Eapd\Pegawai;
+use App\Models\Eapd\Mongodb\Pegawai;
 use Livewire\Component;
 
 class ModalKolomProfilTabelAnggotaKaton extends Component

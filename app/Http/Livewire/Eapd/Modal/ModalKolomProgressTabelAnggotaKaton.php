@@ -3,8 +3,8 @@
 namespace App\Http\Livewire\Eapd\Modal;
 
 use App\Http\Controllers\ApdDataController;
-use App\Models\Eapd\Pegawai;
-use App\Models\Eapd\PeriodeInputApd;
+use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use Livewire\Component;
 use Throwable;
 

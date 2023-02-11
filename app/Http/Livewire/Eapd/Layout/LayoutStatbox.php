@@ -4,9 +4,9 @@ namespace App\Http\Livewire\Eapd\Layout;
 
 use illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ApdDataController;
-use App\Models\Eapd\InputApd;
+use App\Models\Eapd\Mongodb\InputApd;
 use App\Enum\VerifikasiApd as verif;
-use App\Models\Eapd\ApdJenis;
+use App\Models\Eapd\Mongodb\ApdJenis;
 use Livewire\Component;
 use Throwable;
 

@@ -8,7 +8,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Eapd\Pegawai;
+use App\Models\Eapd\Mongodb\Pegawai;
 use App\Enum\VerifikasiApd as verif;
 
 class TabelAnggotaKaton extends DataTableComponent

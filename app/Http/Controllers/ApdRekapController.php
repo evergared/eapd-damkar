@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Enum\StatusApd;
 use App\Enum\VerifikasiApd;
-use App\Models\Eapd\ApdJenis;
-use App\Models\Eapd\ApdList;
-use App\Models\Eapd\InputApd;
-use App\Models\Eapd\Pegawai;
-use App\Models\Eapd\Penempatan;
+use App\Models\Eapd\Mongodb\ApdJenis;
+use App\Models\Eapd\Mongodb\ApdList;
+use App\Models\Eapd\Mongodb\InputApd;
+use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Mongodb\Penempatan;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Throwable;

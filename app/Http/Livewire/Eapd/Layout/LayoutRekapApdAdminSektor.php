@@ -5,7 +5,7 @@ namespace App\Http\Livewire\Eapd\Layout;
 use App\Enum\StatusApd;
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\ApdRekapController;
-use App\Models\Eapd\InputApd;
+use App\Models\Eapd\Mongodb\InputApd;
 use Livewire\Component;
 use Throwable;
 

@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Eapd\Form;
 
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
-use App\Models\Eapd\Pegawai;
+use App\Models\Eapd\Mongodb\Pegawai;
 use App\Http\Controllers\FileController;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;

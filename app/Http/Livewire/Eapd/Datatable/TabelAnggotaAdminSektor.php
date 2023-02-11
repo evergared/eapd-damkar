@@ -3,11 +3,11 @@
 namespace App\Http\Livewire\Eapd\Datatable;
 
 use App\Http\Controllers\ApdDataController;
-use App\Models\Eapd\Jabatan;
+use App\Models\Eapd\Mongodb\Jabatan;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Eapd\Pegawai;
-use App\Models\Eapd\Penempatan;
+use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Mongodb\Penempatan;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,7 +20,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
+        $this->setPrimaryKey('_id');
         $this->setSearchEnabled();
     }
     
@@ -38,11 +38,11 @@ class TabelAnggotaAdminSektor extends DataTableComponent
         // tambahkan jika perlu
         // https://laravel.com/docs/9.x/queries#or-where-clauses
         ->where(function ($q) {
-            $q  ->where('pegawai.id_jabatan','=','L001')    // pjlp damkar
-                ->orWhere('pegawai.id_jabatan','=','L002')  // ASN damkar
-                ->orWhere('pegawai.id_jabatan','=','L003')  // Kepala Regu
-                ->orWhere('pegawai.id_jabatan','=','L004')  // Kepala Pleton
-                ->orWhere('pegawai.id_jabatan','=','S001');  // Staff Sektor
+            $q  ->where('pegawai._id','=','L001')    // pjlp damkar
+                ->orWhere('pegawai._id','=','L002')  // ASN damkar
+                ->orWhere('pegawai._id','=','L003')  // Kepala Regu
+                ->orWhere('pegawai._id','=','L004')  // Kepala Pleton
+                ->orWhere('pegawai._id','=','S001');  // Staff Sektor
         })
 
         // ambil pegawai yang masih aktif
@@ -59,7 +59,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                 ->format(function ($value, $row) {
                     return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-anggota-katon", ['img' => $value, 'id_pegawai' => $row->id]);
                 }),
-            Column::make("id")
+            Column::make("_id")
                 ->sortable()
                 ->hideIf(true),
             Column::make("Nama", "nama")

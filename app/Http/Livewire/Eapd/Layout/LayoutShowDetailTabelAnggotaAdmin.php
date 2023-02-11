@@ -4,11 +4,11 @@ namespace App\Http\Livewire\Eapd\Layout;
 
 use App\Enum\VerifikasiApd as verif;
 use Livewire\Component;
-use App\Models\Eapd\Pegawai;
-use App\Models\Eapd\PeriodeInputApd;
+use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use App\Http\Controllers\ApdDataController;
-use App\Models\Eapd\ApdList;
-use App\Models\Eapd\InputApd;
+use App\Models\Eapd\Mongodb\ApdList;
+use App\Models\Eapd\Mongodb\InputApd;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
 

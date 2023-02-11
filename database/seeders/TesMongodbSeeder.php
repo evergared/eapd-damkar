@@ -54,41 +54,7 @@ class TesMongodbSeeder extends Seeder
             ['_id' => 'A004', 'nama_jenis' => 'Senter', 'keterangan' => null],
         ];
 
-        $dataContohApd = [
-            ['_id' => 'H-bro-0000', 'nama_apd' => 'Protect Red', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' => '2', 'id_kondisi' => '2', 'image' => 'firehelmet_1.jpg||firehelmet_2.jpg||firehelmet_3.jpg'],
-            ['_id' => 'H-bro-0001', 'nama_apd' => 'Alpha Head', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' => '2', 'id_kondisi' => '2', 'image' => 'firehelmet_4.jpg||firehelmet_5.jpg'],
-            ['_id' => 'H-fir-0000', 'nama_apd' => 'Helmet Fire', 'merk' => 'Fire Protect', 'id_jenis' => 'H001', 'id_size' => '2', 'id_kondisi' => '2', 'image' => 'firehelmet_6.jpg'],
-
-            ['_id' => 'H-fir-0001', 'nama_apd' => 'Red Helmet', 'merk' => 'Fire Protect', 'id_jenis' => 'H002', 'id_size' => '2', 'id_kondisi' => '2', 'image' => 'rescuehelmet_1.jpg'],
-
-            ['_id' => 'G-glo-0000', 'nama_apd' => 'Red Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' => '2', 'id_kondisi' => '1', 'image' => 'firegloves_1.jpg'],
-            ['_id' => 'G-glo-0001', 'nama_apd' => 'Yellow Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' => '2', 'id_kondisi' => '1', 'image' => 'firegloves_2.jpg'],
-            ['_id' => 'G-alt-0000', 'nama_apd' => 'Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G001', 'id_size' => '2', 'id_kondisi' => '1', 'image' => 'firegloves_1.jpg||firegloves_2.jpg'],
-
-            ['_id' => 'G-alt-0001', 'nama_apd' => 'Rescue Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' => '2', 'id_kondisi' => '1', 'image' => 'rescuegloves_1.jpg'],
-            ['_id' => 'G-alt-0002', 'nama_apd' => 'Slightly More Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' => '2', 'id_kondisi' => '1', 'image' => 'rescuegloves_2.jpg'],
-
-
-            ['_id' => 'T-fir-0000', 'nama_apd' => 'Fire Jacket', 'merk' => 'Fire Protect', 'id_jenis' => 'T001', 'id_size' => '2', 'id_kondisi' => '1'],
-            ['_id' => 'T-pol-0000', 'nama_apd' => 'Fire Suit', 'merk' => 'Poland Inc', 'id_jenis' => 'T001', 'id_size' => '2', 'id_kondisi' => '1'],
-
-            ['_id' => 'T-pol-0001', 'nama_apd' => 'Jump Suit Poland', 'merk' => 'Poland Inc', 'id_jenis' => 'T002', 'id_size' => '2', 'id_kondisi' => '1'],
-            ['_id' => 'T-yoh-0000', 'nama_apd' => 'Jump Suit', 'merk' => 'Yohanes Safety Accredited', 'id_jenis' => 'T002', 'id_size' => '2', 'id_kondisi' => '1'],
-
-            ['_id' => 'B-yoh-0000', 'nama_apd' => 'Fire Hazard Boots', 'merk' => 'Yohanes Safety Accredited', 'id_jenis' => 'B001', 'id_size' => '3', 'id_kondisi' => '1'],
-            ['_id' => 'B-ari-0000', 'nama_apd' => 'Fire Safety Boots', 'merk' => 'Arian Protection', 'id_jenis' => 'B001', 'id_size' => '3', 'id_kondisi' => '1'],
-
-            ['_id' => 'B-ari-0001', 'nama_apd' => 'Rescue Boots', 'merk' => 'Arian Protection', 'id_jenis' => 'B002', 'id_size' => '3', 'id_kondisi' => '1'],
-
-            ['_id' => 'A-dar-0000', 'nama_apd' => 'Sandstorm', 'merk' => 'Darude', 'id_jenis' => 'A001', 'id_size' => '1', 'id_kondisi' => '1'],
-
-            ['_id' => 'A-ari-0000', 'nama_apd' => 'Arian Visor', 'merk' => 'Arian Protection', 'id_jenis' => 'A002', 'id_size' => '1', 'id_kondisi' => '1'],
-
-            ['_id' => 'A-tho-0000', 'nama_apd' => 'Handaxe', 'merk' => 'Thorsson and Asgard Production', 'id_jenis' => 'A003', 'id_size' => '1', 'id_kondisi' => '1'],
-
-            ['_id' => 'A-uni-0000', 'nama_apd' => 'Flashlight', 'merk' => 'Universal Lightning', 'id_jenis' => 'A004', 'id_size' => '1', 'id_kondisi' => '1'],
-
-        ];
+        
 
         $kondisiUmum = [
             ['text' => 'Baik, Dapat digunakan dengan baik', 'value' => 'baik'],
@@ -182,18 +148,18 @@ class TesMongodbSeeder extends Seeder
         ];
 
         $template = [
-            ['_id' => 'H002', 'opsi_apd' => ['H-fir-0001']],
-            ['_id' => 'H001', 'opsi_apd' => ['H-bro-0000', 'H-fir-0000', 'H-bro-0001']],
-            ['_id' => 'G001', 'opsi_apd' => ['G-glo-0000', 'G-glo-0001', 'G-alt-0000']],
-            ['_id' => 'G002', 'opsi_apd' => ['G-alt-0001', 'G-alt-0002']],
-            ['_id' => 'T001', 'opsi_apd' => ['T-fir-0000', 'T-pol-0000']],
-            ['_id' => 'T002', 'opsi_apd' => ['T-yoh-0000', 'T-pol-0001']],
-            ['_id' => 'B001', 'opsi_apd' => ['B-yoh-0000', 'B-ari-0000']],
-            ['_id' => 'B002', 'opsi_apd' => ['B-ari-0001']],
-            ['_id' => 'A001', 'opsi_apd' => ['A-dar-0000']],
-            ['_id' => 'A002', 'opsi_apd' => ['A-ari-0000']],
-            ['_id' => 'A003', 'opsi_apd' => ['A-tho-0000']],
-            ['_id' => 'A004', 'opsi_apd' => ['A-uni-0000']],
+            ['id_jenis' => 'H002', 'opsi_apd' => ['H-fir-0001']],
+            ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000', 'H-fir-0000', 'H-bro-0001']],
+            ['id_jenis' => 'G001', 'opsi_apd' => ['G-glo-0000', 'G-glo-0001', 'G-alt-0000']],
+            ['id_jenis' => 'G002', 'opsi_apd' => ['G-alt-0001', 'G-alt-0002']],
+            ['id_jenis' => 'T001', 'opsi_apd' => ['T-fir-0000', 'T-pol-0000']],
+            ['id_jenis' => 'T002', 'opsi_apd' => ['T-yoh-0000', 'T-pol-0001']],
+            ['id_jenis' => 'B001', 'opsi_apd' => ['B-yoh-0000', 'B-ari-0000']],
+            ['id_jenis' => 'B002', 'opsi_apd' => ['B-ari-0001']],
+            ['id_jenis' => 'A001', 'opsi_apd' => ['A-dar-0000']],
+            ['id_jenis' => 'A002', 'opsi_apd' => ['A-ari-0000']],
+            ['id_jenis' => 'A003', 'opsi_apd' => ['A-tho-0000']],
+            ['id_jenis' => 'A004', 'opsi_apd' => ['A-uni-0000']],
         ];
 
         error_log('populating jenis');
@@ -202,7 +168,7 @@ class TesMongodbSeeder extends Seeder
         }
 
         error_log('populating kondisi umum');
-        ApdKondisi::create(
+        $kondisi_umum = ApdKondisi::create(
             [
                 'nama_kondisi' => 'umum',
                 'opsi' => $kondisiUmum
@@ -210,25 +176,25 @@ class TesMongodbSeeder extends Seeder
         );
 
         error_log('populating kondisi helm');
-        ApdKondisi::create([
+        $kondisi_helm = ApdKondisi::create([
             'nama_kondisi' => 'helm umum',
             'opsi' => $kondisiHelmUmum
         ]);
 
         error_log('populating size kosong');
-        ApdSize::create([
+        $size_kosong = ApdSize::create([
             'nama_size' => 'kosong',
             'opsi' => ['Tidak Memiliki Standar Ukuran']
         ]);
 
         error_log('populating size umum');
-        ApdSize::create([
+        $size_umum = ApdSize::create([
             'nama_size' => 'umum',
             'opsi' => $sizeUmum
         ]);
 
         error_log('populating size sepatu');
-        ApdSize::create([
+        $size_sepatu_umum = ApdSize::create([
             'nama_size' => 'sepatu umum',
             'opsi' => $sizeSepatu
         ]);
@@ -360,6 +326,44 @@ class TesMongodbSeeder extends Seeder
 
         // error_log('populating list, sering error disini karena id sering duplicate, bisa cek file ApdListFactory.php jika error');
         // ApdList::factory()->count(20)->create();
+
+        error_log('populating apd list');
+
+        $dataContohApd = [
+            ['_id' => 'H-bro-0000', 'nama_apd' => 'Protect Red', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'firehelmet_1.jpg||firehelmet_2.jpg||firehelmet_3.jpg'],
+            ['_id' => 'H-bro-0001', 'nama_apd' => 'Alpha Head', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'firehelmet_4.jpg||firehelmet_5.jpg'],
+            ['_id' => 'H-fir-0000', 'nama_apd' => 'Helmet Fire', 'merk' => 'Fire Protect', 'id_jenis' => 'H001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'firehelmet_6.jpg'],
+
+            ['_id' => 'H-fir-0001', 'nama_apd' => 'Red Helmet', 'merk' => 'Fire Protect', 'id_jenis' => 'H002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'rescuehelmet_1.jpg'],
+
+            ['_id' => 'G-glo-0000', 'nama_apd' => 'Red Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'firegloves_1.jpg'],
+            ['_id' => 'G-glo-0001', 'nama_apd' => 'Yellow Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'firegloves_2.jpg'],
+            ['_id' => 'G-alt-0000', 'nama_apd' => 'Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'firegloves_1.jpg||firegloves_2.jpg'],
+
+            ['_id' => 'G-alt-0001', 'nama_apd' => 'Rescue Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'rescuegloves_1.jpg'],
+            ['_id' => 'G-alt-0002', 'nama_apd' => 'Slightly More Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'rescuegloves_2.jpg'],
+
+
+            ['_id' => 'T-fir-0000', 'nama_apd' => 'Fire Jacket', 'merk' => 'Fire Protect', 'id_jenis' => 'T001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id],
+            ['_id' => 'T-pol-0000', 'nama_apd' => 'Fire Suit', 'merk' => 'Poland Inc', 'id_jenis' => 'T001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id],
+
+            ['_id' => 'T-pol-0001', 'nama_apd' => 'Jump Suit Poland', 'merk' => 'Poland Inc', 'id_jenis' => 'T002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id],
+            ['_id' => 'T-yoh-0000', 'nama_apd' => 'Jump Suit', 'merk' => 'Yohanes Safety Accredited', 'id_jenis' => 'T002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id],
+
+            ['_id' => 'B-yoh-0000', 'nama_apd' => 'Fire Hazard Boots', 'merk' => 'Yohanes Safety Accredited', 'id_jenis' => 'B001', 'id_size' => $size_sepatu_umum->id, 'id_kondisi' => $kondisi_umum->id],
+            ['_id' => 'B-ari-0000', 'nama_apd' => 'Fire Safety Boots', 'merk' => 'Arian Protection', 'id_jenis' => 'B001', 'id_size' => $size_sepatu_umum->id, 'id_kondisi' => $kondisi_umum->id],
+
+            ['_id' => 'B-ari-0001', 'nama_apd' => 'Rescue Boots', 'merk' => 'Arian Protection', 'id_jenis' => 'B002', 'id_size' => $size_sepatu_umum->id, 'id_kondisi' => $kondisi_umum->id],
+
+            ['_id' => 'A-dar-0000', 'nama_apd' => 'Sandstorm', 'merk' => 'Darude', 'id_jenis' => 'A001', 'id_size' => $size_kosong->id, 'id_kondisi' => $kondisi_umum->id],
+
+            ['_id' => 'A-ari-0000', 'nama_apd' => 'Arian Visor', 'merk' => 'Arian Protection', 'id_jenis' => 'A002', 'id_size' => $size_kosong->id, 'id_kondisi' => $kondisi_umum->id],
+
+            ['_id' => 'A-tho-0000', 'nama_apd' => 'Handaxe', 'merk' => 'Thorsson and Asgard Production', 'id_jenis' => 'A003', 'id_size' => $size_kosong->id, 'id_kondisi' => $kondisi_umum->id],
+
+            ['_id' => 'A-uni-0000', 'nama_apd' => 'Flashlight', 'merk' => 'Universal Lightning', 'id_jenis' => 'A004', 'id_size' => $size_kosong->id, 'id_kondisi' => $kondisi_umum->id],
+
+        ];
 
         foreach ($dataContohApd as $item) {
             ApdList::insert($item);

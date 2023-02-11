@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\Eapd\Datatable;
 
-use App\Models\Eapd\Grup;
+use App\Models\Eapd\Mongodb\Grup;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
-use App\Models\Eapd\Pegawai;
-use App\Models\Eapd\Penempatan;
+use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Mongodb\Penempatan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;

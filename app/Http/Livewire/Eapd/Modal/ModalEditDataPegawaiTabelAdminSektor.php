@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\Eapd\Modal;
 
-use App\Models\Eapd\Grup;
-use App\Models\Eapd\Pegawai;
-use App\Models\Eapd\Penempatan;
+use App\Models\Eapd\Mongodb\Grup;
+use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Mongodb\Penempatan;
 use App\Models\User;
 use App\Enum\TipeJabatan;
-use App\Models\Eapd\HistoryTabelPegawai;
+use App\Models\Eapd\Mongodb\HistoryTabelPegawai;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
