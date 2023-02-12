@@ -99,17 +99,17 @@ class TesMongodbSeeder extends Seeder
         ];
 
         $jabatan = [
-            ['_id' => 'L001', 'nama_jabatan' => 'PJLP Damkar', 'tipe_jabatan' => tj::personil(), 'keterangan' => null, 'level_user' => lu::anggota()],
-            ['_id' => 'L002', 'nama_jabatan' => 'ASN Damkar', 'tipe_jabatan' => tj::personil(), 'keterangan' => null, 'level_user' => lu::anggota()],
-            ['_id' => 'L003', 'nama_jabatan' => 'Kepala Regu', 'tipe_jabatan' => tj::personil(), 'keterangan' => null, 'level_user' => lu::anggota()],
-            ['_id' => 'L004', 'nama_jabatan' => 'Kepala Pleton', 'tipe_jabatan' => tj::danton(), 'keterangan' => null, 'level_user' => lu::danton()],
-            ['_id' => 'K001', 'nama_jabatan' => 'Kepala Sektor', 'tipe_jabatan' => tj::eselon4(), 'keterangan' => 'Admin Sektor', 'level_user' => lu::adminSektor()],
-            ['_id' => 'K002', 'nama_jabatan' => 'Kasie Dalkarmat', 'tipe_jabatan' => tj::eselon4(), 'keterangan' => 'Admin Sektor', 'level_user' => lu::adminSektor()],
-            ['_id' => 'K003', 'nama_jabatan' => 'Kasie Sarana', 'tipe_jabatan' => tj::eselon4(), 'keterangan' => 'Admin Sudin', 'level_user' => lu::adminSudin()],
-            ['_id' => 'K004', 'nama_jabatan' => 'Kepala Sudin', 'tipe_jabatan' => tj::eselon4(), 'keterangan' => null, 'level_user' => lu::kasudin()],
-            ['_id' => 'K005', 'nama_jabatan' => 'Kepala Bidang Sarpras', 'tipe_jabatan' => tj::eselon4(), 'keterangan' => 'Admin Sarana', 'level_user' => lu::adminDinas()],
-            ['_id' => 'S001', 'nama_jabatan' => 'Staff Sektor', 'tipe_jabatan' => tj::staff(), 'keterangan' => null, 'level_user' => lu::anggota()],
-            ['_id' => 'S002', 'nama_jabatan' => 'Staff Tata Usaha', 'tipe_jabatan' => tj::staff(), 'keterangan' => null, 'level_user' => lu::anggota()],
+            ['_id' => 'L001', 'nama_jabatan' => 'PJLP Damkar', 'tipe_jabatan' => tj::personil()->value, 'keterangan' => null, 'level_user' => lu::anggota()->value],
+            ['_id' => 'L002', 'nama_jabatan' => 'ASN Damkar', 'tipe_jabatan' => tj::personil()->value, 'keterangan' => null, 'level_user' => lu::anggota()->value],
+            ['_id' => 'L003', 'nama_jabatan' => 'Kepala Regu', 'tipe_jabatan' => tj::personil()->value, 'keterangan' => null, 'level_user' => lu::anggota()->value],
+            ['_id' => 'L004', 'nama_jabatan' => 'Kepala Pleton', 'tipe_jabatan' => tj::danton()->value, 'keterangan' => null, 'level_user' => lu::danton()->value],
+            ['_id' => 'K001', 'nama_jabatan' => 'Kepala Sektor', 'tipe_jabatan' => tj::eselon4()->value, 'keterangan' => 'Admin Sektor', 'level_user' => lu::adminSektor()->value],
+            ['_id' => 'K002', 'nama_jabatan' => 'Kasie Dalkarmat', 'tipe_jabatan' => tj::eselon4()->value, 'keterangan' => 'Admin Sektor', 'level_user' => lu::adminSektor()->value],
+            ['_id' => 'K003', 'nama_jabatan' => 'Kasie Sarana', 'tipe_jabatan' => tj::eselon4()->value, 'keterangan' => 'Admin Sudin', 'level_user' => lu::adminSudin()->value],
+            ['_id' => 'K004', 'nama_jabatan' => 'Kepala Sudin', 'tipe_jabatan' => tj::eselon4()->value, 'keterangan' => null, 'level_user' => lu::kasudin()->value],
+            ['_id' => 'K005', 'nama_jabatan' => 'Kepala Bidang Sarpras', 'tipe_jabatan' => tj::eselon4()->value, 'keterangan' => 'Admin Sarana', 'level_user' => lu::adminDinas()->value],
+            ['_id' => 'S001', 'nama_jabatan' => 'Staff Sektor', 'tipe_jabatan' => tj::staff()->value, 'keterangan' => null, 'level_user' => lu::anggota()->value],
+            ['_id' => 'S002', 'nama_jabatan' => 'Staff Tata Usaha', 'tipe_jabatan' => tj::staff()->value, 'keterangan' => null, 'level_user' => lu::anggota()->value],
 
         ];
 

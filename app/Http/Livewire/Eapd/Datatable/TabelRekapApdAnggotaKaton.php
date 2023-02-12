@@ -12,7 +12,7 @@ class TabelRekapApdAnggotaKaton extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
+        $this->setPrimaryKey('_id');
     }
 
     public function columns(): array

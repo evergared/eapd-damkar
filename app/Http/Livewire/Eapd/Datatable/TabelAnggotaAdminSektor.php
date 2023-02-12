@@ -8,7 +8,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Eapd\Mongodb\Pegawai;
 use App\Models\Eapd\Mongodb\Penempatan;
-use Illuminate\Database\Eloquent\Builder;
+use Jenssegers\MongoDB\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
 class TabelAnggotaAdminSektor extends DataTableComponent
@@ -29,7 +29,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
         return Pegawai::query()
 
         // join tabel pegawai dengan tabel jabatan
-        ->join('jabatan as j','pegawai.id_jabatan','=','j.id_jabatan')
+        ->join('jabatan as j','pegawai.id_jabatan','=','j._id')
 
         // penempatan sesuai sektor kasie
         ->where('id_penempatan','like',Auth::user()->data->sektor . '%')
@@ -38,11 +38,11 @@ class TabelAnggotaAdminSektor extends DataTableComponent
         // tambahkan jika perlu
         // https://laravel.com/docs/9.x/queries#or-where-clauses
         ->where(function ($q) {
-            $q  ->where('pegawai._id','=','L001')    // pjlp damkar
-                ->orWhere('pegawai._id','=','L002')  // ASN damkar
-                ->orWhere('pegawai._id','=','L003')  // Kepala Regu
-                ->orWhere('pegawai._id','=','L004')  // Kepala Pleton
-                ->orWhere('pegawai._id','=','S001');  // Staff Sektor
+            $q  ->where('pegawai.id_jabatan','=','L001')    // pjlp damkar
+                ->orWhere('pegawai.id_jabatan','=','L002')  // ASN damkar
+                ->orWhere('pegawai.id_jabatan','=','L003')  // Kepala Regu
+                ->orWhere('pegawai.id_jabatan','=','L004')  // Kepala Pleton
+                ->orWhere('pegawai.id_jabatan','=','S001');  // Staff Sektor
         })
 
         // ambil pegawai yang masih aktif
@@ -66,12 +66,12 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                 ->sortable(),
             Column::make("Jabatan", "id_jabatan")
                 ->format(function($value){
-                    return Jabatan::where('id_jabatan','=',$value)->first()->nama_jabatan;
+                    return Jabatan::where('_id','=',$value)->first()->nama_jabatan;
                 })
                 ->sortable(),
             Column::make("Penempatan", "id_penempatan")
                 ->format(function($value){
-                    return Penempatan::where('id_penempatan','=',$value)->first()->nama_penempatan;
+                    return Penempatan::where('_id','=',$value)->first()->nama_penempatan;
                 })
                 ->sortable(),
             Column::make("Inputan")

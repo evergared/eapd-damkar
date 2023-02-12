@@ -6,7 +6,7 @@ use App\Http\Controllers\ApdDataController;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ImageColumn;
-use Illuminate\Database\Eloquent\Builder;
+use Jenssegers\MongoDB\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Eapd\Mongodb\Pegawai;
 use App\Enum\VerifikasiApd as verif;
@@ -17,7 +17,7 @@ class TabelAnggotaKaton extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
+        $this->setPrimaryKey('_id');
         $this->setSearchEnabled();
         // $this->setDebugEnabled();
     }
@@ -38,7 +38,7 @@ class TabelAnggotaKaton extends DataTableComponent
             Column::make("Nama", "nama")
                 ->sortable()
                 ->searchable(),
-            Column::make("id")
+            Column::make("_id")
                 ->sortable()
                 ->searchable()
                 ->hideIf(true),
@@ -62,7 +62,7 @@ class TabelAnggotaKaton extends DataTableComponent
                     $id_pegawai = $row->id;
 
                     // dapatkan jabatan dari id_pegawai 
-                    $id_jabatan = Pegawai::where('id', '=', $id_pegawai)->first()->id_jabatan;
+                    $id_jabatan = Pegawai::where('_id', '=', $id_pegawai)->first()->id_jabatan;
 
                     // set periode input
                     $tw = 1; //<-- ini untuk contoh dan test
