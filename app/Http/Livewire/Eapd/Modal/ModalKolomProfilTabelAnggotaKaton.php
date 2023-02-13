@@ -28,7 +28,7 @@ class ModalKolomProfilTabelAnggotaKaton extends Component
     public function tampilProfil($value)
     {
 
-        $pegawai = Pegawai::where('id', '=', $value)->first();
+        $pegawai = Pegawai::where('_id', '=', $value)->first();
 
         $this->nrk = $pegawai->nrk;
         $this->nip = $pegawai->nip;

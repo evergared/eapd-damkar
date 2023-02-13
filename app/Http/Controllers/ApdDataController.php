@@ -99,7 +99,7 @@ class ApdDataController extends Controller
             if(Jabatan::where('id_jabatan', '=', $id_jabatan)->first())
                 error_log('jabatan found');
 
-            if($id_periode === 1)
+            if($id_periode == 1)
             $id_periode = PeriodeInputApd::get()->first()->id;
 
             if(InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first())
@@ -140,6 +140,9 @@ class ApdDataController extends Controller
             else {
                 $id_jabatan = Pegawai::where('id', '=', $id_pegawai)->first()->id_jabatan;
             }
+
+            if($id_periode == 1)
+            $id_periode = PeriodeInputApd::get()->first()->id;
 
             // array kosong untuk return
             $list = [];
@@ -240,7 +243,7 @@ class ApdDataController extends Controller
                 $id_jabatan = Pegawai::where('id', '=', $id_pegawai)->first()->id_jabatan;
             }
 
-            if($id_periode === 1)
+            if($id_periode == 1)
             $id_periode = PeriodeInputApd::get()->first()->id;
 
             // cek apakah user telah menginput apd tersebut
@@ -366,10 +369,12 @@ class ApdDataController extends Controller
             }
 
             // jika parameter periode tidak diisi, maka ambil id periode pertama dari database
-            if($id_periode === 1)
+            if($id_periode == 1)
             {
                 $id_periode = PeriodeInputApd::get()->first()->id;
             }
+
+            error_log("periode : ".$id_periode);
 
             // ambil template input apd dari database berdasarkan pivot table yang telah dibuat di model
             $list = InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first()->template;

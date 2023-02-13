@@ -293,7 +293,7 @@ class ModalInputApdPegawaiHalApdku extends Component
                 $this->telahDiverifAdmin = true;
             }
 
-            $this->nama_apd_user = ApdList::where('id_apd', '=', $this->id_apd_cache)->value('nama_apd');
+            $this->nama_apd_user = ApdList::where('_id', '=', $this->id_apd_cache)->value('nama_apd');
 
             $this->sesuaikanPathGambar();
             $this->refreshGambarUser();

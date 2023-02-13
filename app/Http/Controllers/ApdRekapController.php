@@ -9,6 +9,7 @@ use App\Models\Eapd\Mongodb\ApdList;
 use App\Models\Eapd\Mongodb\InputApd;
 use App\Models\Eapd\Mongodb\Pegawai;
 use App\Models\Eapd\Mongodb\Penempatan;
+use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
@@ -22,6 +23,9 @@ class ApdRekapController extends Controller
     {
         if($sektor == "")
             $sektor = Auth::user()->data->sektor;
+
+        if($id_periode == 1)
+            $id_periode = PeriodeInputApd::get()->first()->id;
         
         try{
 
@@ -30,7 +34,7 @@ class ApdRekapController extends Controller
             if($semua_inputan = InputApd::where('id_periode','=',$id_periode)->get())
             {
                 $inputan_anggota = $semua_inputan->filter(function($value,$key) use($sektor){
-                    $a = Pegawai::where('id','=',$value['id_pegawai'])->first();
+                    $a = Pegawai::where('_id','=',$value['id_pegawai'])->first();
 
                     return $a->sektor == $sektor;
                 });
@@ -39,15 +43,15 @@ class ApdRekapController extends Controller
 
                 foreach($list_jenis_apd as $apd)
                 {
-                    $nama_jenis_apd = ApdJenis::where('id_jenis','=',$apd->id_jenis)->first()->nama_jenis;
+                    $nama_jenis_apd = ApdJenis::where('_id','=',$apd->id_jenis)->first()->nama_jenis;
 
-                    $baik = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::baik())->count();
-                    $rusak_ringan = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakRingan())->count();
-                    $rusak_sedang = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakSedang())->count();
-                    $rusak_berat = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakBerat())->count();
-                    $belum_terima = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::belumTerima())->count();
-                    $hilang = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::hilang())->count();
-                    $total = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->count();
+                    $baik = $inputan_anggota->where('_id','=',$apd->id_jenis)->where('kondisi','=',StatusApd::baik())->count();
+                    $rusak_ringan = $inputan_anggota->where('_id','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakRingan())->count();
+                    $rusak_sedang = $inputan_anggota->where('_id','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakSedang())->count();
+                    $rusak_berat = $inputan_anggota->where('_id','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakBerat())->count();
+                    $belum_terima = $inputan_anggota->where('_id','=',$apd->id_jenis)->where('kondisi','=',StatusApd::belumTerima())->count();
+                    $hilang = $inputan_anggota->where('_id','=',$apd->id_jenis)->where('kondisi','=',StatusApd::hilang())->count();
+                    $total = $inputan_anggota->where('_id','=',$apd->id_jenis)->count();
 
                     $data_rekap_apd->push([
                         "id_jenis" => $apd->id_jenis,
@@ -80,6 +84,9 @@ class ApdRekapController extends Controller
         if($sektor == "")
             $sektor = Auth::user()->data->sektor;
         
+        if($id_periode == 1)
+            $id_periode = PeriodeInputApd::get()->first()->id;
+
         try
         {
             $detail_rekap_apd = collect();
@@ -87,7 +94,7 @@ class ApdRekapController extends Controller
             if($semua_inputan = InputApd::where('id_jenis','=',$id_jenis)->where('id_periode','=',$id_periode)->get())
             {
                 $inputan_anggota = $semua_inputan->filter(function($value,$key) use($sektor){
-                    $a = Pegawai::where('id','=',$value['id_pegawai'])->first();
+                    $a = Pegawai::where('_id','=',$value['id_pegawai'])->first();
 
                     return $a->sektor == $sektor;
                 });
@@ -97,9 +104,9 @@ class ApdRekapController extends Controller
 
                 foreach($inputan_anggota as $inputan)
                 {
-                    $pegawai = Pegawai::where('id','=',$inputan->id_pegawai)->first();
-                    $nama_jenis_apd = ApdJenis::where('id_jenis','=',$inputan->id_jenis)->first()->nama_jenis;
-                    $penempatan = Penempatan::where('id_penempatan','=',$pegawai->id_penempatan)->first();
+                    $pegawai = Pegawai::where('_id','=',$inputan->id_pegawai)->first();
+                    $nama_jenis_apd = ApdJenis::where('_id','=',$inputan->id_jenis)->first()->nama_jenis;
+                    $penempatan = Penempatan::where('_id','=',$pegawai->id_penempatan)->first();
                     $gambar = $adc->siapkanGambarInputanBesertaPathnya($inputan->image,$inputan->id_pegawai,$inputan->id_jenis,$inputan->id_periode);
 
                     if($target_status != "")

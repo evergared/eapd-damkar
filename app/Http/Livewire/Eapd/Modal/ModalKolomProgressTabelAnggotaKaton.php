@@ -51,14 +51,20 @@ class ModalKolomProgressTabelAnggotaKaton extends Component
             $id = $data[0];
             $periode = $data[1];
 
+
+            if($periode == 1)
+            $periode = PeriodeInputApd::get()->first()->id;
+
+
+
             // ambil nama pegawai
-            $this->nama_pegawai = Pegawai::where('id', '=', $id)->first()->nama;
+            $this->nama_pegawai = Pegawai::where('_id', '=', $id)->first()->nama;
 
             // ambil nama periode input
-            $this->nama_periode = PeriodeInputApd::where('id', '=', $periode)->first()->nama_periode;
+            $this->nama_periode = PeriodeInputApd::where('_id', '=', $periode)->first()->nama_periode;
 
             // ambil id jabatan si pengupload
-            $id_jabatan = Pegawai::where('id', '=', $id)->first()->id_jabatan;
+            $id_jabatan = Pegawai::where('_id', '=', $id)->first()->id_jabatan;
 
             // panggil ApdDataController
             $adc = new ApdDataController;

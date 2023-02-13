@@ -62,7 +62,7 @@ class LayoutStatbox extends Component
                         if (verif::tryFrom($input->verifikasi_status) == verif::tertolak()) {
                             $tertolak++;
 
-                            $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
+                            $nama_jenis = ApdJenis::where('_id', '=', $item['id_jenis'])->first()->nama_jenis;
                             $kondisi = $input->kondisi;
                             $status = verif::tryFrom($input->verifikasi_status)->label;
 
@@ -99,7 +99,7 @@ class LayoutStatbox extends Component
                 foreach ($butuhInput as $item) {
                     if ($input = InputApd::where('id_pegawai', '=', Auth::user()->userid)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', 1)->where('kondisi', 'like', 'rusak %')->first()) {
                         $rusak++;
-                        $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
+                        $nama_jenis = ApdJenis::where('_id', '=', $item['id_jenis'])->first()->nama_jenis;
                         $kondisi = $input->kondisi;
                         $status = verif::tryFrom($input->verifikasi_status)->label;
 
@@ -135,7 +135,7 @@ class LayoutStatbox extends Component
                     if ($input = InputApd::where('id_pegawai', '=', Auth::user()->userid)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', 1)->first()) {
                         $terisi++;
 
-                        $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
+                        $nama_jenis = ApdJenis::where('_id', '=', $item['id_jenis'])->first()->nama_jenis;
                         $kondisi = $input->kondisi;
                         $status = verif::tryFrom($input->verifikasi_status)->label;
 
@@ -172,7 +172,7 @@ class LayoutStatbox extends Component
                         if (verif::tryFrom($input->verifikasi_status) == verif::terverifikasi()) {
                             $tervalidasi++;
 
-                            $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
+                            $nama_jenis = ApdJenis::where('_id', '=', $item['id_jenis'])->first()->nama_jenis;
                             $kondisi = $input->kondisi;
                             $status = verif::tryFrom($input->verifikasi_status)->label;
 

@@ -101,15 +101,17 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             $this->id_pegawai = $data[0];
             $this->periode = $data[1];
 
+            if($this->periode === 1)
+            $this->periode = PeriodeInputApd::get()->first()->id;
 
             // ambil nama pegawai
-            $this->nama_pegawai = Pegawai::where('id', '=', $this->id_pegawai)->first()->nama;
+            $this->nama_pegawai = Pegawai::where('_id', '=', $this->id_pegawai)->first()->nama;
 
             // ambil nama periode input
-            $this->nama_periode = PeriodeInputApd::where('id', '=', $this->periode)->first()->nama_periode;
+            $this->nama_periode = PeriodeInputApd::where('_id', '=', $this->periode)->first()->nama_periode;
 
             // ambil id jabatan si pengupload
-            $id_jabatan = Pegawai::where('id', '=', $this->id_pegawai)->first()->id_jabatan;
+            $id_jabatan = Pegawai::where('_id', '=', $this->id_pegawai)->first()->id_jabatan;
 
             // panggil ApdDataController
             $adc = new ApdDataController;

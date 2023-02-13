@@ -34,7 +34,7 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
         return Pegawai::query()
 
         // join tabel pegawai dengan tabel jabatan
-        ->join('jabatan as j','pegawai.id_jabatan','=','j.id_jabatan')
+        ->join('jabatan as j','pegawai.id_jabatan','=','j._id')
 
         // join tabel pegawai dengan tabel penempatan
         ->join('penempatan','pegawai.id_penempatan','=','penempatan._id')
@@ -109,8 +109,8 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
     public function filters(): array
     {
         // untuk filter penempatan
-        $penempatan = Penempatan::where('id_penempatan','like',Auth::user()->data->sektor.'%')
-                        ->get(['id_penempatan as value','nama_penempatan as text'])
+        $penempatan = Penempatan::where('_id','like',Auth::user()->data->sektor.'%')
+                        ->get(['_id as value','nama_penempatan as text'])
                         ->toArray();
         $opsi_penempatan = [];
         foreach($penempatan as $p)
