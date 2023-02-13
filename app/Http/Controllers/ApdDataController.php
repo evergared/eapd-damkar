@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Models\Eapd\ApdList;
-use App\Models\Eapd\InputApdTemplate;
-use App\Models\Eapd\Jabatan;
+use App\Models\Eapd\Mongodb\ApdList;
+use App\Models\Eapd\Mongodb\InputApdTemplate;
+use App\Models\Eapd\Mongodb\Jabatan;
 use App\Enum\VerifikasiApd as verif;
 use App\Enum\StatusApd as status;
-use App\Models\Eapd\ApdJenis;
-use App\Models\Eapd\InputApd;
-use App\Models\Eapd\Pegawai;
+use App\Models\Eapd\Mongodb\ApdJenis;
+use App\Models\Eapd\Mongodb\InputApd;
+use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use Error;
 use Throwable;
 
@@ -95,8 +96,17 @@ class ApdDataController extends Controller
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
 
+            if(Jabatan::where('id_jabatan', '=', $id_jabatan)->first())
+                error_log('jabatan found');
+
+            if($id_periode == 1)
+            $id_periode = PeriodeInputApd::get()->first()->id;
+
+            if(InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first())
+                error_log('template pada periode found');
+
             // ambil template penginputan apd dari database menggunakan pivot table yang telah di buat di model
-            if($list = Jabatan::where('id_jabatan', '=', $id_jabatan)->first()->templatePadaPeriode($id_periode)->first()->template)
+            if($list = InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first()->template)
             {
                 // return dd($list);
                 return $list;
@@ -105,7 +115,7 @@ class ApdDataController extends Controller
                 return [];
 
         } catch (Throwable $e) {
-            error_log('gagal memuat list template input ');
+            error_log('gagal memuat list template input '.$e);
             return [];
         }
     }
@@ -130,6 +140,9 @@ class ApdDataController extends Controller
             else {
                 $id_jabatan = Pegawai::where('id', '=', $id_pegawai)->first()->id_jabatan;
             }
+
+            if($id_periode == 1)
+            $id_periode = PeriodeInputApd::get()->first()->id;
 
             // array kosong untuk return
             $list = [];
@@ -229,6 +242,9 @@ class ApdDataController extends Controller
             else {
                 $id_jabatan = Pegawai::where('id', '=', $id_pegawai)->first()->id_jabatan;
             }
+
+            if($id_periode == 1)
+            $id_periode = PeriodeInputApd::get()->first()->id;
 
             // cek apakah user telah menginput apd tersebut
             if ($input = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_apd','=',$id_apd)->where('id_periode', '=', $id_periode)->first())
@@ -352,9 +368,17 @@ class ApdDataController extends Controller
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
 
-            // ambil template input apd dari database berdasarkan pivot table yang telah dibuat di model
-            $list = Jabatan::where('id_jabatan', '=', $id_jabatan)->first()->templatePadaPeriode($id_periode)->first()->template;
+            // jika parameter periode tidak diisi, maka ambil id periode pertama dari database
+            if($id_periode == 1)
+            {
+                $id_periode = PeriodeInputApd::get()->first()->id;
+            }
 
+            error_log("periode : ".$id_periode);
+
+            // ambil template input apd dari database berdasarkan pivot table yang telah dibuat di model
+            $list = InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first()->template;
+            // return dd($list);
             // panggil controller untuk membantu menampilkan status di bootstrap
             $sdc = new StatusDisplayController;
 
@@ -368,7 +392,7 @@ class ApdDataController extends Controller
                 $warnaVerifikasi = $sdc->ubahVerifikasiApdKeWarnaBootstrap($statusVerifikasi->value);
                 $statusKerusakan = $this->ambilStatusKerusakan($item['id_jenis'], "", $id_periode);
                 $warnaKerusakan = $sdc->ubahKondisiApdKeWarnaBootstrap($statusKerusakan);
-                $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
+                $nama_jenis = ApdJenis::where('_id', '=', $item['id_jenis'])->first()->nama_jenis;
 
                 array_push($template, [
                     'id_jenis' => $item['id_jenis'],
@@ -405,9 +429,10 @@ class ApdDataController extends Controller
             foreach ($opsi_apd as $apd) {
                 // ambil id apd yang akan dijadikan template dan diambil data yang telah diatur oleh admin
                 $id_apd = $apd;
+                error_log('id dari opsi yang dicari : '.$id_apd);
 
                 // ambil data tersebut
-                $model = ApdList::where('id_apd', '=', $id_apd)->first();
+                $model = ApdList::where('_id', '=', $id_apd)->first();
 
                 $nama_apd = $model->nama_apd;
                 $merk_apd = $model->merk_apd;
@@ -609,7 +634,7 @@ class ApdDataController extends Controller
             $targetApd = $opsiApd[0];
 
             // ambil gambar apd tersebut
-            $gambarApd = ApdList::where('id_apd', '=', $targetApd)->first()->image;
+            $gambarApd = ApdList::where('_id', '=', $targetApd)->first()->image;
 
             // ambil gambar pertama dari apd tersebut
             $gbr = $this->ambilGambarPertama($gambarApd);

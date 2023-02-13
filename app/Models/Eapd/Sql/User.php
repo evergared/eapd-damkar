@@ -1,23 +1,26 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Sql;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Sql\Pegawai;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+// use Illuminate\Foundation\Auth\User as Authenticatable;
 use Jenssegers\Mongodb\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-// untuk mongodb
+// untuk sql
 class User extends Authenticatable
 {
     // Jika ingin menggunakan file ini, taruh di folder Models
 
-    use HasApiTokens,  Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
-    protected $collection = 'user';
+    protected $table = 'user';
+    protected $keyType = 'string';
+    protected $primaryKey = 'userid';
 
     /**
      * The attributes that are mass assignable.
@@ -25,7 +28,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        '_id',
+        'userid',
         'password',
     ];
 
@@ -41,12 +44,12 @@ class User extends Authenticatable
 
     public function data()
     {
-        return $this->belongsTo(Pegawai::class,'_id');
+        return $this->belongsTo(Pegawai::class, 'userid', 'id');
     }
 
     public function getNamaAttribute()
     {
-        return Pegawai::where('_id', '=', $this->_id)->first()->nama;
+        return Pegawai::where('id', '=', $this->userid)->first()->nama;
     }
 
 }

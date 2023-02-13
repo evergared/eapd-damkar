@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Eapd\ApdJenis;
-use App\Models\Eapd\ApdKondisi;
-use App\Models\Eapd\ApdList;
-use App\Models\Eapd\ApdSize;
-use App\Models\Eapd\Grup;
-use App\Models\Eapd\InputApdTemplate;
-use App\Models\Eapd\Jabatan;
-use App\Models\Eapd\Pegawai;
-use App\Models\Eapd\Penempatan;
-use App\Models\Eapd\PeriodeInputApd;
-use App\Models\Eapd\Wilayah;
+use App\Models\Eapd\Sql\ApdJenis;
+use App\Models\Eapd\Sql\ApdKondisi;
+use App\Models\Eapd\Sql\ApdList;
+use App\Models\Eapd\Sql\ApdSize;
+use App\Models\Eapd\Sql\Grup;
+use App\Models\Eapd\Sql\InputApdTemplate;
+use App\Models\Eapd\Sql\Jabatan;
+use App\Models\Eapd\Sql\Pegawai;
+use App\Models\Eapd\Sql\Penempatan;
+use App\Models\Eapd\Sql\PeriodeInputApd;
+use App\Models\Eapd\Sql\Wilayah;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;

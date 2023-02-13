@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Eapd\PeriodeInputApd;
+use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -106,7 +106,10 @@ class FileController extends Controller
 
     public function buatPathFileApdUpload($id_pegawai, $id_jenis, $id_periode)
     {
-        $periode = Str::slug(PeriodeInputApd::where('id', '=', $id_periode)->first()->nama_periode);
+        if($id_periode === 1 || $id_periode == null)
+        $id_periode = PeriodeInputApd::get()->first()->id;
+
+        $periode = Str::slug(PeriodeInputApd::where('_id', '=', $id_periode)->first()->nama_periode);
 
         return self::$apdUploadBasePath . '/' . $id_pegawai . '/' . $periode . '/' . $id_jenis;
     }

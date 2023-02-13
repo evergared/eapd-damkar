@@ -4,11 +4,11 @@ namespace App\Http\Livewire\Eapd\Layout;
 
 use App\Enum\VerifikasiApd as verif;
 use Livewire\Component;
-use App\Models\Eapd\Pegawai;
-use App\Models\Eapd\PeriodeInputApd;
+use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use App\Http\Controllers\ApdDataController;
-use App\Models\Eapd\ApdList;
-use App\Models\Eapd\InputApd;
+use App\Models\Eapd\Mongodb\ApdList;
+use App\Models\Eapd\Mongodb\InputApd;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
 
@@ -101,15 +101,17 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             $this->id_pegawai = $data[0];
             $this->periode = $data[1];
 
+            if($this->periode === 1)
+            $this->periode = PeriodeInputApd::get()->first()->id;
 
             // ambil nama pegawai
-            $this->nama_pegawai = Pegawai::where('id', '=', $this->id_pegawai)->first()->nama;
+            $this->nama_pegawai = Pegawai::where('_id', '=', $this->id_pegawai)->first()->nama;
 
             // ambil nama periode input
-            $this->nama_periode = PeriodeInputApd::where('id', '=', $this->periode)->first()->nama_periode;
+            $this->nama_periode = PeriodeInputApd::where('_id', '=', $this->periode)->first()->nama_periode;
 
             // ambil id jabatan si pengupload
-            $id_jabatan = Pegawai::where('id', '=', $this->id_pegawai)->first()->id_jabatan;
+            $id_jabatan = Pegawai::where('_id', '=', $this->id_pegawai)->first()->id_jabatan;
 
             // panggil ApdDataController
             $adc = new ApdDataController;

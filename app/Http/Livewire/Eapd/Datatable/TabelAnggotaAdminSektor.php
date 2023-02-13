@@ -3,12 +3,12 @@
 namespace App\Http\Livewire\Eapd\Datatable;
 
 use App\Http\Controllers\ApdDataController;
-use App\Models\Eapd\Jabatan;
+use App\Models\Eapd\Mongodb\Jabatan;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Eapd\Pegawai;
-use App\Models\Eapd\Penempatan;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Mongodb\Penempatan;
+use Jenssegers\MongoDB\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
 class TabelAnggotaAdminSektor extends DataTableComponent
@@ -20,7 +20,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
+        $this->setPrimaryKey('_id');
         $this->setSearchEnabled();
     }
     
@@ -29,7 +29,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
         return Pegawai::query()
 
         // join tabel pegawai dengan tabel jabatan
-        ->join('jabatan as j','pegawai.id_jabatan','=','j.id_jabatan')
+        ->join('jabatan as j','pegawai.id_jabatan','=','j._id')
 
         // penempatan sesuai sektor kasie
         ->where('id_penempatan','like',Auth::user()->data->sektor . '%')
@@ -59,19 +59,19 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                 ->format(function ($value, $row) {
                     return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-anggota-katon", ['img' => $value, 'id_pegawai' => $row->id]);
                 }),
-            Column::make("id")
+            Column::make("_id")
                 ->sortable()
                 ->hideIf(true),
             Column::make("Nama", "nama")
                 ->sortable(),
             Column::make("Jabatan", "id_jabatan")
                 ->format(function($value){
-                    return Jabatan::where('id_jabatan','=',$value)->first()->nama_jabatan;
+                    return Jabatan::where('_id','=',$value)->first()->nama_jabatan;
                 })
                 ->sortable(),
             Column::make("Penempatan", "id_penempatan")
                 ->format(function($value){
-                    return Penempatan::where('id_penempatan','=',$value)->first()->nama_penempatan;
+                    return Penempatan::where('_id','=',$value)->first()->nama_penempatan;
                 })
                 ->sortable(),
             Column::make("Inputan")

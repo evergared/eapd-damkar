@@ -2,14 +2,14 @@
 
 namespace App\Http\Livewire\Eapd\Datatable;
 
-use App\Models\Eapd\Grup;
+use App\Models\Eapd\Mongodb\Grup;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
-use App\Models\Eapd\Pegawai;
-use App\Models\Eapd\Penempatan;
+use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Mongodb\Penempatan;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Builder;
+use Jenssegers\MongoDB\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
@@ -25,7 +25,7 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
+        $this->setPrimaryKey('_id');
         $this->setSearchEnabled();
     }
 
@@ -34,13 +34,13 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
         return Pegawai::query()
 
         // join tabel pegawai dengan tabel jabatan
-        ->join('jabatan as j','pegawai.id_jabatan','=','j.id_jabatan')
+        ->join('jabatan as j','pegawai.id_jabatan','=','j._id')
 
         // join tabel pegawai dengan tabel penempatan
-        ->join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
+        ->join('penempatan','pegawai.id_penempatan','=','penempatan._id')
 
         // join tabel pegawai dengan tabel grup
-        ->join('grup','pegawai.id_grup','=','grup.id_grup')
+        ->join('grup','pegawai.id_grup','=','grup._id')
 
         // penempatan sesuai sektor kasie
         ->where('pegawai.id_penempatan','like',Auth::user()->data->sektor . '%');
@@ -56,7 +56,7 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->excludeFromColumnSelect(),
-            Column::make('id')
+            Column::make('_id')
                 ->hideIf(true),
             Column::make("Nrk", "nrk")
                 ->sortable()
@@ -109,8 +109,8 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
     public function filters(): array
     {
         // untuk filter penempatan
-        $penempatan = Penempatan::where('id_penempatan','like',Auth::user()->data->sektor.'%')
-                        ->get(['id_penempatan as value','nama_penempatan as text'])
+        $penempatan = Penempatan::where('_id','like',Auth::user()->data->sektor.'%')
+                        ->get(['_id as value','nama_penempatan as text'])
                         ->toArray();
         $opsi_penempatan = [];
         foreach($penempatan as $p)
@@ -119,7 +119,7 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
         }
 
         // untuk filter grup
-        $grup = Grup::all(['id_grup as value','nama_grup as text'])
+        $grup = Grup::all(['_id as value','nama_grup as text'])
                         ->toArray();
         $opsi_grup = [];
         foreach($grup as $p)
@@ -128,7 +128,7 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
         }
 
         return [
-            SelectFilter::make('Penempatan','id_penempatan')
+            SelectFilter::make('Penempatan','_id')
             ->setFilterPillTitle(' Penempatan di ')
             ->setFilterPillValues($opsi_penempatan)
             ->options($opsi_penempatan)

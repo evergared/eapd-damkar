@@ -147,7 +147,7 @@
                     </div>
                     <!-- /.card -->
                 </section>
-
+                
                 @if (auth()->user()->data->jabatan->level_user == 'danton')
 
 
@@ -174,6 +174,7 @@
                                 @endpush
                                 @endonce
                                 <livewire:eapd.datatable.tabel-anggota-katon />
+                                testis
 
                             </div>
                         </div>
