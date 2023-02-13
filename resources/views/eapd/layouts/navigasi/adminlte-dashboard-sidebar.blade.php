@@ -84,15 +84,51 @@
                         </p>
                     </a>
                 </li>
-                @if (auth()->user()->data->jabatan->level_user == 'admin_sektor')
-                <li class="nav-item {{ (Route::currentRouteName() =='laporan')? 'menu-open' :''}}">
-                    <a href="{{route('laporan')}}"
-                        class="nav-link {{ (Route::currentRouteName() =='laporan')? 'active' :''}}">
+                <li class="nav-item {{ (Route::currentRouteName() =='ukuran')? 'menu-open' :''}}">
+                    <a href="{{route('ukuran')}}"
+                        class="nav-link {{ (Route::currentRouteName() =='ukuran')? 'active' :''}}">
+                        <i class="nav-icon fas fa-suitcase"></i>
+                        <p>
+                            Ukuran
+                        </p>
+                    </a>
+                </li>
+                @if (auth()->user()->data->jabatan->level_user == 'admin_sektor' || auth()->user()->data->jabatan->level_user == 'admin_sudin')
+                <li class="nav-item {{ (Route::currentRouteName() =='print-laporan' || Route::currentRouteName() =='progres-sektor' || Route::currentRouteName() =='data-ukuran' || Route::currentRouteName() =='data-distribusi')? 'menu-open' :''}}">
+                    <a 
+                        class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
                             Laporan
+                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item {{ (Route::currentRouteName() =='progres-sektor')? 'menu-open' :''}}">
+                          <a href="{{route('progres-sektor')}}" class="nav-link {{ (Route::currentRouteName() =='progres-sektor')? 'active' :''}}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Progres Sektor</p>
+                          </a>
+                        </li>
+                        <li class="nav-item {{ (Route::currentRouteName() =='data-distribusi')? 'menu-open' :''}}">
+                            <a href="{{route('data-distribusi')}}" class="nav-link {{ (Route::currentRouteName() =='data-distribusi')? 'active' :''}}">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Data Distribusi</p>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ (Route::currentRouteName() =='data-ukuran')? 'menu-open' :''}}">
+                            <a href="{{route('data-ukuran')}}" class="nav-link {{ (Route::currentRouteName() =='data-ukuran')? 'active' :''}}">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Data Ukuran</p>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ (Route::currentRouteName() =='print-laporan')? 'menu-open' :''}}">
+                          <a href="{{route('print-laporan')}}" class="nav-link {{ (Route::currentRouteName() =='print-laporan')? 'active' :''}}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Print Laporan</p>
+                          </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item {{ (Route::currentRouteName() =='kepegawaian')? 'menu-open' :''}}">
                     <a href="{{route('kepegawaian')}}"

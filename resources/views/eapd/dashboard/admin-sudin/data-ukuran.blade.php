@@ -1,10 +1,10 @@
-@extends('eapd.layouts.adminlte-dashboard',['title'=>'Profil Admin Sektor'])
+@extends('eapd.layouts.adminlte-dashboard',['title'=>'Profil Pegawai'])
 
 
 
 @section('content')
 
-@include('eapd.dashboard.komponen.breadcrumbs',['halamanJudul'=>'Profil Admin Sektor','halaman'=>'profil'])
+@include('eapd.dashboard.komponen.breadcrumbs',['halamanJudul'=>'Data Ukuran APD','halaman'=>'data-ukuran'])
 
 <section class="content">
     <div class="container-fluid">
@@ -12,9 +12,9 @@
             <div class="col-lg-12 mt-2">
                 <div class="card">
                     <div class="card-body">
-
+                        
                         @livewireStyles
-                        @livewire('eapd.form.form-profil')
+                        @livewire('eapd.form.data-ukuran')
 
                     </div>
                 </div>

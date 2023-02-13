@@ -24,34 +24,20 @@ class DashboardController extends Controller
 
         // return dd($arc->bangunDataTabelRekapSektor());
         // return dd(Auth::user()->data->jabatan->level_user);
-
         if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
-        {
-            $adc = new ApdDataController;
-            $periode = 1;
-            // $periode = $adc->ambilIdPeriodeInput();
-
-            $maks_inputan = 200;
-            $value_inputan = 0;
-            $value_tervalidasi = 4;
-
-            $adc->hitungCapaianInputSektor(Auth::user()->data->sektor,$maks_inputan,$value_inputan,$periode);
-            $adc->hitungCapaianInputSektor(Auth::user()->data->sektor,$maks_inputan,$value_tervalidasi,$periode,3);
-
-            return view("eapd.dashboard.admin-sektor.main-sektor",[
-                'maks_inputan' => $maks_inputan,
-                'value_inputan' => $value_inputan,
-                'value_tervalidasi' =>$value_tervalidasi
-            ]);
-        }
+            return view("eapd.dashboard.admin-sektor.main-sektor");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
+            return view("eapd.dashboard.admin-sudin.main-sektor");
         else
-            return view("eapd.dashboard.halaman-pegawai.main-pegawai");
+            return view('eapd.dashboard.halaman-pegawai.main-pegawai');
     }
 
     public function tampilProfil(Request $r)
     {
         if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
             return view("eapd.dashboard.admin-sektor.profil");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
+            return view("eapd.dashboard.admin-sudin.profil");
         else
             return view('eapd.dashboard.halaman-pegawai.profil');
     }
@@ -60,8 +46,20 @@ class DashboardController extends Controller
     {
         if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
             return view("eapd.dashboard.admin-sektor.request-item");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
+            return view("eapd.dashboard.admin-sudin.request-item");
         else
             return view('eapd.dashboard.halaman-pegawai.request-item');
+    }
+
+    public function tampilUkuran(Request $r)
+    {
+        if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
+            return view("eapd.dashboard.admin-sektor.ukuran");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
+            return view("eapd.dashboard.admin-sudin.ukuran");
+        else
+            return view('eapd.dashboard.halaman-pegawai.ukuran');
     }
 
     public function tampilApdKu(Request $r)
@@ -69,21 +67,88 @@ class DashboardController extends Controller
         // return view('eapd.dashboard.apdku')->with('list_apd', $adc->bangunItemModalInputApd($adc->muatContohDaftarInputApd()[1]));
         if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
             return view("eapd.dashboard.admin-sektor.apdku");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
+            return view("eapd.dashboard.admin-sudin.apdku");
         else
             return view('eapd.dashboard.halaman-pegawai.apdku');
     }
 
-    public function tampilLaporan(Request $r)
+    public function tampilPrintLaporan(Request $r)
     {
         if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
-            return view("eapd.dashboard.admin-sektor.laporan");
+            return view("eapd.dashboard.admin-sektor.print-laporan");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
+            return view("eapd.dashboard.admin-sudin.print-laporan");
         else
             return view('eapd.dashboard.halaman-pegawai.main-pegawai');
     }
+
+    public function tampilDataUkuran(Request $r)
+    {
+        if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
+            return view("eapd.dashboard.admin-sektor.data-ukuran");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
+            return view("eapd.dashboard.admin-sudin.data-ukuran");
+        else
+            return view('eapd.dashboard.halaman-pegawai.main-pegawai');
+    }
+
+    public function tampilDataDistribusi(Request $r)
+    {
+        if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
+            return view("eapd.dashboard.admin-sektor.data-distribusi");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
+            return view("eapd.dashboard.admin-sudin.data-distribusi");
+        else
+            return view('eapd.dashboard.halaman-pegawai.main-pegawai');
+    }
+
+    public function tampilProgresSektor(Request $r)
+    {
+        if (Auth::user()->data->jabatan->level_user == 'admin_sektor') {
+            $adc = new ApdDataController;
+            $periode = 1;
+            // $periode = $adc->ambilIdPeriodeInput();
+
+            $maks_inputan = 200;
+            $value_inputan = 0;
+            $value_tervalidasi = 4;
+
+            $adc->hitungCapaianInputSektor(Auth::user()->data->sektor, $maks_inputan, $value_inputan, $periode);
+            $adc->hitungCapaianInputSektor(Auth::user()->data->sektor, $maks_inputan, $value_tervalidasi, $periode, 3);
+
+            return view("eapd.dashboard.admin-sektor.progres-sektor", [
+                'maks_inputan' => $maks_inputan,
+                'value_inputan' => $value_inputan,
+                'value_tervalidasi' => $value_tervalidasi
+            ]);
+        } else if (Auth::user()->data->jabatan->level_user == 'admin_sudin') {
+            $adc = new ApdDataController;
+            $periode = 1;
+            // $periode = $adc->ambilIdPeriodeInput();
+
+            $maks_inputan = 200;
+            $value_inputan = 0;
+            $value_tervalidasi = 4;
+
+            $adc->hitungCapaianInputSektor(Auth::user()->data->sektor, $maks_inputan, $value_inputan, $periode);
+            $adc->hitungCapaianInputSektor(Auth::user()->data->sektor, $maks_inputan, $value_tervalidasi, $periode, 3);
+
+            return view("eapd.dashboard.admin-sudin.progres-sektor", [
+                'maks_inputan' => $maks_inputan,
+                'value_inputan' => $value_inputan,
+                'value_tervalidasi' => $value_tervalidasi
+            ]);
+        } else
+            return view("eapd.dashboard.halaman-pegawai.main-pegawai");
+    }
+
     public function tampilKepegawaian(Request $r)
     {
         if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
             return view("eapd.dashboard.admin-sektor.kepegawaian");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
+            return view("eapd.dashboard.admin-sudin.kepegawaian");
         else
             return view('eapd.dashboard.halaman-pegawai.main-pegawai');
     }

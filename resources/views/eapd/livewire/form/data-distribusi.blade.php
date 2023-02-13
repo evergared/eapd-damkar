@@ -1,5 +1,5 @@
 <div>
-                    <div class="card my-n3 mx-n3" id="rekap-tabel">
+    <div class="card my-n3 mx-n3" id="rekap-tabel">
                         <div class="card-header">
                             <h3 class="card-title">{{$nama_periode}}</h3>
                         </div>
@@ -11,19 +11,14 @@
                                         <tr >
                                             <th rowspan="2" style="vertical-align:middle; background-color: gray ;">#</th>
                                             <th style="width:20%; vertical-align:middle; background-color: gray ;" rowspan="2" >Jenis APD</th>
-                                            <th style="width:50%; background-color: gray ;" class="text-center" colspan="4">Kondisi</th>
-                                            <th style="width:20%; background-color: gray ;" colspan="3">Keberadaan</th>
+                                            <th style="width:50%; background-color: gray ;" class="text-center" colspan="2">Kondisi</th>
+                                            <th style="width:10%; vertical-align:middle; background-color: gray ;" rowspan="2">Stok</th>
                                             <th style="width:10%; vertical-align:middle; background-color: gray ;" rowspan="2">SubTotal</th>
-                                            <th style="width:10%; vertical-align:middle; background-color: gray ;" rowspan="2">Distribusi</th>
+                                            <th style="width:10%; vertical-align:middle; background-color: gray ;" rowspan="2">Distribusi Input</th>
                                         </tr>
                                         <tr class="table-head-fixed">
-                                            <th>Baik</th>
-                                            <th>Rusak Ringan</th>
-                                            <th>Rusak Sedang</th>
-                                            <th>Rusak Berat</th>
-                                            <th>Belum Terima</th>
-                                            <th>Hilang</th>
-                                            <th>Diterima</th>
+                                            <th>Baru</th>
+                                            <th>Bekas</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -49,18 +44,7 @@
                                             <td class="text-center align-middle">
                                                 <a onclick="rekapDetail('{{$item['id_jenis']}}','belum_terima')" href="#rekap-tabel">{{$item['belum_terima']}}</a>
                                             </td>
-                                            <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','hilang')" href="#rekap-tabel">{{$item['hilang']}}</a>
-                                            </td>
-                                            <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','total')" href="#rekap-tabel">{{$item['total']}}</a>
-                                            </td>
-                                            <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','total')" href="#rekap-tabel">{{$item['total']}}</a>
-                                            </td>
-                                            <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','distribusi')" href="#rekap-tabel">{{$item['total']}}</a>
-                                            </td>
+                                            
                                         </tr>
                                         @endforeach
 
@@ -78,7 +62,7 @@
                         @endempty
                         
                         <!-- /.card-body -->
-                    </div>
+    </div>
 
                     <!-- {{-- Card untuk preview saat user klik satu gambar start --}} -->
                     
@@ -105,14 +89,12 @@
                                 <tr>
                                     <th>#</th>
                                     <th style="width:20%;">Item</th>
-                                    <th style="width:20%;">Nama</th>
-                                    <th style="width:20%;">Penempatan</th>
-                                    <th style="width:50%; height: 60%;" class="text-center">Foto yang diupload
+                                    <th style="width:20%;">Pengirim</th>
+                                    <th style="width:20%;">Jumlah</th>
+                                    <th style="width:50%; height: 60%;" class="text-center">Surat Jalan
                                     </th>
                                     <th style="width:20%;">Kondisi</th>
-                                    <th style="width:20%;">Verifikasi</th>
-                                    <th style="width:20%;">Komentar Pengupload</th>
-                                    <th>Komentar Verifikator</th>
+                                    <th style="width:20%;">Ukuran</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -121,8 +103,8 @@
                                         <td class="text-center text-wrap my-auto align-middle">{{$key+1}}</td>
                                         <td class="text-center text-wrap my-auto align-middle">{{$item['nama_jenis']}}
                                         </td>
-                                        <td class="text-center text-wrap my-auto align-middle"><strong>{{$item['nama_pegawai']}}</strong></td>
-                                        <td class="text-center text-wrap my-auto align-middle">{{$item['penempatan']}}</td>
+                                        <td class="text-center text-wrap my-auto align-middle"><strong>Admin Sudin Jakarta Selatan</strong></td>
+                                        <td class="text-center text-wrap my-auto align-middle">40</td>
                                         <td>
                                             <div class=" d-none d-sm-block">
 
@@ -176,17 +158,12 @@
 
                                         </td>
                                         <td class="text-center align-middle">
-                                            <span class="badge badge-sm bg-{{$item['kondisi_warna']}}">{{$item['kondisi_status']}}</span>
+                                            <span class="badge badge-sm bg-{{$item['kondisi_warna']}}">Baru</span>
                                         </td>
                                         <td class="text-center align-middle">
-                                            <span class="badge badge-sm bg-{{$item['verifikasi_warna']}}">{{$item['verifikasi_status']}}</span>
+                                            <span class="badge badge-sm bg-{{$item['verifikasi_warna']}}">All Size</span>
                                         </td>
-                                        <td class="text-center align-middle">
-                                            {{$item['komentar_pengupload']}}
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            {{$item['komentar_verifikator']}}
-                                        </td>
+                                        
                                     </tr>
                                 @endforeach
                                 
@@ -211,23 +188,27 @@
 
             <!-- {{-- Card untuk preview saat user klik satu gambar start --}} -->
                 <div class="collapse" id="preview-foto-apd-anggota">
-                    <div class="card mt-5">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <h5>Preview Gambar APD</h5>
+                        <div class="mt-5 mx-n3  card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <h5>Preview Gambar APD</h5>
+                                </div>
+                                <div class="card-tools">
+                                    <button type="button" class="close" data-toggle="collapse"
+                                        data-target="#preview-foto-apd-anggota" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="card-tools">
-                                <button type="button" class="close" data-toggle="collapse"
-                                    data-target="#preview-foto-apd-anggota" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
+                            <div class="card-body">
+                                @if ($gambar == "")
+                                    Tidak ada gambar.
+                                @else
+                                    <img src="{{asset($gambar)}}" class="img-thumbnail" alt="APD">
+                                @endif
                             </div>
-                        </div>
-                        <div class="card-body">
-                            isinya satu gambar yang diklik
                         </div>
                     </div>
-                </div>
             <!-- {{-- Cart untuk preview saat user klik satu gambar end --}} -->
 
             <!-- {{-- Card untuk preview saat viewport hp start --}} -->
@@ -251,6 +232,5 @@
                 </div>
             <!-- {{-- Card untuk preview saat viewport hp end --}} -->
 
-        </div>
-
+    </div>
 </div>

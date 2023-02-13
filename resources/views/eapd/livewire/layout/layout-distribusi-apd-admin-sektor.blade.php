@@ -12,18 +12,17 @@
                                             <th rowspan="2" style="vertical-align:middle; background-color: gray ;">#</th>
                                             <th style="width:20%; vertical-align:middle; background-color: gray ;" rowspan="2" >Jenis APD</th>
                                             <th style="width:50%; background-color: gray ;" class="text-center" colspan="4">Kondisi</th>
-                                            <th style="width:20%; background-color: gray ;" colspan="3">Keberadaan</th>
+                                            <th style="width:20%; background-color: gray ;" colspan="2">Keberadaan</th>
                                             <th style="width:10%; vertical-align:middle; background-color: gray ;" rowspan="2">SubTotal</th>
                                             <th style="width:10%; vertical-align:middle; background-color: gray ;" rowspan="2">Distribusi</th>
                                         </tr>
                                         <tr class="table-head-fixed">
-                                            <th>Baik</th>
-                                            <th>Rusak Ringan</th>
+                                            <th>Baru</th>
+                                            <th>Bekas</th>
                                             <th>Rusak Sedang</th>
                                             <th>Rusak Berat</th>
                                             <th>Belum Terima</th>
                                             <th>Hilang</th>
-                                            <th>Diterima</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -51,9 +50,6 @@
                                             </td>
                                             <td class="text-center align-middle">
                                                 <a onclick="rekapDetail('{{$item['id_jenis']}}','hilang')" href="#rekap-tabel">{{$item['hilang']}}</a>
-                                            </td>
-                                            <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','total')" href="#rekap-tabel">{{$item['total']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
                                                 <a onclick="rekapDetail('{{$item['id_jenis']}}','total')" href="#rekap-tabel">{{$item['total']}}</a>
