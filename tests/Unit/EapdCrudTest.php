@@ -10,14 +10,18 @@ use App\Models\Eapd\Mongodb\Grup;
 use App\Models\Eapd\Mongodb\InputApdTemplate;
 use App\Models\Eapd\Mongodb\Jabatan;
 use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Mongodb\Penempatan;
 use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\TestCase as PhpTes;
 use Tests\TestCase;
+use MongoDb\BSON\Regex;
+
 
 class EapdCrudTest extends TestCase
 {
+    // Panggil menggunakan php artisan test Tests\Unit\EapdCrudTest.php
 
     // use RefreshDatabase;
 
@@ -43,9 +47,16 @@ class EapdCrudTest extends TestCase
 
     public function test_read()
     {
-        $tes = User::find('63e1329904da9dc16d021793')->get()->first()->data;
-        $tes1 = InputApdTemplate::whereIn('jabatan',['L001'])->first()->template;
-        print_r($tes1);
+        // $tes = User::find('63e1329904da9dc16d021793')->get()->first()->data;
+        // $tes1 = InputApdTemplate::whereIn('jabatan',['L001'])->first()->template;
+        $penempatan = Penempatan::where('_id','like','1.11%')
+                        ->get(['_id as value','nama_penempatan as data'])
+                        ->toArray();
+        $penempatan = Penempatan::where('_id','like','1.11%')
+                        ->project(['value'=>'$_id', 'text' => '$nama_penempatan'])
+                        ->get()
+                        ->toArray();
+        print_r($penempatan);
         $this->assertTrue(true);
     }
 }

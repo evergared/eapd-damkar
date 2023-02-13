@@ -110,8 +110,10 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
     {
         // untuk filter penempatan
         $penempatan = Penempatan::where('_id','like',Auth::user()->data->sektor.'%')
-                        ->get(['_id as value','nama_penempatan as text'])
+                        ->project(['value'=>'$_id', 'text' => '$nama_penempatan'])
+                        ->get()
                         ->toArray();
+        
         $opsi_penempatan = [];
         foreach($penempatan as $p)
         {
@@ -119,7 +121,8 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
         }
 
         // untuk filter grup
-        $grup = Grup::all(['_id as value','nama_grup as text'])
+        $grup = Grup::project(['value'=>'$_id','text'=>'$nama_grup'])
+                        ->get()
                         ->toArray();
         $opsi_grup = [];
         foreach($grup as $p)

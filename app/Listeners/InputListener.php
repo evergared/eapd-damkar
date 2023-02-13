@@ -25,7 +25,7 @@ class InputListener
      * @param  object  $event
      * @return void
      */
-    public function handle(InputDilakukan $event)
+    public function handle($event)
     {
         error_log('Trigger');
     }

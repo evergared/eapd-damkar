@@ -2,23 +2,28 @@
 
 namespace App\Notifications;
 
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PegawaiInputApd extends Notification
+class PegawaiInputApd extends Notification implements ShouldBroadcast
 {
-    use Queueable;
+    use Queueable, Dispatchable, InteractsWithSockets;
+
+    protected $pesan;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($pesan)
     {
-        //
+        $this->pesan = $pesan;
     }
 
     /**
@@ -29,22 +34,10 @@ class PegawaiInputApd extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['database','broadcast'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
-    public function toMail($notifiable)
-    {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
-    }
+    
 
     /**
      * Get the array representation of the notification.
@@ -55,7 +48,14 @@ class PegawaiInputApd extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'id_pegawai' => $this['id_pegawai'],
+            'id_jenis' => $this['id_jenis'],
+            'tindakan' => $this['tindakan']
         ];
+    }
+
+    public function broadcastOn()
+    {
+        
     }
 }

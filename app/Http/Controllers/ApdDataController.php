@@ -133,12 +133,12 @@ class ApdDataController extends Controller
 
             // jika parameter id_pegawai kosong, ambil nrk dan jabatan user
             if ($id_pegawai == "") {
-                $id_pegawai = Auth::user()->userid;
+                $id_pegawai = Auth::user()->id;
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
             // jika paramter id_pegawai diisi, cukup ambil jabatan user
             else {
-                $id_jabatan = Pegawai::where('id', '=', $id_pegawai)->first()->id_jabatan;
+                $id_jabatan = Pegawai::where('_id', '=', $id_pegawai)->first()->id_jabatan;
             }
 
             if($id_periode == 1)
@@ -235,7 +235,7 @@ class ApdDataController extends Controller
 
             // jika parameter nrk kosong, ambil nrk dan jabatan user
             if ($id_pegawai == "") {
-                $id_pegawai = Auth::user()->userid;
+                $id_pegawai = Auth::user()->id;
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
             // jika paramter nrk diisi, cukup ambil jabatan user
@@ -664,7 +664,7 @@ class ApdDataController extends Controller
         try {
 
             if ($id_pegawai == "")
-                $id_pegawai = Auth::user()->userid;
+                $id_pegawai = Auth::user()->id;
 
             return verif::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->verifikasi_status);
         } catch (Throwable $e) {
@@ -679,7 +679,7 @@ class ApdDataController extends Controller
         try {
 
             if ($id_pegawai == "")
-                $id_pegawai = Auth::user()->userid;
+                $id_pegawai = Auth::user()->id;
 
             return status::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->kondisi);
         } catch (Throwable $e) {
