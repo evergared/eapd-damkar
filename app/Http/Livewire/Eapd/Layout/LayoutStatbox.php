@@ -7,6 +7,7 @@ use App\Http\Controllers\ApdDataController;
 use App\Models\Eapd\Mongodb\InputApd;
 use App\Enum\VerifikasiApd as verif;
 use App\Models\Eapd\Mongodb\ApdJenis;
+use Error;
 use Livewire\Component;
 use Throwable;
 
@@ -26,9 +27,16 @@ class LayoutStatbox extends Component
         $infoCapaian = [],
         $infoTervalidasi = [];
 
+
     protected $listeners = [
-        'refreshStatbox' => 'render'
+        'refreshStatbox' => 'render',
     ];
+
+    public function coba()
+    {
+        error_log('notifikasi diterima');
+        $this->test_string = "notifikasi tested";
+    }
 
     public function render()
     {

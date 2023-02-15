@@ -7,6 +7,7 @@ use Spatie\Enum\Enum;
 /**
  * Enum yang mempengaruhi hak akses user pegawai.
  * @method static self anggota()
+ * @method static self karu()
  * @method static self danton()
  * @method static self kasudin()
  * @method static self adminSektor()
@@ -19,6 +20,7 @@ class LevelUser extends Enum
     {
         return [
             'anggota' => 'anggota',
+            'karu' => 'karu',
             'danton' => 'danton',
             'kasudin' => 'kasudin',
             'adminSektor' => 'admin_sektor',
@@ -31,6 +33,7 @@ class LevelUser extends Enum
     {
         return[
             'anggota' => 'Anggota',
+            'karu' => 'Kepala Regu',
             'danton' => 'Kepala Pleton',
             'kasudin' => 'Kepala Suku Dinas',
             'adminSektor' => 'Admin Sektor',

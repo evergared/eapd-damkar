@@ -3,9 +3,12 @@
 namespace App\Http\Requests\Auth;
 
 use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\User;
+use App\Notifications\TesNotifikasi;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -81,6 +84,11 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        // untuk test notifikasi, kirim notifikasi saat user login
+        $user = User::find(Auth::user()->id);
+        Notification::send($user,new TesNotifikasi());
+        error_log('kirim notifikasi');
     }
 
     /**

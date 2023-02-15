@@ -1,0 +1,3 @@
+notifikasi di mongodb:
+- notifiable dari Alexzvn/LaravelMongoNotifiable pada model (potentially risky)
+- $connection pada model berisi nama konfigurasi sambungan ke database

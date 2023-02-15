@@ -4,10 +4,14 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+// use Alexzvn\LaravelMongoNotifiable\Notifiable;
+
+use Alexzvn\LaravelMongoNotifiable\Notifiable;
 use App\Models\Eapd\Mongodb\Pegawai;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Jenssegers\Mongodb\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+// use Illuminate\Notifications\Notifiable;
+
 use Laravel\Sanctum\HasApiTokens;
 
 // untuk mongodb
@@ -18,6 +22,7 @@ class User extends Authenticatable
     use HasApiTokens,  Notifiable;
 
     protected $collection = 'user';
+    protected $connection = 'mongodb';
 
     /**
      * The attributes that are mass assignable.

@@ -12,7 +12,7 @@ use Illuminate\Notifications\Notification;
 
 class PegawaiInputApd extends Notification implements ShouldBroadcast
 {
-    use Queueable, Dispatchable, InteractsWithSockets;
+    use Queueable, InteractsWithSockets;
 
     protected $pesan;
 

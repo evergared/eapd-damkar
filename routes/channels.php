@@ -33,21 +33,21 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 //     return $user->nrk === $channelUser;
 // });
 
-// Broadcast::channel('tes', function () {             // <---- contoh public channel, laravel-echo dan livewire otomatis handle ini walau tidak dibuat
-//     return true;
-// });
+Broadcast::channel('tes', function () {             // <---- contoh public channel, laravel-echo dan livewire otomatis handle ini walau tidak dibuat
+    return true;
+});
 
 
 
 // private channel 
 
-// untuk mengirimkan ke pegawai tertentu
+#region untuk mengirimkan ke pegawai tertentu
 Broadcast::channel('pegawai-{id_penerima}',function($user,$id_penerima){
     return $user->id === $id_penerima;
 });
+#endregion
 
-
-// channel admin umum, menjangkau semua admin
+#region channel admin umum, menjangkau semua admin
 Broadcast::channel('admin-sektor',function($user){
     return $user->data->jabatan->level_user == LevelUser::adminSektor();
 });
@@ -59,9 +59,9 @@ Broadcast::channel('admin-sudin',function($user){
 Broadcast::channel('admin-dinas',function($user){
     return $user->data->jabatan->level_user == LevelUser::adminDinas();
 });
+#endregion
 
-
-// tingkat sektor
+#region tingkat sektor
 Broadcast::channel('admin-sektor-{sektor}',function($user,$sektor){
 
     return $user->data->jabatan->level_user == LevelUser::adminSektor() && $user->data->sektor == $sektor;
@@ -73,3 +73,10 @@ Broadcast::channel('danton-{sektor}-{kompi}',function($user,$sektor,$kompi){
             $user->data->sektor == $sektor &&
             $user->data->id_grup == $kompi;
 });
+
+Broadcast::channel('karu-{sektor}-{id}',function($user, $sektor, $id){
+    return  $user->data->jabatan->level_user == LevelUser::karu() &&
+            $user->data->sektor == $sektor &&
+            $user->id == $id;
+});
+#endregion
