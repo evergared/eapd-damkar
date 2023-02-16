@@ -330,36 +330,36 @@ class TesMongodbSeeder extends Seeder
         error_log('populating apd list');
 
         $dataContohApd = [
-            ['_id' => 'H-bro-0000', 'nama_apd' => 'Protect Red', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'firehelmet_1.jpg||firehelmet_2.jpg||firehelmet_3.jpg'],
+            ['_id' => 'H-bro-0000', 'nama_apd' => 'Protect Red', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'fire-helmet-2021.png'],
             ['_id' => 'H-bro-0001', 'nama_apd' => 'Alpha Head', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'firehelmet_4.jpg||firehelmet_5.jpg'],
             ['_id' => 'H-fir-0000', 'nama_apd' => 'Helmet Fire', 'merk' => 'Fire Protect', 'id_jenis' => 'H001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'firehelmet_6.jpg'],
 
-            ['_id' => 'H-fir-0001', 'nama_apd' => 'Red Helmet', 'merk' => 'Fire Protect', 'id_jenis' => 'H002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'rescuehelmet_1.jpg'],
+            ['_id' => 'H-fir-0001', 'nama_apd' => 'Red Helmet', 'merk' => 'Fire Protect', 'id_jenis' => 'H002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'rescue-helmet-2021.png'],
 
-            ['_id' => 'G-glo-0000', 'nama_apd' => 'Red Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'firegloves_1.jpg'],
+            ['_id' => 'G-glo-0000', 'nama_apd' => 'Red Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'fire-glove-2022.png'],
             ['_id' => 'G-glo-0001', 'nama_apd' => 'Yellow Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'firegloves_2.jpg'],
             ['_id' => 'G-alt-0000', 'nama_apd' => 'Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'firegloves_1.jpg||firegloves_2.jpg'],
 
-            ['_id' => 'G-alt-0001', 'nama_apd' => 'Rescue Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'rescuegloves_1.jpg'],
+            ['_id' => 'G-alt-0001', 'nama_apd' => 'Rescue Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'rescue-glove-2022.png'],
             ['_id' => 'G-alt-0002', 'nama_apd' => 'Slightly More Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'rescuegloves_2.jpg'],
 
 
-            ['_id' => 'T-fir-0000', 'nama_apd' => 'Fire Jacket', 'merk' => 'Fire Protect', 'id_jenis' => 'T001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id],
+            ['_id' => 'T-fir-0000', 'nama_apd' => 'Fire Jacket', 'merk' => 'Fire Protect', 'id_jenis' => 'T001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'fire-jacket-2021.png||fire-jacket-back-2021.png'],
             ['_id' => 'T-pol-0000', 'nama_apd' => 'Fire Suit', 'merk' => 'Poland Inc', 'id_jenis' => 'T001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id],
 
-            ['_id' => 'T-pol-0001', 'nama_apd' => 'Jump Suit Poland', 'merk' => 'Poland Inc', 'id_jenis' => 'T002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id],
+            ['_id' => 'T-pol-0001', 'nama_apd' => 'Jump Suit Poland', 'merk' => 'Poland Inc', 'id_jenis' => 'T002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'jumsuit-2022.jpg'],
             ['_id' => 'T-yoh-0000', 'nama_apd' => 'Jump Suit', 'merk' => 'Yohanes Safety Accredited', 'id_jenis' => 'T002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id],
 
-            ['_id' => 'B-yoh-0000', 'nama_apd' => 'Fire Hazard Boots', 'merk' => 'Yohanes Safety Accredited', 'id_jenis' => 'B001', 'id_size' => $size_sepatu_umum->id, 'id_kondisi' => $kondisi_umum->id],
+            ['_id' => 'B-yoh-0000', 'nama_apd' => 'Fire Hazard Boots', 'merk' => 'Yohanes Safety Accredited', 'id_jenis' => 'B001', 'id_size' => $size_sepatu_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'fire-boots-2022.png'],
             ['_id' => 'B-ari-0000', 'nama_apd' => 'Fire Safety Boots', 'merk' => 'Arian Protection', 'id_jenis' => 'B001', 'id_size' => $size_sepatu_umum->id, 'id_kondisi' => $kondisi_umum->id],
 
-            ['_id' => 'B-ari-0001', 'nama_apd' => 'Rescue Boots', 'merk' => 'Arian Protection', 'id_jenis' => 'B002', 'id_size' => $size_sepatu_umum->id, 'id_kondisi' => $kondisi_umum->id],
+            ['_id' => 'B-ari-0001', 'nama_apd' => 'Rescue Boots', 'merk' => 'Arian Protection', 'id_jenis' => 'B002', 'id_size' => $size_sepatu_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'rescue-boots-2020.png'],
 
-            ['_id' => 'A-dar-0000', 'nama_apd' => 'Sandstorm', 'merk' => 'Darude', 'id_jenis' => 'A001', 'id_size' => $size_kosong->id, 'id_kondisi' => $kondisi_umum->id],
+            ['_id' => 'A-dar-0000', 'nama_apd' => 'Sandstorm', 'merk' => 'Darude', 'id_jenis' => 'A001', 'id_size' => $size_kosong->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'respirator-2021.png'],
 
-            ['_id' => 'A-ari-0000', 'nama_apd' => 'Arian Visor', 'merk' => 'Arian Protection', 'id_jenis' => 'A002', 'id_size' => $size_kosong->id, 'id_kondisi' => $kondisi_umum->id],
+            ['_id' => 'A-ari-0000', 'nama_apd' => 'Arian Visor', 'merk' => 'Arian Protection', 'id_jenis' => 'A002', 'id_size' => $size_kosong->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'uvex.png'],
 
-            ['_id' => 'A-tho-0000', 'nama_apd' => 'Handaxe', 'merk' => 'Thorsson and Asgard Production', 'id_jenis' => 'A003', 'id_size' => $size_kosong->id, 'id_kondisi' => $kondisi_umum->id],
+            ['_id' => 'A-tho-0000', 'nama_apd' => 'Handaxe', 'merk' => 'Thorsson and Asgard Production', 'id_jenis' => 'A003', 'id_size' => $size_kosong->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'kampak.png'],
 
             ['_id' => 'A-uni-0000', 'nama_apd' => 'Flashlight', 'merk' => 'Universal Lightning', 'id_jenis' => 'A004', 'id_size' => $size_kosong->id, 'id_kondisi' => $kondisi_umum->id],
 

@@ -588,8 +588,12 @@ class ApdDataController extends Controller
      * @todo Fungsi untuk ambil id periode
      * @body Buat fungsi untuk ambil id periode di db untuk data periode saat insert data input apd
      */
-    public function ambilIdPeriodeInput($tanggal)
+    public function ambilIdPeriodeInput($tanggal = null)
     {
+        if($tanggal == null)
+            {
+                return PeriodeInputApd::get()->first()->id;
+            }
         // where tanggal awal < $tanggal < tanggal akhir -> value('id')
     }
 
@@ -666,6 +670,12 @@ class ApdDataController extends Controller
             if ($id_pegawai == "")
                 $id_pegawai = Auth::user()->id;
 
+            // jika parameter periode tidak diisi, maka ambil id periode pertama dari database
+            if($periode == 1)
+            {
+                $periode = PeriodeInputApd::get()->first()->id;
+            }
+
             return verif::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->verifikasi_status);
         } catch (Throwable $e) {
             // error_log("Gagal mengambil status verifikasi untuk id jenis  '" . $id_jenis . "' " . $e);
@@ -680,6 +690,12 @@ class ApdDataController extends Controller
 
             if ($id_pegawai == "")
                 $id_pegawai = Auth::user()->id;
+
+            // jika parameter periode tidak diisi, maka ambil id periode pertama dari database
+            if($periode == 1)
+            {
+                $periode = PeriodeInputApd::get()->first()->id;
+            }
 
             return status::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->kondisi);
         } catch (Throwable $e) {

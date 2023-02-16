@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Eapd\Modal;
 
+use App\Enum\KeberadaanApd;
 use App\Enum\StatusApd;
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\FileController;
@@ -19,6 +20,7 @@ class ModalInputApdPegawaiHalApdku extends Component
 {
 
     use WithFileUploads;
+
 
     // data untuk list dari template
     public  $id_jenis,
@@ -43,7 +45,7 @@ class ModalInputApdPegawaiHalApdku extends Component
         $kondisi_apd_user = '',
         $gambar_apd_user = [],
         $komentar_apd_user ="",
-        $status_keberadaan_apd_user = "ada";
+        $status_keberadaan_apd_user = "";
 
     // didapat dari db
     public  $gambar_apd = [],
@@ -108,7 +110,7 @@ class ModalInputApdPegawaiHalApdku extends Component
         $this->size_apd = null;
         $this->kondisi_apd = null;
         $this->gambar_apd_template = null;
-
+        $this->status_keberadaan_apd_user = "";
         $this->telahDiverifAdmin = false;
         $this->gambar_apd_user = [];
 
@@ -123,13 +125,17 @@ class ModalInputApdPegawaiHalApdku extends Component
         $this->data_apd = $adc->bangunItemModalInputApd($tes['opsi_apd']);
         $this->nama_jenis = ApdJenis::where('_id', '=', $this->id_jenis)->value('nama_jenis');
 
-        error_log('id_jenis component modal : ' . $this->id_jenis);
-        error_log('nama_jenis component modal : ' . $this->nama_jenis);
 
         $this->hidrasiListApd();
+
         $this->ambilDataUser();
         $this->hidrasiDataOpsi();
+        $this->id_apd_user = $this->id_apd_cache = $this->opsi_apd[0];
+        $this->userTelahMemilih = true;
         $this->refreshGambarTemplate();
+
+        error_log('Gambar : ');
+        // dd($this->gambar_apd);
 
         // untuk cek data
         // return dd($this->data_apd);
@@ -287,6 +293,7 @@ class ModalInputApdPegawaiHalApdku extends Component
             $this->komentar_verif_user = $inputan_user->komentar_verifikator;
             $this->status_verif_user = verif::tryFrom($inputan_user->verifikasi_status)->value;
             $this->label_verif_user = verif::tryFrom($inputan_user->verifikasi_status)->label;
+            $this->status_keberadaan_apd_user = KeberadaanApd::tryFrom($inputan_user->keberadaan)->value;
 
             if($this->status_verif_user == verif::terverifikasi()->value)
             {
@@ -369,7 +376,7 @@ class ModalInputApdPegawaiHalApdku extends Component
             /**
              * @todo ambil id dari fungsi pada kelas ApdDataController
              */
-            $periode = 1;
+            $periode = $adc->ambilIdPeriodeInput();
 
             if($apd = InputApd::where('id_pegawai','=',$id_pegawai)->where('id_jenis','=',$this->id_jenis)->where('id_periode','=',$periode)->first())
             {}
@@ -387,14 +394,22 @@ class ModalInputApdPegawaiHalApdku extends Component
             if($this->status_keberadaan_apd_user != "ada")
             {
                 if($this->status_keberadaan_apd_user == "belum")
+                {
+                    $apd->keberadaan = KeberadaanApd::belumTerima()->value;
                     $apd->kondisi = StatusApd::belumTerima()->value;
+                }
                 
                 if($this->status_keberadaan_apd_user == "hilang")
+                {
+                    $apd->keberadaan = KeberadaanApd::hilang()->value;
                     $apd->kondisi = StatusApd::hilang()->value;
+                }
 
                 $apd->save();
                 session()->flash('success', 'Data Apd berhasil diinput.');
                 $this->ambilDataUser();
+                $this->id_apd_user = $this->id_apd_cache = $this->opsi_apd[0];
+                $this->userTelahMemilih = true;
                 $this->emit('LayoutDaftarInputApdHalApdku');
                 $this->emit('refreshStatbox');
                 return;
@@ -404,7 +419,7 @@ class ModalInputApdPegawaiHalApdku extends Component
             $apd->size = $this->size_apd_user;
             $apd->kondisi = $this->kondisi_apd_user;
             $apd->komentar_pengupload = $this->komentar_apd_user;
-
+            $apd->keberadaan = KeberadaanApd::ada()->value;
 
 
             $list_gbr = [];
@@ -469,6 +484,9 @@ class ModalInputApdPegawaiHalApdku extends Component
 
             $this->ambilDataUser();
             $this->gambar_apd_user = null;
+
+            $this->id_apd_user = $this->id_apd_cache = $this->opsi_apd[0];
+            $this->userTelahMemilih = true;
 
             $this->emit('LayoutDaftarInputApdHalApdku');
             $this->emit('refreshStatbox');

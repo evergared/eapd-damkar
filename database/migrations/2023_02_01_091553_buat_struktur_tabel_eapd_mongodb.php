@@ -139,7 +139,7 @@ return new class extends Migration
                 $t->index('id_jenis');
                 $t->index('id_apd')->nullable();
                 $t->text('size')->nullable();
-                $t->text('status_barang')->nullable();
+                $t->text('keberadaan')->nullable();
                 $t->text('kondisi')->nullable();
                 $t->longText('image')->nullable();
                 $t->text('komentar_pengupload')->nullable();

@@ -132,7 +132,7 @@
 
                                     {{-- Kondisi Gambar APD Anda Start --}}
                                     {{-- Saat User Sudah Pernah Upload Gambar --}}
-                                    @if($gambar_apd)
+                                    @if($gambar_apd && $gambar_apd[0] != "")
 
 
 
@@ -258,6 +258,7 @@
 
                             <div class="form-group">
 
+                                
                                 {{-- Pesan Setelah Input start --}}
 
                                 @if (session()->has('success'))
@@ -277,13 +278,25 @@
                                     </button>
                                 </div>
                                 @endif
+                            </div>
 
 
 
                                 {{-- Pesan Setelah Input End --}}
 
                                 {{-- @todo #5 --}}
-                                <div class="form-group" wire:init='hidrasiListApd'>
+
+                                <div class="form-group">
+                                    <label>Status Keberadaan APD : </label>
+                                    <select class="form-control" wire:model="status_keberadaan_apd_user">
+                                        <option value="" disabled>APD Ada/Hilang/Belum Terima ?</option>
+                                        @foreach ($opsi_keberadaan as $item)
+                                            <option value="{{$item['value']}}">{{$item['text']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                {{-- <div class="form-group" wire:init='hidrasiListApd'>
                                     <label>Model</label>
                                     <select class="form-control" wire:model='id_apd_user'
                                         wire:change='selectModelApdDirubah'>
@@ -299,8 +312,9 @@
 
                                 @error('id_apd_user')
                                 <small class="error text-danger">{{$message}}</small>
-                                @enderror
-                            </div>
+                                @enderror --}}
+                            @if ($status_keberadaan_apd_user == "ada")
+                                
                             <p></p>
                             <p></p>
                             <div class="form-group">
@@ -346,13 +360,26 @@
                                 <span><small class="text-danger">{{$message}}</small></span>
                                 @enderror
                             </div>
+                                
+                            @elseif($status_keberadaan_apd_user == "hilang")
 
+                            <div class="text-danger">
+                                <h4>Status APD anda <strong><u>Hilang</u></strong>, pastikan anda menghubungi admin yang bertanggung jawab di tempat anda dan ikuti instruksi selanjutnya.</h4>
+                            </div>
+
+                            @elseif($status_keberadaan_apd_user == "belum")
+                                
+                            @endif
+
+                            @if ($status_keberadaan_apd_user != "")
                             <div class="form-group">
                                 <label>Keterangan</label>
                                 <textarea class="form-control" rows="3"
                                     placeholder="(opsional) Tulis keterangan kondisi APD"
                                     wire:model='komentar_apd_user'></textarea>
                             </div>
+                            @endif
+                            
 
 
                         </div>
@@ -443,7 +470,6 @@
                             @elseif (count($gambar_apd_user) == 1)
                             <img class="upload-preview product-image" src="{{$gambar_apd_user[0]->temporaryUrl()}}"
                                 alt="Gambar Apd Anda">
-
 
                             @endif
                             @else
