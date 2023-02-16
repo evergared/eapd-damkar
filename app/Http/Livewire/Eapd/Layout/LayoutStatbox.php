@@ -7,6 +7,7 @@ use App\Http\Controllers\ApdDataController;
 use App\Models\Eapd\Mongodb\InputApd;
 use App\Enum\VerifikasiApd as verif;
 use App\Models\Eapd\Mongodb\ApdJenis;
+use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use Error;
 use Livewire\Component;
 use Throwable;
@@ -27,19 +28,18 @@ class LayoutStatbox extends Component
         $infoCapaian = [],
         $infoTervalidasi = [];
 
+    public $periode_inputan = "";
+
 
     protected $listeners = [
         'refreshStatbox' => 'render',
     ];
 
-    public function coba()
-    {
-        error_log('notifikasi diterima');
-        $this->test_string = "notifikasi tested";
-    }
 
     public function render()
     {
+        $adc = new ApdDataController;
+        $this->periode_inputan = $adc->ambilIdPeriodeInput();
         $this->kalkulasiSemua();
         return view('eapd.livewire.layout.layout-statbox');
     }
@@ -66,7 +66,7 @@ class LayoutStatbox extends Component
             } else {
                 $tertolak = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->userid)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', 1)->first()) {
+                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->first()) {
                         if (verif::tryFrom($input->verifikasi_status) == verif::tertolak()) {
                             $tertolak++;
 
@@ -105,7 +105,7 @@ class LayoutStatbox extends Component
             } else {
                 $rusak = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->userid)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', 1)->where('kondisi', 'like', 'rusak %')->first()) {
+                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->where('kondisi', 'like', 'rusak %')->first()) {
                         $rusak++;
                         $nama_jenis = ApdJenis::where('_id', '=', $item['id_jenis'])->first()->nama_jenis;
                         $kondisi = $input->kondisi;
@@ -140,7 +140,7 @@ class LayoutStatbox extends Component
             } else {
                 $terisi = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->userid)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', 1)->first()) {
+                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->first()) {
                         $terisi++;
 
                         $nama_jenis = ApdJenis::where('_id', '=', $item['id_jenis'])->first()->nama_jenis;
@@ -176,7 +176,7 @@ class LayoutStatbox extends Component
             } else {
                 $tervalidasi = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->userid)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', 1)->first()) {
+                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->first()) {
                         if (verif::tryFrom($input->verifikasi_status) == verif::terverifikasi()) {
                             $tervalidasi++;
 
