@@ -353,6 +353,7 @@ class ModalInputApdPegawaiHalApdku extends Component
                 );
             }
 
+            if(is_null($this->gambar_apd))
             $this->validate(
                 [
                     'gambar_apd_user' => 'required'
@@ -421,60 +422,63 @@ class ModalInputApdPegawaiHalApdku extends Component
             $apd->komentar_pengupload = $this->komentar_apd_user;
             $apd->keberadaan = KeberadaanApd::ada()->value;
 
+            if($this->gambar_apd_user)
+            {
+                $list_gbr = [];
 
-            $list_gbr = [];
+                if (count($this->gambar_apd_user) > 1) {
+                    error_log('hit apd lebih dr 1');
+                    $batas_jumlah = 0;
+                    if (count($this->gambar_apd_user) < $adc::$jumlahBatasUploadGambar) {
+                        error_log('hit apd kurang dr jumlah batas up');
 
-            if (count($this->gambar_apd_user) > 1) {
-                error_log('hit apd lebih dr 1');
-                $batas_jumlah = 0;
-                if (count($this->gambar_apd_user) < $adc::$jumlahBatasUploadGambar) {
-                    error_log('hit apd kurang dr jumlah batas up');
+                        $batas_jumlah = count($this->gambar_apd_user);
+                    } else {
+                        error_log('hit apd sesuai jumlah batas up');
 
-                    $batas_jumlah = count($this->gambar_apd_user);
+                        $batas_jumlah = $adc::$jumlahBatasUploadGambar;
+                    }
+
+                    error_log('pengulangan');
+                    for ($i = 0; $i < $batas_jumlah; $i++) {
+
+                        error_log('isi : ' . $this->gambar_apd_user[$i]);
+
+                        $gbr_temp = $fc->prosesNamaFileApdUpload($id_pegawai, $this->id_apd_user, 'jpg', $i);
+
+                        $this->gambar_apd_user[$i]->storeAs(
+                            $fc->buatPathFileApdUpload($id_pegawai, $this->id_jenis, $periode),
+                            $gbr_temp
+                        );
+
+                        array_push($list_gbr, $gbr_temp);
+                    }
                 } else {
-                    error_log('hit apd sesuai jumlah batas up');
 
-                    $batas_jumlah = $adc::$jumlahBatasUploadGambar;
-                }
+                    error_log('isi : ' . $this->gambar_apd_user[0]);
 
-                error_log('pengulangan');
-                for ($i = 0; $i < $batas_jumlah; $i++) {
+                    $gbr_temp = $fc->prosesNamaFileApdUpload($id_pegawai, $this->id_apd_user, 'jpg', 0);
 
-                    error_log('isi : ' . $this->gambar_apd_user[$i]);
-
-                    $gbr_temp = $fc->prosesNamaFileApdUpload($id_pegawai, $this->id_apd_user, 'jpg', $i);
-
-                    $this->gambar_apd_user[$i]->storeAs(
+                    $this->gambar_apd_user[0]->storeAs(
                         $fc->buatPathFileApdUpload($id_pegawai, $this->id_jenis, $periode),
                         $gbr_temp
                     );
 
                     array_push($list_gbr, $gbr_temp);
                 }
-            } else {
 
-                error_log('isi : ' . $this->gambar_apd_user[0]);
 
-                $gbr_temp = $fc->prosesNamaFileApdUpload($id_pegawai, $this->id_apd_user, 'jpg', 0);
+                $gbr = implode("||", $list_gbr);
 
-                $this->gambar_apd_user[0]->storeAs(
-                    $fc->buatPathFileApdUpload($id_pegawai, $this->id_jenis, $periode),
-                    $gbr_temp
-                );
+                // if(!is_null($gbr))
+                // {
+                //     inputApd
+                // }
 
-                array_push($list_gbr, $gbr_temp);
+                $apd->image = "";
+                $apd->image = $gbr;
             }
-
-
-            $gbr = implode("||", $list_gbr);
-
-            // if(!is_null($gbr))
-            // {
-            //     inputApd
-            // }
-
-            $apd->image = "";
-            $apd->image = $gbr;
+            
 
             $apd->save();
 
