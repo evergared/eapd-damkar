@@ -1,7 +1,8 @@
 <div>
-    <div class="card my-n3 mx-n3" id="rekap-tabel">
+    <div class="card my-n3 mx-n3" id="rekap-tabel1">
                         <div class="card-header">
                             <h3 class="card-title">{{$nama_periode}}</h3>
+
                         </div>
                         <!-- /.card-header -->
                         @if(!empty($data_rekap_apd))
@@ -19,22 +20,26 @@
                                     <tbody>
                                         
                                         
-                                        @foreach ($data_rekap_apd as $key => $item)
-                                            <tr>
-                                            <td class="text-center text-wrap my-auto align-middle">{{$key+1}}</td>
-                                            <td class="text-center text-wrap my-auto align-middle">{{$item['jenis_apd']}}
+                                        
+                                        <tr>
+                                            <td class="text-center text-wrap my-auto align-middle">1</td>
+                                            <td class="text-center text-wrap my-auto align-middle">Fire Jacket
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','baik')" href="#rekap-tabel">{{$item['baik']}}</a>
+                                                <a onclick="rekapDetail1('fire-jacket','baik')" href="#rekap-tabel">12</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','rusak_ringan')" href="#rekap-tabel">{{$item['rusak_ringan']}}</a>
+                                                <a onclick="rekapDetail1('troser','rusak_ringan')" href="#rekap-tabel">21</a>
                                             </td>
                                         </tr>
-                                        @endforeach
+                                        
 
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-info float-left">Print Rekap Data Ukuran</button>
+                                
                             </div>
                         @endif
 
@@ -57,52 +62,44 @@
 
 
 
-    <div class="collapse" id="rekapdetail" wire:ignore.self>
+    <div class="collapse" id="rekapdetail1" wire:ignore.self>
             <div class="card my-n3 mx-n3">
                 <div class="card-header">
                     <div class="card-title">
-                        <h4 class="card-title">Progress Rekap</h4>
+                        <h4 class="card-title">Tabel Ukuran</h4>
                     </div>
                     <div class="card-tools">
-                        <a href="javascript:" onclick="backToRekap()">&larr; <u>kembali</u></a>
+                        <a href="javascript:" onclick="backToRekap1()">&larr; <u>kembali</u></a>
                     </div>
                 </div>
                 <div class="card-body table-responsive p-0" style="height: 300px;">
-                    @if (!empty($detail_data_rekap))
+                    
                         <table class="table table-head-fixed text-nowrap">
                             <thead class="text-center">
                                 <tr>
                                     <th style="width:10%;">#</th>
                                     <th style="width:20%;">Item</th>
+                                    <th style="width:20%;">Nama</th>
                                     <th style="width:20%;">Ukuran</th>
-                                    <th style="width:20%;">Jumlah</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($detail_data_rekap as $key => $item)
+                                
                                     <tr class="fire-jacket rusak-berat">
-                                        <td class="text-center text-wrap my-auto align-middle">{{$key+1}}</td>
-                                        <td class="text-center text-wrap my-auto align-middle">{{$item['nama_jenis']}}
+                                        <td class="text-center text-wrap my-auto align-middle">1</td>
+                                        <td class="text-center text-wrap my-auto align-middle">Fire Jacket
                                         </td>
-                                        <td class="text-center align-middle">
-                                            <span class="badge badge-sm bg-{{$item['kondisi_warna']}}">S</span>
+                                        <td class="text-center text-wrap my-auto align-middle">Indra Purwoko
                                         </td>
-                                        <td class="text-center align-middle">
-                                            <span class="btn badge badge-sm bg-{{$item['verifikasi_warna']}}" data-toggle="modal" data-target="#modal-sm">40</span>
+                                        <td class="text-center text-wrap my-auto align-middle">L
                                         </td>
                                     </tr>
-                                @endforeach
+                                
                                 
                             </tbody>
                         </table>
-                    @endif
-
-                    @empty($detail_data_rekap)
-                        <div class="jumbotron text-center">
-                            Belum ada data yang dapat ditampilkan.
-                        </div>
-                    @endempty
                     
+
                                 <!-- /.card-body -->
 
                             
@@ -115,7 +112,7 @@
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title">Daftar Ukuran APD Pegawai</h4>
+                      <h4 class="modal-title">Daftar Pegawai</h4>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
@@ -192,51 +189,7 @@
                 <!-- /.modal-dialog -->
             </div>
             {{-- modal end --}}
-            <!-- {{-- Card untuk preview saat user klik satu gambar start --}} -->
-                <div class="collapse" id="preview-foto-apd-anggota">
-                        <div class="mt-5 mx-n3  card">
-                            <div class="card-header">
-                                <div class="card-title">
-                                    <h5>Preview Gambar APD</h5>
-                                </div>
-                                <div class="card-tools">
-                                    <button type="button" class="close" data-toggle="collapse"
-                                        data-target="#preview-foto-apd-anggota" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                @if ($gambar == "")
-                                    Tidak ada gambar.
-                                @else
-                                    <img src="{{asset($gambar)}}" class="img-thumbnail" alt="APD">
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-            <!-- {{-- Cart untuk preview saat user klik satu gambar end --}} -->
-
-            <!-- {{-- Card untuk preview saat viewport hp start --}} -->
-                <div class="collapse" id="preview-semua-foto-apd-anggota">
-                    <div class="card mt-5">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <h5>Nama APD</h5>
-                            </div>
-                            <div class="card-tools">
-                                <button type="button" class="close" data-toggle="collapse"
-                                    data-target="#preview-semua-foto-apd-anggota" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            isinya semua gambar yang diupload
-                        </div>
-                    </div>
-                </div>
-            <!-- {{-- Card untuk preview saat viewport hp end --}} -->
+            
 
     </div>
 </div>

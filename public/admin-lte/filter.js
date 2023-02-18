@@ -95,6 +95,51 @@ window.addEventListener('jsShowDetail',event =>{
     $("#rekap-tabel").show(500)
     $("#rekapdetail").collapse('hide')
   }
+
+  //function untuk Progress
+  function rekapProgres(Id,Filter){
+    //alert("Tester") console.
+    //alert(Filter)
+    console.log("Id",Id)
+    Livewire.emit('rekapProgres',[Id,Filter]);
+    $("#rekap-progres").hide(500)
+    $("#rekapprogres").collapse('show')
+  }
+
+  function backToProgres(){
+    $("#rekap-progres").show(500)
+    $("#rekapprogres").collapse('hide')
+  }
+
+  //function untuk ukuran apd
+  function rekapDetail1(Id,Filter){
+    //alert("Tester") console.
+    //alert(Filter)
+    console.log("Id",Id)
+    Livewire.emit('rekapDetail1',[Id,Filter]);
+    $("#rekap-tabel1").hide(500)
+    $("#rekapdetail1").collapse('show')
+  }
+
+  function backToRekap1(){
+    $("#rekap-tabel1").show(500)
+    $("#rekapdetail1").collapse('hide')
+  }
+
+//function untuk Distribusi
+  function rekapDistribusi(Id,Filter){
+    //alert("Tester") console.
+    //alert(Filter)
+    console.log("Id",Id)
+    Livewire.emit('rekapDistribusi',[Id,Filter]);
+    $("#rekap-distribusi").hide(500)
+    $("#rekapdistribusi").collapse('show')
+  }
+
+  function backToDistribusi(){
+    $("#rekap-distribusi").show(500)
+    $("#rekapdistribusi").collapse('hide')
+  }
 // hide and show tabel rekap end
 
 // @todo #11
