@@ -99,9 +99,15 @@
 /* Create three equal columns that floats next to each other */
 .column {
     float: left;
-    width: 33.33%;
+    width: 100%;
     display: none; /* Hide all elements by default */
 }
+
+/* @media.column (max-width=768px) {
+    float: left;
+    width: 100%;
+    display: none; Hide all elements by default
+} */
 
 /* Clear floats after rows */
 .row:after {

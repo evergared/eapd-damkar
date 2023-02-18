@@ -1,5 +1,5 @@
 <div>
-    <div class="card my-n3 mx-n3" id="rekap-tabel">
+    <div class="card my-n3 mx-n3" id="rekap-distribusi">
                         <div class="card-header">
                             <h3 class="card-title">{{$nama_periode}}</h3>
                         </div>
@@ -22,31 +22,30 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+
                                         
-                                        
-                                        @foreach ($data_rekap_apd as $key => $item)
                                             <tr>
-                                            <td class="text-center text-wrap my-auto align-middle">{{$key+1}}</td>
-                                            <td class="text-center text-wrap my-auto align-middle">{{$item['jenis_apd']}}
+                                            <td class="text-center text-wrap my-auto align-middle">1</td>
+                                            <td class="text-center text-wrap my-auto align-middle">Fire Jacket
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','baik')" href="#rekap-tabel">{{$item['baik']}}</a>
+                                                <a onclick="rekapDistribusi('fire-jacket','baik')" href="#rekap-tabel">12</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','rusak_ringan')" href="#rekap-tabel">{{$item['rusak_ringan']}}</a>
+                                                <a onclick="rekapDistribusi('fire-jacket','rusak_ringan')" href="#rekap-tabel">-</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','rusak_sedang')" href="#rekap-tabel">{{$item['rusak_sedang']}}</a>
+                                                <a onclick="rekapDistribusi('fire-jacket','rusak_sedang')" href="#rekap-tabel">-</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','rusak_berat')" href="#rekap-tabel">{{$item['rusak_berat']}}</a>
+                                                <a onclick="rekapDistribusi('fire-jacket','rusak_berat')" href="#rekap-tabel">12</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','belum_terima')" href="#rekap-tabel">{{$item['belum_terima']}}</a>
+                                                <a onclick="rekapDistribusi('fire-jacket','belum_terima')" href="#rekap-tabel">12</a>
                                             </td>
                                             
                                         </tr>
-                                        @endforeach
+                                        
 
                                     </tbody>
                                 </table>
@@ -64,26 +63,22 @@
                         <!-- /.card-body -->
     </div>
 
-                    <!-- {{-- Card untuk preview saat user klik satu gambar start --}} -->
-                    
-                    <!-- {{-- Cart untuk preview saat user klik satu gambar end --}} -->
-
-                    <!-- /.card -->
+                  
 
 
 
-    <div class="collapse" id="rekapdetail" wire:ignore.self>
+    <div class="collapse" id="rekapdistribusi" wire:ignore.self>
             <div class="card my-n3 mx-n3">
                 <div class="card-header">
                     <div class="card-title">
-                        <h4 class="card-title">Progress Rekap</h4>
+                        <h4 class="card-title">Tabel Rekap Distribusi</h4>
                     </div>
                     <div class="card-tools">
-                        <a href="javascript:" onclick="backToRekap()">&larr; <u>kembali</u></a>
+                        <a href="javascript:" onclick="backToDistribusi()">&larr; <u>kembali</u></a>
                     </div>
                 </div>
                 <div class="card-body table-responsive p-0" style="height: 300px;">
-                    @if (!empty($detail_data_rekap))
+                    
                         <table class="table table-head-fixed text-nowrap">
                             <thead class="text-center">
                                 <tr>
@@ -98,90 +93,29 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($detail_data_rekap as $key => $item)
+                                
                                     <tr class="fire-jacket rusak-berat">
-                                        <td class="text-center text-wrap my-auto align-middle">{{$key+1}}</td>
-                                        <td class="text-center text-wrap my-auto align-middle">{{$item['nama_jenis']}}
+                                        <td class="text-center text-wrap my-auto align-middle">1</td>
+                                        <td class="text-center text-wrap my-auto align-middle">Fire Jacket
                                         </td>
                                         <td class="text-center text-wrap my-auto align-middle"><strong>Admin Sudin Jakarta Selatan</strong></td>
                                         <td class="text-center text-wrap my-auto align-middle">40</td>
                                         <td>
                                             <div class=" d-none d-sm-block">
-
-                                                @if (!empty($item['gambar']))
-                                                        @if (is_array($item['gambar']))
-                                                            <ul class="list-inline w-50">
-
-                                                                @foreach ($item['gambar'] as $gbr)
-                                                                    <li class="list-inline-item w-75 ">
-                                                                            <a class="apd-foto" data-toggle="collapse"
-                                                                                data-target="#preview-foto-apd-anggota"
-                                                                                style="cursor: pointer;">
-                                                                                <img alt="Avatar" class="table-avatar w-75 h-75"
-                                                                                    src="{{asset($gbr)}}">
-                                                                            </a>
-                                                                        </li> 
-                                                                    @endforeach
-                                                            </ul>
-                                                        @else
-                                                            <a class="apd-foto" data-toggle="collapse"
-                                                                data-target="#preview-foto-apd-anggota"
-                                                                style="cursor: pointer;">
-                                                                <img alt="Avatar" class="table-avatar w-75 h-75"
-                                                                    src="{{asset($item['gambar'])}}">
-                                                            </a>
-                                                        @endif
-                                                @endif
-
-                                                @empty($item['gambar'])
-                                                    <div class="text-center">
-                                                        Tidak ada gambar yang diupload.
-                                                    </div>
-                                                @endempty
-                                                
+                                                <img src="" alt=""> gambar surat jalan
                                             </div>
-                                            <div class="text-center align-middle d-block d-sm-none">
-                                                @if (!empty($item['gambar']))
-                                                    <button type="button" class="btn btn-primary btn-sm"
-                                                        data-toggle="collapse"
-                                                        data-target="#preview-semua-foto-apd-anggota">Lihat
-                                                        Foto</button>
-                                                @endif
-
-                                                @empty($item['gambar'])
-                                                    <div>
-                                                        Tidak ada gambar yang diupload.
-                                                    </div>
-                                                @endempty
-                                                
-                                            </div>
-
                                         </td>
                                         <td class="text-center align-middle">
-                                            <span class="badge badge-sm bg-{{$item['kondisi_warna']}}">Baru</span>
+                                            <span class="badge badge-sm bg-gray">Baru</span>
                                         </td>
                                         <td class="text-center align-middle">
-                                            <span class="badge badge-sm bg-{{$item['verifikasi_warna']}}">All Size</span>
+                                            <span class="badge badge-sm bg-gray">XL</span>
                                         </td>
-                                        
                                     </tr>
-                                @endforeach
+                                
                                 
                             </tbody>
                         </table>
-                    @endif
-
-                    @empty($detail_data_rekap)
-                        <div class="jumbotron text-center">
-                            Belum ada data yang dapat ditampilkan.
-                        </div>
-                    @endempty
-                    
-                                <!-- /.card-body -->
-
-                            
-
-                            <!-- /.card -->
                 </div>
             </div>
             <!-- /.modal-content -->
