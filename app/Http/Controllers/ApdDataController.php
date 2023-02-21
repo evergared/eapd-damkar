@@ -179,7 +179,7 @@ class ApdDataController extends Controller
                             // masukan ke $list
                             array_push($list, [
                                 'id_jenis' => $id_jenis,
-                                'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
+                                'nama_jenis' => ApdJenis::where('_id', '=', $id_jenis)->first()->nama_jenis,
                                 'id_apd' => $input->id_apd,
                                 'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                                 'status_verifikasi' => $verifikasi_label,
@@ -204,7 +204,7 @@ class ApdDataController extends Controller
                         // masukan ke $list
                         array_push($list, [
                             'id_jenis' => $id_jenis,
-                            'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
+                            'nama_jenis' => ApdJenis::where('_id', '=', $id_jenis)->first()->nama_jenis,
                             'id_apd' => $input->id_apd,
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                             'status_verifikasi' => $verifikasi_label,
@@ -282,6 +282,9 @@ class ApdDataController extends Controller
     public function hitungCapaianInputSektor($sektor, int|array &$maks, int|array &$capaian,$id_periode = 1, $target_verifikasi = 0)
     {
         try{
+
+            if($id_periode == 1)
+                $id_periode = PeriodeInputApd::get()->first()->id;
 
             // ambil daftar seluruh pegawai di sektor (termasuk staff dan kasie sektor)
             $array_pegawai = Pegawai::where('id_penempatan','like',$sektor.'%')->get();

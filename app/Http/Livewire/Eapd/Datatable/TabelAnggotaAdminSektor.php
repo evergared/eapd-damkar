@@ -57,7 +57,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
         return [
             Column::make("Foto", 'profile_img')
                 ->format(function ($value, $row) {
-                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-anggota-katon", ['img' => $value, 'id_pegawai' => $row->id]);
+                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-anggota-katon", ['img' => $value, 'id_pegawai' => $row->_id]);
                 }),
             Column::make("_id")
                 ->sortable()
@@ -80,7 +80,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                     $adc = new ApdDataController;
 
                     // ambil id_pegawai dari baris
-                    $id_pegawai = $row->id;
+                    $id_pegawai = $row->_id;
 
                     // dapatkan jabatan 
                     $id_jabatan = $row->id_jabatan;

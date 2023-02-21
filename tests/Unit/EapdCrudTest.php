@@ -46,8 +46,8 @@ class EapdCrudTest extends TestCase
         $pegawai = Pegawai::find('63ef1bf873da03f7b9046f03');
 
         // $pegawai->update(['ukuran' => ['apd1'=>'S','apd2'=>'M']],['upsert'=>true]);
-        $pegawai->ukuran = ['apd1'=>'S','apd2'=>'M','date'=>Carbon::now("Asia/Jakarta")->toDateTimeString()];
-        $pegawai->save();
+        // $pegawai->ukuran = ['apd1'=>'S','apd2'=>'M','date'=>Carbon::now("Asia/Jakarta")->toDateTimeString()];
+        // $pegawai->save();
 
         $this->assertTrue(true);
     }
@@ -63,8 +63,26 @@ class EapdCrudTest extends TestCase
         //                 ->project(['value'=>'$_id', 'text' => '$nama_penempatan'])
         //                 ->get()
         //                 ->toArray();
-        $test_embed = Pegawai::find('63ef1bf873da03f7b9046f03')->first()->ukuran;
-        $read = $test_embed['date'];
+        // $test_embed = Pegawai::find('63ef1bf873da03f7b9046f03')->first()->ukuran;
+        // $read = $test_embed['date'];
+        $read = Pegawai::join('jabatan as j','pegawai.id_jabatan','=','j._id')
+
+        // penempatan sesuai sektor kasie
+        ->where('id_penempatan','like','1.11' . '%')->where('pegawai.id_jabatan','=','L004')
+
+        // ->where(function ($q) {
+        //     $q  ->where('pegawai.id_jabatan','=','L001')    // pjlp damkar
+        //         ->orWhere('pegawai.id_jabatan','=','L002')  // ASN damkar
+        //         ->orWhere('pegawai.id_jabatan','=','L003')  // Kepala Regu
+        //         ->orWhere('pegawai.id_jabatan','=','L004')  // Kepala Pleton
+        //         ->orWhere('pegawai.id_jabatan','=','S001');  // Staff Sektor
+        // })
+
+        // ambil pegawai yang masih aktif
+        // ->where('aktif','=',1)
+
+        // berdasarkan grup
+        ->where('id_grup','=','B')->get();
         print_r($read);
         $this->assertTrue(true);
     }
