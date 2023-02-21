@@ -13,7 +13,7 @@ class Ukuran extends Component
 {
 
     // tanggal terakhir di update
-    public $tanggal = "";
+    public $tanggal = "Belum pernah mengisi..";
 
     // ukuran untuk isian user
     public 
@@ -42,25 +42,38 @@ class Ukuran extends Component
         return view('eapd.livewire.form.ukuran');
     }
 
-    public function inisiasi()
+    public function mount()
     {
-        // ambil inputan terdahulu
-        if(!is_null($inputan = Pegawai::find(Auth::user()->id)->ukuran))
+        $this->ambilDataUser();
+    }
+
+    public function ambilDataUser()
+    {
+        try
         {
-            $this->tanggal = $inputan['tanggal'];
-            $this->ukuranFireJacket = $inputan['FireJacket'];
-            $this->ukuranFireBoots = $inputan['FireBoots'];
-            $this->ukuranRescueBoots = $inputan['RescueBoots'];
-            $this->ukuranWaterRescueBoots = $inputan['WaterRescueBoots'];
-            $this->ukuranJumpsuit = $inputan['Jumpsuit'];
-            $this->ukuranFireGloves = $inputan['FireGlove'];
-            $this->ukuranRescueGloves = $inputan['RescueGlove'];
+            // ambil inputan terdahulu
+            if(!is_null($inputan = Pegawai::find(Auth::user()->id)->ukuran))
+            {
+                $this->tanggal = $inputan['tanggal'];
+                $this->ukuranFireJacket = $inputan['FireJacket'];
+                $this->ukuranFireBoots = $inputan['FireBoots'];
+                $this->ukuranRescueBoots = $inputan['RescueBoots'];
+                $this->ukuranWaterRescueBoots = $inputan['WaterRescueBoots'];
+                $this->ukuranJumpsuit = $inputan['Jumpsuit'];
+                $this->ukuranFireGloves = $inputan['FireGloves'];
+                $this->ukuranRescueGloves = $inputan['RescueGloves'];
+            }
+            else
+            {
+                error_log('hit field ukuran tidak ada');
+            }
+                error_log('pengetesan selesai');
         }
-        else
+        catch(Throwable $e)
         {
-            error_log('hit field ukuran tidak ada');
+
         }
-            error_log('pengetesan selesai');
+        
     }
 
     public function simpan()
@@ -73,8 +86,8 @@ class Ukuran extends Component
                 'tanggal' => Carbon::now('Asia/Jakarta')->toDateTimeString(),
                 'FireJacket' => $this->ukuranFireJacket,
                 'Jumpsuit' => $this->ukuranJumpsuit,
-                'FireGlove' => $this->ukuranFireGloves,
-                'RescueGlove' => $this->ukuranRescueGloves,
+                'FireGloves' => $this->ukuranFireGloves,
+                'RescueGloves' => $this->ukuranRescueGloves,
                 'FireBoots' => $this->ukuranFireBoots,
                 'RescueBoots' => $this->ukuranRescueBoots,
                 'WaterRescueBoots' => $this->ukuranWaterRescueBoots,
@@ -82,9 +95,12 @@ class Ukuran extends Component
 
             $pegawai->ukuran = $inputan;
             $pegawai->save();
+            session()->flash('form-success', 'Data ukuran berhasil diubah.');
+            $this->ambilDataUser();
         }
         catch(Throwable $e)
         {
+            session()->flash('form-fail', 'Data ukuran gagal diubah.');
             error_log('gagal dalam menyimpan data ukuran');
         }
         

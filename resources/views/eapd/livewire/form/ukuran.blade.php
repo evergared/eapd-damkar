@@ -5,6 +5,41 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
+
+          <div  class="card bg-secondary collapse fade show active" id="info-form-ukuran" wire:ignore.self>
+            <div class="card-body">
+              <div class="card-tools">
+                  <button type="button" class="close" data-toggle="collapse"
+                      data-target="#info-form-ukuran" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                  </button>
+              </div>
+              <div>
+                Dibawah ini merupakan form untuk mengganti data ukuran anda.<br>
+                Data yang dimasukan akan digunakan untuk dasar pengadaan APD berikutnya. <br>
+                Pastikan bahwa data yang dimasukan sesuai dengan ukuran anda.<br>
+              </div>
+            </div>
+          </div>
+
+          @if (session()->has('form-fail'))
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{session('form-fail')}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+          @endif
+          
+          @if (session()->has('form-success'))
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{session('form-success')}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+          @endif
+
           <form>
             <div>
               <small><strong>Terakhir Diisi : <i>{{$tanggal}}</i></strong></small>
