@@ -10,6 +10,7 @@ use Jenssegers\MongoDB\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Eapd\Mongodb\Pegawai;
 use App\Enum\VerifikasiApd as verif;
+// use Illuminate\Database\Eloquent\Builder;
 
 class TabelAnggotaKaton extends DataTableComponent
 {
@@ -38,7 +39,7 @@ class TabelAnggotaKaton extends DataTableComponent
             Column::make("Nama", "nama")
                 ->sortable()
                 ->searchable(),
-            Column::make("_id")
+            Column::make("id")
                 ->sortable()
                 ->searchable()
                 ->hideIf(true),
@@ -57,6 +58,8 @@ class TabelAnggotaKaton extends DataTableComponent
                     
                     // panggil ApdDataController
                     $adc = new ApdDataController;
+
+                    // dd($row);
 
                     // ambil id_pegawai dari baris
                     $id_pegawai = $row->id;

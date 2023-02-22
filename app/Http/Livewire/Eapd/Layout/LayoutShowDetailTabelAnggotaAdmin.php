@@ -101,7 +101,7 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             $this->id_pegawai = $data[0];
             $this->periode = $data[1];
 
-            if($this->periode === 1)
+            if($this->periode == 1)
             $this->periode = PeriodeInputApd::get()->first()->id;
 
             // ambil nama pegawai
@@ -219,11 +219,9 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
                     ->where('id_apd','=',$this->detail_id_apd)
                     ->where('id_periode','=',$this->periode)
                     ->first();
-
-
-                
-            $input->verifikasi_oleh = Auth::user()->userid;
-            $input->verifikasi_status = verif::tryFrom($this->admin_verifikasi);
+            
+            $input->verifikasi_oleh = Auth::user()->id;
+            $input->verifikasi_status = verif::tryFrom($this->admin_verifikasi)->value;
             $input->komentar_verifikator = $this->admin_komentar;
 
             $input->save();
@@ -234,10 +232,11 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             //     'komentar_verifikator'=>$this->admin_komentar
             // ]);
 
-
             $adc = new ApdDataController;
 
-            $this->muatDataDariArrayInputan($adc->muatSatuInputanPegawai($this->detail_id_jenis_apd,$this->detail_id_apd,$this->periode,$this->id_pegawai));
+
+            $test = $adc->muatSatuInputanPegawai($this->detail_id_jenis_apd,$this->detail_id_apd,$this->periode,$this->id_pegawai);
+            $this->muatDataDariArrayInputan($test);
             
             // isi apa saja yang telah diinput oleh user
             $this->list_inputan = $adc->muatInputanPegawai($this->periode, $this->id_pegawai);
@@ -257,10 +256,9 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
     {
         try
         {
-
             $this->detail_gambar_user = $inputan['gambar_apd'];
             $this->detail_id_apd = $inputan['id_apd'];
-            $this->detail_nama_apd = ApdList::where('id_apd','=',$this->detail_id_apd)->first()->nama_apd;
+            $this->detail_nama_apd = ApdList::where('_id','=',$this->detail_id_apd)->first()->nama_apd;
             $this->detail_id_jenis_apd = $inputan['id_jenis'];
             $this->detail_nama_jenis_apd = $inputan['nama_jenis'];
             $this->detail_status_kerusakan = $inputan['status_kerusakan'];
@@ -277,12 +275,12 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
 
             $adc = new ApdDataController;
 
-            $this->gambar_template_apd = $adc->siapkanGambarTemplateBesertaPathnya(ApdList::where('id_apd','=',$this->detail_id_apd)->first()->image,$this->detail_id_jenis_apd,$this->detail_id_apd);
+            $this->gambar_template_apd = $adc->siapkanGambarTemplateBesertaPathnya(ApdList::where('_id','=',$this->detail_id_apd)->first()->image,$this->detail_id_jenis_apd,$this->detail_id_apd);
             
         }
         catch (Throwable $e)
         {
-
+            error_log('error dalam memuat data inputan dari array inputan');
         }
     }
 

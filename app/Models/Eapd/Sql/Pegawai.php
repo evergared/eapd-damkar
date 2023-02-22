@@ -18,6 +18,7 @@ class Pegawai extends Model
 
     public $incrementing = false;
 
+    protected $connection = 'mysql';
     protected $table = 'pegawai';
     protected $keyType = 'string';
 

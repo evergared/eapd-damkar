@@ -174,7 +174,6 @@
                                 @endpush
                                 @endonce
                                 <livewire:eapd.datatable.tabel-anggota-katon />
-                                testis
 
                             </div>
                         </div>

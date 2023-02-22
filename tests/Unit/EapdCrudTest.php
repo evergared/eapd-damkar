@@ -65,18 +65,19 @@ class EapdCrudTest extends TestCase
         //                 ->toArray();
         // $test_embed = Pegawai::find('63ef1bf873da03f7b9046f03')->first()->ukuran;
         // $read = $test_embed['date'];
-        $read = Pegawai::join('jabatan as j','pegawai.id_jabatan','=','j._id')
+        $read = Pegawai::with('jabatan')
 
         // penempatan sesuai sektor kasie
-        ->where('id_penempatan','like','1.11' . '%')->where('pegawai.id_jabatan','=','L004')
+        ->where('id_penempatan','like','1.11' . '%')
+        // ->where('id_jabatan','=','L004')->orWhere('id_jabatan','=','L001')
 
-        // ->where(function ($q) {
-        //     $q  ->where('pegawai.id_jabatan','=','L001')    // pjlp damkar
-        //         ->orWhere('pegawai.id_jabatan','=','L002')  // ASN damkar
-        //         ->orWhere('pegawai.id_jabatan','=','L003')  // Kepala Regu
-        //         ->orWhere('pegawai.id_jabatan','=','L004')  // Kepala Pleton
-        //         ->orWhere('pegawai.id_jabatan','=','S001');  // Staff Sektor
-        // })
+        ->where(function ($q) {
+            $q  ->where('id_jabatan','=','L001')    // pjlp damkar
+                ->orWhere('id_jabatan','=','L002')  // ASN damkar
+                ->orWhere('id_jabatan','=','L003')  // Kepala Regu
+                ->orWhere('id_jabatan','=','L004')  // Kepala Pleton
+                ->orWhere('id_jabatan','=','S001');  // Staff Sektor
+        })
 
         // ambil pegawai yang masih aktif
         // ->where('aktif','=',1)
