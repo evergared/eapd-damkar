@@ -406,6 +406,8 @@ class ModalInputApdPegawaiHalApdku extends Component
                     $apd->kondisi = StatusApd::hilang()->value;
                 }
 
+                $apd->id_jenis = $this->id_jenis;
+
                 $apd->save();
                 session()->flash('success', 'Data Apd berhasil diinput.');
                 $this->ambilDataUser();

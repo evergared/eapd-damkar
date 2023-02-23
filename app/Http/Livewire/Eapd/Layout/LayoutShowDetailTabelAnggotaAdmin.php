@@ -187,7 +187,7 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
         try
         {
             $this->kosongkanDataInput();
-
+            error_log('urutan dari item yang diambil : '.$data);
             $this->urutan_detail_item = $data;
             $inputan = $this->list_inputan[$data];
 
@@ -216,9 +216,14 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
         {
             $input = InputApd::where('id_pegawai','=',$this->id_pegawai)
                     ->where('id_jenis','=',$this->detail_id_jenis_apd)
-                    ->where('id_apd','=',$this->detail_id_apd)
+                    // ->where('id_apd','=',$this->detail_id_apd)
                     ->where('id_periode','=',$this->periode)
                     ->first();
+
+            error_log('id pegawai yang diverif '.$this->id_pegawai);
+            error_log('id jenis yang diverif '.$this->detail_id_jenis_apd);
+            error_log('id apd yang diverif '.$this->detail_id_apd);
+            error_log('id periode yang diverif '.$this->periode);
             
             $input->verifikasi_oleh = Auth::user()->id;
             $input->verifikasi_status = verif::tryFrom($this->admin_verifikasi)->value;
@@ -256,9 +261,14 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
     {
         try
         {
+            if(!is_null($inputan['id_apd']))
+            {
+                $this->detail_id_apd = $inputan['id_apd'];
+                $this->detail_nama_apd = ApdList::where('_id','=',$this->detail_id_apd)->first()->nama_apd;
+            }
+
             $this->detail_gambar_user = $inputan['gambar_apd'];
-            $this->detail_id_apd = $inputan['id_apd'];
-            $this->detail_nama_apd = ApdList::where('_id','=',$this->detail_id_apd)->first()->nama_apd;
+            
             $this->detail_id_jenis_apd = $inputan['id_jenis'];
             $this->detail_nama_jenis_apd = $inputan['nama_jenis'];
             $this->detail_status_kerusakan = $inputan['status_kerusakan'];
@@ -266,13 +276,19 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             $this->detail_warna_kerusakan = $inputan['warna_kerusakan'];
             $this->detail_warna_verifikasi = $inputan['warna_verifikasi'];
             $this->detail_komentar_pengupload = $inputan['komentar_pengupload'];
-            $this->detail_nrk_verifikator = $inputan['nrk_verifikator'];
-            $this->detail_komentar_verifikator = $inputan['komentar_verifikator'];
 
-            $verifikator = Pegawai::where('nrk','=',$this->detail_nrk_verifikator)->first();
-            $this->detail_nama_verifikator = (is_null($verifikator))? '' : $verifikator->nama;
-            $this->detail_jabatan_verifikator = (is_null($verifikator))?  '' :'('.$verifikator->jabatan->nama_jabatan.' '.$verifikator->penempatan->nama_penempatan.')';
+            if(!is_null($inputan['id_verifikator']))
+            {
+                error_log('id verifikator : '.$inputan['id_verifikator']);
+                $verifikator = Pegawai::where('_id','=',$inputan['id_verifikator'])->first();
+                
+                $this->detail_nrk_verifikator = $verifikator->nrk;
+                $this->detail_komentar_verifikator = $inputan['komentar_verifikator'];
 
+                $this->detail_nama_verifikator = (is_null($verifikator))? '' : $verifikator->nama;
+                $this->detail_jabatan_verifikator = (is_null($verifikator))?  '' :'('.$verifikator->jabatan->nama_jabatan.' '.$verifikator->penempatan->nama_penempatan.')';
+            }
+            
             $adc = new ApdDataController;
 
             $this->gambar_template_apd = $adc->siapkanGambarTemplateBesertaPathnya(ApdList::where('_id','=',$this->detail_id_apd)->first()->image,$this->detail_id_jenis_apd,$this->detail_id_apd);
@@ -280,7 +296,7 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
         }
         catch (Throwable $e)
         {
-            error_log('error dalam memuat data inputan dari array inputan');
+            error_log('error dalam memuat data inputan dari array inputan : '.$e);
         }
     }
 

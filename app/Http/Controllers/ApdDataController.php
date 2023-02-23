@@ -187,7 +187,7 @@ class ApdDataController extends Controller
                                 'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode),
                                 'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                                 'komentar_pengupload' => $input->komentar_pengupload,
-                                'nrk_verifikator' => $input->verifikasi_oleh,
+                                'id_verifikator' => $input->verifikasi_oleh,
                                 'komentar_verifikator' => $input->komentar_verifikator
 
 
@@ -212,7 +212,7 @@ class ApdDataController extends Controller
                             'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)->label,
                             'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                             'komentar_pengupload' => $input->komentar_pengupload,
-                            'nrk_verifikator' => $input->verifikasi_oleh,
+                            'id_verifikator' => $input->verifikasi_oleh,
                             'komentar_verifikator' => $input->komentar_verifikator
 
 
@@ -272,7 +272,7 @@ class ApdDataController extends Controller
                             'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)->label,
                             'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                             'komentar_pengupload' => $input->komentar_pengupload,
-                            'nrk_verifikator' => $input->verifikasi_oleh,
+                            'id_verifikator' => $input->verifikasi_oleh,
                             'komentar_verifikator' => $input->komentar_verifikator
                         ];
             }
