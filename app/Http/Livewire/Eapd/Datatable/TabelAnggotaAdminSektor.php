@@ -22,6 +22,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
     {
         $this->setPrimaryKey('_id');
         $this->setSearchEnabled();
+        $this->setAdditionalSelects(['nama','id_jabatan']);
     }
     
     public function builder(): Builder
@@ -66,11 +67,12 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                 ->sortable()
                 ->hideIf(true),
             Column::make("Nama", "nama")
-                ->sortable(),
-            Column::make("Jabatan", "nama_jabatan")
-                // ->format(function($value){
-                //     return Jabatan::where('_id','=',$value)->first()->nama_jabatan;
-                // })
+                ->sortable()
+                ->searchable(),
+            Column::make("Jabatan",'id_jabatan')
+                ->format(function($value){
+                    return Jabatan::where('_id','=',$value)->first()->nama_jabatan;
+                })
                 ->sortable(),
             Column::make("Penempatan", "nama_penempatan")
                 // ->format(function($value){
@@ -103,6 +105,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
 
                     // hitung berapa item inputan
                     $value = (is_null($inputan))? 0 : count($inputan);
+
 
                     return view('eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-admin',[
                         'id_pegawai' => $id_pegawai, 'maks' => $maks, 'value'=>$value, 'caption' => 'Inputan', 'warna' => 'success'
