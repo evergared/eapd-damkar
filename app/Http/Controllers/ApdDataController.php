@@ -250,7 +250,7 @@ class ApdDataController extends Controller
             error_log('hit periode id check pass');
 
             // cek apakah user telah menginput apd tersebut
-            if ($input = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_apd','=',$id_apd)->where('id_periode', '=', $id_periode)->first())
+            if ($input = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first())
             {
             error_log('hit input pass');
 

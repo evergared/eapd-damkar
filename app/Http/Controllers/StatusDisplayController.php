@@ -55,16 +55,16 @@ class StatusDisplayController extends Controller
                 $warna = 'warning';
                 break;
             case status::rusakSedang():
-                $warna = 'orange';
+                $warna = 'warning';
                 break;
             case status::rusakBerat():
-                $warna = 'danger';
+                $warna = 'warning';
                 break;
             case status::hilang():
-                $warna = 'dark';
+                $warna = 'danger';
                 break;
             case status::belumTerima():
-                $warna = 'dark';
+                $warna = 'danger';
                 break;
             default:
                 $warna = 'secondary';

@@ -291,7 +291,16 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             
             $adc = new ApdDataController;
 
-            $this->gambar_template_apd = $adc->siapkanGambarTemplateBesertaPathnya(ApdList::where('_id','=',$this->detail_id_apd)->first()->image,$this->detail_id_jenis_apd,$this->detail_id_apd);
+            $apd = ApdList::where('_id','=',$this->detail_id_apd)->first();
+
+            try{
+                $gambar_apd = $apd->image;
+                $this->gambar_template_apd = $adc->siapkanGambarTemplateBesertaPathnya($gambar_apd,$this->detail_id_jenis_apd,$this->detail_id_apd);
+            }
+            catch(Throwable $e)
+            {
+                $this->gambar_template_apd = "";
+            }
             
         }
         catch (Throwable $e)

@@ -34,7 +34,7 @@ class ModalInputApdPegawaiHalApdku extends Component
         $opsi_keberadaan = [
             ['value'=> 'ada', 'text' => 'Sudah Terima dan Ada'],
             ['value'=> 'hilang', 'text' => 'Sudah Terima Tapi Hilang'],
-            ['value'=> 'belum', 'text' => 'APD Belum Diterima'],
+            ['value'=> 'belum terima', 'text' => 'APD Belum Diterima'],
         ];
 
 
@@ -394,7 +394,7 @@ class ModalInputApdPegawaiHalApdku extends Component
 
             if($this->status_keberadaan_apd_user != "ada")
             {
-                if($this->status_keberadaan_apd_user == "belum")
+                if($this->status_keberadaan_apd_user == "belum terima")
                 {
                     $apd->keberadaan = KeberadaanApd::belumTerima()->value;
                     $apd->kondisi = StatusApd::belumTerima()->value;
@@ -407,6 +407,8 @@ class ModalInputApdPegawaiHalApdku extends Component
                 }
 
                 $apd->id_jenis = $this->id_jenis;
+
+                $apd->id_apd = $this->id_apd_user; // hapus ini jika user dapat memilih model
 
                 $apd->save();
                 session()->flash('success', 'Data Apd berhasil diinput.');
