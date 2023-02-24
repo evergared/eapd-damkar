@@ -22,7 +22,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
     {
         $this->setPrimaryKey('_id');
         $this->setSearchEnabled();
-        $this->setAdditionalSelects(['nama','id_jabatan']);
+        $this->setAdditionalSelects(['nama','id_jabatan','id_penempatan']);
     }
     
     public function builder(): Builder
@@ -68,16 +68,18 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                 ->hideIf(true),
             Column::make("Nama", "nama")
                 ->sortable()
-                ->searchable(),
+                ->searchable(function (Builder $query, $pencarian){
+                    $query->orWhere('nama','like','%'.$pencarian.'%');
+                }),
             Column::make("Jabatan",'id_jabatan')
                 ->format(function($value){
                     return Jabatan::where('_id','=',$value)->first()->nama_jabatan;
                 })
                 ->sortable(),
-            Column::make("Penempatan", "nama_penempatan")
-                // ->format(function($value){
-                //     return Penempatan::where('_id','=',$value)->first()->nama_penempatan;
-                // })
+            Column::make("Penempatan", "id_penempatan")
+                ->format(function($value){
+                    return Penempatan::where('_id','=',$value)->first()->nama_penempatan;
+                })
                 ->sortable(),
             Column::make("Inputan")
                 ->label(function($row){
