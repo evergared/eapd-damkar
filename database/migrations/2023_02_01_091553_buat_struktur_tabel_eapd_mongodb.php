@@ -36,6 +36,7 @@ return new class extends Migration
                 $t->index('id_penempatan')->nullable();
                 $t->index('id_grup');
                 $t->boolean('aktif')->default(true);
+                $t->text('override_level_user')->nullable(); // jaga-jaga perlu override level user untuk pegawai tertentu, kosongkan jika tidak perlu
                 $t->timestamps();
             });
         }
@@ -60,9 +61,25 @@ return new class extends Migration
         if (!Schema::hasTable('jabatan')) {
             Schema::create('jabatan', function (Blueprint $t) {
                 $t->id();
-                $t->text('nama_jabatan');
+                $t->text('nama_jabatan'); // untuk ditampilkan di tabel dan web
+                $t->text('nama_jabatan_di_dokumen')->nullable(); // untuk ditampilkan di surat atau dokumen
+                $t->text('nama_jabatan_lengkap')->nullable(); // nama asli / lengkap dari jabatan si pegawai, belum termasuk grade pegawai
                 $t->text('tipe_jabatan');
                 $t->text('level_user');
+                $t->text('keterangan')->nullable();
+                $t->timestamps();
+            });
+        }
+
+        if (!Schema::hasTable('grade_pegawai')) {
+            Schema::create('grade_pegawai', function (Blueprint $t) {
+
+                $t->comment('tabel yang menampung list grade pegawai, dengan skema [tabel pegawai] <-- [tabel grade_pegawai]');
+
+                $t->id(); // disini isi IIa, IIIb, IVc dst 
+                $t->text('nama_grade');
+                $t->text('prefix_nama_jabatan')->nullable(); // untuk menambah imbuhan nama sebelum nama jabatan, cth Pengendali Muda Staff Sektor
+                $t->text('sufix_nama_jabatan')->nullable(); // untuk menambah imbuhan nama setelah nama jabatan, cth Staff Sektor Pengendali Muda
                 $t->text('keterangan')->nullable();
                 $t->timestamps();
             });
@@ -201,34 +218,23 @@ return new class extends Migration
             });
         }
 
-        // pivot table
-
-        if (!Schema::hasTable('pivot_input_apd_template')) {
-            Schema::create('pivot_input_apd_template', function (Blueprint $t) {
-                $t->index('jabatan_id')->nullable();
-                $t->index('input_apd_template_id')->nullable();
-                $t->index('periode_input_apd_id')->nullable();
-            });
-        }
-
-
 
         // tabel history untuk menunjukan perubahan data ke admin tingkat atas
 
-        if(!Schema::hasTable('history_tabel_pegawai')){
-            Schema::create('history_tabel_pegawai',function(Blueprint $t){
-                $t->string('id_pegawai')->primary();
-                $t->longText('sebelumnya')->nullable();
-                $t->longText('perubahan')->nullable();
-                $t->text('keterangan_perubahan')->nullable();
-                $t->string('id_pengubah')->nullable();
-                $t->boolean('dilihat_admin_sektor')->default(false);
-                $t->boolean('dilihat_admin_sudin')->default(false);
-                $t->boolean('dilihat_admin_dinas')->default(false);
-                $t->timestamps();
-                $t->comment('tabel agar admin tingkat atas tau jika ada perubahan data pegawai');
-            });
-        }
+        // if(!Schema::hasTable('history_tabel_pegawai')){
+        //     Schema::create('history_tabel_pegawai',function(Blueprint $t){
+        //         $t->string('id_pegawai')->primary();
+        //         $t->longText('sebelumnya')->nullable();
+        //         $t->longText('perubahan')->nullable();
+        //         $t->text('keterangan_perubahan')->nullable();
+        //         $t->string('id_pengubah')->nullable();
+        //         $t->boolean('dilihat_admin_sektor')->default(false);
+        //         $t->boolean('dilihat_admin_sudin')->default(false);
+        //         $t->boolean('dilihat_admin_dinas')->default(false);
+        //         $t->timestamps();
+        //         $t->comment('tabel agar admin tingkat atas tau jika ada perubahan data pegawai');
+        //     });
+        // }
     }
 
     /**
@@ -255,7 +261,6 @@ return new class extends Migration
         Schema::dropIfExists('input_sewaktu_waktu');
         Schema::dropIfExists('input_sewaktu_waktu_ongoing');
 
-        Schema::dropIfExists('pivot_input_apd_template');
 
     }
 };
