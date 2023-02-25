@@ -107,7 +107,7 @@
                         <li class="nav-item {{ (Route::currentRouteName() =='progres-sektor')? 'menu-open' :''}}">
                           <a href="{{route('progres-sektor')}}" class="nav-link {{ (Route::currentRouteName() =='progres-sektor')? 'active' :''}}">
                             <i class="far fa-circle nav-icon"></i>
-                            <p>Progres Sektor</p>
+                            <p>Progres Inputan</p>
                           </a>
                         </li>
                         <li class="nav-item {{ (Route::currentRouteName() =='data-distribusi')? 'menu-open' :''}}">

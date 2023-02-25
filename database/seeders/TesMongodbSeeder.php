@@ -31,7 +31,7 @@ class TesMongodbSeeder extends Seeder
      */
     public function run()
     {
-        
+
         /**
          * H - Helmet
          * T - Tubuh/Trouser
@@ -54,7 +54,7 @@ class TesMongodbSeeder extends Seeder
             ['_id' => 'A004', 'nama_jenis' => 'Senter', 'keterangan' => null],
         ];
 
-        
+
 
         $kondisiUmum = [
             ['text' => 'Baik, Dapat digunakan dengan baik', 'value' => 'baik'],
@@ -208,7 +208,7 @@ class TesMongodbSeeder extends Seeder
         $jab = [];
         foreach ($jabatan as $item) {
             $i = Jabatan::create($item);
-            array_push($jab,$i->id);
+            array_push($jab, $i->id);
         }
 
         error_log('populating penempatan');
@@ -298,8 +298,8 @@ class TesMongodbSeeder extends Seeder
             'nip' => '3333',
             'nama' => 'Admin Sektor',
             'id_jabatan' => 'K001',
-            'id_wilayah' => '2',
-            'id_penempatan' => '2.11',
+            'id_wilayah' => '1',
+            'id_penempatan' => '1.11',
             'id_grup' => 'S'
         ]);
 
@@ -330,25 +330,25 @@ class TesMongodbSeeder extends Seeder
         error_log('populating apd list');
 
         $dataContohApd = [
-            ['_id' => 'H-bro-0000', 'nama_apd' => 'Protect Red', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'fire-helmet-2021.png'],
-            ['_id' => 'H-bro-0001', 'nama_apd' => 'Alpha Head', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'firehelmet_4.jpg||firehelmet_5.jpg'],
-            ['_id' => 'H-fir-0000', 'nama_apd' => 'Helmet Fire', 'merk' => 'Fire Protect', 'id_jenis' => 'H001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'firehelmet_6.jpg'],
+            ['_id' => 'H-bro-0000', 'nama_apd' => 'Protect Red', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' => $size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'fire-helmet-2021.png'],
+            ['_id' => 'H-bro-0001', 'nama_apd' => 'Alpha Head', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' => $size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'firehelmet_4.jpg||firehelmet_5.jpg'],
+            ['_id' => 'H-fir-0000', 'nama_apd' => 'Helmet Fire', 'merk' => 'Fire Protect', 'id_jenis' => 'H001', 'id_size' => $size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'firehelmet_6.jpg'],
 
-            ['_id' => 'H-fir-0001', 'nama_apd' => 'Red Helmet', 'merk' => 'Fire Protect', 'id_jenis' => 'H002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'rescue-helmet-2021.png'],
+            ['_id' => 'H-fir-0001', 'nama_apd' => 'Red Helmet', 'merk' => 'Fire Protect', 'id_jenis' => 'H002', 'id_size' => $size_umum->id, 'id_kondisi' => $kondisi_helm->id, 'image' => 'rescue-helmet-2021.png'],
 
-            ['_id' => 'G-glo-0000', 'nama_apd' => 'Red Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'fire-glove-2022.png'],
-            ['_id' => 'G-glo-0001', 'nama_apd' => 'Yellow Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'firegloves_2.jpg'],
-            ['_id' => 'G-alt-0000', 'nama_apd' => 'Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'firegloves_1.jpg||firegloves_2.jpg'],
+            ['_id' => 'G-glo-0000', 'nama_apd' => 'Red Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' => $size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'fire-glove-2022.png'],
+            ['_id' => 'G-glo-0001', 'nama_apd' => 'Yellow Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' => $size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'firegloves_2.jpg'],
+            ['_id' => 'G-alt-0000', 'nama_apd' => 'Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G001', 'id_size' => $size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'firegloves_1.jpg||firegloves_2.jpg'],
 
-            ['_id' => 'G-alt-0001', 'nama_apd' => 'Rescue Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'rescue-glove-2022.png'],
-            ['_id' => 'G-alt-0002', 'nama_apd' => 'Slightly More Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'rescuegloves_2.jpg'],
+            ['_id' => 'G-alt-0001', 'nama_apd' => 'Rescue Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' => $size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'rescue-glove-2022.png'],
+            ['_id' => 'G-alt-0002', 'nama_apd' => 'Slightly More Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' => $size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'rescuegloves_2.jpg'],
 
 
-            ['_id' => 'T-fir-0000', 'nama_apd' => 'Fire Jacket', 'merk' => 'Fire Protect', 'id_jenis' => 'T001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'fire-jacket-2021.png||fire-jacket-back-2021.png'],
-            ['_id' => 'T-pol-0000', 'nama_apd' => 'Fire Suit', 'merk' => 'Poland Inc', 'id_jenis' => 'T001', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id],
+            ['_id' => 'T-fir-0000', 'nama_apd' => 'Fire Jacket', 'merk' => 'Fire Protect', 'id_jenis' => 'T001', 'id_size' => $size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'fire-jacket-2021.png||fire-jacket-back-2021.png'],
+            ['_id' => 'T-pol-0000', 'nama_apd' => 'Fire Suit', 'merk' => 'Poland Inc', 'id_jenis' => 'T001', 'id_size' => $size_umum->id, 'id_kondisi' => $kondisi_umum->id],
 
-            ['_id' => 'T-pol-0001', 'nama_apd' => 'Jump Suit Poland', 'merk' => 'Poland Inc', 'id_jenis' => 'T002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'jumsuit-2022.jpg'],
-            ['_id' => 'T-yoh-0000', 'nama_apd' => 'Jump Suit', 'merk' => 'Yohanes Safety Accredited', 'id_jenis' => 'T002', 'id_size' =>$size_umum->id, 'id_kondisi' => $kondisi_umum->id],
+            ['_id' => 'T-pol-0001', 'nama_apd' => 'Jump Suit Poland', 'merk' => 'Poland Inc', 'id_jenis' => 'T002', 'id_size' => $size_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'jumsuit-2022.jpg'],
+            ['_id' => 'T-yoh-0000', 'nama_apd' => 'Jump Suit', 'merk' => 'Yohanes Safety Accredited', 'id_jenis' => 'T002', 'id_size' => $size_umum->id, 'id_kondisi' => $kondisi_umum->id],
 
             ['_id' => 'B-yoh-0000', 'nama_apd' => 'Fire Hazard Boots', 'merk' => 'Yohanes Safety Accredited', 'id_jenis' => 'B001', 'id_size' => $size_sepatu_umum->id, 'id_kondisi' => $kondisi_umum->id, 'image' => 'fire-boots-2022.png'],
             ['_id' => 'B-ari-0000', 'nama_apd' => 'Fire Safety Boots', 'merk' => 'Arian Protection', 'id_jenis' => 'B001', 'id_size' => $size_sepatu_umum->id, 'id_kondisi' => $kondisi_umum->id],
@@ -371,13 +371,12 @@ class TesMongodbSeeder extends Seeder
 
         error_log('populating user');
 
-        foreach($akun as $a){
-            error_log('id user : '.$a->id.' || '.'nama : '.$a->nama);
+        foreach ($akun as $a) {
+            error_log('id user : ' . $a->id . ' || ' . 'nama : ' . $a->nama);
             User::create([
                 '_id' => $a->id,
                 'password' => Hash::make('123456')
             ]);
         }
-
     }
 }

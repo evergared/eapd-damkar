@@ -355,8 +355,8 @@ class TesEapdSeeder extends Seeder
             'nip' => '3333',
             'nama' => 'Admin Sektor',
             'id_jabatan' => 'K001',
-            'id_wilayah' => '2',
-            'id_penempatan' => '2.11',
+            'id_wilayah' => '1',
+            'id_penempatan' => '1.11',
             'id_grup' => 'S'
         ]);
 

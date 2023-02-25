@@ -126,6 +126,21 @@ window.addEventListener('jsShowDetail',event =>{
     $("#rekapdetail1").collapse('hide')
   }
 
+  //function untuk inputan sudin
+  function inputSudin(Id,Filter){
+    //alert("Tester") console.
+    //alert(Filter)
+    console.log("Id",Id)
+    Livewire.emit('inputSudin',[Id,Filter]);
+    $("#input-sudin").hide(500)
+    $("#aksisudin").collapse('show')
+  }
+
+  function backToSudin(){
+    $("#input-sudin").show(500)
+    $("#aksisudin").collapse('hide')
+  }
+
 //function untuk Distribusi
   function rekapDistribusi(Id,Filter){
     //alert("Tester") console.

@@ -17,10 +17,13 @@
                     <div class="card-header p-0 border-bottom-0">
                       <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                         <li class="nav-item">
-                          <a class="nav-link active" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-grafik" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Progres Sektor</a>
+                          <a class="nav-link active" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-grafik" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Capaian Input Sudin</a>
                         </li>
                         <li class="nav-item">
-                          <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-anggota" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Progres Inputan</a>
+                          <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-sudin" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Progres Inputan Sudin</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-anggota" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Progres Inputan Anggota</a>
                         </li>
                         <li class="nav-item">
                           <a class="nav-link" id="custom-tabs-four-settings-tab" data-toggle="pill" href="#tabel-rekap" role="tab" aria-controls="custom-tabs-four-settings" aria-selected="false">Tabel Rekap</a>
@@ -98,6 +101,11 @@
                               @livewire('eapd.layout.layout-show-detail-tabel-anggota-admin')
                             <!-- detail user  -->
                         </div>
+                        <div class="tab-pane fade" id="progres-sudin" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
+                          
+                          @livewire('eapd.layout.layout-inputan-sudin')
+
+                        </div>
                         <div class="tab-pane fade" id="tabel-rekap" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
                           
                           @livewire('eapd.layout.layout-rekap-apd-admin-sektor')
@@ -122,7 +130,7 @@
                 @livewire('livewire-ui-modal')
                 @endpush
                 @endonce
-
+                <livewire:eapd.modal.modal-progres-sudin>
 
             </div>
     </div>

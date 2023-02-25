@@ -1,5 +1,5 @@
 <div>
-                    <div class="card my-n3 mx-n3" id="rekap-tabel">
+                    <div class="card my-n3 mx-n3" id="rekap-progres">
                         <div class="card-header">
                             <h3 class="card-title">{{$nama_periode}}</h3>
                         </div>
@@ -35,31 +35,31 @@
                                             <td class="text-center text-wrap my-auto align-middle">{{$item['jenis_apd']}}
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','baik')" href="#rekap-tabel">{{$item['baik']}}</a>
+                                                <a onclick="rekapProgres('{{$item['id_jenis']}}','baik')" href="#rekap-tabel">{{$item['baik']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','rusak_ringan')" href="#rekap-tabel">{{$item['rusak_ringan']}}</a>
+                                                <a onclick="rekapProgres('{{$item['id_jenis']}}','rusak_ringan')" href="#rekap-tabel">{{$item['rusak_ringan']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','rusak_sedang')" href="#rekap-tabel">{{$item['rusak_sedang']}}</a>
+                                                <a onclick="rekapProgres('{{$item['id_jenis']}}','rusak_sedang')" href="#rekap-tabel">{{$item['rusak_sedang']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','rusak_berat')" href="#rekap-tabel">{{$item['rusak_berat']}}</a>
+                                                <a onclick="rekapProgres('{{$item['id_jenis']}}','rusak_berat')" href="#rekap-tabel">{{$item['rusak_berat']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','belum_terima')" href="#rekap-tabel">{{$item['belum_terima']}}</a>
+                                                <a onclick="rekapProgres('{{$item['id_jenis']}}','belum_terima')" href="#rekap-tabel">{{$item['belum_terima']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','hilang')" href="#rekap-tabel">{{$item['hilang']}}</a>
+                                                <a onclick="rekapProgres('{{$item['id_jenis']}}','hilang')" href="#rekap-tabel">{{$item['hilang']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','total')" href="#rekap-tabel">{{$item['total']}}</a>
+                                                <a onclick="rekapProgres('{{$item['id_jenis']}}','total')" href="#rekap-tabel">{{$item['total']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','total')" href="#rekap-tabel">{{$item['total']}}</a>
+                                                <a onclick="rekapProgres('{{$item['id_jenis']}}','total')" href="#rekap-tabel">{{$item['total']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail('{{$item['id_jenis']}}','distribusi')" href="#rekap-tabel">{{$item['total']}}</a>
+                                                <a onclick="rekapProgres('{{$item['id_jenis']}}','distribusi')" href="#rekap-tabel">{{$item['total']}}</a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -88,14 +88,14 @@
 
 
 
-    <div class="collapse" id="rekapdetail" wire:ignore.self>
+    <div class="collapse" id="rekapprogres" wire:ignore.self>
             <div class="card my-n3 mx-n3">
                 <div class="card-header">
                     <div class="card-title">
                         <h4 class="card-title">Progress Rekap</h4>
                     </div>
                     <div class="card-tools">
-                        <a href="javascript:" onclick="backToRekap()">&larr; <u>kembali</u></a>
+                        <a href="javascript:" onclick="backToProgres()">&larr; <u>kembali</u></a>
                     </div>
                 </div>
                 <div class="card-body table-responsive p-0" style="height: 300px;">
