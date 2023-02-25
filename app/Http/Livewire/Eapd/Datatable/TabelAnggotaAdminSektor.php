@@ -22,14 +22,15 @@ class TabelAnggotaAdminSektor extends DataTableComponent
     {
         $this->setPrimaryKey('_id');
         $this->setSearchEnabled();
+        $this->setAdditionalSelects(['nama','id_jabatan','id_penempatan']);
     }
     
     public function builder(): Builder
     {
         return Pegawai::query()
 
-        // join tabel pegawai dengan tabel jabatan
-        ->join('jabatan as j','pegawai.id_jabatan','=','j._id')
+        // panggil relasi dengan tabel jabatan dan penempatan
+        ->with(['jabatan','penempatan'])
 
         // penempatan sesuai sektor kasie
         ->where('id_penempatan','like',Auth::user()->data->sektor . '%')
@@ -38,15 +39,15 @@ class TabelAnggotaAdminSektor extends DataTableComponent
         // tambahkan jika perlu
         // https://laravel.com/docs/9.x/queries#or-where-clauses
         ->where(function ($q) {
-            $q  ->where('pegawai.id_jabatan','=','L001')    // pjlp damkar
-                ->orWhere('pegawai.id_jabatan','=','L002')  // ASN damkar
-                ->orWhere('pegawai.id_jabatan','=','L003')  // Kepala Regu
-                ->orWhere('pegawai.id_jabatan','=','L004')  // Kepala Pleton
-                ->orWhere('pegawai.id_jabatan','=','S001');  // Staff Sektor
+            $q  ->where('id_jabatan','=','L001')    // pjlp damkar
+                ->orWhere('id_jabatan','=','L002')  // ASN damkar
+                ->orWhere('id_jabatan','=','L003')  // Kepala Regu
+                ->orWhere('id_jabatan','=','L004')  // Kepala Pleton
+                ->orWhere('id_jabatan','=','S001');  // Staff Sektor
         })
 
         // ambil pegawai yang masih aktif
-        ->where('aktif','=',1)
+        // ->where('aktif','=',1)
 
         // berdasarkan grup
         ->where('id_grup','=',$this->kompi);
@@ -57,14 +58,20 @@ class TabelAnggotaAdminSektor extends DataTableComponent
         return [
             Column::make("Foto", 'profile_img')
                 ->format(function ($value, $row) {
-                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-anggota-katon", ['img' => $value, 'id_pegawai' => $row->id]);
+                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-anggota-katon", ['img' => $value, 'id_pegawai' => $row->_id]);
                 }),
             Column::make("_id")
                 ->sortable()
                 ->hideIf(true),
+            Column::make("id_jabatan")
+                ->sortable()
+                ->hideIf(true),
             Column::make("Nama", "nama")
-                ->sortable(),
-            Column::make("Jabatan", "id_jabatan")
+                ->sortable()
+                ->searchable(function (Builder $query, $pencarian){
+                    $query->orWhere('nama','like','%'.$pencarian.'%');
+                }),
+            Column::make("Jabatan",'id_jabatan')
                 ->format(function($value){
                     return Jabatan::where('_id','=',$value)->first()->nama_jabatan;
                 })
@@ -80,7 +87,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                     $adc = new ApdDataController;
 
                     // ambil id_pegawai dari baris
-                    $id_pegawai = $row->id;
+                    $id_pegawai = $row->_id;
 
                     // dapatkan jabatan 
                     $id_jabatan = $row->id_jabatan;
@@ -100,6 +107,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
 
                     // hitung berapa item inputan
                     $value = (is_null($inputan))? 0 : count($inputan);
+
 
                     return view('eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-admin',[
                         'id_pegawai' => $id_pegawai, 'maks' => $maks, 'value'=>$value, 'caption' => 'Inputan', 'warna' => 'success'
@@ -141,8 +149,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
 
                     $adc = new ApdDataController;
 
-                    $tw = 1;
-                    // $tw = $adc->ambilIdPeriodeInput();
+                    $tw = $adc->ambilIdPeriodeInput();
 
                     return view('eapd.livewire.kolom-tambahan-datatable.kolom-show-detail-tabel-anggota-admin',[
                         'id_pegawai' => $row->id, 'periode' => $tw

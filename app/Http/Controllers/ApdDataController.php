@@ -174,12 +174,12 @@ class ApdDataController extends Controller
                             $verifikasi_status = "";
                             $verifikasi_label = "";
 
-                            $this->ekstrakStatusVerifikasi(verif::tryFrom($input->verifikasi_status), $verifikasi_label, $verifikasi_status);
+                            $this->ekstrakStatusVerifikasi(verif::tryFrom($input->verifikasi_status)->value, $verifikasi_label, $verifikasi_status);
 
                             // masukan ke $list
                             array_push($list, [
                                 'id_jenis' => $id_jenis,
-                                'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
+                                'nama_jenis' => ApdJenis::where('_id', '=', $id_jenis)->first()->nama_jenis,
                                 'id_apd' => $input->id_apd,
                                 'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                                 'status_verifikasi' => $verifikasi_label,
@@ -187,7 +187,7 @@ class ApdDataController extends Controller
                                 'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode),
                                 'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                                 'komentar_pengupload' => $input->komentar_pengupload,
-                                'nrk_verifikator' => $input->verifikasi_oleh,
+                                'id_verifikator' => $input->verifikasi_oleh,
                                 'komentar_verifikator' => $input->komentar_verifikator
 
 
@@ -199,12 +199,12 @@ class ApdDataController extends Controller
                         $verifikasi_status = "";
                         $verifikasi_label = "";
 
-                        $this->ekstrakStatusVerifikasi(verif::tryFrom($input->verifikasi_status), $verifikasi_label, $verifikasi_status);
+                        $this->ekstrakStatusVerifikasi(verif::tryFrom($input->verifikasi_status)->value, $verifikasi_label, $verifikasi_status);
 
                         // masukan ke $list
                         array_push($list, [
                             'id_jenis' => $id_jenis,
-                            'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
+                            'nama_jenis' => ApdJenis::where('_id', '=', $id_jenis)->first()->nama_jenis,
                             'id_apd' => $input->id_apd,
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                             'status_verifikasi' => $verifikasi_label,
@@ -212,7 +212,7 @@ class ApdDataController extends Controller
                             'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)->label,
                             'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                             'komentar_pengupload' => $input->komentar_pengupload,
-                            'nrk_verifikator' => $input->verifikasi_oleh,
+                            'id_verifikator' => $input->verifikasi_oleh,
                             'komentar_verifikator' => $input->komentar_verifikator
 
 
@@ -229,10 +229,10 @@ class ApdDataController extends Controller
         }
     }
 
-    public function muatSatuInputanPegawai($id_jenis, $id_apd, $id_periode = 1, $id_pegawai = "")
+    public function muatSatuInputanPegawai($id_jenis, $id_apd, $id_periode = 1, $id_pegawai = ""): array
     {
         try{
-
+            error_log('start muat satu inputan pegawai');
             // jika parameter nrk kosong, ambil nrk dan jabatan user
             if ($id_pegawai == "") {
                 $id_pegawai = Auth::user()->id;
@@ -240,26 +240,31 @@ class ApdDataController extends Controller
             }
             // jika paramter nrk diisi, cukup ambil jabatan user
             else {
-                $id_jabatan = Pegawai::where('id', '=', $id_pegawai)->first()->id_jabatan;
+                $id_jabatan = Pegawai::where('_id', '=', $id_pegawai)->first()->id_jabatan;
             }
+
+            error_log('hit pegawai id check pass');
 
             if($id_periode == 1)
             $id_periode = PeriodeInputApd::get()->first()->id;
+            error_log('hit periode id check pass');
 
             // cek apakah user telah menginput apd tersebut
-            if ($input = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_apd','=',$id_apd)->where('id_periode', '=', $id_periode)->first())
+            if ($input = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first())
             {
+            error_log('hit input pass');
+
                 $verifikasi_status = "";
                 $verifikasi_label = "";
 
-                $this->ekstrakStatusVerifikasi(verif::tryFrom($input->verifikasi_status), $verifikasi_label, $verifikasi_status);
+                $this->ekstrakStatusVerifikasi(verif::tryFrom($input->verifikasi_status)->value, $verifikasi_label, $verifikasi_status);
                 
                 // panggil untuk mambantu mengubah warna status
                 $sdc = new StatusDisplayController;
 
                 return [
                             'id_jenis' => $id_jenis,
-                            'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
+                            'nama_jenis' => ApdJenis::where('_id', '=', $id_jenis)->first()->nama_jenis,
                             'id_apd' => $input->id_apd,
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                             'status_verifikasi' => $verifikasi_label,
@@ -267,21 +272,27 @@ class ApdDataController extends Controller
                             'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)->label,
                             'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                             'komentar_pengupload' => $input->komentar_pengupload,
-                            'nrk_verifikator' => $input->verifikasi_oleh,
+                            'id_verifikator' => $input->verifikasi_oleh,
                             'komentar_verifikator' => $input->komentar_verifikator
                         ];
             }
 
+            error_log('hit end of function');
+
+
         }
         catch(Throwable $e)
         {
-
+            error_log('gagal muat satu inputan pegawai : '.$e);
         }
     }
 
     public function hitungCapaianInputSektor($sektor, int|array &$maks, int|array &$capaian,$id_periode = 1, $target_verifikasi = 0)
     {
         try{
+
+            if($id_periode == 1)
+                $id_periode = PeriodeInputApd::get()->first()->id;
 
             // ambil daftar seluruh pegawai di sektor (termasuk staff dan kasie sektor)
             $array_pegawai = Pegawai::where('id_penempatan','like',$sektor.'%')->get();
@@ -482,7 +493,7 @@ class ApdDataController extends Controller
         $array = [];
 
 
-        $model = ApdList::where('id_apd', '=', $id_apd)->first();
+        $model = ApdList::where('_id', '=', $id_apd)->first();
 
         $nama_apd = $model->nama_apd;
         $merk_apd = $model->merk_apd;
@@ -490,7 +501,6 @@ class ApdDataController extends Controller
         $kondisi_apd = $model->kondisi->opsi;
         $gambar_apd = $model->image;
 
-        error_log('id apd : ' . $id_apd . ' nama apd : ' . $nama_apd);
 
 
         // gambar apd harus berupa array untuk mempermudah pengecekan
@@ -715,7 +725,6 @@ class ApdDataController extends Controller
     public function ekstrakStatusVerifikasi(int|verif $status, string &$label, int|string &$value)
     {
         try {
-
             $tes = verif::tryFrom($status);
 
             $label = $tes->label;

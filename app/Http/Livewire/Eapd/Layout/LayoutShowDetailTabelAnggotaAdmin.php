@@ -101,7 +101,7 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             $this->id_pegawai = $data[0];
             $this->periode = $data[1];
 
-            if($this->periode === 1)
+            if($this->periode == 1)
             $this->periode = PeriodeInputApd::get()->first()->id;
 
             // ambil nama pegawai
@@ -187,7 +187,7 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
         try
         {
             $this->kosongkanDataInput();
-
+            error_log('urutan dari item yang diambil : '.$data);
             $this->urutan_detail_item = $data;
             $inputan = $this->list_inputan[$data];
 
@@ -216,14 +216,17 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
         {
             $input = InputApd::where('id_pegawai','=',$this->id_pegawai)
                     ->where('id_jenis','=',$this->detail_id_jenis_apd)
-                    ->where('id_apd','=',$this->detail_id_apd)
+                    // ->where('id_apd','=',$this->detail_id_apd)
                     ->where('id_periode','=',$this->periode)
                     ->first();
 
-
-                
-            $input->verifikasi_oleh = Auth::user()->userid;
-            $input->verifikasi_status = verif::tryFrom($this->admin_verifikasi);
+            error_log('id pegawai yang diverif '.$this->id_pegawai);
+            error_log('id jenis yang diverif '.$this->detail_id_jenis_apd);
+            error_log('id apd yang diverif '.$this->detail_id_apd);
+            error_log('id periode yang diverif '.$this->periode);
+            
+            $input->verifikasi_oleh = Auth::user()->id;
+            $input->verifikasi_status = verif::tryFrom($this->admin_verifikasi)->value;
             $input->komentar_verifikator = $this->admin_komentar;
 
             $input->save();
@@ -234,10 +237,11 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             //     'komentar_verifikator'=>$this->admin_komentar
             // ]);
 
-
             $adc = new ApdDataController;
 
-            $this->muatDataDariArrayInputan($adc->muatSatuInputanPegawai($this->detail_id_jenis_apd,$this->detail_id_apd,$this->periode,$this->id_pegawai));
+
+            $test = $adc->muatSatuInputanPegawai($this->detail_id_jenis_apd,$this->detail_id_apd,$this->periode,$this->id_pegawai);
+            $this->muatDataDariArrayInputan($test);
             
             // isi apa saja yang telah diinput oleh user
             $this->list_inputan = $adc->muatInputanPegawai($this->periode, $this->id_pegawai);
@@ -257,10 +261,14 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
     {
         try
         {
+            if(!is_null($inputan['id_apd']))
+            {
+                $this->detail_id_apd = $inputan['id_apd'];
+                $this->detail_nama_apd = ApdList::where('_id','=',$this->detail_id_apd)->first()->nama_apd;
+            }
 
             $this->detail_gambar_user = $inputan['gambar_apd'];
-            $this->detail_id_apd = $inputan['id_apd'];
-            $this->detail_nama_apd = ApdList::where('id_apd','=',$this->detail_id_apd)->first()->nama_apd;
+            
             $this->detail_id_jenis_apd = $inputan['id_jenis'];
             $this->detail_nama_jenis_apd = $inputan['nama_jenis'];
             $this->detail_status_kerusakan = $inputan['status_kerusakan'];
@@ -268,21 +276,36 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             $this->detail_warna_kerusakan = $inputan['warna_kerusakan'];
             $this->detail_warna_verifikasi = $inputan['warna_verifikasi'];
             $this->detail_komentar_pengupload = $inputan['komentar_pengupload'];
-            $this->detail_nrk_verifikator = $inputan['nrk_verifikator'];
-            $this->detail_komentar_verifikator = $inputan['komentar_verifikator'];
 
-            $verifikator = Pegawai::where('nrk','=',$this->detail_nrk_verifikator)->first();
-            $this->detail_nama_verifikator = (is_null($verifikator))? '' : $verifikator->nama;
-            $this->detail_jabatan_verifikator = (is_null($verifikator))?  '' :'('.$verifikator->jabatan->nama_jabatan.' '.$verifikator->penempatan->nama_penempatan.')';
+            if(!is_null($inputan['id_verifikator']))
+            {
+                error_log('id verifikator : '.$inputan['id_verifikator']);
+                $verifikator = Pegawai::where('_id','=',$inputan['id_verifikator'])->first();
+                
+                $this->detail_nrk_verifikator = $verifikator->nrk;
+                $this->detail_komentar_verifikator = $inputan['komentar_verifikator'];
 
+                $this->detail_nama_verifikator = (is_null($verifikator))? '' : $verifikator->nama;
+                $this->detail_jabatan_verifikator = (is_null($verifikator))?  '' :'('.$verifikator->jabatan->nama_jabatan.' '.$verifikator->penempatan->nama_penempatan.')';
+            }
+            
             $adc = new ApdDataController;
 
-            $this->gambar_template_apd = $adc->siapkanGambarTemplateBesertaPathnya(ApdList::where('id_apd','=',$this->detail_id_apd)->first()->image,$this->detail_id_jenis_apd,$this->detail_id_apd);
+            $apd = ApdList::where('_id','=',$this->detail_id_apd)->first();
+
+            try{
+                $gambar_apd = $apd->image;
+                $this->gambar_template_apd = $adc->siapkanGambarTemplateBesertaPathnya($gambar_apd,$this->detail_id_jenis_apd,$this->detail_id_apd);
+            }
+            catch(Throwable $e)
+            {
+                $this->gambar_template_apd = "";
+            }
             
         }
         catch (Throwable $e)
         {
-
+            error_log('error dalam memuat data inputan dari array inputan : '.$e);
         }
     }
 
