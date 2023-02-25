@@ -12,7 +12,7 @@
             <div class="col-lg-12 mt-2">
                 <div class="card">
                     <div class="card-body">
-                        <a>admin sektor</a>
+                        
                         @livewireStyles
                         @livewire('eapd.form.ukuran')
 

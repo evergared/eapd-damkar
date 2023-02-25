@@ -29,7 +29,7 @@
                                                 <a onclick="rekapDetail1('fire-jacket','baik')" href="#rekap-tabel">12</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapDetail1('troser','rusak_ringan')" href="#rekap-tabel">21</a>
+                                                <a>21</a>
                                             </td>
                                         </tr>
                                         
