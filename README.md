@@ -28,7 +28,9 @@ useful links :
 -   Dokumentasi livewire-datatable (official rappasoft en) : https://rappasoft.com/docs/laravel-livewire-tables/v2/introduction
 -   Screencast livewire (en) : https://laravel-livewire.com/screencasts
 
-Reminder untuk expose ke local network :
-Aplikasi ini sudah diatur untuk dapat mengekspose ip dan port ke local network sehingga ketika server dijalankan selama masa pengembangan, web dapat diakses dari perangkat lain caranya
+**Reminder untuk expose ke local network** :
+Aplikasi ini sudah diatur untuk dapat mengekspose ip dan port ke local network sehingga ketika server dijalankan dari komputer/laptop selama masa pengembangan, web dapat diakses dari perangkat lain caranya:
 
 jalankan perintah php artisan serve --host xxx.xxx.xxx.xxx -- port xx dan perintah npm run dev --host xxx.xxx.xxx.xxx
+
+ganti xxx dengan ip dan port masing-masing, ip yang digunakan adalah ip komputer/laptop (bisa dilihat dengan ipconfig) untuk port bebas.
