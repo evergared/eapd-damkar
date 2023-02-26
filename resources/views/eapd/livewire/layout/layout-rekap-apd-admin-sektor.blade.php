@@ -1,11 +1,11 @@
 <div>
-                    <div class="card my-n3 mx-n3" id="rekap-progres">
+                    <div class="card my-n3 mx-n3" id="rekap-progres" wire:ignore.self>
                         <div class="card-header">
                             <h3 class="card-title">{{$nama_periode}}</h3>
                         </div>
                         <!-- /.card-header -->
                         @if(!empty($data_rekap_apd))
-                            <div class="card-body table-responsive p-0" style="height: 300px;">
+                            <div class="card-body table-responsive p-0" style="height: 1000px;">
                                 <table class="table text-nowrap">
                                     <thead class="text-center table-bordered" style="background-color: gray ;">
                                         <tr >
@@ -53,13 +53,13 @@
                                                 <a onclick="rekapProgres('{{$item['id_jenis']}}','hilang')" href="#rekap-tabel">{{$item['hilang']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapProgres('{{$item['id_jenis']}}','total')" href="#rekap-tabel">{{$item['total']}}</a>
+                                                <a onclick="rekapProgres('{{$item['id_jenis']}}','ada')" href="#rekap-tabel">{{$item['ada']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
                                                 <a onclick="rekapProgres('{{$item['id_jenis']}}','total')" href="#rekap-tabel">{{$item['total']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="rekapProgres('{{$item['id_jenis']}}','distribusi')" href="#rekap-tabel">{{$item['total']}}</a>
+                                                <a onclick="rekapProgres('{{$item['id_jenis']}}','distribusi')" href="#rekap-tabel">{{$item['distribusi']}}</a>
                                             </td>
                                         </tr>
                                         @endforeach

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\KeberadaanApd;
 use App\Enum\StatusApd;
 use App\Enum\VerifikasiApd;
 use App\Models\Eapd\Mongodb\ApdJenis;
@@ -21,6 +22,7 @@ class ApdRekapController extends Controller
 {
     public function bangunDataTabelRekapApdSektor($id_periode = 1, $sektor = "")
     {
+        error_log('mulai membangun data untuk tabel rekap');
         if($sektor == "")
             $sektor = Auth::user()->data->sektor;
 
@@ -28,30 +30,50 @@ class ApdRekapController extends Controller
             $id_periode = PeriodeInputApd::get()->first()->id;
         
         try{
-
+            error_log('proses try');
             $data_rekap_apd = collect();
 
             if($semua_inputan = InputApd::where('id_periode','=',$id_periode)->get())
             {
+                error_log('hit semua inputan');
+                error_log('persiapan filter');
                 $inputan_anggota = $semua_inputan->filter(function($value,$key) use($sektor){
                     $a = Pegawai::where('_id','=',$value['id_pegawai'])->first();
-
-                    return $a->sektor == $sektor;
+                    $verdict = $a->sektor == $sektor;
+                    error_log('is a->sektor == sektor : '.$verdict);
+                    return $verdict;
                 });
 
                 $list_jenis_apd = $inputan_anggota->unique('id_jenis');
+                error_log('count list jenis apd : '.count($list_jenis_apd));
+                error_log('count inputan anggota : '.count($inputan_anggota));
+
+                // dd($inputan_anggota);
 
                 foreach($list_jenis_apd as $apd)
                 {
+                    error_log('id jenis apd : '.$apd->id_jenis);
                     $nama_jenis_apd = ApdJenis::where('_id','=',$apd->id_jenis)->first()->nama_jenis;
+                    error_log('nama jenis apd : '.$nama_jenis_apd);
 
-                    $baik = $inputan_anggota->where('_id','=',$apd->id_jenis)->where('kondisi','=',StatusApd::baik())->count();
-                    $rusak_ringan = $inputan_anggota->where('_id','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakRingan())->count();
-                    $rusak_sedang = $inputan_anggota->where('_id','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakSedang())->count();
-                    $rusak_berat = $inputan_anggota->where('_id','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakBerat())->count();
-                    $belum_terima = $inputan_anggota->where('_id','=',$apd->id_jenis)->where('kondisi','=',StatusApd::belumTerima())->count();
-                    $hilang = $inputan_anggota->where('_id','=',$apd->id_jenis)->where('kondisi','=',StatusApd::hilang())->count();
-                    $total = $inputan_anggota->where('_id','=',$apd->id_jenis)->count();
+                    $baik = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::baik()->value)->count();
+                    $rusak_ringan = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakRingan()->value)->count();
+                    $rusak_sedang = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakSedang()->value)->count();
+                    $rusak_berat = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakBerat()->value)->count();
+                    $belum_terima = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('keberadaan','=',KeberadaanApd::belumTerima()->value)->count();
+                    $hilang = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('keberadaan','=',KeberadaanApd::hilang()->value)->count();
+                    $ada = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('keberadaan','=',KeberadaanApd::ada()->value)->count();
+                    $total = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->count();
+                    $distribusi = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->count();
+
+                    error_log('jumlah baik : '.$baik);
+                    error_log('jumlah rusak ringan : '.$rusak_ringan);
+                    error_log('jumlah rusak sedang : '.$rusak_sedang);
+                    error_log('jumlah rusak berat : '.$rusak_berat);
+                    error_log('jumlah belum terima : '.$belum_terima);
+                    error_log('jumlah hilang : '.$hilang);
+                    error_log('jumlah ada : '.$ada);
+                    error_log('jumlah total : '.$total);
 
                     $data_rekap_apd->push([
                         "id_jenis" => $apd->id_jenis,
@@ -62,7 +84,9 @@ class ApdRekapController extends Controller
                         "rusak_berat" => $rusak_berat,
                         "belum_terima" => $belum_terima,
                         "hilang" => $hilang,
-                        "total" => $total
+                        "ada" => $ada,
+                        "total" => $total,
+                        "distribusi" => $distribusi,
                     ]);
                 }
             }
@@ -93,17 +117,22 @@ class ApdRekapController extends Controller
 
             if($semua_inputan = InputApd::where('id_jenis','=',$id_jenis)->where('id_periode','=',$id_periode)->get())
             {
+                error_log('hit semua inputan');
+                error_log('mulai filter');
                 $inputan_anggota = $semua_inputan->filter(function($value,$key) use($sektor){
                     $a = Pegawai::where('_id','=',$value['id_pegawai'])->first();
-
-                    return $a->sektor == $sektor;
+                    $verdict = $a->sektor == $sektor;
+                    error_log('is a->sektor == sektor : '.$verdict);
+                    return $verdict;
                 });
+                error_log('selesai filter');
 
                 $adc = new ApdDataController;
                 $sdc = new StatusDisplayController;
 
                 foreach($inputan_anggota as $inputan)
                 {
+                    error_log('hit foreach semua inputan anggota');
                     $pegawai = Pegawai::where('_id','=',$inputan->id_pegawai)->first();
                     $nama_jenis_apd = ApdJenis::where('_id','=',$inputan->id_jenis)->first()->nama_jenis;
                     $penempatan = Penempatan::where('_id','=',$pegawai->id_penempatan)->first();

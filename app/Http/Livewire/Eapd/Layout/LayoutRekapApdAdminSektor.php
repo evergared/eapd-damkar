@@ -6,6 +6,7 @@ use App\Enum\StatusApd;
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\ApdRekapController;
 use App\Models\Eapd\Mongodb\InputApd;
+use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use Livewire\Component;
 use Throwable;
 
@@ -20,28 +21,35 @@ class LayoutRekapApdAdminSektor extends Component
         $nama_periode = "Triwulan ke-4 2023";
 
     protected $listeners = [
-        'rekapDetail'
+        'rekapProgres'
     ];
 
     public function render()
     {
 
-        $apr = new ApdRekapController;
-        $adc = new ApdDataController;
-        // $this->id_periode = $adc->ambilIdPeriodeInput();
-        // $this->nama_periode = PeriodeInputApd::where('id','=',$periode)->first()->nama_periode;
-        $this->id_periode = 1;
-        $this->data_rekap_apd = $apr->bangunDataTabelRekapApdSektor($this->id_periode);
+        
         return view('eapd.livewire.layout.layout-rekap-apd-admin-sektor');
     }
 
-    public function rekapDetail($value)
+    public function mount()
+    {
+        $apr = new ApdRekapController;
+        $adc = new ApdDataController;
+        $periode = $adc->ambilIdPeriodeInput();
+        $this->nama_periode = PeriodeInputApd::where('_id','=',$periode)->first()->nama_periode;
+        $this->id_periode = $periode;
+        $this->data_rekap_apd = $apr->bangunDataTabelRekapApdSektor($this->id_periode);
+    }
+
+    public function rekapProgres($value)
     {
         $this->detail_data_rekap = [];
         try{
             $apr = new ApdRekapController;
             $id_jenis = $value[0];
-            if($value[1] == "total")
+            error_log('id jenis untuk detail : '.$value[0]);
+            error_log('target untuk detail : '.$value[1]);
+            if($value[1] == "total" || $value[1] == "distribusi")
                 $kondisi = "";
             else
                 $kondisi = StatusApd::tryFrom($value[1]);

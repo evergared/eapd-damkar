@@ -103,7 +103,6 @@ class ApdDataController extends Controller
             $id_periode = PeriodeInputApd::get()->first()->id;
 
             if(InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first())
-                error_log('template pada periode found');
 
             // ambil template penginputan apd dari database menggunakan pivot table yang telah di buat di model
             if($list = InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first()->template)
@@ -337,7 +336,6 @@ class ApdDataController extends Controller
                                 if($i['status_verifikasi'] == verif::tryFrom($target_verifikasi)->label)
                                 {
                                     $yang_telah_diinput++;   
-                                    error_log('terinput sekarang '.$yang_telah_diinput);
 
                                 }
                             }

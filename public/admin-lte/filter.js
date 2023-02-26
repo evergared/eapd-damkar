@@ -100,7 +100,7 @@ window.addEventListener('jsShowDetail',event =>{
   function rekapProgres(Id,Filter){
     //alert("Tester") console.
     //alert(Filter)
-    console.log("Id",Id)
+    console.log("Id rekap progress : "+Id)
     Livewire.emit('rekapProgres',[Id,Filter]);
     $("#rekap-progres").hide(500)
     $("#rekapprogres").collapse('show')
