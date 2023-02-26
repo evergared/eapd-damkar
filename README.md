@@ -27,3 +27,8 @@ useful links :
 -   Dokumentasi tailwind css (official en) : https://v2.tailwindcss.com/docs
 -   Dokumentasi livewire-datatable (official rappasoft en) : https://rappasoft.com/docs/laravel-livewire-tables/v2/introduction
 -   Screencast livewire (en) : https://laravel-livewire.com/screencasts
+
+Reminder untuk expose ke local network :
+Aplikasi ini sudah diatur untuk dapat mengekspose ip dan port ke local network sehingga ketika server dijalankan selama masa pengembangan, web dapat diakses dari perangkat lain caranya
+
+jalankan perintah php artisan serve --host xxx.xxx.xxx.xxx -- port xx dan perintah npm run dev --host xxx.xxx.xxx.xxx
