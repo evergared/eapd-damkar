@@ -525,7 +525,7 @@ class ApdDataController extends Controller
         return $array;
     }
 
-    public function bangunDataInputanSudin($id_periode = "", $id_sudin = "")
+    public function muatDataInputanSudin($id_periode = "", $id_sudin = "")
     {
 
         if($id_periode == "")
@@ -540,27 +540,135 @@ class ApdDataController extends Controller
 
         try{
 
-            error_log('ambil id_wilayah');
+            error_log('ambil id_wilayah dengan id sudin '.$id_sudin);
             $id_wilayah = Penempatan::find($id_sudin)->id_wilayah;
+            error_log('id wilayah '.$id_wilayah);
 
-            error_log('buat list sektor');
+             error_log('buat list sektor');
             // buat daftar seluruh sektor yang ada di id_wilayah tsb
             $list_sektor = Penempatan::where('id_wilayah','=',$id_wilayah)->where('keterangan','=','sektor')->pluck('_id')->toArray();
+            error_log('list sektor = '.count($list_sektor));
 
             // siapkan array untuk menampung data yang akan di return
-            $data = collect();
+            $data = array();
 
             error_log('pengulangan untuk mengambil data di tiap pos');
-            // pengulangan untuk mengambil data inputan setiap sektor
+            // pengulangan untuk menghitung berapa data inputan setiap sektor
             foreach($list_sektor as $sektor)
             {
+                error_log('pengulangan untuk sektor '.$sektor);
+                // ambil nama sektor sebagai judul tabel
                 $nama_sektor = Penempatan::find($sektor)->nama_penempatan;
-                
+                $nomor_sektor = "";
+
+                if(str_contains($nama_sektor,'Sektor'))
+                {
+                    $substring = explode(' ',$nama_sektor);
+                    $nomor_sektor = $substring[0].' '.$substring[1];
+                }
+
+                // list pos
+                $list_pos = Penempatan::where('_id','like',$sektor.'.%')->where('keterangan','=','pos')->pluck('_id')->toArray();
+                $data_pos = array();
+                error_log('jumlah pos '.count($list_pos));
+
+                #region hitung jumlah karyawan yang perlu melakukan input apd pada tiap pos
+                foreach($list_pos as $pos)
+                {
+                    error_log('pengulangan untuk pos '.$pos);
+                    $nama_pos = Penempatan::find($pos)->nama_penempatan;
+                    $jumlah_asn = 0;
+                    $jumlah_pjlp = 0;
+                    $yang_harus_diinput = 0;
+                    $yang_telah_diinput = 0;
+                    $yang_telah_diverif = 0;
+                    $seluruh_pegawai = Pegawai::where('id_penempatan','=',$pos)->get();
+                    error_log('jumlah pegawai di pos '.$pos.' '.count($seluruh_pegawai));
+                    foreach($seluruh_pegawai as $pegawai)
+                    {
+                        error_log('mulai menghitung untuk pegawai '.$pegawai.' dengan jabatan '.$pegawai->id_jabatan);
+                        try{
+                            $template = $this->muatListInputApdDariTemplate($id_periode,$pegawai->id_jabatan);
+                            error_log('template is empty '.is_null($template));
+                        }
+                        catch(Throwable $e)
+                        {
+                            $template = null;
+                            error_log('template kosong');
+                        }
+
+                        if(!is_null($template))
+                        {
+                            // jika pegawai tsb merupakan pjlp
+                            if($pegawai->id_jabatan == 'L001')
+                            {
+                                error_log('pegawai pjlp');
+                                $jumlah_pjlp++;
+                            }
+                            // jika pegawi tsb bukan pjlp
+                            else
+                            {
+                                error_log('pegawai asn');
+                                $jumlah_asn++;
+                            }
+
+                            // hitung data inputan
+                            foreach($template as $t)
+                            {
+                                $yang_harus_diinput++;
+                            }
+
+                            $inputan_terinput = $this->muatInputanPegawai($id_periode,$pegawai->id,2);
+                            foreach($inputan_terinput as $inputan)
+                            {
+                                $yang_telah_diinput++;
+                            }
+
+                            $inputan_terverif = $this->muatInputanPegawai($id_periode,$pegawai->id,3);
+                            foreach($inputan_terverif as $inputan)
+                            {
+                                $yang_telah_diverif++;
+                            }
+                        }
+
+                        error_log('jumlah asn : '.$jumlah_asn);
+                        error_log('jumlah pjlp : '.$jumlah_pjlp);
+                        error_log('yang harus diinput : '.$yang_harus_diinput);
+                        error_log('yang telah diinput : '.$yang_telah_diinput);
+                        error_log('yang telah diverif : '.$yang_telah_diverif);
+                    }
+
+                    error_log('masukan list ke data pos');
+                    // masukan data tersebut kedalam array untuk di push ke array data pos
+                    array_push($data_pos,array(
+                        'nama_pos' => $nama_pos,
+                        'pegawai_asn' => $jumlah_asn,
+                        'pegawai_pjlp' => $jumlah_pjlp,
+                        'perlu_diinput' => $yang_harus_diinput,
+                        'telah_diinput' => $yang_telah_diinput,
+                        'telah_diverif' => $yang_telah_diverif
+                    ));
+
+                    
+
+                }
+                #endregion
+
+                error_log('rangkum semua data tersebut');
+                array_push($data,[
+                    'nama_sektor' => $nama_sektor,
+                    'nomor_sektor' => $nomor_sektor,
+                    'data_pos' => $data_pos
+                ]);  
             }
+
+            return $data;
+            //  dd($data);
         }
         catch(Throwable $e)
         {
             error_log('Gagal membangun data inputan id_sudin '.$e);
+            return [];
         }
     }
 

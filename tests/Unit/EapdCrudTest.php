@@ -56,95 +56,13 @@ class EapdCrudTest extends TestCase
     public function test_read()
     {
 
-        $id_sudin = '11';
-        $id_periode = PeriodeInputApd::get()->first()->id;
-        $id_wilayah = Penempatan::find($id_sudin)->id_wilayah;
-
-            error_log('buat list sektor');
-            // buat daftar seluruh sektor yang ada di id_wilayah tsb
-            $list_sektor = Penempatan::where('id_wilayah','=',$id_wilayah)->where('keterangan','=','sektor')->pluck('_id')->toArray();
-
-            // siapkan array untuk menampung data yang akan di return
-            $read = array();
-
-            error_log('pengulangan untuk mengambil data di tiap pos');
-            // pengulangan untuk menghitung berapa data inputan setiap sektor
-            foreach($list_sektor as $sektor)
-            {
-                $adc = new ApdDataController;
-                // ambil nama sektor sebagai judul tabel
-                $nama_sektor = Penempatan::find($sektor)->nama_penempatan;
-
-                // list pos
-                $list_pos = Penempatan::where('_id','like',$sektor)->where('keterangan','=','pos')->pluck('_id')->toArray();
-                $data_pos = array();
-
-                #region hitung jumlah karyawan yang perlu melakukan input apd pada tiap pos
-                foreach($list_pos as $pos)
-                {
-                    $nama_pos = Penempatan::find($pos)->nama_penempatan;
-                    $jumlah_asn = 0;
-                    $jumlah_pjlp = 0;
-                    $yang_harus_diinput = 0;
-                    $yang_telah_diinput = 0;
-                    $yang_telah_diverif = 0;
-                    $seluruh_pegawai = Pegawai::where('penempatan','=',$pos)->get();
-                    foreach($seluruh_pegawai as $pegawai)
-                    {
-                        $template = $adc->muatListInputApdDariTemplate($id_periode,$pegawai->id_jabatan);
-
-                        if(!(is_null($template)))
-                        {
-                            // jika pegawai tsb merupakan pjlp
-                            if($pegawai->id_jabatan == 'L001')
-                            {
-                                $jumlah_pjlp++;
-                            }
-                            // jika pegawi tsb bukan pjlp
-                            else
-                            {
-                                $jumlah_asn++;
-                            }
-
-                            // hitung data inputan
-                            foreach($template as $t)
-                            {
-                                $yang_harus_diinput++;
-                            }
-
-                            $inputan_terinput = $adc->muatInputanPegawai($id_periode,$pegawai->id,2);
-                            foreach($inputan_terinput as $inputan)
-                            {
-                                $yang_telah_diinput++;
-                            }
-
-                            $inputan_terverif = $adc->muatInputanPegawai($id_periode,$pegawai->id,3);
-                            foreach($inputan_terverif as $inputan)
-                            {
-                                $yang_telah_diverif++;
-                            }
-                        }
-                    }
-
-                    // masukan data tersebut kedalam array untuk di push ke array data pos
-                    array_push($data_pos,[
-                        'pos' => $nama_pos,
-                        'pegawai_asn' => $jumlah_asn,
-                        'pegawai_pjlp' => $jumlah_pjlp,
-                        'perlu_diinput' => $yang_harus_diinput,
-                        'telah_diinput' => $yang_telah_diinput,
-                        'telah_diverif' => $yang_telah_diverif
-                    ]);
-
-                }
-                #endregion
-
-                array_push($read,[
-                    'sektor' => $nama_sektor,
-                    'data_pos' => $data_pos
-                ]);  
-            }
-        print_r($read);
+        $string = 'Sektor IX Pasar Minggu';
+        if(str_contains($string,'Sektor'))
+        {
+            $pieces = explode(' ',$string);
+            $read = $pieces[0].' '.$pieces[1];
+        }
+        dd($read);
         $this->assertTrue(true);
     }
 }

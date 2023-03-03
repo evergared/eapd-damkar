@@ -1,113 +1,84 @@
 <div  wire:ignore.self>
         <div class="card my-n3 mx-n3" id="input-sudin"  wire:ignore.self>
           <div class="row">
+
+            
+
             <div class="col-12 col-sm-12 col-md-12 d-flex align-items-stretch flex-column">
-              <div class="card bg-light d-flex flex-fill">
-                <div class="card-header text-muted border-bottom-0">
-                  Sektor I
-                </div>
-                <div class="card-body table-responsive ">
-                    <h2 class="lead"><b>Kebayoran Lama</b></h2>
-                    <table class="table table-head-fixed text-nowrap">
-                        <thead>
-                            <tr>
-                                <th style="width: 1%">
-                                    Pos
-                                </th>
-                                <th style="width: 5%">
-                                    PNS
-                                </th>
-                                <th style="width: 5%">
-                                    PJLP
-                                </th>
-                                <th style="width: 10%">
-                                    Input(%)
-                                </th>
-                                <th style="width: 10%">
-                                    Validasi(%)
-                                </th>
-                                <th style="width: 10%">
-                                    Aksi
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    Pos Kebayoran Lama
-                                </td>
-                                <td>
-                                    8
-                                </td>
-                                <td>
-                                    9
-                                </td>
-                                
-                                <td class="project-state">
-                                        <span class="badge badge-success">100%</span>
-                                </td>
-                                
-                                <td class="project-state">
-                                    <span class="badge badge-info">90%</span>
-                                </td>
-                                <td>
-                                    <a onclick="inputSudin()" class="btn btn-sm bg-teal">
-                                        <i class="fas fa-wrench"></i>
-                                      </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Pos Cipulir
-                                </td>
-                                <td>
-                                    8
-                                </td>
-                                <td>
-                                    8
-                                </td>
-                                
-                                <td class="project-state">
-                                        <span class="badge badge-info">80%</span>
-                                </td>
-                                
-                                <td class="project-state">
-                                    <span class="badge badge-info">80%</span>
-                                </td>
-                                <td>
-                                    <a href="#" class="btn btn-sm bg-teal">
-                                        <i class="fas fa-wrench"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Pos Grogol Utara
-                                </td>
-                                <td>
-                                    8
-                                </td>
-                                <td>
-                                    9
-                                </td>
-                                
-                                <td class="project-state">
-                                        <span class="badge badge-secondary">0%</span>
-                                </td>
-                                
-                                <td class="project-state">
-                                    <span class="badge badge-secondary">0%</span>
-                                </td>
-                                <td>
-                                    <a href="#" class="btn btn-sm bg-teal">
-                                        <i class="fas fa-wrench"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>    
-              </div>
+            @if (!empty($data_semua_sektor))
+                @foreach ($data_semua_sektor as $data_sektor)
+                    <div class="card bg-light d-flex flex-fill">
+                        @if ($data_sektor['nomor_sektor'] != "")
+                            <div class="card-header text-muted border-bottom-0">
+                                {{$data_sektor['nomor_sektor']}}
+                            </div>
+                        @endif
+                        
+                        <div class="card-body table-responsive ">
+                            <h2 class="lead"><b>{{$data_sektor['nama_sektor']}}</b></h2>
+                            <table class="table table-head-fixed text-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 1%">
+                                            Pos
+                                        </th>
+                                        <th style="width: 5%">
+                                            Jumlah PNS
+                                        </th>
+                                        <th style="width: 5%">
+                                            Jumlah PJLP
+                                        </th>
+                                        <th style="width: 10%">
+                                            Terinput(%)
+                                        </th>
+                                        <th style="width: 10%">
+                                            Tervalidasi(%)
+                                        </th>
+                                        <th style="width: 10%">
+                                            Aksi
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($data_sektor['data_pos'] as $pos)
+                                        <tr>
+                                            <td>
+                                                {{$pos['nama_pos']}}
+                                            </td>
+                                            <td>
+                                                {{$pos['pegawai_asn']}}
+                                            </td>
+                                            <td>
+                                                {{$pos['pegawai_pjlp']}}
+                                            </td>
+                                            
+                                            <td class="project-state">
+                                                    <span class="badge badge-success">
+                                                        {{-- {{round(($pos['telah_diinput']/$pos['perlu_diinput']) * 100, 2 )}} --}}
+                                                    </span>
+                                            </td>
+                                            
+                                            <td class="project-state">
+                                                <span class="badge badge-info">
+                                                    {{-- {{round(($pos['telah_diverif']/$pos['perlu_diinput']) * 100, 2 )}} --}}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a onclick="inputSudin()" class="btn btn-sm bg-teal">
+                                                    <i class="fas fa-wrench"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>    
+                    </div>
+                @endforeach
+            @else
+                
+            @endif
+              
             </div>
             <div class="col-12 col-sm-12 col-md-12 d-flex align-items-stretch flex-column">
                 <div class="card bg-light d-flex flex-fill">
