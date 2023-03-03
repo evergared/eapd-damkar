@@ -32,19 +32,21 @@ return new class extends Migration
                 $t->string('no_telp', 20)->nullable();
                 $t->text('email')->nullable();
                 $t->index('id_jabatan')->nullable();
-                $t->index('id_wilayah')->nullable();
                 $t->index('id_penempatan')->nullable();
                 $t->index('id_grup');
                 $t->boolean('aktif')->default(true);
                 $t->text('override_level_user')->nullable(); // jaga-jaga perlu override level user untuk pegawai tertentu, kosongkan jika tidak perlu
                 $t->timestamps();
-            });
+            }); 
         }
 
         if (!Schema::hasTable('penempatan')) {
             Schema::create('penempatan', function (Blueprint $t) {
                 $t->text('nama_penempatan');
                 $t->text('keterangan')->nullable();
+                $t->text('id_wilayah')->nullable();
+                $t->text('id_kecamatan')->nullable()->comment('kosongkan jika keterangan sudin');
+                $t->text('id_kelurahan')->nullable()->comment('kosongkan jika keterangan sudin atau sektor');
                 $t->timestamps();
             });
         }
