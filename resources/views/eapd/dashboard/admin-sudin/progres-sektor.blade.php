@@ -103,7 +103,7 @@
                         </div>
                         <div class="tab-pane fade" id="progres-sudin" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
                           
-                          @livewire('eapd.layout.layout-inputan-sudin')
+                          @livewire('eapd.layout.layout-progress-inputan-sudin-admin-sudin-hal-laporan-sektor')
 
                         </div>
                         <div class="tab-pane fade" id="tabel-rekap" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
@@ -130,7 +130,7 @@
                 @livewire('livewire-ui-modal')
                 @endpush
                 @endonce
-                <livewire:eapd.modal.modal-progres-sudin>
+                <livewire:eapd.modal.modal-detail-progress-sudin>
 
             </div>
     </div>

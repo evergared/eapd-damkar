@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Http\Controllers\ApdDataController;
 use App\Models\Eapd\Mongodb\ApdJenis;
 use App\Models\Eapd\Mongodb\ApdKondisi;
 use App\Models\Eapd\Mongodb\ApdList;
@@ -54,36 +55,95 @@ class EapdCrudTest extends TestCase
 
     public function test_read()
     {
-        // $tes = User::find('63e1329904da9dc16d021793')->get()->first()->data;
-        // $tes1 = InputApdTemplate::whereIn('jabatan',['L001'])->first()->template;
-        // $penempatan = Penempatan::where('_id','like','1.11%')
-        //                 ->get(['_id as value','nama_penempatan as data'])
-        //                 ->toArray();
-        // $penempatan = Penempatan::where('_id','like','1.11%')
-        //                 ->project(['value'=>'$_id', 'text' => '$nama_penempatan'])
-        //                 ->get()
-        //                 ->toArray();
-        // $test_embed = Pegawai::find('63ef1bf873da03f7b9046f03')->first()->ukuran;
-        // $read = $test_embed['date'];
-        $read = Pegawai::with('jabatan')
 
-        // penempatan sesuai sektor kasie
-        ->where('id_penempatan','like','1.11' . '%')
-        // ->where('id_jabatan','=','L004')->orWhere('id_jabatan','=','L001')
+        $id_sudin = '11';
+        $id_periode = PeriodeInputApd::get()->first()->id;
+        $id_wilayah = Penempatan::find($id_sudin)->id_wilayah;
 
-        ->where(function ($q) {
-            $q  ->where('id_jabatan','=','L001')    // pjlp damkar
-                ->orWhere('id_jabatan','=','L002')  // ASN damkar
-                ->orWhere('id_jabatan','=','L003')  // Kepala Regu
-                ->orWhere('id_jabatan','=','L004')  // Kepala Pleton
-                ->orWhere('id_jabatan','=','S001');  // Staff Sektor
-        })
+            error_log('buat list sektor');
+            // buat daftar seluruh sektor yang ada di id_wilayah tsb
+            $list_sektor = Penempatan::where('id_wilayah','=',$id_wilayah)->where('keterangan','=','sektor')->pluck('_id')->toArray();
 
-        // ambil pegawai yang masih aktif
-        // ->where('aktif','=',1)
+            // siapkan array untuk menampung data yang akan di return
+            $read = array();
 
-        // berdasarkan grup
-        ->where('id_grup','=','B')->get();
+            error_log('pengulangan untuk mengambil data di tiap pos');
+            // pengulangan untuk menghitung berapa data inputan setiap sektor
+            foreach($list_sektor as $sektor)
+            {
+                $adc = new ApdDataController;
+                // ambil nama sektor sebagai judul tabel
+                $nama_sektor = Penempatan::find($sektor)->nama_penempatan;
+
+                // list pos
+                $list_pos = Penempatan::where('_id','like',$sektor)->where('keterangan','=','pos')->pluck('_id')->toArray();
+                $data_pos = array();
+
+                #region hitung jumlah karyawan yang perlu melakukan input apd pada tiap pos
+                foreach($list_pos as $pos)
+                {
+                    $nama_pos = Penempatan::find($pos)->nama_penempatan;
+                    $jumlah_asn = 0;
+                    $jumlah_pjlp = 0;
+                    $yang_harus_diinput = 0;
+                    $yang_telah_diinput = 0;
+                    $yang_telah_diverif = 0;
+                    $seluruh_pegawai = Pegawai::where('penempatan','=',$pos)->get();
+                    foreach($seluruh_pegawai as $pegawai)
+                    {
+                        $template = $adc->muatListInputApdDariTemplate($id_periode,$pegawai->id_jabatan);
+
+                        if(!(is_null($template)))
+                        {
+                            // jika pegawai tsb merupakan pjlp
+                            if($pegawai->id_jabatan == 'L001')
+                            {
+                                $jumlah_pjlp++;
+                            }
+                            // jika pegawi tsb bukan pjlp
+                            else
+                            {
+                                $jumlah_asn++;
+                            }
+
+                            // hitung data inputan
+                            foreach($template as $t)
+                            {
+                                $yang_harus_diinput++;
+                            }
+
+                            $inputan_terinput = $adc->muatInputanPegawai($id_periode,$pegawai->id,2);
+                            foreach($inputan_terinput as $inputan)
+                            {
+                                $yang_telah_diinput++;
+                            }
+
+                            $inputan_terverif = $adc->muatInputanPegawai($id_periode,$pegawai->id,3);
+                            foreach($inputan_terverif as $inputan)
+                            {
+                                $yang_telah_diverif++;
+                            }
+                        }
+                    }
+
+                    // masukan data tersebut kedalam array untuk di push ke array data pos
+                    array_push($data_pos,[
+                        'pos' => $nama_pos,
+                        'pegawai_asn' => $jumlah_asn,
+                        'pegawai_pjlp' => $jumlah_pjlp,
+                        'perlu_diinput' => $yang_harus_diinput,
+                        'telah_diinput' => $yang_telah_diinput,
+                        'telah_diverif' => $yang_telah_diverif
+                    ]);
+
+                }
+                #endregion
+
+                array_push($read,[
+                    'sektor' => $nama_sektor,
+                    'data_pos' => $data_pos
+                ]);  
+            }
         print_r($read);
         $this->assertTrue(true);
     }

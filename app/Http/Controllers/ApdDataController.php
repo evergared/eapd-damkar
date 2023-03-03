@@ -13,6 +13,7 @@ use App\Enum\StatusApd as status;
 use App\Models\Eapd\Mongodb\ApdJenis;
 use App\Models\Eapd\Mongodb\InputApd;
 use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Mongodb\Penempatan;
 use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use Error;
 use Throwable;
@@ -83,8 +84,8 @@ class ApdDataController extends Controller
     }
 
     /**
-     * Ambil template untuk input apd dari database berdasarkan periode dan jabatan
-     * @param int $id_periode periode untuk template yang dicari, dalam bentuk id periode
+     * Ambil template untuk input apd dari database berdasarkan id_periode dan jabatan
+     * @param int $id_periode id_periode untuk template yang dicari, dalam bentuk id id_periode
      * @param string $id_jabatan jabatan untuk template yang dicari, dalam bentuk id jabatan
      */
     public function muatListInputApdDariTemplate($id_periode = 1, $id_jabatan = "")
@@ -102,10 +103,10 @@ class ApdDataController extends Controller
             if($id_periode == 1)
             $id_periode = PeriodeInputApd::get()->first()->id;
 
-            if(InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first())
+            if(InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('id_periode',[$id_periode])->first())
 
             // ambil template penginputan apd dari database menggunakan pivot table yang telah di buat di model
-            if($list = InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first()->template)
+            if($list = InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('id_periode',[$id_periode])->first()->template)
             {
                 // return dd($list);
                 return $list;
@@ -120,8 +121,8 @@ class ApdDataController extends Controller
     }
 
     /**
-     * Muat apa saja yang telah diinput oleh pegawai pada periode yang dicari
-     * @param int $id_periode periode yang dicari, dalam bentuk id periode
+     * Muat apa saja yang telah diinput oleh pegawai pada id_periode yang dicari
+     * @param int $id_periode id_periode yang dicari, dalam bentuk id id_periode
      * @param string $id_pegawai pegawai yang dicari, dalam bentuk id pegawai
      * @param int $target_verifikasi jika ada status verifikasi yang dicari, masukan value dari enum /App/Enum/VerifikasiApd.php atau integer 1~5
      * @return array list apa saja yang telah diinput oleh pegawai, di dapat dari tabel input_apd
@@ -246,7 +247,7 @@ class ApdDataController extends Controller
 
             if($id_periode == 1)
             $id_periode = PeriodeInputApd::get()->first()->id;
-            error_log('hit periode id check pass');
+            error_log('hit id_periode id check pass');
 
             // cek apakah user telah menginput apd tersebut
             if ($input = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first())
@@ -364,7 +365,7 @@ class ApdDataController extends Controller
 
     /**
      * Bangun list yang akan digunakan untuk thumbnail di halaman apdku.
-     * @param int $id_periode periode yang dicari, dalam bentuk id periode
+     * @param int $id_periode id_periode yang dicari, dalam bentuk id id_periode
      * @param string $id_jabatan jabatan yang dicari, dalam bentuk id jabatan
      * @return array|string apa saja yang akan ditampilkan untuk thumbnail
      */
@@ -377,16 +378,16 @@ class ApdDataController extends Controller
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
 
-            // jika parameter periode tidak diisi, maka ambil id periode pertama dari database
+            // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
             if($id_periode == 1)
             {
                 $id_periode = PeriodeInputApd::get()->first()->id;
             }
 
-            error_log("periode : ".$id_periode);
+            error_log("id_periode : ".$id_periode);
 
             // ambil template input apd dari database berdasarkan pivot table yang telah dibuat di model
-            $list = InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first()->template;
+            $list = InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('id_periode',[$id_periode])->first()->template;
             // return dd($list);
             // panggil controller untuk membantu menampilkan status di bootstrap
             $sdc = new StatusDisplayController;
@@ -524,6 +525,45 @@ class ApdDataController extends Controller
         return $array;
     }
 
+    public function bangunDataInputanSudin($id_periode = "", $id_sudin = "")
+    {
+
+        if($id_periode == "")
+        {
+            $id_periode = $this->ambilIdPeriodeInput();
+        }
+
+        if($id_sudin == "")
+        {
+            $id_sudin = Penempatan::where('id_wilayah','=',Auth::user()->data->penempatan->id_wilayah)->where('keterangan','=','sudin')->get()->first()->id;
+        }
+
+        try{
+
+            error_log('ambil id_wilayah');
+            $id_wilayah = Penempatan::find($id_sudin)->id_wilayah;
+
+            error_log('buat list sektor');
+            // buat daftar seluruh sektor yang ada di id_wilayah tsb
+            $list_sektor = Penempatan::where('id_wilayah','=',$id_wilayah)->where('keterangan','=','sektor')->pluck('_id')->toArray();
+
+            // siapkan array untuk menampung data yang akan di return
+            $data = collect();
+
+            error_log('pengulangan untuk mengambil data di tiap pos');
+            // pengulangan untuk mengambil data inputan setiap sektor
+            foreach($list_sektor as $sektor)
+            {
+                $nama_sektor = Penempatan::find($sektor)->nama_penempatan;
+                
+            }
+        }
+        catch(Throwable $e)
+        {
+            error_log('Gagal membangun data inputan id_sudin '.$e);
+        }
+    }
+
     public function siapkanGambarTemplateBesertaPathnya(string $stringGambar,$id_jenis, $id_apd)
     {
         try {
@@ -593,8 +633,8 @@ class ApdDataController extends Controller
     }
 
     /**
-     * @todo Fungsi untuk ambil id periode
-     * @body Buat fungsi untuk ambil id periode di db untuk data periode saat insert data input apd
+     * @todo Fungsi untuk ambil id id_periode
+     * @body Buat fungsi untuk ambil id id_periode di db untuk data id_periode saat insert data input apd
      */
     public function ambilIdPeriodeInput($tanggal = null)
     {
@@ -671,20 +711,20 @@ class ApdDataController extends Controller
         }
     }
 
-    public function ambilStatusVerifikasi($id_jenis, $id_pegawai = "", $periode = 1)
+    public function ambilStatusVerifikasi($id_jenis, $id_pegawai = "", $id_periode = 1)
     {
         try {
 
             if ($id_pegawai == "")
                 $id_pegawai = Auth::user()->id;
 
-            // jika parameter periode tidak diisi, maka ambil id periode pertama dari database
-            if($periode == 1)
+            // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
+            if($id_periode == 1)
             {
-                $periode = PeriodeInputApd::get()->first()->id;
+                $id_periode = PeriodeInputApd::get()->first()->id;
             }
 
-            return verif::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->verifikasi_status);
+            return verif::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first()->verifikasi_status);
         } catch (Throwable $e) {
             // error_log("Gagal mengambil status verifikasi untuk id jenis  '" . $id_jenis . "' " . $e);
             // report("Gagal mengambil status verifikasi untuk id jenis  '" . $id_jenis . "' " . $e);
@@ -692,20 +732,20 @@ class ApdDataController extends Controller
         }
     }
 
-    public function ambilStatusKerusakan($id_jenis, $id_pegawai = "", $periode = 1)
+    public function ambilStatusKerusakan($id_jenis, $id_pegawai = "", $id_periode = 1)
     {
         try {
 
             if ($id_pegawai == "")
                 $id_pegawai = Auth::user()->id;
 
-            // jika parameter periode tidak diisi, maka ambil id periode pertama dari database
-            if($periode == 1)
+            // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
+            if($id_periode == 1)
             {
-                $periode = PeriodeInputApd::get()->first()->id;
+                $id_periode = PeriodeInputApd::get()->first()->id;
             }
 
-            return status::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $periode)->first()->kondisi);
+            return status::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first()->kondisi);
         } catch (Throwable $e) {
             // error_log("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);
             // report("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);

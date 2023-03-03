@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Eapd\Datatable;
 
 use App\Models\Eapd\Mongodb\Grup;
+use App\Models\Eapd\Mongodb\Jabatan;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
@@ -27,23 +28,24 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
     {
         $this->setPrimaryKey('_id');
         $this->setSearchEnabled();
+        $this->setAdditionalSelects(['nama','nrk','nip','profile_img','no_telp','id_grup','id_jabatan','id_penempatan']);
     }
 
     public function builder() : Builder
     {
         return Pegawai::query()
 
-        // join tabel pegawai dengan tabel jabatan
-        ->join('jabatan as j','pegawai.id_jabatan','=','j._id')
+        // // join tabel pegawai dengan tabel jabatan
+        // ->join('jabatan as j','pegawai.id_jabatan','=','j._id')
 
-        // join tabel pegawai dengan tabel penempatan
-        ->join('penempatan','pegawai.id_penempatan','=','penempatan._id')
+        // // join tabel pegawai dengan tabel penempatan
+        // ->join('penempatan','pegawai.id_penempatan','=','penempatan._id')
 
-        // join tabel pegawai dengan tabel grup
-        ->join('grup','pegawai.id_grup','=','grup._id')
+        // // join tabel pegawai dengan tabel grup
+        // ->join('grup','pegawai.id_grup','=','grup._id')
 
         // penempatan sesuai sektor kasie
-        ->where('pegawai.id_penempatan','like',Auth::user()->data->sektor . '%');
+        ->where('id_penempatan','like',Auth::user()->data->sektor . '%');
     }
 
     public function columns(): array
@@ -73,16 +75,25 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
                 ->deselected()
                 ->searchable()
                 ->collapseOnMobile(),
-            Column::make("Jabatan", "jabatan.nama_jabatan")
+            Column::make("Jabatan", "id_jabatan")
+                ->format(function($value){
+                    return Jabatan::where('_id','=',$value)->first()->nama_jabatan;
+                })
                 ->sortable()
                 ->collapseOnMobile()
                 ->searchable(),
-            Column::make('id_penempatan')
-                ->hideIf(true),
-            Column::make("Penempatan", "penempatan.nama_penempatan")
+            // Column::make('id_penempatan')
+            //     ->hideIf(true),
+            Column::make("Penempatan", "id_penempatan")
+                ->format(function($value){
+                    return Penempatan::where('_id','=',$value)->first()->nama_penempatan;
+                })
                 ->searchable()
                 ->sortable(),
-            Column::make("Grup Jaga", "grup.nama_grup")
+            Column::make("Grup Jaga", "id_grup")
+                ->format(function($value){
+                    return Grup::where('id_grup','=',$value)->first()->nama_grup;
+                })
                 ->sortable()
                 ->searchable(),
             BooleanColumn::make("Masih Aktif", "aktif")
@@ -136,14 +147,14 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
             ->setFilterPillValues($opsi_penempatan)
             ->options($opsi_penempatan)
             ->filter(function(Builder $b,string $val){
-                $b->where('pegawai.id_penempatan','=',$val);
+                $b->where('id_penempatan','=',$val);
             }),
             SelectFilter::make('Grup','grup')
             ->setFilterPillTitle(' Grup Jaga ')
             ->setFilterPillValues($opsi_grup)
             ->options($opsi_grup)
             ->filter(function(Builder $b,string $val){
-                $b->where('pegawai.id_grup','=',$val);
+                $b->where('id_grup','=',$val);
             }),
             SelectFilter::make('Masih Aktif','aktif')
             ->setFilterPillTitle('Masih Aktif')
@@ -158,9 +169,9 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
             ])
             ->filter(function(Builder $b, string $val){
                 if($val === '1')
-                    $b->where('pegawai.aktif',true);
+                    $b->where('aktif',true);
                 elseif($val === '0')
-                    $b->where('pegawai.aktif',false);
+                    $b->where('aktif',false);
             }),
             
         ];
