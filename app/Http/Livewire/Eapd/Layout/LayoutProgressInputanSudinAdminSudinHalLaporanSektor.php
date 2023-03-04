@@ -36,7 +36,7 @@ class LayoutProgressInputanSudinAdminSudinHalLaporanSektor extends Component
     {
         $this->muatDataInputanSudin();
         if($this->id_detail_pos != "")
-        $this->muatDataInputanPos();
+            $this->muatDataInputanPos();
     }
 
     public function inputSudin($value)

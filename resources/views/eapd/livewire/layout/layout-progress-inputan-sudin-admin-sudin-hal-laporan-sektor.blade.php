@@ -134,7 +134,7 @@
                                                 <span class="badge badge-secondary">{{$item['terverif']}}%</span>
                                             </td>
                                             <td class="text-center text-wrap my-auto align-middle">
-                                                <a class="btn btn-sm bg-teal" wire:click="ModalProgresSudin('{{$item['id_pegawai']}}')"  wire:ignore.self>
+                                                <a class="btn btn-sm bg-teal" onClick=modal("modal-progres-sudin","{{$item['id_pegawai']}}","ModalProgressSudin")  wire:ignore.self>
                                                     <i class="fas fa-pencil-square-o">Edit</i>
                                                 </a>
                                             </td>
