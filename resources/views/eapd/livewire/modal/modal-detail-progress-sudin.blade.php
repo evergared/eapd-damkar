@@ -1,5 +1,5 @@
 <div>
-    <div class="modal fade" id="modal-progres-sudin">
+    <div class="modal fade" id="modal-progres-sudin" wire:ignore.self>
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
@@ -52,9 +52,9 @@
         <!-- /.modal-dialog -->
       </div>
 
-<script>
+{{-- <script>
     window.addEventListener('ModalProgresSudin', event=> {
             modal('modal-progres-sudin')
         })
-</script>
+</script> --}}
 </div>
