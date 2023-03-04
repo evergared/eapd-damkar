@@ -55,13 +55,9 @@ class EapdCrudTest extends TestCase
 
     public function test_read()
     {
-
-        $string = 'Sektor IX Pasar Minggu';
-        if(str_contains($string,'Sektor'))
-        {
-            $pieces = explode(' ',$string);
-            $read = $pieces[0].' '.$pieces[1];
-        }
+        $adc = new ApdDataController;
+        // $read = $adc->muatListInputApdDariTemplate("640220e5d7f5db34c60dca70","L001");
+        $read = InputApdTemplate::whereIn('periode',["640220e5d7f5db34c60dca70"])->first()->template;
         dd($read);
         $this->assertTrue(true);
     }

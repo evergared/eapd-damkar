@@ -48,3 +48,7 @@ di satu class, ada variable public $namaFileApd,
 maka untuk fungsi yang berinteraksi dengan variable tersebut contohnya
 
 prosesNamaFileApd(), ubahNamaFileApd(), dan semacamnya
+
+
+List event yang dapat ditangkap oleh komponen livewire untuk fitur perubahan secara realtime :
+- refreshDataKomponen

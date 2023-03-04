@@ -103,10 +103,10 @@ class ApdDataController extends Controller
             if($id_periode == 1)
             $id_periode = PeriodeInputApd::get()->first()->id;
 
-            if(InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('id_periode',[$id_periode])->first())
+            if(InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first())
 
             // ambil template penginputan apd dari database menggunakan pivot table yang telah di buat di model
-            if($list = InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('id_periode',[$id_periode])->first()->template)
+            if($list = InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first()->template)
             {
                 // return dd($list);
                 return $list;
@@ -586,7 +586,7 @@ class ApdDataController extends Controller
                     error_log('jumlah pegawai di pos '.$pos.' '.count($seluruh_pegawai));
                     foreach($seluruh_pegawai as $pegawai)
                     {
-                        error_log('mulai menghitung untuk pegawai '.$pegawai.' dengan jabatan '.$pegawai->id_jabatan);
+                        error_log('mulai menghitung untuk pegawai '.$pegawai->nama_pegawai.' dengan jabatan '.$pegawai->id_jabatan);
                         try{
                             $template = $this->muatListInputApdDariTemplate($id_periode,$pegawai->id_jabatan);
                             error_log('template is empty '.is_null($template));
@@ -641,6 +641,7 @@ class ApdDataController extends Controller
                     error_log('masukan list ke data pos');
                     // masukan data tersebut kedalam array untuk di push ke array data pos
                     array_push($data_pos,array(
+                        'id_pos' => $pos,
                         'nama_pos' => $nama_pos,
                         'pegawai_asn' => $jumlah_asn,
                         'pegawai_pjlp' => $jumlah_pjlp,
@@ -669,6 +670,57 @@ class ApdDataController extends Controller
         {
             error_log('Gagal membangun data inputan id_sudin '.$e);
             return [];
+        }
+    }
+
+    public function muatDataInputanPos($id_penempatan_pos, $id_periode)
+    {
+        try{
+
+            $data = [];
+            $list_pegawai = Pegawai::where('id_penempatan','=',$id_penempatan_pos)->get();
+
+            foreach($list_pegawai as $pegawai)
+            {
+                $template = $this->muatListInputApdDariTemplate($id_periode,$pegawai->id_jabatan);
+                $yang_harus_diinput = 0;
+                $yang_telah_diinput = 0;
+                $yang_telah_diverif = 0;
+
+                try{
+                    $jabatan_pegawai = Jabatan::find($pegawai->id_jabatan)->nama_jabatan;
+                }
+                catch(Throwable $e)
+                {
+                    $jabatan_pegawai = '-';
+                }
+
+                if(!is_null($template))
+                {
+
+                    $yang_harus_diinput = count($template);
+
+                    $yang_telah_diinput = count($this->muatInputanPegawai($id_periode,$pegawai->id,2));
+
+                    $yang_telah_diverif = count($this->muatInputanPegawai($id_periode,$pegawai->id,3));
+                    
+                }
+
+                array_push($data,[
+                    'id_pegawai' => $pegawai->id,
+                    'nama_pegawai' => $pegawai->nama,
+                    'jabatan_pegawai' => $jabatan_pegawai,
+                    'terinput'=> ($yang_harus_diinput > 0)? round(($yang_telah_diinput/$yang_harus_diinput) * 100, 2) : 0,
+                    'terverif'=> ($yang_harus_diinput > 0)? round(($yang_telah_diverif/$yang_harus_diinput) * 100, 2) : 0,
+                ]);
+            }
+
+            return $data;
+
+        }
+        catch(Throwable $e)
+        {
+            error_log('gagal dalam memuat data inputan pos '.$id_penempatan_pos.' '.$e);
         }
     }
 

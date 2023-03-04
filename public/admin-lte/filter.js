@@ -127,11 +127,11 @@ window.addEventListener('jsShowDetail',event =>{
   }
 
   //function untuk inputan sudin
-  function inputSudin(Id,Filter){
+  function inputSudin(Id){
     //alert("Tester") console.
     //alert(Filter)
     console.log("Id",Id)
-    Livewire.emit('inputSudin',[Id,Filter]);
+    Livewire.emit('inputSudin',Id);
     $("#input-sudin").hide(500)
     $("#aksisudin").collapse('show')
   }
