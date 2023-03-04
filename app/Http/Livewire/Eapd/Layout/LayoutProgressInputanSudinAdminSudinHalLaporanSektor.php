@@ -35,6 +35,8 @@ class LayoutProgressInputanSudinAdminSudinHalLaporanSektor extends Component
     public function refreshDataKomponen()
     {
         $this->muatDataInputanSudin();
+        if($this->id_detail_pos != "")
+        $this->muatDataInputanPos();
     }
 
     public function inputSudin($value)
