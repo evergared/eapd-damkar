@@ -569,6 +569,7 @@ class ApdDataController extends Controller
 
                 // list pos
                 $list_pos = Penempatan::where('_id','like',$sektor.'.%')->where('keterangan','=','pos')->pluck('_id')->toArray();
+                array_push($list_pos,$sektor);
                 $data_pos = array();
                 error_log('jumlah pos '.count($list_pos));
 
@@ -576,7 +577,7 @@ class ApdDataController extends Controller
                 foreach($list_pos as $pos)
                 {
                     error_log('pengulangan untuk pos '.$pos);
-                    $nama_pos = Penempatan::find($pos)->nama_penempatan;
+                    $nama_pos = ($pos == $sektor)? 'Staff / Non-Pos' : Penempatan::find($pos)->nama_penempatan ;
                     $jumlah_asn = 0;
                     $jumlah_pjlp = 0;
                     $yang_harus_diinput = 0;

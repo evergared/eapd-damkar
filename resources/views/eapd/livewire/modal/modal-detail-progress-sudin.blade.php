@@ -51,4 +51,10 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
+
+<script>
+    window.addEventListener('ModalProgresSudin', event=> {
+            modal('modal-progres-sudin')
+        })
+</script>
 </div>

@@ -94,7 +94,7 @@
         <div class="collapse" id="aksisudin" wire:ignore.self>
             <div class="card my-n3 mx-n3">
                 {{-- Status Start --}}
-            <div wire:loading wire:target="data_detail_pos">
+            <div wire:loading>
                 <div class="spinner-border spinner-border-sm text-info" role="status"></div>
                 <small class="text-info"> Memuat data..</small>
             </div>
@@ -144,7 +144,9 @@
                             </table>
                     </div>                
                 @else
-                                    
+                       
+
+                                     
                 @endif
 
                 
@@ -156,8 +158,4 @@
 
         </div>
 </div>
-<script>
-    window.addEventListener('ModalProgresSudin', event=> {
-            modal('modal-progres-sudin')
-        })
-</script>
+
