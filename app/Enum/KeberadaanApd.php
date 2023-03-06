@@ -14,9 +14,9 @@ class KeberadaanApd extends Enum
     protected static function values(): array
     {
         return [
-            'belumTerima' => 'belum terima',
-            'hilang' => 'hilang',
-            'ada' => 'ada',
+            'belumTerima' => 'Belum Terima',
+            'hilang' => 'Hilang',
+            'ada' => 'Ada',
         ];
     }
 
@@ -25,7 +25,7 @@ class KeberadaanApd extends Enum
         return [
             'belumTerima' => 'APD Belum Diterima',
             'hilang' => 'APD Hilang',
-            'ada' => 'Ada',
+            'ada' => 'APD Ada',
         ];
     }
 }

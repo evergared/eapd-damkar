@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\KeberadaanApd as keberadaan;
 use App\Enum\StatusApd as status;
 
 /**
@@ -68,6 +69,30 @@ class StatusDisplayController extends Controller
                 break;
             default:
                 $warna = 'secondary';
+                break;
+        }
+
+        return $warna;
+    }
+
+    public function ubahKeberadaanApdKeWarnaBootstrap($item):string
+    {
+        $warna = "";
+
+        $status = keberadaan::tryFrom($item);
+
+        switch($status){
+            case keberadaan::ada() :
+                $warna = "info";
+                break;
+            case keberadaan::belumTerima() :
+                $warna = "orange";
+                break;
+            case keberadaan::hilang() :
+                $warna = "danger";
+                break;
+            default :
+                $warna = "secondary";
                 break;
         }
 

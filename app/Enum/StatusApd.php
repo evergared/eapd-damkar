@@ -31,7 +31,7 @@ class StatusApd extends Enum
         return [
             'belumTerima' => 'APD Belum Diterima',
             'hilang' => 'APD Hilang',
-            'baik' => 'Baik',
+            'baik' => 'Kondisi Baik',
             'rusakRingan' => 'Rusak Ringan',
             'rusakSedang' => 'Rusak Sedang',
             'rusakBerat' => 'Rusak Berat',

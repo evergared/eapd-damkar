@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\KeberadaanApd;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -97,7 +98,7 @@ class ApdDataController extends Controller
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
 
-            if(Jabatan::where('id_jabatan', '=', $id_jabatan)->first())
+            if(Jabatan::where('_id', '=', $id_jabatan)->first())
                 error_log('jabatan found');
 
             if($id_periode == 1)
@@ -182,6 +183,8 @@ class ApdDataController extends Controller
                                 'nama_jenis' => ApdJenis::where('_id', '=', $id_jenis)->first()->nama_jenis,
                                 'id_apd' => $input->id_apd,
                                 'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
+                                'status_keberadaan' => KeberadaanApd::tryFrom($input->keberadaan)->label,
+                                'warna_keberadaan'=> $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->keberadaan),
                                 'status_verifikasi' => $verifikasi_label,
                                 'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
                                 'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode),
@@ -207,6 +210,8 @@ class ApdDataController extends Controller
                             'nama_jenis' => ApdJenis::where('_id', '=', $id_jenis)->first()->nama_jenis,
                             'id_apd' => $input->id_apd,
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
+                            'status_keberadaan' => KeberadaanApd::tryFrom($input->keberadaan)->label,
+                            'warna_keberadaan'=> $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->keberadaan),
                             'status_verifikasi' => $verifikasi_label,
                             'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
                             'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)->label,
@@ -387,7 +392,7 @@ class ApdDataController extends Controller
             error_log("id_periode : ".$id_periode);
 
             // ambil template input apd dari database berdasarkan pivot table yang telah dibuat di model
-            $list = InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('id_periode',[$id_periode])->first()->template;
+            $list = InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first()->template;
             // return dd($list);
             // panggil controller untuk membantu menampilkan status di bootstrap
             $sdc = new StatusDisplayController;
