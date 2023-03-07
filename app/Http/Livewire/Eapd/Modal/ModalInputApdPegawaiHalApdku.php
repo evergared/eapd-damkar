@@ -130,6 +130,9 @@ class ModalInputApdPegawaiHalApdku extends Component
 
         $this->ambilDataUser();
         $this->hidrasiDataOpsi();
+        /**
+         * @todo fix bug : saat user telah selesai mengisi data apd dan kembali klik thumbnail list apd, form control tidak muncul walau opsi sudah benar (sudah terima dan ada)
+         */
         $this->id_apd_user = $this->id_apd_cache = $this->opsi_apd[0];
         $this->userTelahMemilih = true;
         $this->refreshGambarTemplate();
