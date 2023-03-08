@@ -12,7 +12,7 @@
             {{-- Start bagian untuk alert --}}
               <div>
                 {{-- Alert untuk mixed --}}
-                {{-- @if (session()->has('success_simpan_data')) --}}
+                @if (session()->has('mixed_simpan_data'))
                     <div class="alert alert-light alert-dismissable fade show" role="alert">
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
@@ -52,9 +52,10 @@
                         </div>
                       </div>
                     </div>
-                {{-- @endif --}}
+                @endif
                 
                 {{-- Alert untuk sukses --}}
+                @if (session()->has('success_simpan_data'))
                     <div class="alert alert-success alert-dismissable fade show" role="alert">
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
@@ -77,14 +78,17 @@
                         </div>
                       </div>
                     </div>
+                @endif
+
 
                   {{-- Alert untuk gagal --}}
+                  @if (session()->has('fail_simpan_data'))
                     <div class="alert alert-danger alert-dismissable fade show" role="alert">
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                       </button>
                       <div>
-                        Berhasil merubah status validasi dari <a href="#list-danger-a" data-toggle="collapse">{{session('danger_simpan_data')}} item</a>.
+                        Berhasil merubah status validasi dari <a href="#list-danger-a" data-toggle="collapse">{{session('fail_simpan_data')}} item</a>.
                       </div>
                       <div class="collapse" id="list-danger-a">
                         <div class="card card-body bg-danger mt-2">
@@ -101,16 +105,21 @@
                         </div>
                       </div>
                     </div>
+                  @endif
+
 
                   {{-- Alert untuk none --}}
+                  @if (session()->has('none_simpan_data'))
                     <div class="alert alert-secondary alert-dismissable fade show" role="alert">
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                       </button>
                       <div>
-                        Berhasil merubah status validasi dari
+                        {{session('none_simpan_data')}}
                       </div>
                     </div>
+                  @endif
+
                 
               </div>
             {{-- End bagian untuk alert --}}
@@ -180,7 +189,7 @@
                               </select>
                             </div>
                             <div class="row">
-                              <textarea class="form-control"  placeholder="(opsional) Tambah Komentar"></textarea>
+                              <textarea class="form-control" wire:model="temp_verifikasi_inputan.{{$index}}.komentar"  placeholder="(opsional) Tambah Komentar"></textarea>
                             </div>
                             
                           </td>

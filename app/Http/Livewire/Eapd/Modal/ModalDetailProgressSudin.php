@@ -50,7 +50,7 @@ class ModalDetailProgressSudin extends Component
             $this->ada_verifikasi_yang_berubah = false;
             foreach($this->list_inputan_pegawai as $item)
             {
-                $n = array('id_jenis' => $item['id_jenis'], 'verifikasi' => VerifikasiApd::tryFrom($item['status_verifikasi']));
+                $n = array('id_jenis' => $item['id_jenis'], 'verifikasi' => VerifikasiApd::tryFrom($item['status_verifikasi'])->value,"komentar" => "");
                 array_push($this->temp_verifikasi_inputan,$n
                 );
             }
@@ -97,7 +97,8 @@ class ModalDetailProgressSudin extends Component
             catch(Throwable $e)
             {
                 error_log('gagal menyimpan data pada index '.$i.' dengan data sebagai berikut :');
-                error_log(implode('|',$this->list_inputan_pegawai[$i]));
+                error_log('error : '.$e);
+                // error_log(implode('|',$this->list_inputan_pegawai[$i]));
                 $jumlah_gagal++;
                 array_push($this->verifikasi_yang_berubah['gagal'],ApdJenis::find($$this->list_inputan_pegawai[$i]['id_jenis'])->nama_jenis);
             }
