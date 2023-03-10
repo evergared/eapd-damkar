@@ -7,6 +7,7 @@ use App\Http\Controllers\ApdDataController;
 use App\Models\Eapd\Mongodb\ApdJenis;
 use App\Models\Eapd\Mongodb\InputApd;
 use App\Models\Eapd\Mongodb\Pegawai;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Throwable;
 
@@ -22,7 +23,9 @@ class ModalDetailProgressSudin extends Component
 
     public
         $ada_verifikasi_yang_berubah = false, 
-        $verifikasi_yang_berubah = array('berhasil' => ['fj','nn'], 'gagal' => ['fj','nn']);
+        $verifikasi_yang_berubah = array('berhasil' => ['fj','nn'], 'gagal' => ['fj','nn']),
+        $verifikasi_yang_berhasil_diubah = array(),
+        $verifikasi_yang_gagal_diubah = array();
 
     public $listeners = [
         'ModalProgressSudin'
@@ -46,11 +49,11 @@ class ModalDetailProgressSudin extends Component
             $this->list_inputan_pegawai = $adc->muatInputanPegawai($periode,$this->id_pegawai);
             $this->temp_verifikasi_inputan = [];
             $this->cache_verifikasi_inputan = [];
-            $this->verifikasi_yang_berubah = array('berhasil' => ['fj','nn'], 'gagal' => ['fj','nn']);
+            $this->verifikasi_yang_berubah = array('berhasil' => [], 'gagal' => []);
             $this->ada_verifikasi_yang_berubah = false;
             foreach($this->list_inputan_pegawai as $item)
             {
-                $n = array('id_jenis' => $item['id_jenis'], 'verifikasi' => VerifikasiApd::tryFrom($item['status_verifikasi'])->value,"komentar" => "");
+                $n = array('id_jenis' => $item['id_jenis'], 'verifikasi' => $item['enum_verifikasi'],"komentar" => "");
                 array_push($this->temp_verifikasi_inputan,$n
                 );
             }
@@ -72,7 +75,8 @@ class ModalDetailProgressSudin extends Component
         foreach($this->temp_verifikasi_inputan as $i => $inputan)
         {
             // jika verifikasi tidak kosong dan verifikasi berbeda dengan data sebelumnya
-            if($inputan['verifikasi'] != "" && $inputan['verifikasi'] != $this->cache_verifikasi_inputan[$i]['verifikasi'])
+            if(($inputan['verifikasi'] != "" && $inputan['verifikasi'] != $this->cache_verifikasi_inputan[$i]['verifikasi']) || 
+               ($inputan['komentar'] != "" && $inputan['komentar'] != $this->cache_verifikasi_inputan[$i]['komentar']) )
                 // masukan urutan data tsb ke daftar index
                 array_push($index,$i);
         }
@@ -83,16 +87,25 @@ class ModalDetailProgressSudin extends Component
         $jumlah_gagal = 0;
         $jumlah_berhasil = 0;
         $this->verifikasi_yang_berubah = array('berhasil' => [], 'gagal' => []);
+        $this->verifikasi_yang_berhasil_diubah = array();
+        $this->verifikasi_yang_gagal_diubah = array();
         foreach($index as $i)
         {
             try{
 
                 $inputan = InputApd::where('id_pegawai','=',$this->id_pegawai)->where('id_periode','=',$periode)->where('id_jenis','=',$this->list_inputan_pegawai[$i]['id_jenis'])->get()->first();
-                $inputan->verifikasi_status = $this->temp_verifikasi_inputan[$i]['verifikasi'];
-                $inputan->komentar_verifikator = $this->temp_verifikasi_inputan[$i]['komentar'];
+                
+                if($this->temp_verifikasi_inputan[$i]['verifikasi'] != "" && $this->temp_verifikasi_inputan[$i]['verifikasi'] != $this->cache_verifikasi_inputan[$i]['verifikasi'])
+                    $inputan->verifikasi_status = VerifikasiApd::tryFrom($this->temp_verifikasi_inputan[$i]['verifikasi'])->value;
+
+                if($this->temp_verifikasi_inputan[$i]['komentar'] != "" && $this->temp_verifikasi_inputan[$i]['komentar'] != $this->cache_verifikasi_inputan[$i]['komentar'])    
+                    $inputan->komentar_verifikator = $this->temp_verifikasi_inputan[$i]['komentar'];
+
+                $inputan->verifikasi_oleh = Auth::user()->id;
+
                 $inputan->save();
                 $jumlah_berhasil++;
-                array_push($this->verifikasi_yang_berubah['berhasil'],ApdJenis::find($inputan->id_jenis)->nama_jenis);
+                array_push($this->verifikasi_yang_berhasil_diubah,ApdJenis::find($inputan->id_jenis)->nama_jenis);
             }
             catch(Throwable $e)
             {
@@ -100,17 +113,21 @@ class ModalDetailProgressSudin extends Component
                 error_log('error : '.$e);
                 // error_log(implode('|',$this->list_inputan_pegawai[$i]));
                 $jumlah_gagal++;
-                array_push($this->verifikasi_yang_berubah['gagal'],ApdJenis::find($$this->list_inputan_pegawai[$i]['id_jenis'])->nama_jenis);
+                array_push($this->verifikasi_yang_gagal_diubah,ApdJenis::find($$this->list_inputan_pegawai[$i]['id_jenis'])->nama_jenis);
             }
         }
 
         // mengeluarkan pesan untuk proses perubahan inputan yang telah dilakukan
         if($jumlah_berhasil > 0 && $jumlah_gagal > 0)
         {
+            $this->ModalProgressSudin($this->id_pegawai);
+            $this->emit('refreshDataLayout');
             session()->flash('mixed_simpan_data',['success'=>$jumlah_berhasil,'fail'=>$jumlah_gagal]);
         }
         elseif($jumlah_berhasil > 0)
         {
+            $this->ModalProgressSudin($this->id_pegawai);
+            $this->emit('refreshDataLayout');
             session()->flash('success_simpan_data',$jumlah_berhasil);
         }
         elseif($jumlah_gagal > 0)
@@ -121,6 +138,7 @@ class ModalDetailProgressSudin extends Component
         {
             session()->flash('none_simpan_data','Tidak ada yang berubah, pastikan validasi telah dipilih dengan benar (Validasi/Tolak).'.'\n'.'Jika hal ini sering terjadi, harap hubungi admin.');
         }
+
 
     }
 

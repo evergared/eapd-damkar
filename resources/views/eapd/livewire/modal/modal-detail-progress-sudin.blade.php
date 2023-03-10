@@ -30,7 +30,7 @@
                           </div>
                             <h5 class="text-success">Berhasil : </h5>
                             <ul>
-                              @foreach ($verifikasi_yang_berubah['berhasil'] as $item)
+                              @foreach ($verifikasi_yang_berhasil_diubah as $item)
                                   <li>{{$item}}</li>
                               @endforeach
                             </ul>
@@ -45,7 +45,7 @@
                           </div>
                             <h5 class="text-danger">Gagal : </h5>
                             <ul>
-                              @foreach ($verifikasi_yang_berubah['berhasil'] as $item)
+                              @foreach ($verifikasi_yang_gagal_diubah as $item)
                                   <li>{{$item}}</li>
                               @endforeach
                             </ul>
@@ -71,7 +71,7 @@
                             </button>
                           </div>
                             <ul>
-                              @foreach ($verifikasi_yang_berubah['berhasil'] as $item)
+                              @foreach ($verifikasi_yang_berhasil_diubah as $item)
                                   <li>{{$item}}</li>
                               @endforeach
                             </ul>
@@ -88,7 +88,7 @@
                           <span aria-hidden="true">&times;</span>
                       </button>
                       <div>
-                        Berhasil merubah status validasi dari <a href="#list-danger-a" data-toggle="collapse">{{session('fail_simpan_data')}} item</a>.
+                        Gagal merubah status validasi dari <a href="#list-danger-a" data-toggle="collapse">{{session('fail_simpan_data')}} item</a>.
                       </div>
                       <div class="collapse" id="list-danger-a">
                         <div class="card card-body bg-danger mt-2">
@@ -98,7 +98,7 @@
                             </button>
                           </div>
                             <ul>
-                              @foreach ($verifikasi_yang_berubah['berhasil'] as $item)
+                              @foreach ($verifikasi_yang_gagal_diubah as $item)
                                   <li>{{$item}}</li>
                               @endforeach
                             </ul>

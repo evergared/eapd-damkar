@@ -185,6 +185,7 @@ class ApdDataController extends Controller
                                 'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                                 'status_keberadaan' => KeberadaanApd::tryFrom($input->keberadaan)->label,
                                 'warna_keberadaan'=> $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->keberadaan),
+                                'enum_verifikasi' => $input->verifikasi_status,
                                 'status_verifikasi' => $verifikasi_label,
                                 'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
                                 'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode),
@@ -212,6 +213,7 @@ class ApdDataController extends Controller
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                             'status_keberadaan' => KeberadaanApd::tryFrom($input->keberadaan)->label,
                             'warna_keberadaan'=> $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->keberadaan),
+                            'enum_verifikasi' => $input->verifikasi_status,
                             'status_verifikasi' => $verifikasi_label,
                             'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
                             'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)->label,
@@ -624,7 +626,7 @@ class ApdDataController extends Controller
                                 $yang_harus_diinput++;
                             }
 
-                            $inputan_terinput = $this->muatInputanPegawai($id_periode,$pegawai->id,2);
+                            $inputan_terinput = $this->muatInputanPegawai($id_periode,$pegawai->id);
                             foreach($inputan_terinput as $inputan)
                             {
                                 $yang_telah_diinput++;
@@ -706,7 +708,7 @@ class ApdDataController extends Controller
 
                     $yang_harus_diinput = count($template);
 
-                    $yang_telah_diinput = count($this->muatInputanPegawai($id_periode,$pegawai->id,2));
+                    $yang_telah_diinput = count($this->muatInputanPegawai($id_periode,$pegawai->id));
 
                     $yang_telah_diverif = count($this->muatInputanPegawai($id_periode,$pegawai->id,3));
                     
