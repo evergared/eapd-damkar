@@ -391,6 +391,8 @@ class ModalInputApdPegawaiHalApdku extends Component
                 $apd->id_jenis = $this->id_jenis;
                 $apd->id_periode = $periode;
                 $apd->verifikasi_status = verif::verifikasi()->value;
+                $apd->verifikasi_oleh = "";
+                $apd->komentar_verifikator = "";
             }
                         
 

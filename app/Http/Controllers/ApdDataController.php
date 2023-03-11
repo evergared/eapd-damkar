@@ -236,7 +236,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function muatSatuInputanPegawai($id_jenis, $id_apd, $id_periode = 1, $id_pegawai = ""): array
+    public function muatSatuInputanPegawai($id_jenis, $id_periode = 1, $id_pegawai = ""): array
     {
         try{
             error_log('start muat satu inputan pegawai');
@@ -274,6 +274,9 @@ class ApdDataController extends Controller
                             'nama_jenis' => ApdJenis::where('_id', '=', $id_jenis)->first()->nama_jenis,
                             'id_apd' => $input->id_apd,
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
+                            'status_keberadaan' => $input->keberadaan,
+                            'warna_keberadaan' => $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->keberadaan),
+                            'enum_verifikasi'=>$input->verifikasi_status,
                             'status_verifikasi' => $verifikasi_label,
                             'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
                             'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)->label,
@@ -283,8 +286,6 @@ class ApdDataController extends Controller
                             'komentar_verifikator' => $input->komentar_verifikator
                         ];
             }
-
-            error_log('hit end of function');
 
 
         }

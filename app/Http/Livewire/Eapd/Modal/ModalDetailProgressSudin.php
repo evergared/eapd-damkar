@@ -17,6 +17,7 @@ class ModalDetailProgressSudin extends Component
     public 
         $nama_pegawai = "",
         $id_pegawai = "",
+        $id_periode = "",
         $list_inputan_pegawai = [],
         $temp_verifikasi_inputan = [],
         $cache_verifikasi_inputan = [];
@@ -27,15 +28,21 @@ class ModalDetailProgressSudin extends Component
         $verifikasi_yang_berhasil_diubah = array(),
         $verifikasi_yang_gagal_diubah = array();
 
+    public 
+        $data_detail_inputan = [];
+
     public $listeners = [
         'ModalProgressSudin'
     ];
 
+    #region livewire lifecycle
     public function render()
     {
         return view('eapd.livewire.modal.modal-detail-progress-sudin');
     }
+    #endregion
 
+    #region event handler
     public function ModalProgressSudin($value)
     {
         error_log('detail inputan sudin '.$value);
@@ -45,8 +52,8 @@ class ModalDetailProgressSudin extends Component
             $this->nama_pegawai = Pegawai::find($this->id_pegawai)->nama;
 
             $adc = new ApdDataController;
-            $periode = $adc->ambilIdPeriodeInput();
-            $this->list_inputan_pegawai = $adc->muatInputanPegawai($periode,$this->id_pegawai);
+            $this->id_periode = $adc->ambilIdPeriodeInput();
+            $this->list_inputan_pegawai = $adc->muatInputanPegawai($this->id_periode,$this->id_pegawai);
             $this->temp_verifikasi_inputan = [];
             $this->cache_verifikasi_inputan = [];
             $this->verifikasi_yang_berubah = array('berhasil' => [], 'gagal' => []);
@@ -67,7 +74,9 @@ class ModalDetailProgressSudin extends Component
             session()->flash('error_fetch_data','Gagal memuat data untuk detail inputan pegawai.');
         }
     }
+    #endregion
 
+    #region click handler
     public function simpan()
     {
         // pengecekan inputan mana saja yang berubah verifikasinya
@@ -83,7 +92,6 @@ class ModalDetailProgressSudin extends Component
 
         // melakukan perubahan verifikasi terhadap inputan yang berubah
         $adc = new ApdDataController;
-        $periode = $adc->ambilIdPeriodeInput();
         $jumlah_gagal = 0;
         $jumlah_berhasil = 0;
         $this->verifikasi_yang_berubah = array('berhasil' => [], 'gagal' => []);
@@ -93,7 +101,7 @@ class ModalDetailProgressSudin extends Component
         {
             try{
 
-                $inputan = InputApd::where('id_pegawai','=',$this->id_pegawai)->where('id_periode','=',$periode)->where('id_jenis','=',$this->list_inputan_pegawai[$i]['id_jenis'])->get()->first();
+                $inputan = InputApd::where('id_pegawai','=',$this->id_pegawai)->where('id_periode','=',$this->id_periode)->where('id_jenis','=',$this->list_inputan_pegawai[$i]['id_jenis'])->get()->first();
                 
                 if($this->temp_verifikasi_inputan[$i]['verifikasi'] != "" && $this->temp_verifikasi_inputan[$i]['verifikasi'] != $this->cache_verifikasi_inputan[$i]['verifikasi'])
                     $inputan->verifikasi_status = VerifikasiApd::tryFrom($this->temp_verifikasi_inputan[$i]['verifikasi'])->value;
@@ -138,8 +146,23 @@ class ModalDetailProgressSudin extends Component
         {
             session()->flash('none_simpan_data','Tidak ada yang berubah, pastikan validasi telah dipilih dengan benar (Validasi/Tolak).'.'\n'.'Jika hal ini sering terjadi, harap hubungi admin.');
         }
-
-
     }
+
+    public function lihatDetail($value)
+    {
+        $id_jenis = $value;
+
+        try{
+
+            $adc = new ApdDataController;
+            $this->data_detail_inputan = $adc->muatSatuInputanPegawai($id_jenis,$this->id_periode,$this->id_pegawai);
+
+        }
+        catch(Throwable $e)
+        {
+
+        }
+    }
+    #endregion
 
 }
