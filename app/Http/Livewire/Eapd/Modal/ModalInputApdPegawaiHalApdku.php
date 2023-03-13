@@ -12,6 +12,7 @@ use App\Models\Eapd\Mongodb\ApdJenis;
 use App\Models\Eapd\Mongodb\ApdList;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Eapd\Mongodb\InputApd;
+use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Throwable;
@@ -393,6 +394,7 @@ class ModalInputApdPegawaiHalApdku extends Component
                 $apd->verifikasi_status = verif::verifikasi()->value;
                 $apd->verifikasi_oleh = "";
                 $apd->komentar_verifikator = "";
+                $apd->data_diupdate = Carbon::now('Asia/Jakarta')->toDateTimeString();
             }
                         
 
@@ -412,6 +414,7 @@ class ModalInputApdPegawaiHalApdku extends Component
                 }
 
                 $apd->id_jenis = $this->id_jenis;
+                $apd->komentar_pengupload = "";
 
                 $apd->id_apd = $this->id_apd_user; // hapus ini jika user dapat memilih model
 
