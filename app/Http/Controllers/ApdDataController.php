@@ -16,6 +16,7 @@ use App\Models\Eapd\Mongodb\InputApd;
 use App\Models\Eapd\Mongodb\Pegawai;
 use App\Models\Eapd\Mongodb\Penempatan;
 use App\Models\Eapd\Mongodb\PeriodeInputApd;
+use Carbon\Carbon;
 use Error;
 use Throwable;
 
@@ -268,11 +269,15 @@ class ApdDataController extends Controller
                 
                 // panggil untuk mambantu mengubah warna status
                 $sdc = new StatusDisplayController;
+                $verifikator = Pegawai::find($input->verifikasi_oleh);
 
                 return [
                             'id_jenis' => $id_jenis,
                             'nama_jenis' => ApdJenis::where('_id', '=', $id_jenis)->first()->nama_jenis,
                             'id_apd' => $input->id_apd,
+                            'size_apd' => ($input->size)?$input->size:"-",
+                            'data_terakhir_update' => $input->data_diupdate,
+                            'verifikasi_terakhir_update' => Carbon::createFromTimestamp($input->updated_at)->toDateTimeString(),
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                             'status_keberadaan' => $input->keberadaan,
                             'warna_keberadaan' => $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->keberadaan),
@@ -283,6 +288,8 @@ class ApdDataController extends Controller
                             'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                             'komentar_pengupload' => $input->komentar_pengupload,
                             'id_verifikator' => $input->verifikasi_oleh,
+                            'nama_verifikator'=> $verifikator->nama,
+                            'jabatan_verifikator'=> Jabatan::find($verifikator->id_jabatan)->nama_jabatan,
                             'komentar_verifikator' => $input->komentar_verifikator
                         ];
             }
