@@ -165,6 +165,7 @@ return new class extends Migration
                 $t->text('keterangan')->nullable();
                 $t->timestamps();
                 $t->index('id_periode')->nullable();
+                $t->text('data_diupdate')->nullable();
                 $t->text('verifikasi_oleh')->nullable();
                 $t->string('verifikasi_status', 2)->nullable();
                 $t->text('komentar_verifikator')->nullable();
