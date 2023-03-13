@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Eapd\Modal;
 use App\Enum\VerifikasiApd;
 use App\Http\Controllers\ApdDataController;
 use App\Models\Eapd\Mongodb\ApdJenis;
+use App\Models\Eapd\Mongodb\ApdList;
 use App\Models\Eapd\Mongodb\InputApd;
 use App\Models\Eapd\Mongodb\Pegawai;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +30,9 @@ class ModalDetailProgressSudin extends Component
         $verifikasi_yang_gagal_diubah = array();
 
     public 
-        $data_detail_inputan = [];
+        $nama_apd_detail = "",
+        $gambar_apd_template = null,
+        $data_detail_inputan = null;
 
     public $listeners = [
         'ModalProgressSudin'
@@ -150,17 +153,23 @@ class ModalDetailProgressSudin extends Component
 
     public function lihatDetail($value)
     {
+        error_log('start lihat detil '.$value);
         $id_jenis = $value;
+        $this->gambar_apd_template = null;
 
         try{
-
+            $this->nama_apd_detail = ApdJenis::find($id_jenis)->nama_jenis;
             $adc = new ApdDataController;
             $this->data_detail_inputan = $adc->muatSatuInputanPegawai($id_jenis,$this->id_periode,$this->id_pegawai);
-
+            $this->gambar_apd_template = $adc->siapkanGambarTemplateBesertaPathnya(ApdList::find($this->data_detail_inputan['id_apd'])->image,$id_jenis,$this->data_detail_inputan['id_apd']);
+            error_log('lihat detail finish');
         }
         catch(Throwable $e)
         {
-
+            $this->nama_apd_detail = "-";
+            $this->data_detail_inputan = null;
+            $this->gambar_apd_template = null;
+            error_log('error lihat detail '.$e);
         }
     }
     #endregion
