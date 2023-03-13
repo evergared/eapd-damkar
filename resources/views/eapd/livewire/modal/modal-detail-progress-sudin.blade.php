@@ -190,12 +190,12 @@
                               </select>
                             </div>
                             <div class="row">
-                              <textarea class="form-control" wire:model="temp_verifikasi_inputan.{{$index}}.komentar"  placeholder="(opsional) Tambah Komentar"></textarea>
+                              <textarea class="form-control" wire:model="temp_verifikasi_inputan.{{$index}}.komentar"  placeholder="(opsional) Tambah Catatan/Komentar"></textarea>
                             </div>
                             
                           </td>
                           <td class="text-center text-wrap my-auto align-middle">
-                            <button type="button" class="btn btn-secondary">Detail</button>
+                            <button type="button" class="btn btn-secondary" wire:click="lihatDetail('{{$item['id_jenis']}}')">Detail</button>
                           </td>
                         </tr>
                       @endforeach
@@ -251,15 +251,14 @@
               </div>
             </div>
           </div>
-          
           {{-- End Card Profil --}}
 
           {{-- Start Card lihat detail --}}
           <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <h4 class="d-none d-sm-block">Detail Inputan</h4>
-                    <h5 class="d-block d-sm-none">Detail Inputan</h5>
+                    <h4 class="d-none d-sm-block">Detail Inputan {{$nama_apd_detail}}</h4>
+                    <h5 class="d-block d-sm-none">Detail Inputan {{$nama_apd_detail}}</h5>
                 </div>
                 <div class="card-tools">
                     <button type="button" class="close" data-toggle="collapse"
@@ -269,119 +268,100 @@
                 </div>
             </div>
             <div class="card-body">
-              <div class="row">
-                {{-- Start tampilan gambar --}}
-                <div class="col-12 col-sm-6">
-                  <div class="card">
-                    {{-- nav tabs --}}
-                    <div class="card-header">
-                      <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                          <a class="nav-link active" id="gambar-user-tab" role="tab" aria-selected="true" data-toggle="pill" 
-                            aria-controls="gambar-user-tab-content" href="#gambar-user-tab-content">Gambar yang diupload</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" id="gambar-apd-tab" role="tab" aria-selected="false" data-toggle="pill"
-                            aria-controls="gambar-apd-tab-content" href="#gambar-apd-tab-content">Gambar APD</a>
-                        </li>
-                      </ul>
-                    </div>
-
-                    {{-- tab content --}}
-                    <div class="card-body">
-                      <div class="tab-content">
-                        {{-- gambar apd user --}}
-                        <div class="tab-pane fade active show" id="gambar-user-tab-content" role="tabpanel" aria-labelledby="gambar-user-tab">
-                          testing
-                        </div>
-
-                        {{-- gambar apd template --}}
-                        <div class="tab-pane fade" id="gambar-apd-tab-content" role="tabpanel" aria-labelledby="gambar-apd-tab">
-                          testising
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
+                {{-- Status Start --}}
+                <div wire:loading='lihatDetail'>
+                    <div class="spinner-border spinner-border-sm text-info" role="status"></div>
+                    <small class="text-info"> Memuat data..</small>
                 </div>
-                {{-- End tampilan gambar --}}
+                {{-- Status End --}}
+              {{-- Start jika detail dapat diambil --}}
+              @if (!is_null($data_detail_inputan))
+                <div class="row">
+                  {{-- Start tampilan gambar --}}
+                  <div class="col-12 col-sm-6">
+                    <div class="card">
+                      {{-- nav tabs --}}
+                      <div class="card-header">
+                        <ul class="nav nav-tabs" role="tablist">
+                          <li class="nav-item">
+                            <a class="nav-link active" id="gambar-user-tab" role="tab" aria-selected="true" data-toggle="pill" 
+                              aria-controls="gambar-user-tab-content" href="#gambar-user-tab-content">Gambar yang diupload</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" id="gambar-apd-tab" role="tab" aria-selected="false" data-toggle="pill"
+                              aria-controls="gambar-apd-tab-content" href="#gambar-apd-tab-content">Gambar APD</a>
+                          </li>
+                        </ul>
+                      </div>
 
-                {{-- Start tampilan data --}}
-                <div class="col-12 col-sm-6">
-                  {{-- data inputan dari user --}}
-                  <div class="card">
-                    <div class="card-header">
-                      <h4 class="mt-5 d-block d-sm-none">Data Inputan</h4>
-                      <h4 class="d-none d-sm-block">Data Inputan</h4>
-                    </div>
-                    <div class="card-body">
-                      <div class="row mb-2">
-                        <div class="col-sm">
-                          <div>
-                            <div>
-                              <strong>Keberadaan :</strong>
-                            </div>
-                            <div class="text-center align-middle">
-                                <span class="badge badge-info text-center text-wrap my-auto align-middle">TESTING</span>
-                            </div>
+                      {{-- tab content --}}
+                      <div class="card-body">
+                        <div class="tab-content">
+                          {{-- Start gambar apd user --}}
+                          <div class="tab-pane fade active show" id="gambar-user-tab-content" role="tabpanel" aria-labelledby="gambar-user-tab">
+                            testing
                           </div>
-                          <div>
-                            <div>
-                              <strong>Kondisi :</strong>
-                            </div>
-                            <div class="text-center align-middle">
-                                <span class="badge badge-info text-center text-wrap my-auto align-middle">TESTING</span>
-                            </div>
+                          {{-- End gambar apd user --}}
+
+                          {{-- Start gambar apd template --}}
+                          <div class="tab-pane fade" id="gambar-apd-tab-content" role="tabpanel" aria-labelledby="gambar-apd-tab">
+                            {{-- Start jika gambar template ada --}}
+                            @if (!is_null($gambar_apd_template))
+                                {{-- Start jika ada lebih dari satu --}}
+                                @if ()
+                                    
+                                @endif
+                                {{-- End jika ada lebih dari satu --}}
+                            {{-- End jika gambar template ada --}}
+                            {{-- Start jika tidak ada gambar template --}}
+                            @else
+                            @endif
+                            {{-- End jika tidak ada gambar template --}}
+                            
                           </div>
-                        </div>
-                        <div class="col-sm">
-                          <div>
-                            <div>
-                              <strong>Ukuran :</strong>
-                            </div>
-                            <div class="text-center align-middle">
-                                <span class="badge badge-info text-center text-wrap my-auto align-middle">TESTING</span>
-                            </div>
-                          </div>
-                          <div>
-                            <div>
-                              <strong>Terakhir Diubah :</strong>
-                            </div>
-                            <div class="text-center align-middle">
-                                <span class="badge badge-info text-center text-wrap my-auto align-middle">TESTING</span>
-                            </div>
-                          </div>
+                          {{-- End gambar apd template --}}
                         </div>
                       </div>
-                      <div class="row-sm">
-                        <div class="text-bold mb-1">
-                          Catatan dari Peng-unggah : 
-                        </div>
-                        <div class="blockquote">
-                            dlafkdalfkjaof dkfjaljfka ldkfjal
-                        </div>
-                      </div>
-                        
+
                     </div>
                   </div>
-                  
-                  
-                  {{-- data validasi dari admin --}}
-                  <div class="card">
-                    <div class="card-header">
-                      <h4 class="mt-5 d-block d-sm-none">Data Validasi</h4>
-                      <h4 class="d-none d-sm-block">Data Validasi</h4>
-                    </div>
-                    <div class="card-body">
+                  {{-- End tampilan gambar --}}
 
+                  {{-- Start tampilan data --}}
+                  <div class="col-12 col-sm-6">
+                    {{-- data inputan dari user --}}
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="mt-5 d-block d-sm-none">Data Inputan</h4>
+                        <h4 class="d-none d-sm-block">Data Inputan</h4>
+                      </div>
+                      <div class="card-body">
                         <div class="row mb-2">
                           <div class="col-sm">
                             <div>
                               <div>
-                                <strong>Status Validasi :</strong>
+                                <strong>Keberadaan :</strong>
                               </div>
                               <div class="text-center align-middle">
-                                  <span class="badge badge-info text-center text-wrap my-auto align-middle">TESTING</span>
+                                  <span class="badge badge-{{$data_detail_inputan['warna_keberadaan']}} text-center text-wrap my-auto align-middle">{{$data_detail_inputan['status_keberadaan']}}</span>
+                              </div>
+                            </div>
+                            <div>
+                              <div>
+                                <strong>Kondisi :</strong>
+                              </div>
+                              <div class="text-center align-middle">
+                                  <span class="badge badge-{{$data_detail_inputan['warna_kerusakan']}} text-center text-wrap my-auto align-middle">{{$data_detail_inputan['status_kerusakan']}}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm">
+                            <div>
+                              <div>
+                                <strong>Ukuran :</strong>
+                              </div>
+                              <div class="text-center align-middle">
+                                  <span class="badge badge-secondary text-center text-wrap my-auto align-middle">{{$data_detail_inputan['size_apd']}}</span>
                               </div>
                             </div>
                             <div>
@@ -389,45 +369,100 @@
                                 <strong>Terakhir Diubah :</strong>
                               </div>
                               <div class="text-center align-middle">
-                                  <span class="badge badge-info text-center text-wrap my-auto align-middle">TESTING</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-sm">
-                            <div>
-                              <div>
-                                <strong>Verifikator :</strong>
-                              </div>
-                              <div class="text-center align-middle">
-                                  <span class="badge badge-info text-center text-wrap my-auto align-middle">TESTING</span>
-                              </div>
-                            </div>
-                            <div>
-                              <div>
-                                <strong>Jabatan Verifikator :</strong>
-                              </div>
-                              <div class="text-center align-middle">
-                                  <span class="badge badge-info text-center text-wrap my-auto align-middle">TESTING</span>
+                                  <span class="badge badge-secondary text-center text-wrap my-auto align-middle">{{$data_detail_inputan['verifikasi_terakhir_update']}}</span>
                               </div>
                             </div>
                           </div>
                         </div>
-                        <div class="row-sm">
-                          <div class="text-bold mb-1">
-                            Catatan dari Verifikator : 
-                          </div>
-                          <div class="blockquote">
-                              dlafkdalfkjaof dkfjaljfka ldkfjal
-                          </div>
-                        </div>
-
+                        @if ($data_detail_inputan['komentar_pengupload'])
+                           <div class="row-sm">
+                              <div class="text-bold mb-1">
+                                Catatan dari Peng-unggah : 
+                              </div>
+                              <div class="blockquote">
+                                  {{$data_detail_inputan['komentar_pengupload']}}
+                              </div>
+                            </div> 
+                        @endif
+                        
+                          
+                      </div>
                     </div>
+                    
+                    
+                    {{-- data validasi dari admin --}}
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="mt-5 d-block d-sm-none">Data Validasi</h4>
+                        <h4 class="d-none d-sm-block">Data Validasi</h4>
+                      </div>
+                      <div class="card-body">
+                        
+                          <div class="row mb-2">
+                            <div class="col-sm">
+                              <div>
+                                <div>
+                                  <strong>Status Validasi :</strong>
+                                </div>
+                                <div class="text-center align-middle">
+                                    <span class="badge badge-{{$data_detail_inputan['warna_verifikasi']}} text-center text-wrap my-auto align-middle">{{$data_detail_inputan['status_verifikasi']}}</span>
+                                </div>
+                              </div>
+                              <div>
+                                <div>
+                                  <strong>Terakhir Diubah :</strong>
+                                </div>
+                                <div class="text-center align-middle">
+                                    <span class="badge badge-info text-center text-wrap my-auto align-middle">{{$data_detail_inputan['data_terakhir_update']}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm">
+                              <div>
+                                <div>
+                                  <strong>Verifikator :</strong>
+                                </div>
+                                <div class="text-center align-middle">
+                                    <span class="badge badge-light text-center text-wrap my-auto align-middle">{{$data_detail_inputan['nama_verifikator']}}</span>
+                                </div>
+                              </div>
+                              <div>
+                                <div>
+                                  <strong>Jabatan Verifikator :</strong>
+                                </div>
+                                <div class="text-center align-middle">
+                                    <span class="badge badge-light text-center text-wrap my-auto align-middle">{{$data_detail_inputan['jabatan_verifikator']}}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          @if ($data_detail_inputan['komentar_verifikator'])
+                              <div class="row-sm">
+                                <div class="text-bold mb-1">
+                                  Catatan dari Verifikator : 
+                                </div>
+                                <div class="blockquote">
+                                    {{$data_detail_inputan['komentar_verifikator']}}
+                                </div>
+                              </div>
+                          @endif
+                      </div>
+                    </div>
+
                   </div>
+                  {{-- End tampilan data --}}
 
+                </div> 
+              {{-- End jika detail dapat diambil --}}
+              {{-- Start jika detail tidak dapat diambil --}}
+              @else
+                <div class="jumbotron text-center">
+                  Tidak ada yang dapat ditampilkan.
                 </div>
-                {{-- End tampilan data --}}
+              {{-- End jika detail tidak dapat diambil --}}
+              @endif
 
-              </div>
+
             </div>
           </div>
           {{-- End Card lihat detail --}}
