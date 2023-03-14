@@ -58,12 +58,14 @@ class LayoutProgressInputanSudinAdminSudinHalLaporanSektor extends Component
     public function muatDataInputanSudin()
     {
         $adc = new ApdDataController;
+        $this->data_semua_sektor = [];
         $this->data_semua_sektor = $adc->muatDataInputanSudin();
     }
 
     public function muatDataInputanPos()
     {
         $adc = new ApdDataController;
+        $this->data_detail_pos = [];
         $this->data_detail_pos = $adc->muatDataInputanPos($this->id_detail_pos,$adc->ambilIdPeriodeInput());
     }
 }

@@ -29,7 +29,8 @@ class ModalDetailProgressSudin extends Component
         $verifikasi_yang_berhasil_diubah = array(),
         $verifikasi_yang_gagal_diubah = array();
 
-    public 
+    public
+        $gambar_terpilih = null, 
         $nama_apd_detail = "",
         $gambar_apd_template = null,
         $data_detail_inputan = null;
@@ -170,6 +171,35 @@ class ModalDetailProgressSudin extends Component
             $this->data_detail_inputan = null;
             $this->gambar_apd_template = null;
             error_log('error lihat detail '.$e);
+        }
+    }
+
+    public function satuFoto($index, $index_gbr)
+    {
+        $this->gambar_terpilih = null;
+        try{
+
+            $inputan = $this->list_inputan_pegawai[$index];
+            $this->gambar_terpilih = $inputan['gambar_apd'][$index_gbr];
+
+        }
+        catch(Throwable $e)
+        {
+
+        }
+    }
+
+    public function semuaFoto($index)
+    {
+        $this->gambar_terpilih = null;
+        try{
+
+            $this->gambar_terpilih = $this->list_inputan_pegawai[$index]['gambar_apd'];
+
+        }
+        catch(Throwable $e)
+        {
+
         }
     }
     #endregion

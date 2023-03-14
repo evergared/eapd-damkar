@@ -288,8 +288,8 @@ class ApdDataController extends Controller
                             'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                             'komentar_pengupload' => $input->komentar_pengupload,
                             'id_verifikator' => $input->verifikasi_oleh,
-                            'nama_verifikator'=> $verifikator->nama,
-                            'jabatan_verifikator'=> Jabatan::find($verifikator->id_jabatan)->nama_jabatan,
+                            'nama_verifikator'=> (is_null($verifikator))? "" : $verifikator->nama,
+                            'jabatan_verifikator'=> (is_null($verifikator))? "" : Jabatan::find($verifikator->id_jabatan)->nama_jabatan,
                             'komentar_verifikator' => $input->komentar_verifikator
                         ];
             }

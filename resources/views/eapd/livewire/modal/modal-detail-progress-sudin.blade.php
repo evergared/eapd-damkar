@@ -152,17 +152,17 @@
                               <div class="align-middle">
                                 <ul class="list-inline w-50 d-none d-sm-block text-center">
                                   @foreach ($item['gambar_apd'] as $index_gbr => $gbr)
-                                      <a class="apd-foto" wire:click="satuFoto('preview-foto-apd-anggota',{{$index}},{{$index_gbr}})" style="cursor: pointer;">
+                                      <a class="apd-foto" wire:click="satuFoto({{$index}},{{$index_gbr}})" style="cursor: pointer;">
                                         <img alt="APD" class="table-avatar w-25 h-25" src="{{asset($gbr)}}">
                                       </a>
                                   @endforeach
                                 </ul>
                               </div>
-                              <a class="btn btn-primary d-block d-sm-none" wire:click="semuaFoto('preview-foto-apd-anggota',{{$index}})"><i class="fas fa-image"></i></a>
+                              <a class="btn btn-primary d-block d-sm-none" wire:click="semuaFoto({{$index}})"><i class="fas fa-image"></i></a>
                             @elseif(is_string($item['gambar_apd']) && $item['gambar_apd'] != "")
                               {{-- Saat ada gambar dan berisi hanya satu --}}
                               <img alt="APD" class="table-avatar w-25 h-25 d-none d-sm-block" src="{{asset($gbr)}}">
-                              <a class="btn btn-primary d-block d-sm-none" wire:click="semuaFoto('preview-foto-apd-anggota',{{$index}})" style="cursor: pointer;"><i class="fas fa-image"></i></a>
+                              <a class="btn btn-primary d-block d-sm-none" wire:click="semuaFoto({{$index}})" style="cursor: pointer;"><i class="fas fa-image"></i></a>
                             @elseif(!$item['gambar_apd'])
                               {{-- Saat tidak ada gambar --}}
                               Tidak ada gambar yang diupload.
@@ -224,13 +224,13 @@
                 <h4 class="d-none d-sm-block">Profil</h4>
                 <h5 class="d-block d-sm-none">Profil</h5>
               </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-3">
+              <div class="card-body align-items-center">
+                <div class="row d-flex">
+                  <div class="col-sm-3 m-2">
                     <img class="img-thumbnail" style="max-width:160px; max-height:160px;"
                       src="{{asset('storage/img/avatar/placeholder/avatar.jpg')}}">
                   </div>
-                  <div class="col-sm-6">
+                  <div class="col-sm-6 pl-sm-8">
                     <div class="row">
                       NIP/NIK : 4643256465496846496465964
                     </div>
@@ -253,6 +253,76 @@
           </div>
           {{-- End Card Profil --}}
 
+          {{-- Start Card Lihat Foto --}}
+          <div class="col-sm-10 mx-auto">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  <h4>Preview Gambar</h4>
+                </div>
+                <div class="card-tools">
+                  <button type="button" class="close" data-toggle="collapse"
+                      data-target="#detail-inputan" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body text-center">
+                {{-- Start ketika ada gambar yang terpilih --}}
+                @if (!is_null($gambar_terpilih))
+                  {{-- Start ketika gambar yang terpilih ada banyak --}}
+                    @if(is_array($gambar_terpilih) && count($gambar_terpilih) > 1)
+                        {{-- Script untuk preview gambar terpilih Start--}}
+                        <script>
+                            $(document).ready(function() {
+                        $('.gambar-multi.product-image-thumb').on('click', function () {
+                            var $image_element = $(this).find('img')
+                            $('.gambar-multi-preview.product-image').prop('src', $image_element.attr('src'))
+                            $('.gambar-multi.product-image-thumb.active').removeClass('active')
+                            $(this).addClass('active')
+                            })
+                        })
+                        </script>
+                        {{-- Script untuk preview gambar terpilih End--}}
+
+                        <img class="gambar-multi-preview product-image"
+                        src="{{asset($gambar_terpilih[0])}}" alt="Gambar Apd">
+                        <div class="col-12 gambar-multi product-image-thumbs">
+                            @foreach ($gambar_terpilih as $key => $gbr)
+                                @if($key === array_key_first($gambar_terpilih))
+                                <div class="gambar-multi product-image-thumb active"><img
+                                        src="{{asset($gbr)}}" alt="APD">
+                                </div>
+                                @else
+                                <div class="gambar-multi product-image-thumb"><img
+                                        src="{{asset($gbr)}}" alt="APD">
+                                </div>
+                                @endif
+                            @endforeach
+                        </div>
+                  {{-- End ketika gambar yang terpilih ada banyak --}}
+                  
+                  {{-- Start ketika gambar yang terpilih hanya satu --}}
+                    @elseif(is_string($gambar_terpilih) && $gambar_terpilih != "")
+                    <img src="{{asset($gambar_terpilih)}}" class="img-thumbnail" alt="gambar terpilih">
+                  {{-- End ketika gambar yang terpilih hanya satu --}}
+                    @endif
+                {{-- End ketika ada gambar yang terpilih --}}
+
+                {{-- Start ketika tidak ada gambar yang terpilih --}}
+                @else
+                  <div class="jumbotron text-center">
+                    Tidak ada gambar yang dipilih.
+                  </div>
+                {{-- End ketika tidak ada gambar yang terpilih --}}
+
+                @endif
+              </div>
+            </div>
+          </div>
+          
+          {{-- End Card Lihat Foto --}}
+
           {{-- Start Card lihat detail --}}
           <div class="card">
             <div class="card-header">
@@ -268,18 +338,21 @@
                 </div>
             </div>
             <div class="card-body">
+
                 {{-- Status Start --}}
                 <div wire:loading='lihatDetail'>
                     <div class="spinner-border spinner-border-sm text-info" role="status"></div>
                     <small class="text-info"> Memuat data..</small>
                 </div>
                 {{-- Status End --}}
+
               {{-- Start jika detail dapat diambil --}}
               @if (!is_null($data_detail_inputan))
                 <div class="row">
                   {{-- Start tampilan gambar --}}
                   <div class="col-12 col-sm-6">
                     <div class="card">
+
                       {{-- nav tabs --}}
                       <div class="card-header">
                         <ul class="nav nav-tabs" role="tablist">
@@ -299,7 +372,55 @@
                         <div class="tab-content">
                           {{-- Start gambar apd user --}}
                           <div class="tab-pane fade active show" id="gambar-user-tab-content" role="tabpanel" aria-labelledby="gambar-user-tab">
-                            testing
+                            {{-- Start jika gambar user ada --}}
+                            @if (!is_null($data_detail_inputan['gambar_apd']))
+                                {{-- Start jika ada lebih dari satu --}}
+                                @if (is_array($data_detail_inputan['gambar_apd']) && count($data_detail_inputan['gambar_apd']) > 1)
+                                    
+                                    {{-- Script untuk preview gambar apd Start--}}
+                                    <script>
+                                        $(document).ready(function() {
+                                    $('.apd-user.product-image-thumb').on('click', function () {
+                                        var $image_element = $(this).find('img')
+                                        $('.apd-user-preview.product-image').prop('src', $image_element.attr('src'))
+                                        $('.apd-user.product-image-thumb.active').removeClass('active')
+                                        $(this).addClass('active')
+                                        })
+                                    })
+                                    </script>
+                                    {{-- Script untuk preview gambar apd End--}}
+
+                                    <img class="apd-user-preview product-image"
+                                    src="{{asset($data_detail_inputan['gambar_apd'][0])}}" alt="Gambar Apd Anda">
+                                    <div class="col-12 apd-user product-image-thumbs">
+                                        @foreach ($data_detail_inputan['gambar_apd'] as $key => $gbr)
+                                            @if($key === array_key_first($data_detail_inputan['gambar_apd']))
+                                            <div class="apd-user product-image-thumb active"><img
+                                                    src="{{asset($gbr)}}" alt="APD">
+                                            </div>
+                                            @else
+                                            <div class="apd-user product-image-thumb"><img
+                                                    src="{{asset($gbr)}}" alt="APD">
+                                            </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                {{-- End jika ada lebih dari satu --}}
+                                
+                                {{-- Start jika hanya ada satu gambar --}}
+                                @elseif(is_string($data_detail_inputan['gambar_apd']) && $data_detail_inputan['gambar_apd'] != "")
+                                    <img src="{{asset($data_detail_inputan['gambar_apd'])}}" class="img-thumbnail" alt="APD">
+                                {{-- End jika hanya ada satu gambar --}}
+                                @endif
+                            {{-- End jika gambar user ada --}}
+
+                            {{-- Start jika tidak ada gambar user --}}
+                            @else
+                              <div class="jumbotron text-center">
+                                Tidak ada gambar yang ditampilkan.
+                              </div>
+                            {{-- End jika tidak ada gambar user --}}
+                            @endif
                           </div>
                           {{-- End gambar apd user --}}
 
@@ -308,18 +429,55 @@
                             {{-- Start jika gambar template ada --}}
                             @if (!is_null($gambar_apd_template))
                                 {{-- Start jika ada lebih dari satu --}}
-                                @if ()
+                                @if (is_array($gambar_apd_template) && count($gambar_apd_template) > 1)
                                     
-                                @endif
+                                    {{-- Script untuk preview gambar apd Start--}}
+                                    <script>
+                                        $(document).ready(function() {
+                                    $('.apd-template.product-image-thumb').on('click', function () {
+                                        var $image_element = $(this).find('img')
+                                        $('.apd-template-preview.product-image').prop('src', $image_element.attr('src'))
+                                        $('.apd-template.product-image-thumb.active').removeClass('active')
+                                        $(this).addClass('active')
+                                        })
+                                    })
+                                    </script>
+                                    {{-- Script untuk preview gambar apd End--}}
+
+                                    <img class="apd-template-preview product-image"
+                                    src="{{asset($gambar_apd_template[0])}}" alt="Gambar Apd Anda">
+                                    <div class="col-12 apd-template product-image-thumbs">
+                                        @foreach ($gambar_apd_template as $key => $gbr)
+                                            @if($key === array_key_first($gambar_apd_template))
+                                            <div class="apd-template product-image-thumb active"><img
+                                                    src="{{asset($gbr)}}" alt="APD">
+                                            </div>
+                                            @else
+                                            <div class="apd-template product-image-thumb"><img
+                                                    src="{{asset($gbr)}}" alt="APD">
+                                            </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
                                 {{-- End jika ada lebih dari satu --}}
+                                
+                                {{-- Start jika hanya ada satu gambar --}}
+                                @elseif(is_string($gambar_apd_template) && $gambar_apd_template != "")
+                                    <img src="{{asset($gambar_apd_template)}}" class="img-thumbnail" alt="APD">
+                                {{-- End jika hanya ada satu gambar --}}
+                                @endif
                             {{-- End jika gambar template ada --}}
+
                             {{-- Start jika tidak ada gambar template --}}
                             @else
-                            @endif
+                              <div class="jumbotron text-center">
+                                Tidak ada gambar yang ditampilkan.
+                              </div>
                             {{-- End jika tidak ada gambar template --}}
-                            
+                            @endif
                           </div>
                           {{-- End gambar apd template --}}
+
                         </div>
                       </div>
 
@@ -454,6 +612,7 @@
 
                 </div> 
               {{-- End jika detail dapat diambil --}}
+
               {{-- Start jika detail tidak dapat diambil --}}
               @else
                 <div class="jumbotron text-center">
