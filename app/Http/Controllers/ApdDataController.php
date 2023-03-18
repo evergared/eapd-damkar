@@ -740,30 +740,38 @@ class ApdDataController extends Controller
         }
     }
 
-    public function siapkanGambarTemplateBesertaPathnya(string $stringGambar,$id_jenis, $id_apd)
+    public function siapkanGambarTemplateBesertaPathnya($stringGambar,$id_jenis, $id_apd)
     {
         try {
-            // jika gambar banyak
-            if (str_contains($stringGambar, "||")) {
-                // jadikan string gambar tersebut ke bentuk array
-                $gbr = explode("||", $stringGambar);
-            } else
-                $gbr = $stringGambar;
+            if(!is_null($stringGambar))
+            {
+                // jika gambar banyak
+                if (str_contains($stringGambar, "||")) {
+                    // jadikan string gambar tersebut ke bentuk array
+                    $gbr = explode("||", $stringGambar);
+                } else
+                    $gbr = $stringGambar;
 
-            $fc = new FileController;
+                $fc = new FileController;
 
-            if (is_array($gbr)) {
-                $gambar = [];
-                foreach ($gbr as $g) {
-                    array_push($gambar, 'storage/' . $fc->buatPathFileApdItem($id_jenis, $id_apd) . '/' . $g);
+                if (is_array($gbr)) {
+                    $gambar = [];
+                    foreach ($gbr as $g) {
+                        array_push($gambar, 'storage/' . $fc->buatPathFileApdItem($id_jenis, $id_apd) . '/' . $g);
+                    }
+                    return $gambar;
+                } else {
+                    if ($gbr == "")
+                        return "";
+                    else
+                        return 'storage/' . $fc->buatPathFileApdItem($id_jenis, $id_apd) . '/' . $gbr;
                 }
-                return $gambar;
-            } else {
-                if ($gbr == "")
-                    return "";
-                else
-                    return 'storage/' . $fc->buatPathFileApdItem($id_jenis, $id_apd) . '/' . $gbr;
             }
+            else
+            {
+                return "";
+            }
+            
         } catch (Throwable $e) {
             error_log('Gagal menyiapkan gambar inputan user ' . $e);
             return "";
