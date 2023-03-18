@@ -126,15 +126,15 @@ window.addEventListener('jsShowDetail',event =>{
     $("#rekapdetail1").collapse('hide')
   }
 
-  //function untuk inputan sudin
-  function inputSudin(Id){
+  //function untuk inputan aksi sudin layout admin sudin
+  window.addEventListener('tampilAksiSudin',event=>{
     //alert("Tester") console.
     //alert(Filter)
-    console.log("Id",Id)
-    Livewire.emit('inputSudin',Id);
+    console.log("aksi sudin triggered")
+    // Livewire.emit('inputSudin',Id);
     $("#input-sudin").hide(500)
     $("#aksisudin").collapse('show')
-  }
+  })
 
   function backToSudin(){
     $("#input-sudin").show(500)

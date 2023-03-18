@@ -6,8 +6,10 @@ use App\Enum\VerifikasiApd;
 use App\Http\Controllers\ApdDataController;
 use App\Models\Eapd\Mongodb\ApdJenis;
 use App\Models\Eapd\Mongodb\ApdList;
+use App\Models\Eapd\Mongodb\Grup;
 use App\Models\Eapd\Mongodb\InputApd;
 use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Mongodb\Penempatan;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Throwable;
@@ -15,6 +17,7 @@ use Throwable;
 class ModalDetailProgressSudin extends Component
 {
 
+    // value general
     public 
         $nama_pegawai = "",
         $id_pegawai = "",
@@ -23,17 +26,28 @@ class ModalDetailProgressSudin extends Component
         $temp_verifikasi_inputan = [],
         $cache_verifikasi_inputan = [];
 
+    // untuk cek berhasil/tidak perubahan yang dilakukan
     public
         $ada_verifikasi_yang_berubah = false, 
         $verifikasi_yang_berubah = array('berhasil' => ['fj','nn'], 'gagal' => ['fj','nn']),
         $verifikasi_yang_berhasil_diubah = array(),
         $verifikasi_yang_gagal_diubah = array();
 
+    // untuk tampilan gambar di card detail inputan
     public
         $gambar_terpilih = null, 
         $nama_apd_detail = "",
         $gambar_apd_template = null,
         $data_detail_inputan = null;
+
+    // untuk data profil
+    public 
+        $profil_tampil = false,
+        $profil_penempatan = "",
+        $profil_nip = "",
+        $profil_nrk = "",
+        $profil_grup = "",
+        $profil_foto = "";
 
     public $listeners = [
         'ModalProgressSudin'
@@ -163,7 +177,7 @@ class ModalDetailProgressSudin extends Component
             $adc = new ApdDataController;
             $this->data_detail_inputan = $adc->muatSatuInputanPegawai($id_jenis,$this->id_periode,$this->id_pegawai);
             $this->gambar_apd_template = $adc->siapkanGambarTemplateBesertaPathnya(ApdList::find($this->data_detail_inputan['id_apd'])->image,$id_jenis,$this->data_detail_inputan['id_apd']);
-            error_log('lihat detail finish');
+            $this->dispatchBrowserEvent('cardLihatDetail');
         }
         catch(Throwable $e)
         {
@@ -180,7 +194,13 @@ class ModalDetailProgressSudin extends Component
         try{
 
             $inputan = $this->list_inputan_pegawai[$index];
-            $this->gambar_terpilih = $inputan['gambar_apd'][$index_gbr];
+            if($index_gbr < 0)
+                $this->gambar_terpilih = $inputan['gambar_apd'];
+            else
+                $this->gambar_terpilih = $inputan['gambar_apd'][$index_gbr];
+
+            $this->dispatchBrowserEvent('cardLihatFoto');
+        
 
         }
         catch(Throwable $e)
@@ -195,11 +215,37 @@ class ModalDetailProgressSudin extends Component
         try{
 
             $this->gambar_terpilih = $this->list_inputan_pegawai[$index]['gambar_apd'];
+            $this->dispatchBrowserEvent('cardLihatFoto');
 
         }
         catch(Throwable $e)
         {
 
+        }
+    }
+
+    public function profil()
+    {
+        $this->profil_tampil = false;
+        $this->profil_penempatan = "";
+        $this->profil_nip = "";
+        $this->profil_nrk = "";
+        $this->profil_grup = "";
+        $this->profil_foto = "";
+        try{
+            $pegawai = Pegawai::find($this->id_pegawai);
+            $this->profil_penempatan = Penempatan::find($pegawai->id_penempatan)->nama_penempatan;
+            $this->profil_nip = $pegawai->nip;
+            $this->profil_nrk = $pegawai->nrk;
+            $this->profil_grup = Grup::where("id_grup",'=',$pegawai->id_grup)->first()->nama_grup;
+            $this->profil_foto = $pegawai->profile_img;
+            $this->profil_tampil = true;
+            $this->dispatchBrowserEvent('cardProfil');
+
+        }
+        catch(Throwable $e)
+        {
+            error_log('gagal tampil profil '.$e);
         }
     }
     #endregion
