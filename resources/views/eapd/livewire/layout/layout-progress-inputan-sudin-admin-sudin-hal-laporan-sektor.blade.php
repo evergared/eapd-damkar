@@ -72,7 +72,7 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <a onclick="inputSudin('{{$pos['id_pos']}}')" class="btn btn-sm bg-teal">
+                                                <a wire:click="aksiSudin('{{$pos['id_pos']}}')" class="btn btn-sm bg-teal">
                                                     <i class="fas fa-wrench"></i>
                                                 </a>
                                             </td>
@@ -134,7 +134,7 @@
                                                 <span class="badge badge-secondary">{{$item['terverif']}}%</span>
                                             </td>
                                             <td class="text-center text-wrap my-auto align-middle">
-                                                <a class="btn btn-sm bg-teal" onClick=modal("modal-progres-sudin","{{$item['id_pegawai']}}","ModalProgressSudin")  wire:ignore.self>
+                                                <a class="btn btn-sm bg-teal" onClick=modal("modal-progres-sudin","{{$item['id_pegawai']}}","ModalProgressSudin")>
                                                     <i class="fas fa-pencil-square-o">Edit</i>
                                                 </a>
                                             </td>

@@ -40,11 +40,12 @@ class LayoutProgressInputanSudinAdminSudinHalLaporanSektor extends Component
             $this->muatDataInputanPos();
     }
 
-    public function inputSudin($value)
+    public function aksiSudin($value)
     {
         error_log('inputan sudin');
         $this->id_detail_pos = $value;
         $this->muatDataInputanPos();
+        $this->dispatchBrowserEvent('tampilAksiSudin');
     }
     #endregion
 
