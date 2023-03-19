@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Eapd\Modal;
 
 use App\Enum\VerifikasiApd;
 use App\Http\Controllers\ApdDataController;
+use App\Http\Controllers\FileController;
 use App\Models\Eapd\Mongodb\ApdJenis;
 use App\Models\Eapd\Mongodb\ApdList;
 use App\Models\Eapd\Mongodb\Grup;
@@ -233,12 +234,13 @@ class ModalDetailProgressSudin extends Component
         $this->profil_grup = "";
         $this->profil_foto = "";
         try{
+            $fc = new FileController;
             $pegawai = Pegawai::find($this->id_pegawai);
             $this->profil_penempatan = Penempatan::find($pegawai->id_penempatan)->nama_penempatan;
             $this->profil_nip = $pegawai->nip;
             $this->profil_nrk = $pegawai->nrk;
             $this->profil_grup = Grup::where("id_grup",'=',$pegawai->id_grup)->first()->nama_grup;
-            $this->profil_foto = $pegawai->profile_img;
+            $this->profil_foto = ($pegawai->profile_img)? $fc::$avatarUploadBasePath.$fc->prosesNamaFileAvatarUpload($this->id_pegawai) : $fc::$avatarPlaceholder;
             $this->profil_tampil = true;
             $this->dispatchBrowserEvent('cardProfil');
 

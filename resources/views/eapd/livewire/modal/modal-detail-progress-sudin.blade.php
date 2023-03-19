@@ -235,7 +235,7 @@
                       <div class="row">
                         <div class="col-sm-3 m-2">
                           <img class="img-thumbnail" style="max-width:160px; max-height:160px;"
-                            src="{{asset('storage/img/avatar/placeholder/avatar.jpg')}}">
+                            src="{{asset($profil_foto)}}">
                         </div>
                         <div class="col-sm-6 pl-sm-8">
                           <div class="row">
@@ -322,7 +322,15 @@
                       @elseif(is_string($gambar_terpilih) && $gambar_terpilih != "")
                       <img src="{{asset($gambar_terpilih)}}" class="img-thumbnail" alt="gambar terpilih">
                     {{-- End ketika gambar yang terpilih hanya satu --}}
+
+                    {{-- Start antisipasi gambar tidak null tetapi tidak ada gambar --}}
+                      @else
+                      <div class="jumbotron text-center">
+                        Tidak ada gambar yang dipilih.
+                      </div>
                       @endif
+                    {{-- End antisipasi gambar tidak null tetapi tidak ada gambar --}}
+
                   {{-- End ketika ada gambar yang terpilih --}}
 
                   {{-- Start ketika tidak ada gambar yang terpilih --}}
@@ -428,17 +436,25 @@
                                   @elseif(is_string($data_detail_inputan['gambar_apd']) && $data_detail_inputan['gambar_apd'] != "")
                                       <img src="{{asset($data_detail_inputan['gambar_apd'])}}" class="img-thumbnail" alt="APD">
                                   {{-- End jika hanya ada satu gambar --}}
+
+                                  {{-- Start antisipasi gambar tidak null tetapi tidak ada gambar --}}
+                                    @else
+                                    <div class="jumbotron text-center">
+                                      Tidak ada gambar yang diunggah.
+                                    </div>
+                                  {{-- End antisipasi gambar tidak null tetapi tidak ada gambar --}}
+
                                   @endif
                               {{-- End jika gambar user ada --}}
 
                               {{-- Start jika tidak ada gambar user --}}
                               @elseif(is_null($data_detail_inputan['gambar_apd']) || $data_detail_inputan['gambar_apd'] === "")
                                 <div class="jumbotron text-center">
-                                  Tidak ada gambar yang ditampilkan.
+                                  Tidak ada gambar yang diunggah.
                                 </div>
                               @else
                                 <div class="jumbotron text-center">
-                                  Tidak ada gambar yang ditampilkan.
+                                  Tidak ada gambar yang diunggah.
                                 </div>
                               {{-- End jika tidak ada gambar user --}}
                               @endif
@@ -486,17 +502,24 @@
                                   @elseif(is_string($gambar_apd_template) && $gambar_apd_template != "")
                                       <img src="{{asset($gambar_apd_template)}}" class="img-thumbnail" alt="APD">
                                   {{-- End jika hanya ada satu gambar --}}
+
+                                  {{-- Start antisipasi gambar tidak null tetapi tidak ada gambar --}}
+                                    @else
+                                    <div class="jumbotron text-center">
+                                      Tidak ada gambar yang disediakan.
+                                    </div>
+                                  {{-- End antisipasi gambar tidak null tetapi tidak ada gambar --}}
                                   @endif
                               {{-- End jika gambar template ada --}}
 
                               {{-- Start jika tidak ada gambar template --}}
                               @elseif(is_null($gambar_apd_template) || $gambar_apd_tempate === "")
                                 <div class="jumbotron text-center">
-                                  Tidak ada gambar yang ditampilkan.
+                                  Tidak ada gambar yang disediakan.
                                 </div>
                               @else
                                 <div class="jumbotron text-center">
-                                  Tidak ada gambar yang ditampilkan.
+                                  Tidak ada gambar yang disediakan.
                                 </div>
                               {{-- End jika tidak ada gambar template --}}
                               @endif
@@ -662,6 +685,7 @@
         <!-- /.modal-dialog -->
       </div>
 
+{{-- Javascript --}}
   @once
       <script>
 
