@@ -25,7 +25,7 @@ class ApdRekapController extends Controller
      */
     public function bangunDataTabelRekapApdSektor($id_periode = 1, $sektor = "")
     {
-        error_log('mulai membangun data untuk tabel rekap');
+        // error_log('mulai membangun data untuk tabel rekap');
         if($sektor == "")
             // $sektor = Auth::user()->data->sektor;
             $sektor = "1.11";
@@ -149,7 +149,6 @@ class ApdRekapController extends Controller
                                 ];
 
                                 $data_rekap->where("id_jenis",$data["id_jenis"])->replace($data_baru);
-                                $data_yang_sudah_ada = $data_rekap->where("id_jenis",$data["id_jenis"])->first();
 
                             }
 
