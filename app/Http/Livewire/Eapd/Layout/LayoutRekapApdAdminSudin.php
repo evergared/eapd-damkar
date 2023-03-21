@@ -26,10 +26,11 @@ class LayoutRekapApdAdminSudin extends Component
             $adc = new ApdDataController;
             $this->id_periode = $adc->ambilIdPeriodeInput();
             $this->nama_periode = PeriodeInputApd::find($this->id_periode)->nama_periode;
+            $this->muatDataRekap();
         }
         catch(Throwable $e)
         {
-            
+            error_log("gagal memuat ".$e);
         }
     }
 
@@ -39,11 +40,10 @@ class LayoutRekapApdAdminSudin extends Component
 
             $apr = new ApdRekapController;
             $this->data_rekap_apd = $apr->bangunDataTabelRekapApdSudin();
-
         }
         catch(Throwable $e)
         {
-
+            error_log('gagal memuat data rekap () '.$e);
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Http\Controllers\ApdDataController;
+use App\Http\Controllers\ApdRekapController;
 use App\Models\Eapd\Mongodb\ApdJenis;
 use App\Models\Eapd\Mongodb\ApdKondisi;
 use App\Models\Eapd\Mongodb\ApdList;
@@ -34,31 +35,70 @@ class EapdCrudTest extends TestCase
      */
     public function test_insert()
     {
+        $apr = new ApdRekapController;
 
-        // ApdJenis::factory()->create();
-        // ApdSize::factory()->create();
-        // ApdKondisi::factory()->create();
-        // PeriodeInputApd::factory()->create();
+        $sudin = "1";
 
-        // ApdList::factory()->count(10)->create();
+        // dapatkan semua sektor yang ada di sudin
+            $list_sektor =  Penempatan::where('id_wilayah','=',$sudin)
+                            ->where('keterangan','=','sektor')
+                            ->pluck('id');
 
-        // $this->assertDatabaseCount('apd_list', 10);
+            $data_rekap = collect();
+            // pengulangan untuk mengambil rangkuman data inputan tiap sektor
+            foreach($list_sektor as $sektor)
+            {
+                // ambil rangkuman data sektor tersebut
+                $data_sektor = $apr->bangunDataTabelRekapApdSektor(1,$sektor); // parameter 1 hanya untuk test
 
-        $pegawai = Pegawai::find('63ef1bf873da03f7b9046f03');
+                // jika data rekap masih kosong, jadikan data yang baru diambil menjadi data rekap saat ini
+                if($data_rekap->isEmpty())
+                    $data_rekap = $data_sektor;
+                else
+                    {
+                        foreach($data_sektor as $data)
+                        {
+                            // jika jenis apd tsb sudah ada di data rekap, maka tambahkan jumlah datanya saja
+                            if($data_rekap->contains("id_jenis",$data["id_jenis"]))
+                            {
+                                $data_yang_sudah_ada = $data_rekap->where("id_jenis",$data["id_jenis"])->first();
 
-        // $pegawai->update(['ukuran' => ['apd1'=>'S','apd2'=>'M']],['upsert'=>true]);
-        // $pegawai->ukuran = ['apd1'=>'S','apd2'=>'M','date'=>Carbon::now("Asia/Jakarta")->toDateTimeString()];
-        // $pegawai->save();
+                                $data_baru = [
+                                    "baik" => $data_yang_sudah_ada["baik"] + $data["baik"],
+                                    "rusak_ringan" => $data_yang_sudah_ada["rusak_ringan"] + $data["rusak_ringan"],
+                                    "rusak_sedang" => $data_yang_sudah_ada["rusak_sedang"] + $data["rusak_sedang"],
+                                    "rusak_berat" => $data_yang_sudah_ada["rusak_berat"] + $data["rusak_berat"],
+                                    "belum_terima" => $data_yang_sudah_ada["belum_terima"] + $data["belum_terima"],
+                                    "hilang" => $data_yang_sudah_ada["hilang"] + $data["hilang"],
+                                    "ada" => $data_yang_sudah_ada["ada"] + $data["ada"],
+                                    "total" => $data_yang_sudah_ada["total"] + $data["total"],
+                                    "distribusi" => $data_yang_sudah_ada["distribusi"] + $data["distribusi"],
+                                ];
+
+                                $data_rekap->where("id_jenis",$data["id_jenis"])->replace($data_baru);
+                                $data_yang_sudah_ada = $data_rekap->where("id_jenis",$data["id_jenis"])->first();
+
+                            }
+
+                            // jika apd tsb belum ada di data rekap, maka tambahkan sebagai entry baru
+                            else
+                            {
+                                $data_rekap->push[$data];
+                            }
+
+                        }
+                    }
+
+            }
 
         $this->assertTrue(true);
     }
 
     public function test_read()
     {
-        $adc = new ApdDataController;
-        // $read = $adc->muatListInputApdDariTemplate("640220e5d7f5db34c60dca70","L001");
-        $read = InputApdTemplate::whereIn('periode',["640220e5d7f5db34c60dca70"])->first()->template;
-        dd($read);
+        // $apr = new ApdRekapController;
+        // $read = $apr->bangunDataTabelRekapApdSektor();
+        // dd($read);
         $this->assertTrue(true);
     }
 }

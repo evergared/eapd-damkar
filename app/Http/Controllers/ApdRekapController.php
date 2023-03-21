@@ -27,37 +27,32 @@ class ApdRekapController extends Controller
     {
         error_log('mulai membangun data untuk tabel rekap');
         if($sektor == "")
-            $sektor = Auth::user()->data->sektor;
+            // $sektor = Auth::user()->data->sektor;
+            $sektor = "1.11";
 
         if($id_periode == 1)
             $id_periode = PeriodeInputApd::get()->first()->id;
         
         try{
-            error_log('proses try');
             $data_rekap_apd = collect();
 
+            // pengulangan untuk cek apa saja yang harus diinput oleh pegawai di sektor tersebut
             if($semua_inputan = InputApd::where('id_periode','=',$id_periode)->get())
             {
-                error_log('hit semua inputan');
-                error_log('persiapan filter');
                 $inputan_anggota = $semua_inputan->filter(function($value,$key) use($sektor){
                     $a = Pegawai::where('_id','=',$value['id_pegawai'])->first();
                     $verdict = $a->sektor == $sektor;
-                    error_log('is a->sektor == sektor : '.$verdict);
                     return $verdict;
                 });
 
                 $list_jenis_apd = $inputan_anggota->unique('id_jenis');
-                error_log('count list jenis apd : '.count($list_jenis_apd));
-                error_log('count inputan anggota : '.count($inputan_anggota));
 
                 // dd($inputan_anggota);
 
+                // pengulangan untuk ambil rangkuman data berdasarkan list jenis apd yang telah diambil
                 foreach($list_jenis_apd as $apd)
                 {
-                    error_log('id jenis apd : '.$apd->id_jenis);
                     $nama_jenis_apd = ApdJenis::where('_id','=',$apd->id_jenis)->first()->nama_jenis;
-                    error_log('nama jenis apd : '.$nama_jenis_apd);
 
                     $baik = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::baik()->value)->count();
                     $rusak_ringan = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakRingan()->value)->count();
@@ -69,14 +64,14 @@ class ApdRekapController extends Controller
                     $total = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->count();
                     $distribusi = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->count();
 
-                    error_log('jumlah baik : '.$baik);
-                    error_log('jumlah rusak ringan : '.$rusak_ringan);
-                    error_log('jumlah rusak sedang : '.$rusak_sedang);
-                    error_log('jumlah rusak berat : '.$rusak_berat);
-                    error_log('jumlah belum terima : '.$belum_terima);
-                    error_log('jumlah hilang : '.$hilang);
-                    error_log('jumlah ada : '.$ada);
-                    error_log('jumlah total : '.$total);
+                    // error_log('jumlah baik : '.$baik);
+                    // error_log('jumlah rusak ringan : '.$rusak_ringan);
+                    // error_log('jumlah rusak sedang : '.$rusak_sedang);
+                    // error_log('jumlah rusak berat : '.$rusak_berat);
+                    // error_log('jumlah belum terima : '.$belum_terima);
+                    // error_log('jumlah hilang : '.$hilang);
+                    // error_log('jumlah ada : '.$ada);
+                    // error_log('jumlah total : '.$total);
 
                     $data_rekap_apd->push([
                         "id_jenis" => $apd->id_jenis,
@@ -122,12 +117,54 @@ class ApdRekapController extends Controller
                             ->where('keterangan','=','sektor')
                             ->pluck('id');
 
-            // ambil jumlah keseluruhan data apd berikut kondisinya dari tiap sektor
-            $data_rekap = 
+            $data_rekap = collect();
+            // pengulangan untuk mengambil rangkuman data inputan tiap sektor
             foreach($list_sektor as $sektor)
             {
+                // ambil rangkuman data sektor tersebut
+                $data_sektor = $this->bangunDataTabelRekapApdSektor(1,$sektor); // parameter 1 hanya untuk test
+
+                // jika data rekap masih kosong, jadikan data yang baru diambil menjadi data rekap saat ini
+                if($data_rekap->isEmpty())
+                    $data_rekap = $data_sektor;
+                else
+                    {
+                        foreach($data_sektor as $data)
+                        {
+                            // jika jenis apd tsb sudah ada di data rekap, maka tambahkan jumlah datanya saja
+                            if($data_rekap->contains("id_jenis",$data["id_jenis"]))
+                            {
+                                $data_yang_sudah_ada = $data_rekap->where("id_jenis",$data["id_jenis"])->first();
+
+                                $data_baru = [
+                                    "baik" => $data_yang_sudah_ada["baik"] + $data["baik"],
+                                    "rusak_ringan" => $data_yang_sudah_ada["rusak_ringan"] + $data["rusak_ringan"],
+                                    "rusak_sedang" => $data_yang_sudah_ada["rusak_sedang"] + $data["rusak_sedang"],
+                                    "rusak_berat" => $data_yang_sudah_ada["rusak_berat"] + $data["rusak_berat"],
+                                    "belum_terima" => $data_yang_sudah_ada["belum_terima"] + $data["belum_terima"],
+                                    "hilang" => $data_yang_sudah_ada["hilang"] + $data["hilang"],
+                                    "ada" => $data_yang_sudah_ada["ada"] + $data["ada"],
+                                    "total" => $data_yang_sudah_ada["total"] + $data["total"],
+                                    "distribusi" => $data_yang_sudah_ada["distribusi"] + $data["distribusi"],
+                                ];
+
+                                $data_rekap->where("id_jenis",$data["id_jenis"])->replace($data_baru);
+                                $data_yang_sudah_ada = $data_rekap->where("id_jenis",$data["id_jenis"])->first();
+
+                            }
+
+                            // jika apd tsb belum ada di data rekap, maka tambahkan sebagai entry baru
+                            else
+                            {
+                                $data_rekap->push[$data];
+                            }
+
+                        }
+                    }
 
             }
+
+            return $data_rekap;
 
         }
         catch(Throwable $e)
