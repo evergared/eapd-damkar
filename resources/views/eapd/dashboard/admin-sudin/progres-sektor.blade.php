@@ -108,7 +108,7 @@
                         </div>
                         <div class="tab-pane fade" id="tabel-rekap" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
                           
-                          @livewire('eapd.layout.layout-rekap-apd-admin-sektor')
+                          @livewire('eapd.layout.layout-rekap-apd-admin-sudin')
 
                           
                         </div>

@@ -20,6 +20,9 @@ use Throwable;
  */
 class ApdRekapController extends Controller
 {
+    /**
+     * Untuk membangun data rekapan apd sektor, berupa jumlah berapa data dengan kondisi tertentu
+     */
     public function bangunDataTabelRekapApdSektor($id_periode = 1, $sektor = "")
     {
         error_log('mulai membangun data untuk tabel rekap');
@@ -97,6 +100,39 @@ class ApdRekapController extends Controller
         catch(Throwable $e)
         {
             error_log("gagal membangun data tabel rekap tingkat sektor ".$e);
+        }
+    }
+
+    /**
+     * Untuk membangun data rekapan apd sudin, berupa jumlah berapa data dengan kondisi tertentu
+     */
+    public function bangunDataTabelRekapApdSudin($id_periode = 1, $sudin = "")
+    {
+        error_log('mulai membangun data untuk tabel rekap');
+        if($sudin == "")
+            $sudin = Auth::user()->data->penempatan->id_wilayah;
+
+        if($id_periode == 1)
+            $id_periode = PeriodeInputApd::get()->first()->id;
+        
+        try{
+            
+            // dapatkan semua sektor yang ada di sudin
+            $list_sektor =  Penempatan::where('id_wilayah','=',$sudin)
+                            ->where('keterangan','=','sektor')
+                            ->pluck('id');
+
+            // ambil jumlah keseluruhan data apd berikut kondisinya dari tiap sektor
+            $data_rekap = 
+            foreach($list_sektor as $sektor)
+            {
+
+            }
+
+        }
+        catch(Throwable $e)
+        {
+            error_log("gagal membangun data tabel rekap tingkat sudin ".$e);
         }
     }
 
