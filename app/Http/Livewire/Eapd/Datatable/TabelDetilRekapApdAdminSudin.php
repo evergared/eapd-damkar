@@ -18,7 +18,7 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
         $status_yang_dicari = "";
 
     public 
-        $sektor = "",
+        $sudin = "",
         $id_jenis = "",
         $id_periode = "";
 
@@ -29,16 +29,23 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
     #region Method/Function buatan sendiri
     public function tampilTabel($value)
     {
+        $this->tabel_ditampilkan = false;
         try{
 
-            $this->kondisi_atau_keberadaan = $value[0];
-            $this->status_yang_dicari = $value[1];
+            $this->sudin = $value[0];
+            $this->id_jenis = $value[1];
+            $this->id_periode = $value[2];
+            $this->kondisi_atau_keberadaan = $value[3];
+            $this->status_yang_dicari = $value[4];
             $this->tabel_ditampilkan = true;
 
         }
         catch(Throwable $e)
         {
             $this->tabel_ditampilkan = false;
+            $this->sudin = "";
+            $this->id_jenis = "";
+            $this->id_periode = "";
             $this->kondisi_atau_keberadaan = "";
             $this->status_yang_dicari = "";
         }
@@ -56,7 +63,12 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
         $base = InputApd::query();
 
         $table_query = $base->where('id_jenis','=',$this->id_jenis)->where('id_periode','=',$this->id_periode)
-                        ->filter(function())
+                        ->where($this->kondisi_atau_keberadaan,'=',$this->status_yang_dicari)
+                        ->filter(function($value,$key){
+                            $pegawai = Pegawai::find($value['id_pegawai']);
+                            return $pegawai->id_wilayah == $this->sudin;
+                        });
+        return ($this->tabel_ditampilkan)? $table_query : $base;
     }
 
     public function columns(): array

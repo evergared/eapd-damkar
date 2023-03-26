@@ -34,6 +34,19 @@ class LayoutRekapApdAdminSudin extends Component
         }
     }
 
+    public function detailRekap($value)
+    {
+        try{
+            error_log($value[0]);
+            $this->dispatchBrowserEvent('showDetailRekapApdAdminSudin');
+
+        }
+        catch(Throwable $e)
+        {
+
+        }
+    }
+
     public function muatDataRekap()
     {
         try{
