@@ -45,4 +45,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/ukuran', [\App\Http\Controllers\DashboardController::class, 'tampilUkuran'])->name('ukuran');
     Route::get('/data-ukuran', [\App\Http\Controllers\DashboardController::class, 'tampilDataUkuran'])->name('data-ukuran');
     Route::get('/data-distribusi', [\App\Http\Controllers\DashboardController::class, 'tampilDataDistribusi'])->name('data-distribusi');
+    Route::get('/running-text', [\App\Http\Controllers\DashboardController::class, 'tampilRunningText'])->name('running-text');
 });

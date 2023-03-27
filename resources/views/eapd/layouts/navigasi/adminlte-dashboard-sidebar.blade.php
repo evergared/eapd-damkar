@@ -93,7 +93,7 @@
                         </p>
                     </a>
                 </li>
-                @if (auth()->user()->data->jabatan->level_user == 'admin_sektor' || auth()->user()->data->jabatan->level_user == 'admin_sudin')
+                @if (auth()->user()->data->jabatan->level_user == 'admin_sektor' || auth()->user()->data->jabatan->level_user == 'admin_sudin' || auth()->user()->data->jabatan->level_user == 'admin_dinas')
                 <li class="nav-item {{ (Route::currentRouteName() =='print-laporan' || Route::currentRouteName() =='progres-sektor' || Route::currentRouteName() =='data-ukuran' || Route::currentRouteName() =='data-distribusi')? 'menu-open' :''}}">
                     <a 
                         class="nav-link">
@@ -130,6 +130,28 @@
                         </li>
                     </ul>
                 </li>
+
+                @if (auth()->user()->data->jabatan->level_user == 'admin_dinas')
+                    <li class="nav-item {{ (Route::currentRouteName() =='running-text' )? 'menu-open' :''}}">
+                        <a 
+                            class="nav-link">
+                            <i class="nav-icon fas fa-flag"></i>
+                            <p>
+                                Pengaturan Web
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item {{ (Route::currentRouteName() =='running-text')? 'menu-open' :''}}">
+                            <a href="{{route('running-text')}}" class="nav-link {{ (Route::currentRouteName() =='running-text')? 'active' :''}}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Notice Text Berjalan</p>
+                            </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
+                
                 <li class="nav-item {{ (Route::currentRouteName() =='kepegawaian')? 'menu-open' :''}}">
                     <a href="{{route('kepegawaian')}}"
                         class="nav-link {{ (Route::currentRouteName() =='kepegawaian')? 'active' :''}}">
@@ -140,6 +162,7 @@
                     </a>
                 </li>
                 @endif
+                
                 <li class="nav-header border-bottom"><i class="nav-icon fas fa-book"></i><span></span> Manual Book</li>
                 <li class="nav-item">
                     <a href="" onclick="alert('Coming soon'); return false" target="_blank" class="nav-link">
