@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Eapd\Layout;
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\ApdRekapController;
 use App\Models\Eapd\Mongodb\PeriodeInputApd;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Throwable;
 
@@ -38,6 +39,10 @@ class LayoutRekapApdAdminSudin extends Component
     {
         try{
             error_log($value[0]);
+            $sudin = Auth::user()->data->wilayah->id;
+            $this->emit('tampilTabel',[$sudin,$this->id_periode,$value[0],$value[1],$value[2]]);
+            // $this->emit('tampilTabel');
+
             $this->dispatchBrowserEvent('showDetailRekapApdAdminSudin');
 
         }

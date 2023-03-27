@@ -35,31 +35,31 @@
                             <td class="text-center text-wrap my-auto align-middle">{{$item['jenis_apd']}}
                             </td>
                             <td class="text-center align-middle">
-                                <a wire:click="detailRekap('{{$item['id_jenis']}}','baik')" href="#card-rekap">{{$item['baik']}}</a>
+                                <a wire:click="detailRekap(['{{$item['id_jenis']}}','kondisi','baik'])" href="#card-rekap">{{$item['baik']}}</a>
                             </td>
                             <td class="text-center align-middle">
-                                <a wire:click="detailRekap('{{$item['id_jenis']}}','rusak_ringan')" href="#card-rekap">{{$item['rusak_ringan']}}</a>
+                                <a wire:click="detailRekap(['{{$item['id_jenis']}}','kondisi','rusak ringan'])" href="#card-rekap">{{$item['rusak_ringan']}}</a>
                             </td>
                             <td class="text-center align-middle">
-                                <a wire:click="detailRekap('{{$item['id_jenis']}}','rusak_sedang')" href="#card-rekap">{{$item['rusak_sedang']}}</a>
+                                <a wire:click="detailRekap(['{{$item['id_jenis']}}','kondisi','rusak sedang'])" href="#card-rekap">{{$item['rusak_sedang']}}</a>
                             </td>
                             <td class="text-center align-middle">
-                                <a wire:click="detailRekap('{{$item['id_jenis']}}','rusak_berat')" href="#card-rekap">{{$item['rusak_berat']}}</a>
+                                <a wire:click="detailRekap(['{{$item['id_jenis']}}','kondisi','rusak berat'])" href="#card-rekap">{{$item['rusak_berat']}}</a>
                             </td>
                             <td class="text-center align-middle">
-                                <a wire:click="detailRekap('{{$item['id_jenis']}}','belum_terima')" href="#card-rekap">{{$item['belum_terima']}}</a>
+                                <a wire:click="detailRekap(['{{$item['id_jenis']}}','keberadaan','Belum Terima'])" href="#card-rekap">{{$item['belum_terima']}}</a>
                             </td>
                             <td class="text-center align-middle">
-                                <a wire:click="detailRekap('{{$item['id_jenis']}}','hilang')" href="#card-rekap">{{$item['hilang']}}</a>
+                                <a wire:click="detailRekap(['{{$item['id_jenis']}}','keberadaan','Hilang'])" href="#card-rekap">{{$item['hilang']}}</a>
                             </td>
                             <td class="text-center align-middle">
-                                <a wire:click="detailRekap('{{$item['id_jenis']}}','ada')" href="#card-rekap">{{$item['ada']}}</a>
+                                <a wire:click="detailRekap(['{{$item['id_jenis']}}','keberadaan','Ada'])" href="#card-rekap">{{$item['ada']}}</a>
                             </td>
                             <td class="text-center align-middle">
-                                <a wire:click="detailRekap('{{$item['id_jenis']}}','total')" href="#card-rekap">{{$item['total']}}</a>
+                                <a wire:click="detailRekap(['{{$item['id_jenis']}}','total','total'])" href="#card-rekap">{{$item['total']}}</a>
                             </td>
                             <td class="text-center align-middle">
-                                <a wire:click="detailRekap('{{$item['id_jenis']}}','distribusi')" href="#card-rekap">{{$item['distribusi']}}</a>
+                                <a wire:click="detailRekap(['{{$item['id_jenis']}}','distribusi','distribusi'])" href="#card-rekap">{{$item['distribusi']}}</a>
                             </td>
                         </tr>
                         @endforeach
@@ -79,7 +79,7 @@
         <!-- /.card-body -->
     </div>
 
-    <div class="collapse" id="collapse-detail-rekap" wire:ignore.self>
+    <div class="collapse" id="collapse-detail-rekap">
             <div class="card my-n3 mx-n3">
                 <div class="card-header">
                     <div class="card-title">
@@ -90,7 +90,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    Testing
+                    @livewire('eapd.datatable.tabel-detil-rekap-apd-admin-sudin')
                 </div>
                 {{-- <div class="card-body table-responsive p-0" style="height: 300px;">
                     @if (!empty($detail_data_rekap))
@@ -262,7 +262,7 @@
                     $('#collapse-detail-rekap').collapse('hide')
                 })
 
-                hideDetailRekapApdAdminSudin()
+                function hideDetailRekapApdAdminSudin()
                 {
                     $('#card-rekap').show(500)
                     $('#collapse-detail-rekap').collapse('hide')
