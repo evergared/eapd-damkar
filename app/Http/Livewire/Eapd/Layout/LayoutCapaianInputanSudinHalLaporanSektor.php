@@ -16,6 +16,11 @@ class LayoutCapaianInputanSudinHalLaporanSektor extends Component
         $maks_tervalidasi = 200,
         $value_tervalidasi = 0;
 
+    protected $listeners = [
+        'refreshDataKomponenLokal' => 'hitungCapaian',
+        'refreshDataKomponenGlobal' => 'hitungCapaian'
+    ];
+
     public function render()
     {
         return view('eapd.livewire.layout.layout-capaian-inputan-sudin-hal-laporan-sektor');
