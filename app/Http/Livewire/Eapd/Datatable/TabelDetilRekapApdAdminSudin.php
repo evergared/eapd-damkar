@@ -14,6 +14,7 @@ use App\Models\Eapd\Mongodb\InputApd;
 use App\Models\Eapd\Mongodb\Pegawai;
 use App\Models\Eapd\Mongodb\Penempatan;
 use App\Models\Eapd\Mongodb\PeriodeInputApd;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\View;
 use Jenssegers\Mongodb\Eloquent\Builder;
@@ -26,6 +27,8 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
 {
 
     public string $tableName = 'rekap_admin_sudin';
+
+    public array $users = [];
 
     public 
         $kondisi_atau_keberadaan = "",
@@ -69,18 +72,16 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
             $this->emitSelf('refreshDatatable');
         }
     }
-
-    public function klikGambar($value)
+    public function profil($value)
     {
-        // try{
-
-        // }
+        $this->emit('lihatDetailPegawaiRekapSudin',$value);
     }
     #endregion
 
     #region Method/Function dari rappasoft laravel livewire tables
     public function configure(): void
     {
+        // $this->setDebugEnabled();
         $this->setPrimaryKey('id');
         $this->setRefreshVisible();
         $this->setOfflineIndicatorEnabled();
@@ -144,13 +145,14 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
                 ->sortable(),
             Column::make("Nama Pegawai", "id_pegawai")
                 ->format(function($value){
-                    return Pegawai::find($value)->nama;
+                    return "<a wire:click=\"profil('".$value."')\" style='cursor: pointer;'><u>".Pegawai::find($value)->nama."</u></a>";
                 })
                 ->searchable()
                 ->secondaryHeader(function(){
                     return view('eapd.livewire.komponen-tambahan-datatable.column-search',['field' => 'nama']);
                 })
-                ->sortable(),
+                ->sortable()
+                ->html(),
             Column::make("Penempatan", "id_pegawai")
                 ->format(function($value){
                     return Pegawai::find($value)->penempatan->nama_penempatan;
@@ -187,8 +189,7 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
                 ->format(function($value,$row) use($adc){
                     $gambar = $adc->siapkanGambarInputanBesertaPathnya($value,$row->id_pegawai,$this->id_jenis,$this->id_periode);
                     return view('eapd.livewire.kolom-tambahan-datatable.kolom-gambar-apd',['gambar_apd' => $gambar]);
-                })
-                ->sortable(),
+                }),
             Column::make("Catatan Pengupload", "komentar_pengupload")
                 ->deselected()
                 ->sortable(),
@@ -203,6 +204,9 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
                 ->deselected()
                 ->sortable(),
             Column::make("Data Diupdate", "data_diupdate")
+                ->format(function($value){
+                    return Carbon::createFromTimeString($value,'Asia/Jakarta');
+                })
                 ->sortable(),
             
         ];
@@ -235,18 +239,18 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
 
         }
         return [
-            SelectFilter::make("Kondisi")
-            ->setFilterPillTitle('Kondisi ')
-            ->options($opsi_kondisi)
-            ->filter(function(Builder $b, string $val){
-                $b->where('kondisi','=',$val);
-            }),
-            SelectFilter::make("keberadaan")
-            ->setFilterPillTitle('Keberadaan ')
-            ->options($opsi_keberadaan)
-            ->filter(function(Builder $b, string $val){
-                $b->where('keberadaan','=',$val);
-            }),
+            // SelectFilter::make("Kondisi")
+            // ->setFilterPillTitle('Kondisi ')
+            // ->options($opsi_kondisi)
+            // ->filter(function(Builder $b, string $val){
+            //     $b->where('kondisi','=',$val);
+            // }),
+            // SelectFilter::make("keberadaan")
+            // ->setFilterPillTitle('Keberadaan ')
+            // ->options($opsi_keberadaan)
+            // ->filter(function(Builder $b, string $val){
+            //     $b->where('keberadaan','=',$val);
+            // }),
         ];
     }
     #endregion

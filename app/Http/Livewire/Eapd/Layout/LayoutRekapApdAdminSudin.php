@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Eapd\Layout;
 
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\ApdRekapController;
+use App\Http\Controllers\FileController;
+use App\Models\Eapd\Mongodb\Pegawai;
 use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -15,6 +17,23 @@ class LayoutRekapApdAdminSudin extends Component
         $id_periode = "",
         $nama_periode = "",
         $data_rekap_apd = [];
+
+    public
+        $detail_gambar = "",
+        $id_detail_pegawai = "";
+
+    public
+        $profil_nama = "",
+        $profil_penempatan = "",
+        $profil_nip = "",
+        $profil_nrk = "",
+        $profil_grup = "",
+        $profil_foto = "";
+
+    protected $listeners = [
+        'lihatGambarRekapSudin' => 'lihatGambar',
+        'lihatDetailPegawaiRekapSudin'=>'lihatDetailPegawai'
+    ];
 
     public function render()
     {
@@ -62,6 +81,49 @@ class LayoutRekapApdAdminSudin extends Component
         catch(Throwable $e)
         {
             error_log('gagal memuat data rekap () '.$e);
+        }
+    }
+
+
+
+    public function lihatGambar($value)
+    {
+        try{
+            $this->detail_gambar = $value;
+            $this->dispatchBrowserEvent('showLihatGambar');
+        }
+        catch(Throwable $e)
+        {
+            $this->detail_gambar = "";
+            error_log('gagal melihat gambar rekap '.$e);
+        }
+    }
+
+    public function lihatDetailPegawai($value)
+    {
+        try{
+            $fc = new FileController;
+            $this->id_detail_pegawai = $value;
+            $pegawai = Pegawai::find($this->id_detail_pegawai);
+            $this->profil_nama = $pegawai->nama;
+            $this->profil_penempatan = $pegawai->penempatan->nama_penempatan;
+            $this->profil_nip = $pegawai->nip;
+            $this->profil_nrk = $pegawai->nrk;
+            $this->profil_grup = $pegawai->grup->nama_grup;
+            $this->profil_foto = ($pegawai->profile_img)? $fc::$avatarUploadBasePath.$fc->prosesNamaFileAvatarUpload($this->id_pegawai) : $fc::$avatarPlaceholder;
+            $this->dispatchBrowserEvent('showDetailProfil');
+
+        }
+        catch(Throwable $e)
+        {
+            $this->id_detail_pegawai = "";
+            $this->profil_nama = "";
+            $this->profil_penempatan = "";
+            $this->profil_nip = "";
+            $this->profil_nrk = "";
+            $this->profil_grup = "";
+            $this->profil_foto = "";
+            error_log('gagal melihat detail pegawai '.$e);
         }
     }
 }

@@ -11,7 +11,7 @@ Tidak ada gambar yang diupload.
 <ul class="list-inline w-50 text-nowrap">
     @foreach ($gambar_apd as $index=>$i)
         <a class="apd-foto" 
-        {{-- wire:click="satuFoto('preview-foto-apd-anggota',{{$urut}},{{$index}})" --}}
+        wire:click="$emit('lihatGambarRekapSudin','{{$i}}')"
             style="cursor: pointer;">
             <img alt="APD" class="table-avatar w-25 h-25"
                 src="{{asset($i)}}">
