@@ -12,6 +12,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Eapd\Mongodb\InputApd;
 use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Eapd\Mongodb\Penempatan;
 use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\View;
@@ -24,6 +25,8 @@ use Throwable;
 class TabelDetilRekapApdAdminSudin extends DataTableComponent
 {
 
+    public string $tableName = 'rekap_admin_sudin';
+
     public 
         $kondisi_atau_keberadaan = "",
         $status_yang_dicari = "";
@@ -32,6 +35,11 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
         $sudin = "0",
         $id_jenis = "",
         $id_periode = "";
+
+    public  $columnSearch = [
+        'nama' => null,
+        'penempatan' => null,
+    ];
 
     protected $index = 0;
 
@@ -61,6 +69,13 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
             $this->emitSelf('refreshDatatable');
         }
     }
+
+    public function klikGambar($value)
+    {
+        // try{
+
+        // }
+    }
     #endregion
 
     #region Method/Function dari rappasoft laravel livewire tables
@@ -69,11 +84,11 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setRefreshVisible();
         $this->setOfflineIndicatorEnabled();
-        // $this->setSearchDisabled();
+        $this->setSearchDisabled();
         $this->setTdAttributes(function(Column $column, $row, $columnIndex, $rowIndex){
             return ["class" => "text-center align-middle"];
         });
-        $this->setAdditionalSelects(['id_pegawai','id_apd','id_periode','size','keberadaan','kondisi','komentar_pengupload','verifikasi_oleh','verifikasi_status','komentar_verifikator','image']);
+        $this->setAdditionalSelects(['data_diupdate','id_pegawai','id_apd','id_periode','size','keberadaan','kondisi','komentar_pengupload','verifikasi_oleh','verifikasi_status','komentar_verifikator','image']);
     }
 
     public function builder(): Builder
@@ -87,7 +102,34 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
             ->when($this->kondisi_atau_keberadaan ?? null, function($query){
                 if($this->kondisi_atau_keberadaan == "kondisi" || $this->kondisi_atau_keberadaan == "keberadaan")
                     $query->where($this->kondisi_atau_keberadaan,'=',$this->status_yang_dicari);
+            })
+            
+            #region untuk colum search
+            // pencarian nama
+            ->when($this->columnSearch['nama'] ?? null, function($query, $nama){
+                $query->orWhere(function($query) use($nama){
+                        // error_log('kata_pencarian : '.$kata_pencarian);
+                        $ids = Pegawai::where('nama','like',$nama.'%')->get()->pluck('id');
+                        // error_log('potential id : '.$ids);
+                        foreach($ids as $id)
+                            $query->orWhere('id_pegawai','=',$id);
+                    error_log("query : ".$query->toSql());
+
+                    });
+            })
+            // pencarian penempatan
+            //@ToDo : search untuk penempatan
+            ->when($this->columnSearch['penempatan'] ?? null, function($query,$penempatan){
+                $query->with('pegawai.penempatan',function($query) use($penempatan){
+                    error_log('kata pencarian : '.$penempatan);
+                    $ids = Penempatan::where('nama_penempatan','like',$penempatan.'%')->where('id_wilayah','=',$this->sudin)->get()->pluck('id');
+                    error_log('ids : '.$ids);
+                    foreach($ids as $id)
+                    $query->orWhere('pegawai:id_penempatan','=',$id);
+                    error_log("query : ".$query->toSql());
+                });
             });
+            #endregion
     }
 
     public function columns(): array
@@ -104,19 +146,18 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
                 ->format(function($value){
                     return Pegawai::find($value)->nama;
                 })
-                ->searchable(function(Builder $q, $kata_pencarian){
-                    $q->orWhere(function($query) use($kata_pencarian){
-                        // error_log('kata_pencarian : '.$kata_pencarian);
-                        $ids = Pegawai::where('nama','like',$kata_pencarian.'%')->get()->pluck('id');
-                        // error_log('potential id : '.$ids);
-                        foreach($ids as $id)
-                            $query->orWhere('id_pegawai','=',$id);
-                    });
+                ->searchable()
+                ->secondaryHeader(function(){
+                    return view('eapd.livewire.komponen-tambahan-datatable.column-search',['field' => 'nama']);
                 })
                 ->sortable(),
             Column::make("Penempatan", "id_pegawai")
                 ->format(function($value){
                     return Pegawai::find($value)->penempatan->nama_penempatan;
+                })
+                ->searchable()
+                ->secondaryHeader(function(){
+                    return view('eapd.livewire.komponen-tambahan-datatable.column-search',['field' => 'penempatan']);
                 })
                 ->sortable(),
             Column::make("Nama Apd", "id_apd")
@@ -169,10 +210,43 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
 
     public function filters():array
     {
+
+        $opsi_kondisi = [];
+        foreach(StatusApd::toArray() as $key => $status)
+        {
+
+            $opsi_kondisi[$key] = $key;
+
+        }
+
+        $opsi_keberadaan = [];
+        foreach(KeberadaanApd::toArray() as $key => $status)
+        {
+
+            $opsi_keberadaan[$key] = $status;
+
+        }
+
+        $opsi_verifikasi = [];
+        foreach(VerifikasiApd::toArray() as $key => $status)
+        {
+
+            $opsi_verifikasi[$key] = $status;
+
+        }
         return [
-            // SelectFilter::make("Penempatan")
-            // ->setFilterPillTitle('Penempatan di ')
-            // ->options(function(Builder $b))
+            SelectFilter::make("Kondisi")
+            ->setFilterPillTitle('Kondisi ')
+            ->options($opsi_kondisi)
+            ->filter(function(Builder $b, string $val){
+                $b->where('kondisi','=',$val);
+            }),
+            SelectFilter::make("keberadaan")
+            ->setFilterPillTitle('Keberadaan ')
+            ->options($opsi_keberadaan)
+            ->filter(function(Builder $b, string $val){
+                $b->where('keberadaan','=',$val);
+            }),
         ];
     }
     #endregion

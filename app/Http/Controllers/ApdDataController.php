@@ -378,6 +378,38 @@ class ApdDataController extends Controller
         }
     }
 
+    public function hitungCapaianInputSudin($sudin, int|array &$maks, int|array &$capaian,$id_periode = 1, $target_verifikasi = 0)
+    {
+        try{
+
+            // ambil list semua sektor di suatu wilayah
+            $list_sektor = Penempatan::where('id_wilayah','=',$sudin)->where('keterangan','=','sektor')->get()->pluck('id');
+
+            $yang_harus_diinput = 0;
+            $yang_telah_diinput = 0;
+
+            // pengulangan untuk mengambil jumlah data inputan
+            foreach($list_sektor as $sektor)
+            {
+                $yang_harus_diinput_sektor = 0;
+                $yang_telah_diinput_sektor = 0;
+                $this->hitungCapaianInputSektor($sektor,$yang_harus_diinput_sektor,$yang_telah_diinput_sektor,$id_periode,$target_verifikasi);
+
+                $yang_harus_diinput = $yang_harus_diinput + $yang_harus_diinput_sektor;
+                $yang_telah_diinput = $yang_telah_diinput + $yang_telah_diinput_sektor;
+            }
+
+            $maks = $yang_harus_diinput;
+            $capaian = $yang_telah_diinput;
+        }
+        catch(Throwable $e)
+        {
+            error_log('Gagal menghitung capaian input sudin untuk wilayah '.$sudin.' '.$e);
+            $maks = 0;
+            $capaian = 0;
+        }
+    }
+
     /**
      * Bangun list yang akan digunakan untuk thumbnail di halaman apdku.
      * @param int $id_periode id_periode yang dicari, dalam bentuk id id_periode

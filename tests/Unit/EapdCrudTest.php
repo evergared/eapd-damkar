@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Enum\StatusApd;
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\ApdRekapController;
 use App\Models\Eapd\Mongodb\ApdJenis;
@@ -35,61 +36,26 @@ class EapdCrudTest extends TestCase
      */
     public function test_insert()
     {
-        $apr = new ApdRekapController;
+        $opsi_kondisi = [];
+        $status_apd = StatusApd::toArray();
+        // for($i = 0; $i++; $i < count($status_apd))
+        foreach($status_apd as $key => $status)
+        {
 
-        $sudin = "1";
+            $opsi_kondisi[$key] = $key;
 
-        // dapatkan semua sektor yang ada di sudin
-            $list_sektor =  Penempatan::where('id_wilayah','=',$sudin)
-                            ->where('keterangan','=','sektor')
-                            ->pluck('id');
+        }
 
-            $data_rekap = collect();
-            // pengulangan untuk mengambil rangkuman data inputan tiap sektor
-            foreach($list_sektor as $sektor)
-            {
-                // ambil rangkuman data sektor tersebut
-                $data_sektor = $apr->bangunDataTabelRekapApdSektor(1,$sektor); // parameter 1 hanya untuk test
-
-                // jika data rekap masih kosong, jadikan data yang baru diambil menjadi data rekap saat ini
-                if($data_rekap->isEmpty())
-                    $data_rekap = $data_sektor;
-                else
-                    {
-                        foreach($data_sektor as $data)
-                        {
-                            // jika jenis apd tsb sudah ada di data rekap, maka tambahkan jumlah datanya saja
-                            if($data_rekap->contains("id_jenis",$data["id_jenis"]))
-                            {
-                                $data_yang_sudah_ada = $data_rekap->where("id_jenis",$data["id_jenis"])->first();
-
-                                $data_baru = [
-                                    "baik" => $data_yang_sudah_ada["baik"] + $data["baik"],
-                                    "rusak_ringan" => $data_yang_sudah_ada["rusak_ringan"] + $data["rusak_ringan"],
-                                    "rusak_sedang" => $data_yang_sudah_ada["rusak_sedang"] + $data["rusak_sedang"],
-                                    "rusak_berat" => $data_yang_sudah_ada["rusak_berat"] + $data["rusak_berat"],
-                                    "belum_terima" => $data_yang_sudah_ada["belum_terima"] + $data["belum_terima"],
-                                    "hilang" => $data_yang_sudah_ada["hilang"] + $data["hilang"],
-                                    "ada" => $data_yang_sudah_ada["ada"] + $data["ada"],
-                                    "total" => $data_yang_sudah_ada["total"] + $data["total"],
-                                    "distribusi" => $data_yang_sudah_ada["distribusi"] + $data["distribusi"],
-                                ];
-
-                                $data_rekap->where("id_jenis",$data["id_jenis"])->replace($data_baru);
-                                $data_yang_sudah_ada = $data_rekap->where("id_jenis",$data["id_jenis"])->first();
-
-                            }
-
-                            // jika apd tsb belum ada di data rekap, maka tambahkan sebagai entry baru
-                            else
-                            {
-                                $data_rekap->push[$data];
-                            }
-
-                        }
-                    }
-
-            }
+        // untuk filter grup
+        $grup = Grup::project(['value'=>'$_id','text'=>'$nama_grup'])
+                        ->get()
+                        ->toArray();
+        $opsi_grup = [];
+        foreach($grup as $p)
+        {
+            $opsi_grup[$p['value']] = $p['text'];
+        }
+       print_r($opsi_kondisi);
 
         $this->assertTrue(true);
     }
