@@ -89,14 +89,14 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
         $this->setTdAttributes(function(Column $column, $row, $columnIndex, $rowIndex){
             return ["class" => "text-center align-middle"];
         });
-        $this->setAdditionalSelects(['data_diupdate','id_pegawai','id_apd','id_periode','size','keberadaan','kondisi','komentar_pengupload','verifikasi_oleh','verifikasi_status','komentar_verifikator','image']);
+        $this->setAdditionalSelects(['id_penempatan','data_diupdate','id_pegawai','id_apd','id_periode','size','keberadaan','kondisi','komentar_pengupload','verifikasi_oleh','verifikasi_status','komentar_verifikator','image']);
     }
 
     public function builder(): Builder
     {
         return InputApd::query()
             ->with('pegawai',function($query){
-                $query->where('id_wilayah','=',$this->sudin);
+                $query->where('id_wilayah','=',$this->sudin)->select('id_penempatan');
             })
             ->when($this->id_periode ?? null, fn($query) => $query->where('id_periode','=',$this->id_periode))
             ->when($this->id_jenis ?? null, fn($query) => $query->where('id_jenis','=',$this->id_jenis))
@@ -114,21 +114,22 @@ class TabelDetilRekapApdAdminSudin extends DataTableComponent
                         // error_log('potential id : '.$ids);
                         foreach($ids as $id)
                             $query->orWhere('id_pegawai','=',$id);
-                    error_log("query : ".$query->toSql());
 
                     });
             })
             // pencarian penempatan
-            //@ToDo : search untuk penempatan
             ->when($this->columnSearch['penempatan'] ?? null, function($query,$penempatan){
-                $query->with('pegawai.penempatan',function($query) use($penempatan){
-                    error_log('kata pencarian : '.$penempatan);
-                    $ids = Penempatan::where('nama_penempatan','like',$penempatan.'%')->where('id_wilayah','=',$this->sudin)->get()->pluck('id');
-                    error_log('ids : '.$ids);
-                    foreach($ids as $id)
-                    $query->orWhere('pegawai:id_penempatan','=',$id);
-                    error_log("query : ".$query->toSql());
-                });
+                    error_log('pencarian penempatan layer 1 : '.$penempatan);
+                    $query->with('pegawai.penempatan',function($query) use($penempatan){
+                        $query->where('penempatan.nama_penempatan','like','%'.$penempatan.'%');
+                    });
+            //     $query->orWhere(function($query) use($penempatan){
+            //         error_log('pencarian penempatan layer 1 : '.$penempatan);
+            //         $query->with('pegawai.penempatan',function($query) use($penempatan){
+            //             error_log('pencarian penempatan layer 2 : '.$penempatan);
+            //             $query->orWhere('nama_penempatan','like','%'.$penempatan.'%');
+            //         });
+            // });
             });
             #endregion
     }
