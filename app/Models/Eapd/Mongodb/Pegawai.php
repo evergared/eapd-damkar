@@ -48,6 +48,11 @@ class Pegawai extends Model
         return $this->belongsTo(Grup::class,'id_grup','id_grup');
     }
 
+    public function input_apd()
+    {
+        return $this->hasMany(InputApd::class, 'id_pegawai', '_id');
+    }
+
     public function getSektorAttribute()
     {
         try{
