@@ -165,7 +165,7 @@
                             @elseif(is_string($item['gambar_apd']) && $item['gambar_apd'] != "")
                               {{-- Saat ada gambar dan berisi hanya satu --}}
                               <a class="apd-foto d-none d-sm-block" wire:click="satuFoto({{$index}},-1)" style="cursor: pointer;">
-                                <img alt="APD" class="table-avatar w-25 h-25 d-none d-sm-block" src="{{asset($gbr)}}">
+                                <img alt="APD" class="table-avatar w-25 h-25 d-none d-sm-block" src="{{asset($item['gambar_apd'])}}">
                               </a>
                               <a class="btn btn-primary d-block d-sm-none" wire:click="semuaFoto({{$index}})" style="cursor: pointer;"><i class="fas fa-image"></i></a>
                             @elseif(!$item['gambar_apd'])
