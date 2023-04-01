@@ -75,10 +75,20 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                 ->format(function($value){
                     return Jabatan::where('_id','=',$value)->first()->nama_jabatan;
                 })
+                ->searchable( function($query,$search){
+                    $ids = Jabatan::where('nama_jabatan','like','%'.$search.'%')->get()->pluck('id');
+                    foreach($ids as $id)
+                        $query->orWhere('id_jabatan',$id);
+                })
                 ->sortable(),
             Column::make("Penempatan", "id_penempatan")
                 ->format(function($value){
                     return Penempatan::where('_id','=',$value)->first()->nama_penempatan;
+                })
+                ->searchable(function($query,$search){
+                    $ids = Penempatan::where('nama_penempatan','like','%'.$search.'%')->get()->pluck('id');
+                    foreach($ids as $id)
+                        $query->orWhere('id_penempatan',$id);
                 })
                 ->sortable(),
             Column::make("Inputan")
