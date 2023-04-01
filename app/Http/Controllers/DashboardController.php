@@ -180,4 +180,12 @@ class DashboardController extends Controller
         else
             return view('eapd.dashboard.halaman-pegawai.main-pegawai');
     }
+
+    public function tampilTemplateEapd(Request $r)
+    {
+        if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
+            return view("eapd.dashboard.admin-dinas.template-eapd");
+        else
+            return view('eapd.dashboard.halaman-pegawai.main-pegawai');
+    }
 }

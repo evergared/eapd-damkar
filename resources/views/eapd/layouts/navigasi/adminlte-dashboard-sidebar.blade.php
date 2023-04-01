@@ -148,6 +148,12 @@
                                 <p>Notice Text Berjalan</p>
                             </a>
                             </li>
+                            <li class="nav-item {{ (Route::currentRouteName() =='template-eapd')? 'menu-open' :''}}">
+                                <a href="{{route('template-eapd')}}" class="nav-link {{ (Route::currentRouteName() =='template-eapd')? 'active' :''}}">
+                                  <i class="far fa-circle nav-icon"></i>
+                                  <p>Edit Template APD</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endif

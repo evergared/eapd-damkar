@@ -1,10 +1,10 @@
-@extends('eapd.layouts.adminlte-dashboard',['title'=>'Running Text'])
+@extends('eapd.layouts.adminlte-dashboard',['title'=>'Template E-Apd'])
 
 
 
 @section('content')
 
-@include('eapd.dashboard.komponen.breadcrumbs',['halamanJudul'=>'Daftar Ukuran APD','halaman'=>'ukuran'])
+@include('eapd.dashboard.komponen.breadcrumbs',['halamanJudul'=>'Edit Template Apd','halaman'=>'ukuran'])
 
 <section class="content">
     <div class="container-fluid">
@@ -14,7 +14,7 @@
                     <div class="card-body">
                         
                         @livewireStyles
-                        @livewire('eapd.form.form-running-text')
+                        @livewire('eapd.form.form-template-eapd')
 
                     </div>
                 </div>
