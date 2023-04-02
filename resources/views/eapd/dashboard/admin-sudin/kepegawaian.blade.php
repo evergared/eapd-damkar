@@ -50,7 +50,7 @@
                         </div>
                       </div>
 
-                      @livewire('eapd.datatable.tabel-kepegawaian-admin-sektor')
+                      @livewire('eapd.datatable.tabel-kepegawaian-admin-sudin')
                     </div>
                   </div>
 
@@ -58,7 +58,7 @@
                 </section>
 
                 {{-- modals --}}
-                @livewire('eapd.modal.modal-edit-data-pegawai-tabel-admin-sektor')
+                @livewire('eapd.modal.modal-edit-data-pegawai-tabel-admin-sudin')
 
                 @livewire('eapd.modal.modal-kolom-profil-tabel-anggota-katon')
                 {{-- modals end --}}
