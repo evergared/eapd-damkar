@@ -10,6 +10,7 @@ use App\Models\Eapd\Mongodb\ApdKondisi;
 use App\Models\Eapd\Mongodb\ApdList;
 use App\Models\Eapd\Mongodb\ApdSize;
 use App\Models\Eapd\Mongodb\Grup;
+use App\Models\Eapd\Mongodb\InputApd;
 use App\Models\Eapd\Mongodb\InputApdTemplate;
 use App\Models\Eapd\Mongodb\Jabatan;
 use App\Models\Eapd\Mongodb\Pegawai;
@@ -36,26 +37,15 @@ class EapdCrudTest extends TestCase
      */
     public function test_insert()
     {
-        $opsi_kondisi = [];
-        $status_apd = StatusApd::toArray();
-        // for($i = 0; $i++; $i < count($status_apd))
-        foreach($status_apd as $key => $status)
-        {
-
-            $opsi_kondisi[$key] = $key;
-
-        }
-
-        // untuk filter grup
-        $grup = Grup::project(['value'=>'$_id','text'=>'$nama_grup'])
-                        ->get()
-                        ->toArray();
-        $opsi_grup = [];
-        foreach($grup as $p)
-        {
-            $opsi_grup[$p['value']] = $p['text'];
-        }
-       print_r($opsi_kondisi);
+        // $query = InputApd::with(['pegawai' => function($query){
+        //     $query->with(['jabatan' => function($query){
+        //         $query->where('nama_jabatan','like','%PJLP%')->select('nama_jabatan');
+        //     }])->select('nama as nama_pegawai');
+        // }])->get(['id_apd','nama']);
+        $adc = new ApdDataController;
+        $inputan = $adc->muatDataUkuranApd('11');
+        error_log('inputan : ');
+        print_r($inputan);
 
         $this->assertTrue(true);
     }
