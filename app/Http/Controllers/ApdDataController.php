@@ -900,7 +900,7 @@ class ApdDataController extends Controller
                     // jika jenis apd belum ada, maka buat list apd baru
                     else
                     {
-                        $data_ukuran["list_apd"] = [$key => ["ukuran" => [$ukuran_apd_pegawai => 1], "pegawai_yang_mengisi" => [$p->id]]];
+                        $data_ukuran["list_apd"][$key] = ["ukuran" => [$ukuran_apd_pegawai => 1], "pegawai_yang_mengisi" => [$p->id]];
                     }
                 }
             }
