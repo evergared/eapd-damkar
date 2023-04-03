@@ -878,29 +878,33 @@ class ApdDataController extends Controller
                         // jika di data ukuran sudah ada size tersebut maka
                         if(array_key_exists($ukuran_apd_pegawai,$data_apd_tersimpan['ukuran']))
                             {
-                                array_column($data_apd_tersimpan['ukuran'],$ukuran_apd_pegawai) +1;
-                                error_log('jumlah data ukuran : '.array_column($data_apd_tersimpan['ukuran'],$ukuran_apd_pegawai));
+                                $jumlah = $data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai]['jumlah'];
+                                $data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai]['jumlah'] = $jumlah +1;
+                                array_push($data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai]['pegawai'],$p->id);
                             }
                         // jika di data ukuran belum ada size tersebut maka buat ukuran tersebut
                         else
                         {
-                            $data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai] = 1;
+                            $data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai] = array();
+                            $data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai]['jumlah'] = 1;
+                            // array_push($data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai]['pegawai'],$p->id);
+                            $data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai]['pegawai'] = [$p->id];
                         }
 
                         // cek apakah ada collection pegawai yang mengisi, jika tidak ada maka buat
-                        if(!array_key_exists('pegawai_yang_mengisi',array_column($data_apd_tersimpan,$key)))
+                        if(!array_key_exists('pegawai_yang_mengisi',$data_apd_tersimpan))
                         {
-                            array_column($data_apd_tersimpan,$key)['pegawai_yang_mengisi'] = 1;
+                            $data_apd_tersimpan['pegawai_yang_mengisi'] = [$p->id];
                         }
                         else
-                            array_column($data_apd_tersimpan,$key)['pegawai_yang_mengisi'] ++; 
+                            array_push($data_apd_tersimpan['pegawai_yang_mengisi'], $p->id ); 
                         // update data
                         $data_ukuran['list_apd'][$key] = $data_apd_tersimpan;
                     }
                     // jika jenis apd belum ada, maka buat list apd baru
                     else
                     {
-                        $data_ukuran["list_apd"][$key] = ["ukuran" => [$ukuran_apd_pegawai => 1], "pegawai_yang_mengisi" => [$p->id]];
+                        $data_ukuran["list_apd"][$key] = ["ukuran" => [$ukuran_apd_pegawai => ["jumlah" => 1, "pegawai" => array($p->id)]], "pegawai_yang_mengisi" => [$p->id]];
                     }
                 }
             }

@@ -55,13 +55,13 @@ class Ukuran extends Component
             if(!is_null($inputan = Pegawai::find(Auth::user()->id)->ukuran))
             {
                 $this->tanggal = $inputan['tanggal'];
-                $this->ukuranFireJacket = $inputan['FireJacket'];
-                $this->ukuranFireBoots = $inputan['FireBoots'];
-                $this->ukuranRescueBoots = $inputan['RescueBoots'];
-                $this->ukuranWaterRescueBoots = $inputan['WaterRescueBoots'];
+                $this->ukuranFireJacket = $inputan['Fire_Jacket'];
+                $this->ukuranFireBoots = $inputan['Fire_Boots'];
+                $this->ukuranRescueBoots = $inputan['Rescue_Boots'];
+                $this->ukuranWaterRescueBoots = $inputan['Water_Rescue_Boots'];
                 $this->ukuranJumpsuit = $inputan['Jumpsuit'];
-                $this->ukuranFireGloves = $inputan['FireGloves'];
-                $this->ukuranRescueGloves = $inputan['RescueGloves'];
+                $this->ukuranFireGloves = $inputan['Fire_Gloves'];
+                $this->ukuranRescueGloves = $inputan['Rescue_Gloves'];
             }
             else
             {
@@ -84,13 +84,13 @@ class Ukuran extends Component
 
             $inputan = [
                 'tanggal' => Carbon::now('Asia/Jakarta')->toDateTimeString(),
-                'FireJacket' => $this->ukuranFireJacket,
+                'Fire_Jacket' => $this->ukuranFireJacket,
                 'Jumpsuit' => $this->ukuranJumpsuit,
-                'FireGloves' => $this->ukuranFireGloves,
-                'RescueGloves' => $this->ukuranRescueGloves,
-                'FireBoots' => $this->ukuranFireBoots,
-                'RescueBoots' => $this->ukuranRescueBoots,
-                'WaterRescueBoots' => $this->ukuranWaterRescueBoots,
+                'Fire_Gloves' => $this->ukuranFireGloves,
+                'Rescue_Gloves' => $this->ukuranRescueGloves,
+                'Fire_Boots' => $this->ukuranFireBoots,
+                'Rescue_Boots' => $this->ukuranRescueBoots,
+                'Water_Rescue_Boots' => $this->ukuranWaterRescueBoots,
             ];
 
             $pegawai->ukuran = $inputan;
