@@ -1,5 +1,5 @@
 <div>
-    <div class="card my-n3 mx-n3" id="tabel-list-ukuran-apd">
+    <div class="card my-n3 mx-n3" id="tabel-list-ukuran-apd" wire:ignore.self>
                         <div class="card-header">
                             <h3 class="card-title">{{$nama_periode}}</h3>
 
@@ -23,7 +23,7 @@
                                         @foreach($data_ukuran['list_apd'] as $namaApd => $data )
                                         <tr>
                                             <td class="text-center text-wrap my-auto align-middle">{{array_search($namaApd,array_keys($data_ukuran['list_apd'])) + 1}}</td>
-                                            <td class="text-center text-wrap my-auto align-middle">{{$namaApd}}
+                                            <td class="text-center text-wrap my-auto align-middle">{{ str_replace("_", " ",$namaApd)}}
                                             </td>
                                             <td class="text-center align-middle">
                                                 <a wire:click="lihatJumlahUkuran('{{$namaApd}}')" href="#rekap-tabel">{{ count($data['pegawai_yang_mengisi'])}}</a>
@@ -88,11 +88,11 @@
                                   @foreach ($detail_jumlah_ukuran['ukuran'] as $nama_ukuran => $ukuran)
                                     <tr class="fire-jacket rusak-berat">
                                         <td class="text-center text-wrap my-auto align-middle">{{array_search($nama_ukuran,array_keys($ukuran)) + 1}}</td>
-                                        <td class="text-center text-wrap my-auto align-middle">{{$detail_nama_apd}}
+                                        <td class="text-center text-wrap my-auto align-middle">{{str_replace("_"," ",$detail_nama_apd)}}
                                         </td>
                                         <td class="text-center text-wrap my-auto align-middle">{{$nama_ukuran}}
                                         </td>
-                                        <td class="text-center text-wrap my-auto align-middle"><a onclick="modal('modal-daftar-pegawai',['{{$detail_nama_apd}}','{{$nama_ukuran}}',{{$ukuran['pegawai']}}],'tampilTabel')">{{$ukuran['jumlah']}}</a>
+                                        <td class="text-center text-wrap my-auto align-middle"><a wire:click="lihatDaftarPegawai(['{{$nama_ukuran}}'])">{{$ukuran['jumlah']}}</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -141,9 +141,7 @@
                                   </div>
                                 </div>
                                 <!-- /.card-header -->
-                                <div class="card-body table-responsive p-0" style="height: 300px;">
                                   @livewire('eapd.datatable.tabel-daftar-pegawai-modal-data-ukuran')
-                                </div>
                                 <!-- /.card-body -->
                               </div>
                               <!-- /.card -->
@@ -173,10 +171,16 @@
     $("#tabel-jumlah-ukuran-apd").collapse('show')
   })
 
+  window.addEventListener('tampilModalDaftarPegawai',event=>{
+     $('#modal-daftar-pegawai').modal('show')
+  })
+
   function kembaliKeListUkuranApd(){
     $("#tabel-list-ukuran-apd").show(500)
     $("#tabel-jumlah-ukuran-apd").collapse('hide')
   }
+
+
       </script>
 
 </div>

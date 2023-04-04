@@ -24,25 +24,27 @@ class TabelDaftarPegawaiModalDataUkuran extends DataTableComponent
         $this->setTableAttributes([
             "class" => "table table-head-fixed text-nowrap"
         ]);
+
+        $this->setRefreshVisible();
     }
 
     public function builder(): Builder
     {
-        return Pegawai::query()->whereIn('id',$this->list_id_pegawai);
+        return Pegawai::query()->select(['_id','nama','nrk','nip','no_telp','id_jabatan','id_wilayah','id_penempatan','id_grup','aktif'])
+                ->orWhere(function($query){
+                    foreach($this->list_id_pegawai as $id)
+                    $query->orWhere('_id',$id);
+                });
     }
 
     public function columns(): array
     {
         return [
-            Column::make(" id", "_id")
+            Column::make("Nama", "nama")
                 ->sortable(),
             Column::make("Nrk", "nrk")
                 ->sortable(),
             Column::make("Nip", "nip")
-                ->sortable(),
-            Column::make("Nama", "nama")
-                ->sortable(),
-            Column::make("Profile img", "profile_img")
                 ->sortable(),
             Column::make("No telp", "no_telp")
                 ->sortable(),
@@ -56,14 +58,6 @@ class TabelDaftarPegawaiModalDataUkuran extends DataTableComponent
                 ->sortable(),
             Column::make("Aktif", "aktif")
                 ->sortable(),
-            Column::make("Plt", "plt")
-                ->sortable(),
-            Column::make("Kurang", "kurang")
-                ->sortable(),
-            Column::make("Created at", "created_at")
-                ->sortable(),
-            Column::make("Updated at", "updated_at")
-                ->sortable(),
         ];
     }
 
@@ -74,6 +68,7 @@ class TabelDaftarPegawaiModalDataUkuran extends DataTableComponent
             $this->nama_apd = $value[0];
             $this->ukuran = $value[1];
             $this->list_id_pegawai = $value[2];
+            $this->emitSelf('refreshDatatable');
 
         }
         catch(Throwable $e)

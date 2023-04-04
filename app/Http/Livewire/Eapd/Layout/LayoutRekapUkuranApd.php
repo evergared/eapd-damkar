@@ -6,6 +6,7 @@ use App\Http\Controllers\ApdDataController;
 use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Throwable;
 
 class LayoutRekapUkuranApd extends Component
 {
@@ -43,5 +44,22 @@ class LayoutRekapUkuranApd extends Component
         $this->detail_jumlah_ukuran = $this->data_ukuran['list_apd'][$this->detail_nama_apd];
         // dd($this->detail_jumlah_ukuran);
         $this->dispatchBrowserEvent('tampilJumlahUkuranApd');
+    }
+
+    public function lihatDaftarPegawai($value)
+    {
+        try{
+            
+            $ukuran = $value[0];
+            $pegawai_yang_mengisi = $this->detail_jumlah_ukuran['ukuran'][$ukuran]['pegawai'];
+
+            $this->emit('tampilTabel',[$this->detail_nama_apd,$ukuran,$pegawai_yang_mengisi]);
+            $this->dispatchBrowserEvent('tampilModalDaftarPegawai');
+
+        }
+        catch(Throwable $e)
+        {
+            error_log('gagal dalam menampilkan modal daftar pegawai pada data ukuran '.$e);
+        }
     }
 }
