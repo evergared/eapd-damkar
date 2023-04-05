@@ -13,20 +13,21 @@ use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Throwable;
 
-class ModalEditDataPegawaiTabelAdminSektor extends Component
+class ModalEditDataPegawaiTabelAdminSudin extends Component
 {
 
     // data untuk option select
-    public 
+    public
         $list_penempatan = [],
         $list_grup = [],
+        $list_sektor = [],
         $list_aktif = [
-            ['value' => '1', 'text'=>"Masih Aktif"],
-            ['value' => '0', 'text'=>"Tidak Aktif / Pensiun"],
+            ['value' => '1', 'text' => "Masih Aktif"],
+            ['value' => '0', 'text' => "Tidak Aktif / Pensiun"],
         ];
 
     // data pegawai yang dipanggil
-    public 
+    public
         $id_pegawai = "",
         $nrk = "",
         $nip = "",
@@ -38,10 +39,11 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         $aktif = "",
         $password = "",
         $keterangan = "",
-        $tipe_jabatan_user = "";
+        $tipe_jabatan_user = "",
+        $sektor = "";
 
     // untuk menyimpan data awal
-    public 
+    public
         $cache_nrk = "",
         $cache_nip = "",
         $cache_nama = "",
@@ -49,10 +51,11 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         $cache_penempatan = "",
         $cache_email = "",
         $cache_telp = "",
-        $cache_aktif = "";
+        $cache_aktif = "",
+        $cache_sektor = "";
 
     // untuk ditampilkan di ubah penempatan
-    public 
+    public
         $jabatan_pegawai = "";
 
     // untuk menampilkan atau tidaknya ubah password
@@ -60,7 +63,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         $user_ditemukan = false;
 
     // untuk perbandingan tipe jabatan
-    public 
+    public
         $tipe_jabatan_personil = "",
         $tipe_jabatan_danton = "";
 
@@ -75,7 +78,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
 
     public function render()
     {
-        return view('eapd.livewire.modal.modal-edit-data-pegawai-tabel-admin-sektor');
+        return view('eapd.livewire.modal.modal-edit-data-pegawai-tabel-admin-sudin');
     }
 
     /**
@@ -83,14 +86,13 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
      */
     public function inisiasiModal($value)
     {
-        try
-        {
+        try {
             // ambil id_pegawai
             $this->id_pegawai =  $value;
 
 
             // ambil data pegawai
-            $pegawai = Pegawai::where('_id','=',$this->id_pegawai)->first();
+            $pegawai = Pegawai::where('_id', '=', $this->id_pegawai)->first();
 
             // inisiasi data lainnya
             $this->nrk = $this->cache_nrk = $pegawai->nrk;
@@ -101,6 +103,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             $this->email = $this->cache_email = $pegawai->email;
             $this->telp = $this->cache_telp = $pegawai->no_telp;
             $this->aktif = $this->cache_aktif = $pegawai->aktif;
+            $this->sektor = $this->cache_sektor = $pegawai->sektor;
 
             $this->jabatan_pegawai = $pegawai->jabatan->nama_jabatan;
             $this->tipe_jabatan_user = $pegawai->jabatan->tipe_jabatan;
@@ -108,46 +111,53 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             $this->tipe_jabatan_personil = TipeJabatan::personil()->value;
             $this->tipe_jabatan_danton = TipeJabatan::danton()->value;
 
-            //ambil data pos sektor, kecuali nama sektor
+            //ambil data pos sektor
             $this->list_penempatan = [];
-            
-            $query_penempatan = Penempatan::where('_id','like',Auth::user()->data->sektor.'%')
-                    // ->where('id_penempatan','!=',Auth::user()->data->sektor)
-                    ->get();
+            error_log("sektor : ".$this->sektor);
+            $query_penempatan = Penempatan::where('id_wilayah', '=', Auth::user()->data->id_wilayah)
+                ->where('_id','like',$this->sektor.'%')
+                ->where('keterangan','pos')
+                ->get();
 
-            foreach($query_penempatan as $q)
-            {
-                array_push($this->list_penempatan,[
+            foreach ($query_penempatan as $q) {
+                array_push($this->list_penempatan, [
                     'value' => $q->id,
                     'text' => $q->nama_penempatan
                 ]);
             }
 
-            // error_log("array penempatan : ".implode("||",$this->list_penempatan));
-
             // ambil data grup
             $this->list_grup = [];
-            
+
             $query_grup = Grup::all();
 
-            foreach($query_grup as $q)
-            {
-                array_push($this->list_grup,[
+            foreach ($query_grup as $q) {
+                array_push($this->list_grup, [
                     'value' => $q->id_grup,
                     'text' => $q->nama_grup
                 ]);
             }
 
+            // ambil data list sektor di suatu wilayah
+            $this->list_sektor = [];
+
+            $query_sektor = Penempatan::where('id_wilayah',Auth::user()->data->penempatan->id_wilayah)->where('keterangan','sektor')->get();
+
+            foreach($query_sektor as $q)
+            {
+                array_push($this->list_sektor,[
+                    'value' => $q->id,
+                    'text' => $q->nama_penempatan
+                ]);
+            }
+
             // cek apakah ada user dengan id_pegawai tersebut
-            $this->user_ditemukan = User::where('_id','=',$this->id_pegawai)->first() != "";
+            $this->user_ditemukan = User::where('_id', '=', $this->id_pegawai)->first() != "";
 
 
             $this->koreksiPenempatanDanGrup();
-
-        }
-        catch(Throwable $e)
-        {
-            error_log('gagal inisiasi modal edit data pegawai '.$e);
+        } catch (Throwable $e) {
+            error_log('gagal inisiasi modal edit data pegawai ' . $e);
         }
     }
 
@@ -156,10 +166,10 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         $id_pegawai = "";
 
         // proses menyimpan perubahan data
-        try{
+        try {
 
             // ambil data pegawai mana yang mau diubah
-            $pegawai = Pegawai::where('_id','=',$this->id_pegawai)->first();
+            $pegawai = Pegawai::where('_id', '=', $this->id_pegawai)->first();
 
             // ambil perubahan dari input di modal
             $pegawai->id_grup = $this->grup;
@@ -178,10 +188,10 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
 
             // ambil id pegawai yang barusan di update
             // $id_pegawai = $pegawai->{$pegawai->getKeyName()};
-            error_log('id pegawai dari modal : '.$id_pegawai);
+            error_log('id pegawai dari modal : ' . $id_pegawai);
 
             // ambil data pegawai
-            $pegawai = Pegawai::where('_id','=',$id_pegawai)->first();
+            $pegawai = Pegawai::where('_id', '=', $id_pegawai)->first();
 
             // inisiasi ulang data lainnya
             $this->id_pegawai = $pegawai->id;
@@ -195,42 +205,31 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             $this->aktif = $this->cache_aktif = $pegawai->aktif;
 
             // tampilkan pesan
-            session()->flash('form-success','Berhasil melakukan perubahan data.');
+            session()->flash('form-success', 'Berhasil melakukan perubahan data.');
 
             // refresh datatable
             $this->emit('refreshDatatable');
-
-        }
-        catch(Throwable $e)
-        {
-            if(is_null($pegawai) && $id_pegawai != "")
-            {
-                session()->flash('form-success','Berhasil melakukan perubahan data, namun terjadi kesalahan saat mengambil data yang telah diubah.');
-                error_log('Gagal mengambil data setelah perubahan berhasil '.$e);
+        } catch (Throwable $e) {
+            if (is_null($pegawai) && $id_pegawai != "") {
+                session()->flash('form-success', 'Berhasil melakukan perubahan data, namun terjadi kesalahan saat mengambil data yang telah diubah.');
+                error_log('Gagal mengambil data setelah perubahan berhasil ' . $e);
+            } else {
+                session()->flash('form-fail', 'Gagal melakukan perubahan data.');
+                error_log('Gagal melakukan perubahan data ' . $e);
             }
-            else
-            {
-                session()->flash('form-fail','Gagal melakukan perubahan data.');
-                error_log('Gagal melakukan perubahan data '.$e);
-            }
-            
         }
 
         // proses menyimpan keterangan admin (bila ada)
-        if($this->keterangan != "" && $id_pegawai != "")
-        {
-            try{
-                error_log('hit keterangan edit user '.$id_pegawai);
-                $history = HistoryTabelPegawai::where('id_pegawai','=',$id_pegawai)->first();
+        if ($this->keterangan != "" && $id_pegawai != "") {
+            try {
+                error_log('hit keterangan edit user ' . $id_pegawai);
+                $history = HistoryTabelPegawai::where('id_pegawai', '=', $id_pegawai)->first();
                 $history->keterangan_perubahan = $this->keterangan;
-                
+
                 $history->save();
                 $this->keterangan = "";
-
-            }
-            catch(Throwable $e)
-            {
-                error_log('Gagal menambahkan keterangan perubahan pada data pegawai yang telah diubah '.$e);
+            } catch (Throwable $e) {
+                error_log('Gagal menambahkan keterangan perubahan pada data pegawai yang telah diubah ' . $e);
             }
         }
     }
@@ -246,45 +245,43 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             ]
         );
 
-        try{
+        try {
 
-            error_log('passwrod '.$this->password);
+            error_log('passwrod ' . $this->password);
             // ambil user mana yang akan diubah passwordnya
-            $user = User::where('_id','=',$this->id_pegawai)->first();
+            $user = User::where('_id', '=', $this->id_pegawai)->first();
             // buat password dari inputan
             $user->password = Hash::make($this->password);
             // simpan perubahan
             $user->save();
             // tampilkan pesan
-            session()->flash('form-success','Berhasil mengganti password akun '.$this->cache_nama);
+            session()->flash('form-success', 'Berhasil mengganti password akun ' . $this->cache_nama);
             // hapus isi dari input password
             $this->password = "";
-
-        }
-        catch(Throwable $e)
-        {
-            error_log('Gagal mengubah password '.$e);
-            report('Gagal mengubah password '.$e);
-            session()->flash('form-fail','Gagal melakukan perubahan password');
+        } catch (Throwable $e) {
+            error_log('Gagal mengubah password ' . $e);
+            report('Gagal mengubah password ' . $e);
+            session()->flash('form-fail', 'Gagal melakukan perubahan password');
         }
     }
 
     public function resetPerubahanData()
     {
-            $this->nrk = $this->cache_nrk;
-            $this->nama = $this->cache_nama;
-            $this->nip = $this->cache_nip;
-            $this->grup = $this->cache_grup;
-            // $this->penempatan = $this->cache_penempatan;
-            $this->email = $this->cache_email;
-            $this->telp = $this->cache_telp;
-            $this->aktif = $this->cache_aktif;
+        $this->nrk = $this->cache_nrk;
+        $this->nama = $this->cache_nama;
+        $this->nip = $this->cache_nip;
+        $this->grup = $this->cache_grup;
+        $this->penempatan = $this->cache_penempatan;
+        $this->email = $this->cache_email;
+        $this->telp = $this->cache_telp;
+        $this->aktif = $this->cache_aktif;
+        $this->sektor = $this->cache_sektor;
     }
 
     public function koreksiPenempatanDanGrup()
     {
 
-        try{
+        try {
 
             /**
              * Agar tidak ada pegawai yang seharusnya tidak termasuk anggota pos, tapi masuk pos
@@ -299,63 +296,69 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
              */
 
             // cek penempatan dan grup tidak kosong
-            if($this->penempatan != "" && $this->grup != "")
-            {
+            if ($this->penempatan != "" && $this->grup != "") {
                 // jika user merupakan petugas lapangan
-                if($this->tipe_jabatan_user == $this->tipe_jabatan_personil) // tambahkan jabatan dengan in_array jika perlu
+                if ($this->tipe_jabatan_user == $this->tipe_jabatan_personil) // tambahkan jabatan dengan in_array jika perlu
                 {
                     // jika penempatannya menggunakan nama sektor
-                    if($this->penempatan == Auth::user()->data->sektor)
-                    {
-                        $tempat = Penempatan::where('_id','=',Auth::user()->data->sektor)->first()->nama_penempatan;
+                    if ($this->penempatan == Auth::user()->data->sektor) {
+                        $tempat = Penempatan::where('_id', '=', Auth::user()->data->sektor)->first()->nama_penempatan;
                         $this->penempatan = "";
-                        session()->flash('warning-penempatan','Penempatan '.$tempat.' hanya untuk yang tidak memiliki grup jaga.');
+                        session()->flash('warning-penempatan', 'Penempatan ' . $tempat . ' hanya untuk yang tidak memiliki grup jaga.');
                     }
 
                     // jika grup jaganya bukan abc
-                    if(!in_array($this->grup,["A","B","C"]))
-                    {
+                    if (!in_array($this->grup, ["A", "B", "C"])) {
                         $this->grup = "";
-                        session()->flash('warning-grup','Pilih kembali grup jaga.');
+                        session()->flash('warning-grup', 'Pilih kembali grup jaga.');
                     }
-                }
-                else
-                {
-                    if($this->penempatan != Auth::user()->data->sektor)
-                    {
-                        $tempat = Penempatan::where('_id','=',Auth::user()->data->sektor)->first()->nama_penempatan;
+                } else {
+                    if ($this->penempatan != Auth::user()->data->sektor) {
+                        $tempat = Penempatan::where('_id', '=', Auth::user()->data->sektor)->first()->nama_penempatan;
                         $this->penempatan = "";
-                        session()->flash('warning-penempatan','Pilih penempatan '.$tempat.' untuk yang tidak memiliki grup jaga.');
+                        session()->flash('warning-penempatan', 'Pilih penempatan ' . $tempat . ' untuk yang tidak memiliki grup jaga.');
                     }
 
-                    if(in_array($this->grup,["A","B","C"]) && $this->tipe_jabatan_user != $this->tipe_jabatan_danton) // tambahkan jabatan dengan in_array jika perlu
+                    if (in_array($this->grup, ["A", "B", "C"]) && $this->tipe_jabatan_user != $this->tipe_jabatan_danton) // tambahkan jabatan dengan in_array jika perlu
                     {
                         $this->grup = "";
-                        session()->flash('warning-grup','Grup jaga ABC hanya untuk yang melaksanakan piket jaga.');
+                        session()->flash('warning-grup', 'Grup jaga ABC hanya untuk yang melaksanakan piket jaga.');
                     }
                 }
             }
-        }
-        catch(Throwable $e)
-        {
-            error_log('Terjadi kesalahan saat mengganti grup jaga. '.$e);
-            report('Terjadi kesalahan saat mengganti grup jaga. '.$e);
-            session()->flash('error-data-penempatan','Terjadi kesalahan saat mengganti grup jaga.');
+        } catch (Throwable $e) {
+            error_log('Terjadi kesalahan saat mengganti grup jaga. ' . $e);
+            report('Terjadi kesalahan saat mengganti grup jaga. ' . $e);
+            session()->flash('error-data-penempatan', 'Terjadi kesalahan saat mengganti grup jaga.');
             $this->grup = "";
         }
-
-
     }
 
-    public function dataPegawaiAdaYangDirubah():bool
+    public function optionSektorDiganti()
     {
-        return 
-            ($this->nama != $this->cache_nama) ||
+        $this->list_penempatan = [];
+            error_log("sektor : ".$this->sektor);
+
+            $query_penempatan = Penempatan::where('id_wilayah', '=', Auth::user()->data->id_wilayah)
+                ->where('_id','like',$this->sektor.'%')
+                ->where('keterangan','pos')
+                ->get();
+
+            foreach ($query_penempatan as $q) {
+                array_push($this->list_penempatan, [
+                    'value' => $q->id,
+                    'text' => $q->nama_penempatan
+                ]);
+            }
+    }
+
+    public function dataPegawaiAdaYangDirubah(): bool
+    {
+        return ($this->nama != $this->cache_nama) ||
             ($this->nip != $this->cache_nip) ||
             ($this->nrk != $this->cache_nrk) ||
             ($this->email != $this->cache_email) ||
             ($this->telp != $this->cache_telp) ||
             ($this->aktif != $this->cache_aktif);
     }
-
 }

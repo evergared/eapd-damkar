@@ -244,18 +244,20 @@ class ApdDataController extends Controller
             // jika parameter nrk kosong, ambil nrk dan jabatan user
             if ($id_pegawai == "") {
                 $id_pegawai = Auth::user()->id;
-                $id_jabatan = Auth::user()->data->id_jabatan;
+                // $id_jabatan = Auth::user()->data->id_jabatan;
             }
             // jika paramter nrk diisi, cukup ambil jabatan user
             else {
-                $id_jabatan = Pegawai::where('_id', '=', $id_pegawai)->first()->id_jabatan;
+                // $id_jabatan = Pegawai::where('_id', '=', $id_pegawai)->first()->id_jabatan;
             }
 
-            error_log('hit pegawai id check pass');
+            error_log('hit pegawai id check pass '.$id_pegawai);
 
             if($id_periode == 1)
             $id_periode = PeriodeInputApd::get()->first()->id;
-            error_log('hit id_periode id check pass');
+            error_log('hit id_periode id check pass '.$id_periode);
+
+            error_log('id_jenis : '.$id_jenis);
 
             // cek apakah user telah menginput apd tersebut
             if ($input = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first())
@@ -373,6 +375,38 @@ class ApdDataController extends Controller
         catch(Throwable $e)
         {
             error_log('Gagal menghitung capaian input sektor '.$sektor.' '.$e);
+            $maks = 0;
+            $capaian = 0;
+        }
+    }
+
+    public function hitungCapaianInputSudin($sudin, int|array &$maks, int|array &$capaian,$id_periode = 1, $target_verifikasi = 0)
+    {
+        try{
+
+            // ambil list semua sektor di suatu wilayah
+            $list_sektor = Penempatan::where('id_wilayah','=',$sudin)->where('keterangan','=','sektor')->get()->pluck('id');
+
+            $yang_harus_diinput = 0;
+            $yang_telah_diinput = 0;
+
+            // pengulangan untuk mengambil jumlah data inputan
+            foreach($list_sektor as $sektor)
+            {
+                $yang_harus_diinput_sektor = 0;
+                $yang_telah_diinput_sektor = 0;
+                $this->hitungCapaianInputSektor($sektor,$yang_harus_diinput_sektor,$yang_telah_diinput_sektor,$id_periode,$target_verifikasi);
+
+                $yang_harus_diinput = $yang_harus_diinput + $yang_harus_diinput_sektor;
+                $yang_telah_diinput = $yang_telah_diinput + $yang_telah_diinput_sektor;
+            }
+
+            $maks = $yang_harus_diinput;
+            $capaian = $yang_telah_diinput;
+        }
+        catch(Throwable $e)
+        {
+            error_log('Gagal menghitung capaian input sudin untuk wilayah '.$sudin.' '.$e);
             $maks = 0;
             $capaian = 0;
         }
@@ -737,6 +771,153 @@ class ApdDataController extends Controller
         catch(Throwable $e)
         {
             error_log('gagal dalam memuat data inputan pos '.$id_penempatan_pos.' '.$e);
+        }
+    }
+
+    /**
+     * 
+     */
+    public function muatDataUkuranApd($penempatan = "")
+    {
+        // jika penempatan kosong, maka ambil penempatan user
+        if($penempatan == "")
+            $penempatan = Auth::user()->data->id_penempatan;
+        
+        try{
+            // ambil id penempatan berdasarkan tingkat yang setara
+            error_log('ambil id penempatan');
+            $tingkat_penempatan = Penempatan::find($penempatan)->keterangan;
+
+            $penempatan_ids = null;
+
+            if($tingkat_penempatan == "pos")
+            {
+                $penempatan_ids = $penempatan;
+            }
+            elseif($tingkat_penempatan == "sektor")
+            {
+                $penempatan_ids = Penempatan::where('id','like',$penempatan.'%')->get()->pluck('id');
+            }
+            elseif($tingkat_penempatan == "sudin")
+            {
+                $wil = Penempatan::find($penempatan)->id_wilayah;
+                $penempatan_ids = Penempatan::where('id_wilayah',$wil)->get()->pluck('id');
+            }
+            elseif($tingkat_penempatan == "dinas")
+            {
+                $penempatan_ids = Penempatan::where('id','like','#'.filter_var($penempatan,FILTER_SANITIZE_NUMBER_INT).'%')->get()->pluck('id');
+            }
+            error_log('tingkat penempatan : '.$tingkat_penempatan);
+            error_log('id penempatan yang dikumpulkan : '.$penempatan_ids);
+            /**
+             * Data ukuran untuk di return, struktur :
+             *  collection $data_ukuran =>[
+             *           - collection    $list_apd => [
+             *                                          - string        $nama_apd
+             *                                          - collection    $ukuran
+             *                                          - collection    $pegawai yang menginput
+             *                                         ]
+             *           - int           $keseluruhan pegawai
+             *      ]
+             * 
+             * Sementara untuk collection ukuran, memiliki struktur
+             * collection $ukuran => [size => jumlah], dimana :
+             * - size : tipe string, berupa ukuran ("S","M","42","39") yang menjadi key
+             * - jumlah : tipe int, berupa berapa banyak ukuran
+             */
+            $data_ukuran = array('list_apd' => array() ,'keseluruhan_pegawai' => 0);
+
+            if(is_null($penempatan_ids))
+                return $data_ukuran;
+            
+            // muat seluruh pegawai yang di tempatkan sesuai dengan penempatan
+            $pegawai = collect();
+            if(is_string($penempatan_ids))
+            {
+                $pegawai = Pegawai::where('id_penempatan','=',$penempatan_ids)->get();
+            }
+            else
+            {
+                foreach($penempatan_ids as $id)
+                {
+                    $pegawai_pada_penempatan = Pegawai::where('id_penempatan','=',$id)->get();
+
+                    if(!$pegawai_pada_penempatan->isEmpty())
+                    foreach($pegawai_pada_penempatan as $result)
+                        $pegawai->push($result);
+                }
+            }
+            error_log('jumlah pegawai yang di dapat : '.$pegawai->count());
+
+            // cek setiap data ukuran pada model pegawai dari tiap pegawai yang diambil
+            foreach($pegawai as $p)
+            {
+                error_log('cek pegawai');
+                // jika mereka belum pernah mengisi
+                if(is_null($p->ukuran))
+                    continue;
+                
+                error_log('pegawai pernah mengisi dengan nama '.$p->nama);
+                
+                // jika pegawai pernah mengisi inputan ukuran, lakukan pengulangan untuk setiap ukuran yang diinput
+                foreach($p->ukuran as $key => $ukuran_apd_pegawai)
+                {
+                    error_log('mulai cek inputan untuk key '.$key);
+                    // jika key pada inputan berupa tanggal, lewati
+                    if($key == "tanggal")
+                        continue;
+                    
+                    // selain itu, jika jenis apd sudah ada di data inputan maka lakukan
+                    if(array_key_exists($key,$data_ukuran['list_apd']))
+                    {
+                        $data_apd_tersimpan = $data_ukuran['list_apd'][$key];
+                        // tambah collection kosong untuk menampung ukuran jika belum ada
+                        if(!array_key_exists('ukuran',$data_apd_tersimpan))
+                            $data_apd_tersimpan['ukuran'] = array();
+
+                        // jika di data ukuran sudah ada size tersebut maka
+                        if(array_key_exists($ukuran_apd_pegawai,$data_apd_tersimpan['ukuran']))
+                            {
+                                $jumlah = $data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai]['jumlah'];
+                                $data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai]['jumlah'] = $jumlah +1;
+                                array_push($data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai]['pegawai'],$p->id);
+                            }
+                        // jika di data ukuran belum ada size tersebut maka buat ukuran tersebut
+                        else
+                        {
+                            $data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai] = array();
+                            $data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai]['jumlah'] = 1;
+                            // array_push($data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai]['pegawai'],$p->id);
+                            $data_apd_tersimpan['ukuran'][$ukuran_apd_pegawai]['pegawai'] = [$p->id];
+                        }
+
+                        // cek apakah ada collection pegawai yang mengisi, jika tidak ada maka buat
+                        if(!array_key_exists('pegawai_yang_mengisi',$data_apd_tersimpan))
+                        {
+                            $data_apd_tersimpan['pegawai_yang_mengisi'] = [$p->id];
+                        }
+                        else
+                            array_push($data_apd_tersimpan['pegawai_yang_mengisi'], $p->id ); 
+                        // update data
+                        $data_ukuran['list_apd'][$key] = $data_apd_tersimpan;
+                    }
+                    // jika jenis apd belum ada, maka buat list apd baru
+                    else
+                    {
+                        $data_ukuran["list_apd"][$key] = ["ukuran" => [$ukuran_apd_pegawai => ["jumlah" => 1, "pegawai" => array($p->id)]], "pegawai_yang_mengisi" => [$p->id]];
+                    }
+                }
+            }
+
+            // masukan jumlah semua pegawai yang dimuat
+            $data_ukuran["keseluruhan_pegawai"] = $pegawai->count();
+
+            return $data_ukuran;
+
+        }
+        catch(Throwable $e)
+        {
+            error_log('kesalahan saat pengumpulan data ukuran '.$e);
         }
     }
 

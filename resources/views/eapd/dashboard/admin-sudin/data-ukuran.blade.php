@@ -14,7 +14,7 @@
                     <div class="card-body">
                         
                         @livewireStyles
-                        @livewire('eapd.form.data-ukuran')
+                        @livewire('eapd.layout.layout-rekap-ukuran-apd')
 
                     </div>
                 </div>

@@ -16,7 +16,7 @@ class LayoutProgressInputanSudinAdminSudinHalLaporanSektor extends Component
 
     public $listeners = [
         'refreshDataKomponenGlobal' => 'refreshDataKomponen', // untuk handle event global
-        'refreshDataLayout' => 'refreshDataKomponen',
+        'refreshDataKomponenLokal' => 'refreshDataKomponen',
         'inputSudin'
     ];
 

@@ -43,7 +43,7 @@
                                     <a class="btn" href="#sambutan"><i
                                             class="fa fa-arrow-right text-white me-3"></i>Klik disini!</a>
                                 </div>
-                                <div style="height: 30%; width:30%;">
+                                <div class="d-none d-sm-block" style="height: 30%; width:30%;">
                                     <img src="{{asset('damkar/kadis.jpg')}}" class="animated slideInLeft">
                                 </div>
                             </div>
@@ -66,12 +66,18 @@
 <!-- Facts Start -->
 
 <div class="pt-4" id="sambutan"></div>
-<div></div>
+
+    <div class="d-block d-sm-none">
+        <img class="mx-auto" style="height: 100%; width:100%;" src="{{asset('damkar/kadis.jpg')}}" class="animated slideInLeft">
+    </div>
+
 <!-- About Start -->
 <div class="container-fluid bg-light overflow-hidden my-5 px-lg-0">
     <div class="container about px-lg-0">
+        
         <div class="row g-0 mx-lg-0 justify-content-center">
-            <div class="g-0 mx-lg-5 " style="width: 80%;">
+            
+            <div class="g-0 mx-lg-5" style="width: 80%;">
                 <p class="mt-8 mb-8">Kepala Dinas Penanggulangan Kebakaran dan Penyelamatan</p>
                 <br>
                 <a class="text-gray-800 hover:text-gray-900">Provinsi DKI Jakarta</a>

@@ -258,17 +258,17 @@
                                         <div>
                                             <div class="row">
                                                 <div class="col"><strong>Jenis APD</strong></div>
-                                                <div class="col">:</div>
+                                                <div class="">:</div>
                                                 <div class="col">{{$detail_nama_jenis_apd}}</div>
                                             </div>
                                             <div class="row">
                                                 <div class="col"><strong>Model APD</strong></div>
-                                                <div class="col">:</div>
+                                                <div class="">:</div>
                                                 <div class="col">{{$detail_nama_apd}}</div>
                                             </div>
                                             <div class="row">
                                                 <div class="col"><strong>Status Kondisi</strong></div>
-                                                <div class="col">:</div>
+                                                <div class="">:</div>
                                                 <div class="col"><span class="badge bg-{{$detail_warna_kerusakan}}">{{$detail_status_kerusakan}}</span></div>
                                             </div>
                                             <div class="row">
@@ -289,12 +289,12 @@
                                         <div>
                                             <div class="row">
                                                 <div class="col"><strong>Status Validasi</strong></div>
-                                                <div class="col">:</div>
+                                                <div class="">:</div>
                                                 <div class="col"><span class="badge bg-{{$detail_warna_verifikasi}}">{{$detail_status_verifikasi}}</span></div>
                                             </div>
                                             <div class="row">
                                                 <div class="col"><strong>Verifikator</strong></div>
-                                                <div class="col">:</div>
+                                                <div class="">:</div>
                                                 <div class="col">{{$detail_nama_verifikator}} {{$detail_jabatan_verifikator}}</div>
                                             </div>
                                             <div class="row">

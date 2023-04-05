@@ -143,21 +143,22 @@ class DashboardController extends Controller
             $periode = 1;
             // $periode = $adc->ambilIdPeriodeInput();
 
-            $maks_inputan = 200;
-            $value_inputan = 0;
-            $value_tervalidasi = 4;
 
-            $adc->hitungCapaianInputSektor(Auth::user()->data->sektor, $maks_inputan, $value_inputan, $periode);
-            $adc->hitungCapaianInputSektor(Auth::user()->data->sektor, $maks_inputan, $value_tervalidasi, $periode, 3);
+            // $maks_inputan = 200;
+            // $value_inputan = 0;
+            // $value_tervalidasi = 4;
 
-            return view("eapd.dashboard.admin-sudin.progres-sudin", [
-                'maks_inputan' => $maks_inputan,
-                'value_inputan' => $value_inputan,
-                'value_tervalidasi' => $value_tervalidasi
-            ]);
-        } else if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
-            return view("eapd.dashboard.admin-dinas.progres-dinas");
-        else
+            // $adc->hitungCapaianInputSektor(Auth::user()->data->sektor, $maks_inputan, $value_inputan, $periode);
+            // $adc->hitungCapaianInputSektor(Auth::user()->data->sektor, $maks_inputan, $value_tervalidasi, $periode, 3);
+
+            return view("eapd.dashboard.admin-sudin.progres-sektor"
+            // , [
+            //     'maks_inputan' => $maks_inputan,
+            //     'value_inputan' => $value_inputan,
+            //     'value_tervalidasi' => $value_tervalidasi
+            // ]
+            );
+        } else
             return view("eapd.dashboard.halaman-pegawai.main-pegawai");
     }
 

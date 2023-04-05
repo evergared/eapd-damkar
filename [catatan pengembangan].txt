@@ -51,4 +51,5 @@ prosesNamaFileApd(), ubahNamaFileApd(), dan semacamnya
 
 
 List event yang dapat ditangkap oleh komponen livewire untuk fitur perubahan secara realtime :
-- refreshDataKomponen
+- untuk yang bukan bersifat broadcast : refreshDataKomponenLokal
+- untuk yang bersifat broadcast : refreshDataKomponenGlobal

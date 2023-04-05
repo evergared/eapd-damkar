@@ -26,15 +26,16 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
 
     public function configure(): void
     {
+        // $this->setDebugEnabled();
         $this->setPrimaryKey('_id');
         $this->setSearchEnabled();
-        $this->setAdditionalSelects(['nama','nrk','nip','profile_img','no_telp','id_grup','id_jabatan','id_penempatan']);
+        // $this->setAdditionalSelects(['nama','nrk','nip','profile_img','no_telp','id_grup','id_jabatan','id_penempatan']);
     }
 
     public function builder() : Builder
     {
         return Pegawai::query()
-
+        // ->select('nama','nrk','nip')
         // // join tabel pegawai dengan tabel jabatan
         // ->join('jabatan as j','pegawai.id_jabatan','=','j._id')
 
@@ -45,7 +46,21 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
         // ->join('grup','pegawai.id_grup','=','grup._id')
 
         // penempatan sesuai sektor kasie
-        ->where('id_penempatan','like',Auth::user()->data->sektor . '%');
+        ->select(['nama','nrk','nip','profile_img','no_telp','id_grup','id_jabatan','id_penempatan','jabatan_pegawai'])
+        ->where('id_penempatan','like',Auth::user()->data->sektor . '%')
+        // ->whereRaw(function($collection){
+        //                     return $collection->aggregate([
+        //                         ['$lookup' => [
+        //                                 'from' => 'jabatan',
+        //                                 'localField' => 'id_jabatan',
+        //                                 'foreignField' => '_id',
+        //                                 'as' => 'jabatan_pegawai'
+        //                                 ]
+        //                         ],
+        //                         ['$unwind' => '$jabatan']
+        //                         ]);
+        //                 })
+        ;
     }
 
     public function columns(): array
@@ -55,33 +70,80 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
                 ->format(function ($value, $row) {
                     return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-kepegawaian-admin-sektor", ['img' => $row->profile_img, 'id_pegawai' => $row->id, 'nama'=>$value]);
                 })
-                ->sortable()
-                ->searchable()
+                ->sortable(
+                    fn(Builder $query,string $direction)=> $query->orderBy('nama',$direction)
+                )
+                ->searchable(
+                    fn(Builder $query, string $kata_pencarian)=> $query->orWhere('nama','like','%'.$kata_pencarian.'%')
+                )
                 ->excludeFromColumnSelect(),
             Column::make('_id')
                 ->hideIf(true),
             Column::make("Nrk", "nrk")
-                ->sortable()
-                ->searchable()
+                ->sortable(
+                    fn(Builder $query,string $direction)=> $query->orderBy('nrk',$direction)
+
+                )
+                ->searchable(
+                    fn(Builder $query, string $kata_pencarian)=> $query->orWhere('nrk','like','%'.$kata_pencarian.'%')
+                )
                 ->deselected()
                 ->collapseOnMobile(),
             Column::make("Nip", "nip")
                 ->deselected()
-                ->searchable()
+                ->searchable(
+                    fn(Builder $query, string $kata_pencarian)=> $query->orWhere('nip','like','%'.$kata_pencarian.'%')
+                )
                 ->collapseOnMobile(),
             Column::make("Profile img", "profile_img")
                 ->hideIf(true),
             Column::make("No telp", "no_telp")
                 ->deselected()
-                ->searchable()
+                ->searchable(
+                    fn(Builder $query, string $kata_pencarian)=> $query->orWhere('no_telp','like','%'.$kata_pencarian.'%')
+                )
                 ->collapseOnMobile(),
             Column::make("Jabatan", "id_jabatan")
                 ->format(function($value){
                     return Jabatan::where('_id','=',$value)->first()->nama_jabatan;
                 })
-                ->sortable()
+                ->sortable(
+                    fn(Builder $query,string $direction)=> $query->orderBy('id_jabatan',$direction)
+
+                )
                 ->collapseOnMobile()
-                ->searchable(),
+                ->searchable(
+                    fn(Builder $query, $kata_pencarian)=>
+                    $query->orWhere(function($query) use($kata_pencarian){
+                            $ids = Jabatan::where('nama_jabatan','like','%'.$kata_pencarian.'%')->get()->pluck('_id');
+                            foreach($ids as $id)
+                                $query->orWhere('id_jabatan',$id);
+                        })
+                    // function(Builder $query, $kata_pencarian)
+                    // {
+                    //     error_log('kata pencarian');
+                    //     return 
+                    //     // $query->whereRaw(function($collection){
+                    //     //     return $collection->aggregate([
+                    //     //         ['$lookup' => [
+                    //     //                 'from' => 'jabatan',
+                    //     //                 'localField' => 'id_jabatan',
+                    //     //                 'foreignField' => '_id',
+                    //     //                 'as' => 'jabatan'
+                    //     //                 ]
+                    //     //         ],
+                    //     //         ['$unwind' => '$jabatan']
+                    //     //         ]);
+                    //     // })->orWhere('jabatan_pegawai.nama_jabatan','like',$kata_pencarian.'%');
+                    //     $query->with('jabatan',function($query)use($kata_pencarian){
+                    //         error_log('search jabatan : '.$kata_pencarian);
+                    //         $ids = Jabatan::where('nama_jabatan','like',$kata_pencarian.'%')->get()->pluck('_id');
+                    //         error_log('id jabatan : '.$ids);
+                    //         foreach($ids as $id)
+                    //             $query->orWhere('id_jabatan',$id);
+                    //     });
+                    // }
+                ),
             // Column::make('id_penempatan')
             //     ->hideIf(true),
             Column::make("Penempatan", "id_penempatan")
@@ -132,7 +194,7 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
         }
 
         // untuk filter grup
-        $grup = Grup::project(['value'=>'$_id','text'=>'$nama_grup'])
+        $grup = Grup::project(['value'=>'$id_grup','text'=>'$nama_grup'])
                         ->get()
                         ->toArray();
         $opsi_grup = [];
@@ -154,6 +216,7 @@ class TabelKepegawaianAdminSektor extends DataTableComponent
             ->setFilterPillValues($opsi_grup)
             ->options($opsi_grup)
             ->filter(function(Builder $b,string $val){
+                error_log('filter grup : '.$val);
                 $b->where('id_grup','=',$val);
             }),
             SelectFilter::make('Masih Aktif','aktif')

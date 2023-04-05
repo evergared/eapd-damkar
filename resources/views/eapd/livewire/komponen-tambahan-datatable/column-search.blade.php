@@ -1,8 +1,7 @@
-@if (config('livewire-tables.theme') === 'bootstrap-4')
     <div class="mb-3 mb-md-0 input-group">
         <input
             wire:model.debounce="columnSearch.{{ $field }}"
-            placeholder="Search {{ ucfirst($field) }}"
+            placeholder="Cari"
             type="text"
             class="form-control"
         >
@@ -17,4 +16,3 @@
             </div>
         @endif
     </div>
-@endif

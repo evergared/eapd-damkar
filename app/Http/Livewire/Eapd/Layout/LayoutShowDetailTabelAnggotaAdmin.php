@@ -240,12 +240,15 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             $adc = new ApdDataController;
 
 
-            $test = $adc->muatSatuInputanPegawai($this->detail_id_jenis_apd,$this->detail_id_apd,$this->periode,$this->id_pegawai);
+            // $test = $adc->muatSatuInputanPegawai($this->detail_id_jenis_apd,$this->detail_id_apd,$this->periode,$this->id_pegawai); // ketika id_apd dan id_jenis dibutuhkan
+            $test = $adc->muatSatuInputanPegawai($this->detail_id_jenis_apd,$this->periode,$this->id_pegawai);
             $this->muatDataDariArrayInputan($test);
             
             // isi apa saja yang telah diinput oleh user
             $this->list_inputan = $adc->muatInputanPegawai($this->periode, $this->id_pegawai);
 
+            $this->emit('refreshDataKomponenLokal');
+            $this->emit('refreshDataKomponenGlobal');
             session()->flash('success_simpan_data','Perubahan validasi berhasil dilakukan.');
         }
         catch(Throwable $e)

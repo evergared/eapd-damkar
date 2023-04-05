@@ -491,7 +491,7 @@ class ModalInputApdPegawaiHalApdku extends Component
                 $apd->image = $gbr;
             }
             
-
+            $apd->verifikasi_status = verif::verifikasi()->value;
             $apd->save();
 
             session()->flash('success', 'Data Apd berhasil diinput.');
