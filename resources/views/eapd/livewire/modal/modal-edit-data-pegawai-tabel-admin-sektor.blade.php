@@ -200,7 +200,10 @@
                                           </div>
                                           <div class="form-group">
                                             <label>Pos</label>
-                                            <select wire:model='penempatan' wire:change='koreksiPenempatanDanGrup' class="form-control select2bs4" style="width: 100%;">
+                                            <select 
+                                            wire:model='penempatan' 
+                                            wire:change='koreksiPenempatanDanGrup'
+                                             class="form-control select2bs4" style="width: 100%;" wire:ignore.self>
                                               <option disabled value="">Pilih Penempatan</option>
                                                     {{-- generate list pos penempatan start --}}
                                                     @forelse ($list_penempatan as $p)
@@ -216,10 +219,10 @@
                                                             <option value="{{$p['value']}}">{{$p['text']}}</option>
                                                           @endif
                                                         @endif
+                                                        {{-- <option value="{{$p['value']}}">{{$p['text']}}</option> --}}
                                                     @empty
                                     
                                                     @endforelse
-
                                                     {{-- generate list pos penempatan end --}}
                                             </select>
                                             @if ($penempatan != $cache_penempatan && $cache_penempatan != "")
