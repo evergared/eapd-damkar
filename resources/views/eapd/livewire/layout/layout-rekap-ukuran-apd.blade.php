@@ -87,12 +87,12 @@
                               @if (!empty($detail_jumlah_ukuran))
                                   @foreach ($detail_jumlah_ukuran['ukuran'] as $nama_ukuran => $ukuran)
                                     <tr class="fire-jacket rusak-berat">
-                                        <td class="text-center text-wrap my-auto align-middle">{{array_search($nama_ukuran,array_keys($ukuran)) + 1}}</td>
+                                        <td class="text-center text-wrap my-auto align-middle">{{array_search($nama_ukuran,array_keys($detail_jumlah_ukuran['ukuran'])) + 1}}</td>
                                         <td class="text-center text-wrap my-auto align-middle">{{str_replace("_"," ",$detail_nama_apd)}}
                                         </td>
                                         <td class="text-center text-wrap my-auto align-middle">{{$nama_ukuran}}
                                         </td>
-                                        <td class="text-center text-wrap my-auto align-middle"><a wire:click="lihatDaftarPegawai(['{{$nama_ukuran}}'])">{{$ukuran['jumlah']}}</a>
+                                        <td class="text-center text-wrap my-auto align-middle"><a href="#modal-daftar-pegawai" wire:click="lihatDaftarPegawai(['{{$nama_ukuran}}'])">{{$ukuran['jumlah']}}</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -127,18 +127,6 @@
                               <div class="card">
                                 <div class="card-header">
                                   <h3 class="card-title">Tabel Ukuran</h3>
-                  
-                                  <div class="card-tools">
-                                    <div class="input-group input-group-sm" style="width: 150px;">
-                                      <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-                  
-                                      <div class="input-group-append">
-                                        <button type="submit" class="btn btn-default">
-                                          <i class="fas fa-search"></i>
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </div>
                                 </div>
                                 <!-- /.card-header -->
                                   @livewire('eapd.datatable.tabel-daftar-pegawai-modal-data-ukuran')
