@@ -17,6 +17,7 @@ use App\Models\Eapd\Mongodb\Jabatan;
 use App\Models\Eapd\Mongodb\Pegawai;
 use App\Models\Eapd\Mongodb\Penempatan;
 use App\Models\Eapd\Mongodb\PeriodeInputApd;
+use App\Models\Eapd\Mongodb\Provinsi;
 use App\Models\Eapd\Mongodb\Wilayah;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -135,11 +136,15 @@ class TesMongodbSeeder extends Seeder
 
 
         $wilayah = [
-            ['_id' => '1', 'nama_wilayah' => 'Jakarta Pusat', 'keterangan' => null],
-            ['_id' => '2', 'nama_wilayah' => 'Jakarta Utara', 'keterangan' => null],
-            ['_id' => '3', 'nama_wilayah' => 'Jakarta Barat', 'keterangan' => null],
-            ['_id' => '4', 'nama_wilayah' => 'Jakarta Selatan', 'keterangan' => null],
-            ['_id' => '5', 'nama_wilayah' => 'Jakarta Timur', 'keterangan' => null],
+            ['_id' => '1', 'nama_wilayah' => 'Jakarta Pusat', 'id_provinsi' => '1' , 'keterangan' => null],
+            ['_id' => '2', 'nama_wilayah' => 'Jakarta Utara', 'id_provinsi' => '1' , 'keterangan' => null],
+            ['_id' => '3', 'nama_wilayah' => 'Jakarta Barat', 'id_provinsi' => '1' , 'keterangan' => null],
+            ['_id' => '4', 'nama_wilayah' => 'Jakarta Selatan', 'id_provinsi' => '1' , 'keterangan' => null],
+            ['_id' => '5', 'nama_wilayah' => 'Jakarta Timur', 'id_provinsi' => '1' , 'keterangan' => null],
+        ];
+
+        $provinsi = [
+            ['_id' => '1','nama_provinsi' => 'DKI Jakarta'],
         ];
 
         $periode = [
@@ -148,6 +153,9 @@ class TesMongodbSeeder extends Seeder
             'tgl_akhir' => '2023-04-01'
         ];
 
+        /**
+         * @ToDo : sesuaikan dengan struktur baru
+         */
         $template = [
             ['id_jenis' => 'H002', 'opsi_apd' => ['H-fir-0001']],
             ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000', 'H-fir-0000', 'H-bro-0001']],
@@ -217,6 +225,11 @@ class TesMongodbSeeder extends Seeder
             Penempatan::create($item);
         }
 
+        error_log('populating provinsi');
+        foreach ($provinsi as $item) {
+            Provinsi::create($item);
+        }
+
         error_log('populating wilayah');
         foreach ($wilayah as $item) {
             Wilayah::create($item);
@@ -251,7 +264,8 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'L004',
             'id_wilayah' => '1',
             'id_penempatan' => '1.11',
-            'id_grup' => 'B'
+            'id_grup' => 'B',
+            'aktif' => true,
         ]);
 
         $akun[1] = Pegawai::create([
@@ -261,6 +275,7 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'L001',
             'id_wilayah' => '1',
             'id_penempatan' => '1.11.01',
+            'aktif' => true,
             'id_grup' => 'B'
         ]);
 
@@ -271,6 +286,7 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'K001',
             'id_wilayah' => '1',
             'id_penempatan' => '1.11',
+            'aktif' => true,
             'id_grup' => 'S'
         ]);
 
@@ -281,6 +297,7 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'K005',
             'id_wilayah' => '1',
             'id_penempatan' => 'D_1',
+            'aktif' => true,
             'id_grup' => 'S'
         ]);
 
@@ -291,6 +308,7 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'K003',
             'id_wilayah' => '1',
             'id_penempatan' => '11',
+            'aktif' => true,
             'id_grup' => 'S'
         ]);
 
@@ -301,6 +319,7 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'K001',
             'id_wilayah' => '1',
             'id_penempatan' => '1.11',
+            'aktif' => true,
             'id_grup' => 'S'
         ]);
 
@@ -311,6 +330,7 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'L001',
             'id_wilayah' => '2',
             'id_penempatan' => '2.11',
+            'aktif' => true,
             'id_grup' => 'B'
         ]);
 
@@ -321,6 +341,7 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'K004',
             'id_wilayah' => '1',
             'id_penempatan' => '11',
+            'aktif' => true,
             'id_grup' => 'S'
         ]);
 

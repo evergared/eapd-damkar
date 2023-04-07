@@ -20,4 +20,9 @@ class Wilayah extends Model
     {
         return $this->hasMany(Pegawai::class, 'id_wilayah', '_id');
     }
+
+    public function provinsi()
+    {
+        return $this->belongsTo(Provinsi::class,'id_provinsi','_id');
+    }
 }

@@ -21,12 +21,23 @@ class Pegawai extends Model
         'no_telp',
         'id_jabatan',
         'id_wilayah',
+        'id_atasan',
         'id_penempatan',
         'id_grup',
         'aktif',
         'plt',
         'kurang',
     ];
+
+    public function bawahan_langsung()
+    {
+        return ;
+    }
+
+    public function bawahan_semua()
+    {
+        return ;
+    }
 
     public function jabatan()
     {
@@ -53,7 +64,7 @@ class Pegawai extends Model
         return $this->hasMany(InputApd::class, 'id_pegawai', '_id');
     }
 
-    public function getSektorAttribute()
+    public function sektor()
     {
         try{
             /**

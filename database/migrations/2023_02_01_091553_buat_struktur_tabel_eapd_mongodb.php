@@ -34,6 +34,7 @@ return new class extends Migration
                 $t->index('id_jabatan')->nullable();
                 $t->index('id_penempatan')->nullable();
                 $t->index('id_grup');
+                $t->string('id_atasan')->nullable()->comment('id dari atasan langsung pegawai ini');
                 $t->boolean('aktif')->default(true);
                 $t->text('override_level_user')->nullable(); // jaga-jaga perlu override level user untuk pegawai tertentu, kosongkan jika tidak perlu
                 $t->timestamps();
@@ -78,10 +79,18 @@ return new class extends Migration
 
                 $t->comment('tabel yang menampung list grade pegawai, dengan skema [tabel pegawai] <-- [tabel grade_pegawai]');
 
-                $t->id(); // disini isi IIa, IIIb, IVc dst 
                 $t->text('nama_grade');
+                $t->string('kode_grade'); // disini isi IIa, IIIb, IVc dst 
                 $t->text('prefix_nama_jabatan')->nullable(); // untuk menambah imbuhan nama sebelum nama jabatan, cth Pengendali Muda Staff Sektor
                 $t->text('sufix_nama_jabatan')->nullable(); // untuk menambah imbuhan nama setelah nama jabatan, cth Staff Sektor Pengendali Muda
+                $t->text('keterangan')->nullable();
+                $t->timestamps();
+            });
+        }
+
+        if (!Schema::hasTable('provinsi')) {
+            Schema::create('provinsi', function (Blueprint $t) {
+                $t->text('nama_provinsi');
                 $t->text('keterangan')->nullable();
                 $t->timestamps();
             });
@@ -90,6 +99,7 @@ return new class extends Migration
         if (!Schema::hasTable('wilayah')) {
             Schema::create('wilayah', function (Blueprint $t) {
                 $t->text('nama_wilayah');
+                $t->text('id_provinsi');
                 $t->text('keterangan')->nullable();
                 $t->timestamps();
             });
@@ -97,7 +107,8 @@ return new class extends Migration
 
         if (!Schema::hasTable('kecamatan')) {
             Schema::create('kecamatan', function (Blueprint $t) {
-                $t->text('nama_kecamatan');
+                $t->text('nama_kecamatan');                
+                $t->text('id_wilayah');
                 $t->text('keterangan')->nullable();
                 $t->timestamps();
             });
@@ -105,7 +116,8 @@ return new class extends Migration
 
         if (!Schema::hasTable('kelurahan')) {
             Schema::create('kelurahan', function (Blueprint $t) {
-                $t->text('nama_kelurahan');
+                $t->text('nama_kelurahan');                
+                $t->text('id_kecamatan');
                 $t->text('keterangan')->nullable();
                 $t->timestamps();
             });
@@ -175,7 +187,7 @@ return new class extends Migration
         if (!Schema::hasTable('input_apd_ongoing')) {
             Schema::create('input_apd_ongoing', function (Blueprint $t) {
                 $t->index('id_input_apd');
-                $t->longText('cache')->comment('json value dari input');
+                $t->longText('cache')->comment('value langsung dari collection input_apd yang diembed');
                 $t->timestamps();
             });
         }
@@ -185,6 +197,8 @@ return new class extends Migration
                 $t->text('nama_periode');
                 $t->date('tgl_awal')->nullable();
                 $t->date('tgl_akhir')->nullable();
+                $t->boolean('aktif')->nullable();
+                $t->text('pesan_berjalan')->nullable();
                 $t->text('keterangan')->nullable();
                 $t->timestamps();
             });
@@ -193,8 +207,44 @@ return new class extends Migration
         if (!Schema::hasTable('input_apd_template')) {
             Schema::create('input_apd_template', function (Blueprint $t) {
                 $t->text('nama')->nullable()->default('Template EAPD')->comment('nama dari template');
-                $t->longText('template')->comment('json');
+                $t->string('id_periode')->nullable()->comment('diisi id dari collection periode_input_apd');
+                $t->longText('template')->comment('diisi array yang akan digunakan oleh aplikasi untuk template');
                 $t->timestamps();
+
+                /**
+                 * struktur tempate :
+                 * $template = 
+                 * [
+                 *      [id_jabatan] => [
+                 *                          [id_jenis_apd] =>   [
+                 *                                                  - id_apd,
+                 *                                                  - id_apd,
+                 *                                                  - id_apd,
+                 *                                              ],
+                 *                           [id_jenis_apd] =>   [
+                 *                                                  - id_apd,
+                 *                                                  - id_apd,
+                 *                                                  - id_apd,
+                 *                                              ]
+                 *                      ],
+                 *      [id_jabatan] => [
+                 *                          [id_jenis_apd] =>   [
+                 *                                                  - id_apd,
+                 *                                                  - id_apd,
+                 *                                                  - id_apd,
+                 *                                              ],
+                 *                           [id_jenis_apd] =>   [
+                 *                                                  - id_apd,
+                 *                                                  - id_apd,
+                 *                                                  - id_apd,
+                 *                                              ]
+                 *                      ],
+                 * ];
+                 * 
+                 * - id_jabatan = pegawai dengan jabatan apa yang harus mengisi
+                 * - id_jenis_apd = tipe apd apa yang harus diisi oleh pegawai saat menginput
+                 * - id_apd = apd apa saja yang disediakan sebagai opsi
+                 */
             });
         }
 
@@ -216,7 +266,7 @@ return new class extends Migration
         if (!Schema::hasTable('input_sewaktu_waktu_ongoing')) {
             Schema::create('input_sewaktu_waktu_ongoing', function (Blueprint $t) {
                 $t->string('id_input_sewaktu_waktu')->primary();
-                $t->longText('cache')->comment('json value dari input');
+                $t->longText('cache')->comment('value langsung dari collection input_sewaktu_waktu yang diembed');
                 $t->timestamps();
             });
         }
@@ -251,7 +301,10 @@ return new class extends Migration
         Schema::dropIfExists('pegawai');
         Schema::dropIfExists('grup');
         Schema::dropIfExists('jabatan');
+        Schema::dropIfExists('provinsi');
         Schema::dropIfExists('wilayah');
+        Schema::dropIfExists('kecamatan');
+        Schema::dropIfExists('kelurahan');
         Schema::dropIfExists('penempatan');
         Schema::dropIfExists('apd_list');
         Schema::dropIfExists('apd_jenis');

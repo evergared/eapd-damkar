@@ -30,6 +30,6 @@ class PeriodeInputApd extends Model
 
     public function template()
     {
-        return $this->belongsToMany(InputApdTemplate::class, null,'periode_input_apd_id','id_periode','_id');
+        return $this->hasOne(InputApdTemplate::class,'id_periode','_id');
     }
 }
