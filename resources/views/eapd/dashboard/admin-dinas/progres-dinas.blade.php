@@ -20,7 +20,7 @@
                           <a class="nav-link active" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-grafik" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Capaian Input Dinas</a>
                         </li>
                         <li class="nav-item">
-                          <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-sudin" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Progres Inputan Sudin</a>
+                          <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-dinas" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Progres Inputan Dinas</a>
                         </li>
                         <li class="nav-item">
                           <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-anggota" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Progres Inputan Anggota</a>
@@ -33,24 +33,7 @@
                     <div class="card-body">
                       <div class="tab-content" id="custom-tabs-four-tabContent">
                         <div class="tab-pane fade show active" id="progres-grafik" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
-                          <div class="container">
-                           <h4>Capaian Inputan {{ auth()->user()->data->penempatan->nama_penempatan }}</h4>
-                              {{-- <div class="progress progress-sm">
-                                  <div class="progress-bar bg-success progress-bar-striped" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="{{$maks_inputan}}" style="width: {{ ($value_inputan > 0 && $maks_inputan >0)? round(($value_inputan/$maks_inputan)*100,2) : 0}}%">
-                                  </div>
-                              </div>
-                              <small>
-                                  {{ ($value_inputan > 0 && $maks_inputan >0)? 'Terinput '.round(($value_inputan/$maks_inputan)*100,2).'%' : 'Belum ada data yang terinput'}}
-                              </small><br><br><br> --}}
-                            <h4>Capaian Validasi {{ auth()->user()->data->penempatan->nama_penempatan }}</h4>
-                              {{-- <div class="progress progress-sm">
-                                  <div class="progress-bar bg-info progress-bar-striped" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="{{$maks_inputan}}" style="width: {{ ($value_tervalidasi > 0 && $maks_inputan >0)? round(($value_tervalidasi/$maks_inputan)*100,2) : 0}}%">
-                                  </div>
-                              </div>
-                              <small>
-                                  {{ ($value_tervalidasi > 0 && $maks_inputan >0)? 'Terinput '.round(($value_tervalidasi/$maks_inputan)*100,2).'%' : 'Belum ada data yang tervalidasi'}}
-                              </small> --}}
-                          </div>
+                          
                         </div>
                         <div class="tab-pane fade" id="progres-anggota" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
                             <div class="tab-pane text-left fade show active" id="vert-tabs-home" role="tabpanel" aria-labelledby="vert-tabs-home-tab">
@@ -102,9 +85,9 @@
                               @livewire('eapd.layout.layout-show-detail-tabel-anggota-admin')
                             <!-- detail user  -->
                         </div>
-                        <div class="tab-pane fade" id="progres-sudin" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
+                        <div class="tab-pane fade" id="progres-dinas" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
                           inputan dinas
-                          {{-- @livewire('eapd.layout.layout-inputan-sudin') --}}
+                          {{-- @livewire('eapd.layout.layout-inputan-dinas') --}}
 
                         </div>
                         <div class="tab-pane fade" id="tabel-rekap" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
@@ -131,7 +114,7 @@
                 @livewire('livewire-ui-modal')
                 @endpush
                 @endonce
-                {{-- <livewire:eapd.modal.modal-progres-sudin> --}}
+                {{-- <livewire:eapd.modal.modal-progres-dinas> --}}
 
             </div>
     </div>
