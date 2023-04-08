@@ -33,7 +33,7 @@
                     <div class="card-body">
                       <div class="tab-content" id="custom-tabs-four-tabContent">
                         <div class="tab-pane fade show active" id="progres-grafik" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
-                          
+                          @livewire("eapd.layout.layout-capaian-inputan-dinas")
                         </div>
                         <div class="tab-pane fade" id="progres-anggota" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
                             <div class="tab-pane text-left fade show active" id="vert-tabs-home" role="tabpanel" aria-labelledby="vert-tabs-home-tab">
