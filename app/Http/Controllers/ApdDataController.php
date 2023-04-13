@@ -16,6 +16,8 @@ use App\Models\Eapd\Mongodb\InputApd;
 use App\Models\Eapd\Mongodb\Pegawai;
 use App\Models\Eapd\Mongodb\Penempatan;
 use App\Models\Eapd\Mongodb\PeriodeInputApd;
+use App\Models\Eapd\Mongodb\Provinsi;
+use App\Models\Eapd\Mongodb\Wilayah;
 use Carbon\Carbon;
 use Error;
 use Throwable;
@@ -409,6 +411,72 @@ class ApdDataController extends Controller
             error_log('Gagal menghitung capaian input sudin untuk wilayah '.$sudin.' '.$e);
             $maks = 0;
             $capaian = 0;
+        }
+    }
+
+    public function hitungCapaianInputDinas($id_periode,)
+    {
+        $data_capaian = [];
+
+        // $data_capaian = [
+        //     provinsi => [
+        //         max,
+        //         value,
+        //         sudin => [
+        //             max,
+        //             value,
+        //             sektor => [
+        //                 max,
+        //                 value,
+        //                 pos => [
+        //                     max,
+        //                     value,
+        //                 ]
+        //             ]
+        //         ]
+        //     ]
+        // ]
+
+        try{
+
+            // hitung berapa banyak provinsi
+            $list_provinsi = Provinsi::all();
+
+            foreach($list_provinsi as $provinsi)
+            {
+                $data_provinsi = [];
+                try{
+                    
+                    // ambil semua wilayah/sudin yang ada di provinsi
+                    $list_wilayah = Wilayah::where('id_provinsi',$provinsi->id)->get();
+                    $data_sudin = [];
+                    foreach($list_wilayah as $wilayah)
+                    {
+                        $sudin = Penempatan::where('id_wilayah',$wilayah->id)->where('keterangan','sudin')->get()->first();
+                        $max_sudin = 0;
+                        $value_validasi_sudin = 0;
+                        $value_inputan_sudin = 0;
+                        $this->hitungCapaianInputSudin($sudin->id,$max_sudin,$value_inputan_sudin,$id_periode);
+                        $this->hitungCapaianInputSudin($sudin->id,$max_sudin,$value_validasi_sudin,$id_periode,3);
+                        $data_sudin[$sudin->nama_penempatan] = [];
+                    }
+                    $data_provinsi = $data_sudin;
+
+                }
+                catch(Throwable $e)
+                {
+                    error_log('kesalahan saat mengumpulkan data capaian input provinsi '.$e);
+                    $data_provinsi = [];
+                }
+
+                $data_capaian[$provinsi->nama_provinsi] = $data_provinsi;
+            }
+
+        }
+        catch(Throwable $e)
+        {
+            error_log('Terjadi kesalahan saat menghitung capaian input dinas '.$e);
+            return $data_capaian;
         }
     }
 
