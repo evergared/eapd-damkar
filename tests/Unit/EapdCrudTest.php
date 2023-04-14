@@ -37,14 +37,10 @@ class EapdCrudTest extends TestCase
      */
     public function test_insert()
     {
-        $ids = ["640fda9ffcaedd03f40cbca3","640fda9ffcaedd03f40cbca4"];
-
-        $pegawai = Pegawai::where(function($query) use($ids){
-            foreach($ids as $id)
-                $query->orWhere('_id',$id);
-        })->get();
-
-        print_r($pegawai);
+        $adc = new ApdDataController;
+        $data_dinas = $adc->hitungCapaianInputDinas(PeriodeInputApd::get()->first()->id);
+        $pos = Penempatan::where('_id','like',"1.11%")->where("keterangan",'=','pos')->get();
+        print_r($data_dinas);
 
         $this->assertTrue(true);
     }

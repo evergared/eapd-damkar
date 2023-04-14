@@ -101,8 +101,8 @@ class ApdDataController extends Controller
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
 
-            if(Jabatan::where('_id', '=', $id_jabatan)->first())
-                error_log('jabatan found');
+            // if(Jabatan::where('_id', '=', $id_jabatan)->first())
+            //     error_log('jabatan found');
 
             if($id_periode == 1)
             $id_periode = PeriodeInputApd::get()->first()->id;
@@ -444,6 +444,8 @@ class ApdDataController extends Controller
 
             foreach($list_provinsi as $provinsi)
             {
+                // hitung capaian inputan dalam suatu provinsi
+                // reserved fitur untuk upgrade di masa depan
                 $data_provinsi = [];
                 try{
                     
@@ -452,26 +454,95 @@ class ApdDataController extends Controller
                     $data_sudin = [];
                     foreach($list_wilayah as $wilayah)
                     {
-                        $sudin = Penempatan::where('id_wilayah',$wilayah->id)->where('keterangan','sudin')->get()->first();
-                        $max_sudin = 0;
-                        $value_validasi_sudin = 0;
-                        $value_inputan_sudin = 0;
-                        $this->hitungCapaianInputSudin($sudin->id,$max_sudin,$value_inputan_sudin,$id_periode);
-                        $this->hitungCapaianInputSudin($sudin->id,$max_sudin,$value_validasi_sudin,$id_periode,3);
-                        $data_sudin[$sudin->nama_penempatan] = [];
+                        try{
+                                error_log("id wilayah : ".$wilayah->id);
+                                $sudin = Penempatan::where('id_wilayah',$wilayah->id)->where('keterangan','sudin')->get()->first();
+                                error_log("id sudin : ".$sudin->id);
+                                $max_sudin = 0;
+                                $value_validasi_sudin = 0;
+                                $value_inputan_sudin = 0;
+                                $this->hitungCapaianInputSudin($sudin->id,$max_sudin,$value_inputan_sudin,$id_periode);
+                                $this->hitungCapaianInputSudin($sudin->id,$max_sudin,$value_validasi_sudin,$id_periode,3);
+                                error_log("value inputan sudin : ".$value_inputan_sudin);
+
+                                // hitung capaian inputan pada tiap sektor dalam sudin
+                                $data_sektor = [];
+                                $list_sektor = Penempatan::where('id_wilayah',$wilayah->id)->where("keterangan","sektor")->get();
+                                foreach($list_sektor as $sektor)
+                                {
+                                    try{
+                                        error_log("sektor id : ".$sektor->id);
+                                            $max_sektor = 0;
+                                            $value_inputan_sektor = 0;
+                                            $value_validasi_sektor = 0;
+
+                                            $this->hitungCapaianInputSektor($sektor->id,$max_sektor,$value_inputan_sektor,$id_periode);
+                                            $this->hitungCapaianInputSektor($sektor->id,$max_sektor,$value_validasi_sektor,$id_periode,3);
+
+                                            //hitung capaian inputan pada tiap pos dalam sektor
+                                            $data_pos = [];
+                                            $list_pos = Penempatan::where('_id','like',$sektor->id."%")->where("keterangan","pos")->get();
+                                            error_log("pos count : ".count($list_pos));
+                                            foreach($list_pos as $pos)
+                                            {
+                                                try{
+                                                    error_log("pos id : ".$pos->id);
+                                                        $max_pos = 0;
+                                                        $value_inputan_pos = 0;
+                                                        $value_validasi_pos = 0;
+                                                        
+                                                        $data_pos[$pos->nama_penempatan] = [
+                                                                                                "value_max" => $max_pos,
+                                                                                                "value_inputan" => $value_inputan_pos,
+                                                                                                "value_validasi" => $value_validasi_pos
+                                                        ];
+                                                }
+                                                catch(Throwable $e)
+                                                {
+                                                    error_log("gagal dalam mengumpulkan data pos");
+                                                }
+                                                
+                                            }
+
+                                            $data_sektor[$sektor->nama_penempatan] = [
+                                                                                        "value_max" => $max_sektor,
+                                                                                        "value_inputan" => $value_inputan_sektor,
+                                                                                        "value_validasi" => $value_validasi_sektor,
+                                                                                        "pos" => $data_pos];
+                                    }
+                                    catch(Throwable $e)
+                                    {
+                                        error_log("gagal dalam mengumpulkan data sektor");
+                                    }
+                                    
+                                }
+
+                                $data_sudin[$sudin->nama_penempatan] = [
+                                                                        "value_max" => $max_sudin,
+                                                                        "value_inputan" => $value_inputan_sudin,
+                                                                        "value_validasi" => $value_validasi_sudin,
+                                                                        "sektor" => $data_sektor];
+
+                        }
+                        catch(Throwable $e)
+                        {
+                            error_log("gagal dalam mengumpulkan data sudin");
+                        }
                     }
+
                     $data_provinsi = $data_sudin;
 
                 }
                 catch(Throwable $e)
                 {
-                    error_log('kesalahan saat mengumpulkan data capaian input provinsi '.$e);
+                    error_log('kesalahan saat mengumpulkan data capaian input provinsi ');
                     $data_provinsi = [];
                 }
 
                 $data_capaian[$provinsi->nama_provinsi] = $data_provinsi;
             }
 
+            return $data_capaian;
         }
         catch(Throwable $e)
         {
