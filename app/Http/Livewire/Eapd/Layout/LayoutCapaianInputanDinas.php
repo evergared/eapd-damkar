@@ -45,6 +45,7 @@ class LayoutCapaianInputanDinas extends Component
         try{
 
             $adc = new ApdDataController;
+            $this->data_capaian = $adc->hitungCapaianInputDinas($this->id_periode);
 
         }
         catch(Throwable $e)
