@@ -306,6 +306,53 @@ class ApdDataController extends Controller
         }
     }
 
+    public function hitungCapaianInputPos($pos, int|array &$maks, int|array &$capaian, $id_periode, $target_verifikasi = 0)
+    {
+        try{
+            
+            $array_pegawai = Pegawai::where("id_penempatan",$pos)->get();
+
+            $yang_harus_diinput = 0;
+            $yang_telah_diinput = 0;
+
+            foreach($array_pegawai as $pegawai)
+            {
+                $template = $this->muatListInputApdDariTemplate($id_periode, $pegawai->id_jabatan);
+
+                if(!is_null($template))
+                {
+                    foreach($template as $t)
+                        $yang_harus_diinput++;
+                    $inputan = $this->muatInputanPegawai($id_periode, $pegawai->id,$target_verifikasi);
+
+                    if(is_array($inputan) && count($inputan) !== 0)
+                    {
+                        foreach($inputan as $i)
+                        {
+                            if($target_verifikasi != 0)
+                            {
+                                if($i["status_verifikasi"] == verif::tryFrom($target_verifikasi)->label)
+                                    $yang_telah_diinput++;
+                            }
+                            else
+                                $yang_telah_diinput++;
+                        }
+                    }
+                }
+            }
+
+            $maks = $yang_harus_diinput;
+            $capaian = $yang_telah_diinput;
+        }
+        catch(Throwable $e)
+        {
+            error_log("Gagal dalam menghitung capaian input pos ".$e);
+            $maks = 0;
+            $capaian = 0;
+
+        }
+    }
+
     public function hitungCapaianInputSektor($sektor, int|array &$maks, int|array &$capaian,$id_periode = 1, $target_verifikasi = 0)
     {
         try{
@@ -490,6 +537,9 @@ class ApdDataController extends Controller
                                                         $max_pos = 0;
                                                         $value_inputan_pos = 0;
                                                         $value_validasi_pos = 0;
+
+                                                        $this->hitungCapaianInputPos($pos->id,$max_pos,$value_inputan_pos,$id_periode);
+                                                        $this->hitungCapaianInputPos($pos->id,$max_pos,$value_validasi_pos,$id_periode,3);
                                                         
                                                         $data_pos[$pos->nama_penempatan] = [
                                                                                                 "value_max" => $max_pos,
@@ -500,6 +550,7 @@ class ApdDataController extends Controller
                                                 catch(Throwable $e)
                                                 {
                                                     error_log("gagal dalam mengumpulkan data pos");
+                                                    continue;
                                                 }
                                                 
                                             }
@@ -513,6 +564,7 @@ class ApdDataController extends Controller
                                     catch(Throwable $e)
                                     {
                                         error_log("gagal dalam mengumpulkan data sektor");
+                                        continue;
                                     }
                                     
                                 }
@@ -527,6 +579,7 @@ class ApdDataController extends Controller
                         catch(Throwable $e)
                         {
                             error_log("gagal dalam mengumpulkan data sudin");
+                            continue;
                         }
                     }
 
@@ -537,6 +590,7 @@ class ApdDataController extends Controller
                 {
                     error_log('kesalahan saat mengumpulkan data capaian input provinsi ');
                     $data_provinsi = [];
+                    continue;
                 }
 
                 $data_capaian[$provinsi->nama_provinsi] = $data_provinsi;
