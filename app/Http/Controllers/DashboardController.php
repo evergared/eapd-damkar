@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ApdDataController;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Kontroler yang menghandle request dan penyajian halaman web.
+ */
 class DashboardController extends Controller
 {
 
