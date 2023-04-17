@@ -64,6 +64,14 @@ Breadcrumbs::for('progres-sektor', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('Progres Sektor', route('progres-sektor'));
 });
+Breadcrumbs::for('progres-sudin', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Progres Sudin', route('progres-sektor'));
+});
+Breadcrumbs::for('progres-dinas', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Progres Dinas', route('progres-sektor'));
+});
 Breadcrumbs::for('ukuran', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('Daftar Ukuran APD', route('ukuran'));
