@@ -767,7 +767,7 @@ class ApdDataController extends Controller
         return $array;
     }
 
-    public function muatDataInputanSudin($id_periode = "", $id_sudin = "")
+    public function muatDataInputanSudin($id_periode = "", $id_wilayah = "")
     {
 
         if($id_periode == "")
@@ -775,15 +775,14 @@ class ApdDataController extends Controller
             $id_periode = $this->ambilIdPeriodeInput();
         }
 
-        if($id_sudin == "")
+        if($id_wilayah == "")
         {
-            $id_sudin = Penempatan::where('id_wilayah','=',Auth::user()->data->penempatan->id_wilayah)->where('keterangan','=','sudin')->get()->first()->id;
+            // $id_sudin = Penempatan::where('id_wilayah','=',Auth::user()->data->penempatan->id_wilayah)->where('keterangan','=','sudin')->get()->first()->id;
+            $id_wilayah = Auth::user()->data->penempatan->id_wilayah;
         }
 
         try{
 
-            error_log('ambil id_wilayah dengan id sudin '.$id_sudin);
-            $id_wilayah = Penempatan::find($id_sudin)->id_wilayah;
             error_log('id wilayah '.$id_wilayah);
 
              error_log('buat list sektor');
