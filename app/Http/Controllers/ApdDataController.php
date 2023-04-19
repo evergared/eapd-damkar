@@ -101,22 +101,18 @@ class ApdDataController extends Controller
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
 
-            // if(Jabatan::where('_id', '=', $id_jabatan)->first())
-            //     error_log('jabatan found');
-
+            // jika parameter periode tidak diisi, maka ambil periode paling atas
             if($id_periode == 1)
             $id_periode = PeriodeInputApd::get()->first()->id;
 
-            if(InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first())
-
-            // ambil template penginputan apd dari database menggunakan pivot table yang telah di buat di model
-            if($list = InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first()->template)
-            {
-                // return dd($list);
-                return $list;
-            }
-            else
-                return [];
+            $template_pada_periode = InputApdTemplate::where("id_periode",$id_periode)->get()->first()->template;
+            // dd($template_pada_periode);
+            
+            if(array_key_exists($id_jabatan,$template_pada_periode))
+                return $template_pada_periode[$id_jabatan];
+            
+            error_log('template input apd tidak ditemukan untuk jabatan '.$id_jabatan);
+            return [];
 
         } catch (Throwable $e) {
             error_log('gagal memuat list template input '.$e);
@@ -629,7 +625,7 @@ class ApdDataController extends Controller
             error_log("id_periode : ".$id_periode);
 
             // ambil template input apd dari database berdasarkan pivot table yang telah dibuat di model
-            $list = InputApdTemplate::whereIn('jabatan',[$id_jabatan])->whereIn('periode',[$id_periode])->first()->template;
+            $list = $this->muatListInputApdDariTemplate($id_periode,$id_jabatan);
             // return dd($list);
             // panggil controller untuk membantu menampilkan status di bootstrap
             $sdc = new StatusDisplayController;
