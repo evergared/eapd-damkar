@@ -21,6 +21,7 @@
     "dependencies": {
         "@alpinejs/focus": "^3.10.5",
         "admin-lte": "3.2",
-        "moment": "^2.29.4"
+        "moment": "^2.29.4",
+        "sweetalert2": "^11.4.0"
     }
 }
