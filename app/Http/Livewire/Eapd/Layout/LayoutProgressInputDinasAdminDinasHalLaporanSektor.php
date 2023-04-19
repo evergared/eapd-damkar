@@ -6,7 +6,7 @@ use App\Http\Controllers\ApdDataController;
 use App\Models\Eapd\Mongodb\Wilayah;
 use Livewire\Component;
 
-class LayoutProgressInputanSudinAdminSudinHalLaporanSektor extends Component
+class LayoutProgressInputDinasAdminDinasHalLaporanSektor extends Component
 {
 
     public
@@ -74,6 +74,7 @@ class LayoutProgressInputanSudinAdminSudinHalLaporanSektor extends Component
 
     public function muatDataInputanSudin()
     {
+        error_log("memuat data inputan sudin ".$this->wilayah_yang_ditampilkan);
         $adc = new ApdDataController;
         $this->data_semua_sektor = [];
         $this->data_semua_sektor = $adc->muatDataInputanSudin("",$this->wilayah_yang_ditampilkan);

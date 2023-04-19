@@ -33,7 +33,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
         ->with(['jabatan','penempatan'])
 
         // penempatan sesuai sektor kasie
-        ->where('id_penempatan','like',Auth::user()->data->sektor . '%')
+        ->where('id_penempatan','like',Auth::user()->data->penempatan->id . '%')
 
         // jabatan yang akan di query
         // tambahkan jika perlu

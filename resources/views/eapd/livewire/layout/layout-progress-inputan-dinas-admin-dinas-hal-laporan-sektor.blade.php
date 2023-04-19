@@ -1,17 +1,28 @@
  <div  wire:ignore.self>
+    <div class="card my-n3 mx-n3" id="input-sudin"  wire:ignore.self>
 
-        <div class="form-group">
-            <label>Data Inputan Sudin</label>
-            <select wire:model="wilayah_yang_ditampilkan" wire:change="muatDataInputanSudin">
+        <div class="form-group my-3 mx-3">
+            <label for="select-sudin">Data Inputan Sudin</label>
+            <select id="select-sudin" class="custom-select" wire:model="wilayah_yang_ditampilkan" wire:change="muatDataInputanSudin">
                 <option value="" disabled>Pilih Sudin</option>
                 @foreach ($list_sudin as $sudin)
-                    <option value="{{$sudin["value"]}}}">{{$sudin["text"]}}</option>
+                    <option value="{{$sudin["value"]}}">{{$sudin["text"]}}</option>
                 @endforeach
             </select>
+
+            {{-- Status Start --}}
+            <div wire:loading='muatDataInputanSudin'>
+                <div class="spinner-border spinner-border-sm text-info" role="status"></div>
+                <small class="text-info"> Memuat data sudin dan sektor..</small>
+            </div>
+            {{-- Status End --}}
+
         </div>
 
+        
+        
+
         @if ($wilayah_yang_ditampilkan)
-            <div class="card my-n3 mx-n3" id="input-sudin"  wire:ignore.self>
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 d-flex align-items-stretch flex-column">
                 @if (!empty($data_semua_sektor))
@@ -100,12 +111,12 @@
                 
                 </div>
             </div>
-            </div>                
         @else
             <div class="jumbotron text-center">
                 Silahkan pilih sudin yang akan ditampilkan.
             </div>
         @endif
+            </div>                
 
 
 
@@ -139,6 +150,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {{-- todo : multisort array
+                                        ref :   https://stackoverflow.com/questions/2699086/how-to-sort-a-multi-dimensional-array-by-value
+                                                https://www.php.net/manual/en/array.sorting.php
+                                     --}}
                                     @foreach ($data_detail_pos as $key => $item)
                                         <tr class="fire-jacket rusak-berat">
                                             <td class="text-center text-wrap my-auto align-middle">{{$key + 1}}</td>
@@ -163,17 +178,14 @@
                     </div>                
                 @else
                        
-
+                    <div class="jumbotron text-center">
+                        Tidak ada data yang dapat ditampilkan.
+                    </div>
                                      
                 @endif
 
                 
             </div>
-        </div>
-
-        {{-- modal --}}
-        <div>
-
         </div>
 </div>
 
