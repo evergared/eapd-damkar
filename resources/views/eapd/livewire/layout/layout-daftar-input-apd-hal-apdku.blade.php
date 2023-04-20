@@ -7,7 +7,7 @@
                     {{-- generate thumbnail Start --}}
 
                     {{-- Saat list memiliki isi--}}
-                    @if(is_array($daftarApd))
+                    @if(!empty($daftarApd))
 
                     <div class="card-header bg-gradient-teal">
 

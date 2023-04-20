@@ -243,20 +243,7 @@ $(function () {
     $("#rekapprogres").collapse('hide')
   }
 
-  //function untuk ukuran apd
-  function rekapDetail1(Id,Filter){
-    //alert("Tester") console.
-    //alert(Filter)
-    console.log("Id",Id)
-    Livewire.emit('rekapDetail1',[Id,Filter]);
-    $("#rekap-tabel1").hide(500)
-    $("#rekapdetail1").collapse('show')
-  }
-
-  function backToRekap1(){
-    $("#rekap-tabel1").show(500)
-    $("#rekapdetail1").collapse('hide')
-  }
+ 
 
   //function untuk inputan aksi sudin layout admin sudin
   window.addEventListener('tampilAksiSudin',event=>{

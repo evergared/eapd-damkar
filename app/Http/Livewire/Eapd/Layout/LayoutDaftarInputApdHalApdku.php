@@ -11,7 +11,7 @@ class LayoutDaftarInputApdHalApdku extends Component
 {
 
     // berisi template apd apa saja yang perlu diinput oleh user
-    public $daftarApd;
+    public $daftarApd = [];
 
     public $memuat = false,
         $listKosong = true;
@@ -28,12 +28,14 @@ class LayoutDaftarInputApdHalApdku extends Component
 
     public function bangunDaftarInputApd()
     {
+        $this->daftarApd = [];
         try {
             $adc = new ApdDataController;
             $periode = 1;
             // $periode = $adc->ambilIdPeriodeInput();
             $this->daftarApd =  $adc->bangunListInputApdDariTemplate($periode);
         } catch (Throwable $e) {
+            $this->daftarApd = [];
             session()->flash('apdku_page_error', 'Kesalahan dalam pengambilan data.');
         }
     }

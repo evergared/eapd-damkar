@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ApdDataController;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Kontroler yang menghandle request dan penyajian halaman web.
+ */
 class DashboardController extends Controller
 {
 
@@ -139,26 +142,9 @@ class DashboardController extends Controller
                 'value_tervalidasi' => $value_tervalidasi
             ]);
         } else if (Auth::user()->data->jabatan->level_user == 'admin_sudin') {
-            $adc = new ApdDataController;
-            $periode = 1;
-            // $periode = $adc->ambilIdPeriodeInput();
-
-            // $maks_inputan = 200;
-            // $value_inputan = 0;
-            // $value_tervalidasi = 4;
-
-            // $adc->hitungCapaianInputSektor(Auth::user()->data->sektor, $maks_inputan, $value_inputan, $periode);
-            // $adc->hitungCapaianInputSektor(Auth::user()->data->sektor, $maks_inputan, $value_tervalidasi, $periode, 3);
-
-            return view(
-                "eapd.dashboard.admin-sudin.progres-sektor"
-                // , [
-                //     'maks_inputan' => $maks_inputan,
-                //     'value_inputan' => $value_inputan,
-                //     'value_tervalidasi' => $value_tervalidasi
-                // ]
-            );
-        } else if (Auth::user()->data->jabatan->level_user == 'admin_dinas') {
+            return view("eapd.dashboard.admin-sudin.progres-sektor");
+        }
+        else if (Auth::user()->data->jabatan->level_user == 'admin_dinas') {
             return view("eapd.dashboard.admin-dinas.progres-dinas");
         } else
             return view("eapd.dashboard.halaman-pegawai.main-pegawai");
@@ -180,6 +166,7 @@ class DashboardController extends Controller
     {
         if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
             return view("eapd.dashboard.admin-dinas.periode-setting");
+
         else
             return view('eapd.dashboard.halaman-pegawai.main-pegawai');
     }
@@ -188,6 +175,7 @@ class DashboardController extends Controller
     {
         if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
             return view("eapd.dashboard.admin-dinas.pengaturan-barang");
+
         else
             return view('eapd.dashboard.halaman-pegawai.main-pegawai');
     }

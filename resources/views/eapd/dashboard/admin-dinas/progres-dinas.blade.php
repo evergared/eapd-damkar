@@ -1,9 +1,11 @@
- @extends('eapd.layouts.adminlte-dashboard',['title'=>'Laporan Sektor'])
+
+ @extends('eapd.layouts.adminlte-dashboard',['title'=>'Laporan Dinas'])
 
 @section('content')
 
 
-@include('eapd.dashboard.komponen.breadcrumbs',[ 'halamanJudul'=>'Laporan Sektor','halaman'=>'progres-sektor'])
+
+@include('eapd.dashboard.komponen.breadcrumbs',[ 'halamanJudul'=>'Laporan Dinas','halaman'=>'progres-dinas'])
 @include('eapd.dashboard.komponen.marquee-informasi')
 
 <section class="content">
@@ -14,90 +16,38 @@
               <section class="container-fluid">
                 <div class="col-12">
                   <div class="card card-primary card-outline card-outline-tabs">
+
+
                     <div class="card-header p-0 border-bottom-0">
-                      <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
-                        <li class="nav-item">
-                          <a class="nav-link active" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-grafik" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Capaian Input Sudin</a>
+                      <ul class="nav nav-tabs" id="progress-dinas-tablist" role="tablist">
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link active" id="capaian-input-tab" data-toggle="tab" data-target="#capaian-input-tabpanel" type="button" role="tab" aria-controls="capaian-input-tabpanel" aria-selected="true">Capaian Input Dinas</button>
                         </li>
-                        <li class="nav-item">
-                          <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-sudin" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Progres Inputan Sudin</a>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="progress-dinas-tab" data-toggle="tab" data-target="#progress-dinas-tabpanel" type="button" role="tab" aria-controls="progress-dinas-tabpanel" aria-selected="false">Progress Inputan Dinas</button>
                         </li>
-                        <li class="nav-item">
-                          <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#progres-anggota" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Progres Inputan Anggota</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" id="custom-tabs-four-settings-tab" data-toggle="pill" href="#tabel-rekap" role="tab" aria-controls="custom-tabs-four-settings" aria-selected="false">Tabel Rekap</a>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="tabel-rekap-tab" data-toggle="tab" data-target="#tabel-rekap-tabpanel" type="button" role="tab" aria-controls="tabel-rekap-tabpanel" aria-selected="false">Tabel Rekapitulasi</button>
                         </li>
                       </ul>
                     </div>
+
                     <div class="card-body">
-                      <div class="tab-content" id="custom-tabs-four-tabContent">
-                        <div class="tab-pane fade show active" id="progres-grafik" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
-                          @livewire('eapd.layout.layout-capaian-inputan-sudin-hal-laporan-sektor')
+                      <div class="tab-content" id="progress-dinas-tablistContent">
+                        <div class="tab-pane fade show active" id="capaian-input-tabpanel" role="tabpanel" aria-labelledby="capaian-input-tab">
+                          @livewire("eapd.layout.layout-capaian-inputan-dinas")
                         </div>
-                        <div class="tab-pane fade" id="progres-anggota" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
-                            <div class="tab-pane text-left fade show active" id="vert-tabs-home" role="tabpanel" aria-labelledby="vert-tabs-home-tab">
-                                <div class="card-header p-0 border-bottom-0">
-                                  <ul class="nav nav-tabs" id="custom-tabs" role="tablist">
-                                    <li class="nav-item">
-                                      <a class="nav-link active" id="grub-a-tab" data-toggle="pill" href="#grub-a" role="tab" aria-controls="grub-a" aria-selected="false">Grub A</a>
-                                    </li>
-                                    <li class="nav-item">
-                                      <a class="nav-link" id="grub-b-tab" data-toggle="pill" href="#grub-b" role="tab" aria-controls="grub-b" aria-selected="false">Grub B</a>
-                                    </li>
-                                    <li class="nav-item">
-                                      <a class="nav-link" id="grub-c-tab" data-toggle="pill" href="#grub-c" role="tab" aria-controls="grub-c" aria-selected="false">Grub C</a>
-                                    </li>
-                                    <li class="nav-item">
-                                      <a class="nav-link" id="staf-tab" data-toggle="pill" href="#staf" role="tab" aria-controls="staf" aria-selected="false">Staf</a>
-                                    </li>
-                                  </ul>
-                                </div>
-                                {{-- Tabel anggota berdasarkan kompi Start --}}
-                                <div class="card-body">
-                                  <div class="tab-content" id="custom-tabs-four-tabContent">
-                                    <div class="tab-pane fade show active" id="grub-a" role="tabpanel" aria-labelledby="grub-a-tab">
-
-                                      @livewire('eapd.datatable.tabel-anggota-admin-sektor',['kompi'=>'A'])
-
-                                    </div>
-                                    <div class="tab-pane fade" id="grub-b" role="tabpanel" aria-labelledby="grub-b-tab">
-                                      
-                                      @livewire('eapd.datatable.tabel-anggota-admin-sektor',['kompi'=>'B'])
-
-                                    </div>
-                                    <div class="tab-pane fade" id="grub-c" role="tabpanel" aria-labelledby="grub-c-tab">
-
-                                       @livewire('eapd.datatable.tabel-anggota-admin-sektor',['kompi'=>'C'])
-
-                                    </div>
-                                    <div class="tab-pane" id="staf" role="tabpanel" aria-labelledby="user-tab">
-
-                                      @livewire('eapd.datatable.tabel-anggota-admin-sektor',['kompi'=>'S'])
-
-                                    </div>
-                                  </div>
-                                </div>
-                                {{-- Tabel anggota berdasarkan kompi End --}}
-                            </div>
-                            <!-- detail user  -->
-                              @livewire('eapd.layout.layout-show-detail-tabel-anggota-admin')
-                            <!-- detail user  -->
+                        <div class="tab-pane fade" id="progress-dinas-tabpanel" role="tabpanel" aria-labelledby="progress-dinas-tab">
+                          @livewire('eapd.layout.layout-progress-input-dinas-admin-dinas-hal-laporan-sektor')
                         </div>
-                        <div class="tab-pane fade" id="progres-sudin" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
-                          
-                          @livewire('eapd.layout.layout-progress-inputan-sudin-admin-sudin-hal-laporan-sektor')
-
+                        <div class="tab-pane fade" id="tabel-rekap-tabpanel" role="tabpanel" aria-labelledby="tabel-rekap-tab">
+                          @livewire('eapd.layout.layout-rekap-apd-admin-sektor')
                         </div>
-                        <div class="tab-pane fade" id="tabel-rekap" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
-                          
-                          @livewire('eapd.layout.layout-rekap-apd-admin-sudin')
-
-                          
-                        </div>
-                        
                       </div>
                     </div>
+
+                    
+                    
                     <!-- /.card -->
                   </div>
                 </div>
@@ -114,6 +64,8 @@
                 @endpush
                 @endonce
                 <livewire:eapd.modal.modal-detail-progress-sudin>
+
+                {{-- <livewire:eapd.modal.modal-progres-dinas> --}}
 
             </div>
     </div>

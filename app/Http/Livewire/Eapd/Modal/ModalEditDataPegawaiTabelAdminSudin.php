@@ -20,6 +20,7 @@ class ModalEditDataPegawaiTabelAdminSudin extends Component
     public
         $list_penempatan = [],
         $list_grup = [],
+        $list_sektor = [],
         $list_aktif = [
             ['value' => '1', 'text' => "Masih Aktif"],
             ['value' => '0', 'text' => "Tidak Aktif / Pensiun"],
@@ -38,7 +39,8 @@ class ModalEditDataPegawaiTabelAdminSudin extends Component
         $aktif = "",
         $password = "",
         $keterangan = "",
-        $tipe_jabatan_user = "";
+        $tipe_jabatan_user = "",
+        $sektor = "";
 
     // untuk menyimpan data awal
     public
@@ -49,7 +51,8 @@ class ModalEditDataPegawaiTabelAdminSudin extends Component
         $cache_penempatan = "",
         $cache_email = "",
         $cache_telp = "",
-        $cache_aktif = "";
+        $cache_aktif = "",
+        $cache_sektor = "";
 
     // untuk ditampilkan di ubah penempatan
     public
@@ -100,6 +103,7 @@ class ModalEditDataPegawaiTabelAdminSudin extends Component
             $this->email = $this->cache_email = $pegawai->email;
             $this->telp = $this->cache_telp = $pegawai->no_telp;
             $this->aktif = $this->cache_aktif = $pegawai->aktif;
+            $this->sektor = $this->cache_sektor = $pegawai->sektor;
 
             $this->jabatan_pegawai = $pegawai->jabatan->nama_jabatan;
             $this->tipe_jabatan_user = $pegawai->jabatan->tipe_jabatan;
@@ -107,16 +111,17 @@ class ModalEditDataPegawaiTabelAdminSudin extends Component
             $this->tipe_jabatan_personil = TipeJabatan::personil()->value;
             $this->tipe_jabatan_danton = TipeJabatan::danton()->value;
 
-            //ambil data pos sektor, kecuali nama sektor
+            //ambil data pos sektor
             $this->list_penempatan = [];
-
+            error_log("sektor : ".$this->sektor);
             $query_penempatan = Penempatan::where('id_wilayah', '=', Auth::user()->data->id_wilayah)
-                // ->where('id_penempatan','!=',Auth::user()->data->sektor)
+                ->where('_id','like',$this->sektor.'%')
+                ->where('keterangan','pos')
                 ->get();
 
             foreach ($query_penempatan as $q) {
                 array_push($this->list_penempatan, [
-                    'value' => $q->id_penempatan,
+                    'value' => $q->id,
                     'text' => $q->nama_penempatan
                 ]);
             }
@@ -130,6 +135,19 @@ class ModalEditDataPegawaiTabelAdminSudin extends Component
                 array_push($this->list_grup, [
                     'value' => $q->id_grup,
                     'text' => $q->nama_grup
+                ]);
+            }
+
+            // ambil data list sektor di suatu wilayah
+            $this->list_sektor = [];
+
+            $query_sektor = Penempatan::where('id_wilayah',Auth::user()->data->penempatan->id_wilayah)->where('keterangan','sektor')->get();
+
+            foreach($query_sektor as $q)
+            {
+                array_push($this->list_sektor,[
+                    'value' => $q->id,
+                    'text' => $q->nama_penempatan
                 ]);
             }
 
@@ -257,6 +275,7 @@ class ModalEditDataPegawaiTabelAdminSudin extends Component
         $this->email = $this->cache_email;
         $this->telp = $this->cache_telp;
         $this->aktif = $this->cache_aktif;
+        $this->sektor = $this->cache_sektor;
     }
 
     public function koreksiPenempatanDanGrup()
@@ -313,6 +332,24 @@ class ModalEditDataPegawaiTabelAdminSudin extends Component
             session()->flash('error-data-penempatan', 'Terjadi kesalahan saat mengganti grup jaga.');
             $this->grup = "";
         }
+    }
+
+    public function optionSektorDiganti()
+    {
+        $this->list_penempatan = [];
+            error_log("sektor : ".$this->sektor);
+
+            $query_penempatan = Penempatan::where('id_wilayah', '=', Auth::user()->data->id_wilayah)
+                ->where('_id','like',$this->sektor.'%')
+                ->where('keterangan','pos')
+                ->get();
+
+            foreach ($query_penempatan as $q) {
+                array_push($this->list_penempatan, [
+                    'value' => $q->id,
+                    'text' => $q->nama_penempatan
+                ]);
+            }
     }
 
     public function dataPegawaiAdaYangDirubah(): bool

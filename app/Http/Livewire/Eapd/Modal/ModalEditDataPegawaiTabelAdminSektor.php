@@ -118,10 +118,12 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             foreach($query_penempatan as $q)
             {
                 array_push($this->list_penempatan,[
-                    'value' => $q->id_penempatan,
+                    'value' => $q->id,
                     'text' => $q->nama_penempatan
                 ]);
             }
+
+            // error_log("array penempatan : ".implode("||",$this->list_penempatan));
 
             // ambil data grup
             $this->list_grup = [];
@@ -273,7 +275,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             $this->nama = $this->cache_nama;
             $this->nip = $this->cache_nip;
             $this->grup = $this->cache_grup;
-            $this->penempatan = $this->cache_penempatan;
+            // $this->penempatan = $this->cache_penempatan;
             $this->email = $this->cache_email;
             $this->telp = $this->cache_telp;
             $this->aktif = $this->cache_aktif;

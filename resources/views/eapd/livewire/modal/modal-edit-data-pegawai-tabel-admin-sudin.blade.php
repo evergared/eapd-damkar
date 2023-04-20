@@ -199,39 +199,56 @@
                                             <h5>{{$jabatan_pegawai}}</h5>
                                           </div>
                                           <div class="form-group">
-                                            <label>Sektor/Pos</label>
-                                            <select wire:model='penempatan' wire:change='koreksiPenempatanDanGrup' class="form-control select2bs4" style="width: 100%;">
-                                              <option disabled value="">Pilih Penempatan</option>
+                                            <label>Sektor</label>
+                                            <select wire:model='sektor' wire:change='optionSektorDiganti' class="form-control select2bs4" style="width: 100%;">
+                                              <option disabled value="">Pilih Sektor</option>
                                                     {{-- generate list pos penempatan start --}}
-                                                    @forelse ($list_penempatan as $p)
-
-                                                        @if($tipe_jabatan_user != $tipe_jabatan_personil)
-                                                        {{-- Jika user bukan personil, jangan tampilkan pos dan kantor sektor, tampilkan nama sektor saja --}}
-                                                          @if ($p['value'] == auth()->user()->data->sektor)
-                                                            <option value="{{$p['value']}}">{{$p['text']}}</option>
-                                                          @endif
-                                                        @else
-                                                        {{-- Jika user personil, tampilkan pos dan kantor sektor, tapi tidak nama sektor --}}
-                                                          @if ($p['value'] != auth()->user()->data->sektor)
-                                                            <option value="{{$p['value']}}">{{$p['text']}}</option>
-                                                          @endif
-                                                        @endif
+                                                    @forelse ($list_sektor as $p)
+                                                      <option value="{{$p['value']}}">{{$p['text']}}</option>
                                                     @empty
                                     
                                                     @endforelse
 
                                                     {{-- generate list pos penempatan end --}}
                                             </select>
-                                            @if ($penempatan != $cache_penempatan && $cache_penempatan != "")
-                                              <small class="text-info">Sebelumnya <strong>{{$list_penempatan[array_search($cache_penempatan,array_column($list_penempatan,'value'))]['text']}}</strong></small> <br>
-                                            @endif
-                                            @if (session()->has('warning-penempatan'))
-                                                <small class="text-warning"><strong>{{session('warning-penempatan')}}</strong></small> <br>
-                                            @endif
-                                            @error('penempatan')
-                                                <small class="text-danger"><strong>{{$message}}</strong></small> <br>
-                                            @enderror
                                           </div>
+                                          @if ($sektor != "")
+                                              <div class="form-group">
+                                                <label>Pos</label>
+                                                <select wire:model='penempatan' wire:change='koreksiPenempatanDanGrup' class="form-control select2bs4" style="width: 100%;">
+                                                  <option disabled value="">Pilih Penempatan</option>
+                                                        {{-- generate list pos penempatan start --}}
+                                                        @forelse ($list_penempatan as $p)
+
+                                                            @if($tipe_jabatan_user != $tipe_jabatan_personil)
+                                                            {{-- Jika user bukan personil, jangan tampilkan pos dan kantor sektor, tampilkan nama sektor saja --}}
+                                                              @if ($p['value'] == auth()->user()->data->sektor)
+                                                                <option value="{{$p['value']}}">{{$p['text']}}</option>
+                                                              @endif
+                                                            @else
+                                                            {{-- Jika user personil, tampilkan pos dan kantor sektor, tapi tidak nama sektor --}}
+                                                              @if ($p['value'] != auth()->user()->data->sektor)
+                                                                <option value="{{$p['value']}}">{{$p['text']}}</option>
+                                                              @endif
+                                                            @endif
+                                                        @empty
+                                        
+                                                        @endforelse
+
+                                                        {{-- generate list pos penempatan end --}}
+                                                </select>
+                                                @if ($penempatan != $cache_penempatan && $cache_penempatan != "")
+                                                  <small class="text-info">Sebelumnya <strong>{{$list_penempatan[array_search($cache_penempatan,array_column($list_penempatan,'value'))]['text']}}</strong></small> <br>
+                                                @endif
+                                                @if (session()->has('warning-penempatan'))
+                                                    <small class="text-warning"><strong>{{session('warning-penempatan')}}</strong></small> <br>
+                                                @endif
+                                                @error('penempatan')
+                                                    <small class="text-danger"><strong>{{$message}}</strong></small> <br>
+                                                @enderror
+                                              </div>
+                                          @endif
+                                          
                                           <div class="form-group">
                                             <label>Grup Jaga</label>
                                             <select wire:model='grup' wire:change='koreksiPenempatanDanGrup' class="form-control select2bs4" style="width: 100%;">

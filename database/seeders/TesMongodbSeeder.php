@@ -17,6 +17,7 @@ use App\Models\Eapd\Mongodb\Jabatan;
 use App\Models\Eapd\Mongodb\Pegawai;
 use App\Models\Eapd\Mongodb\Penempatan;
 use App\Models\Eapd\Mongodb\PeriodeInputApd;
+use App\Models\Eapd\Mongodb\Provinsi;
 use App\Models\Eapd\Mongodb\Wilayah;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -98,6 +99,7 @@ class TesMongodbSeeder extends Seeder
             ['id_grup' => 'S', 'nama_grup' => 'Non Grup', 'keterangan' => null],
         ];
 
+        // id jabatan ini hanya contoh, mohon ganti id jabatan agar dapat disortir dengan sesuai
         $jabatan = [
             ['_id' => 'L001', 'nama_jabatan' => 'PJLP Damkar', 'tipe_jabatan' => tj::personil()->value, 'keterangan' => null, 'level_user' => lu::anggota()->value],
             ['_id' => 'L002', 'nama_jabatan' => 'ASN Damkar', 'tipe_jabatan' => tj::personil()->value, 'keterangan' => null, 'level_user' => lu::anggota()->value],
@@ -135,11 +137,15 @@ class TesMongodbSeeder extends Seeder
 
 
         $wilayah = [
-            ['_id' => '1', 'nama_wilayah' => 'Jakarta Pusat', 'keterangan' => null],
-            ['_id' => '2', 'nama_wilayah' => 'Jakarta Utara', 'keterangan' => null],
-            ['_id' => '3', 'nama_wilayah' => 'Jakarta Barat', 'keterangan' => null],
-            ['_id' => '4', 'nama_wilayah' => 'Jakarta Selatan', 'keterangan' => null],
-            ['_id' => '5', 'nama_wilayah' => 'Jakarta Timur', 'keterangan' => null],
+            ['_id' => '1', 'nama_wilayah' => 'Jakarta Pusat', 'id_provinsi' => '1' , 'keterangan' => null],
+            ['_id' => '2', 'nama_wilayah' => 'Jakarta Utara', 'id_provinsi' => '1' , 'keterangan' => null],
+            ['_id' => '3', 'nama_wilayah' => 'Jakarta Barat', 'id_provinsi' => '1' , 'keterangan' => null],
+            ['_id' => '4', 'nama_wilayah' => 'Jakarta Selatan', 'id_provinsi' => '1' , 'keterangan' => null],
+            ['_id' => '5', 'nama_wilayah' => 'Jakarta Timur', 'id_provinsi' => '1' , 'keterangan' => null],
+        ];
+
+        $provinsi = [
+            ['_id' => '1','nama_provinsi' => 'DKI Jakarta'],
         ];
 
         $periode = [
@@ -149,18 +155,84 @@ class TesMongodbSeeder extends Seeder
         ];
 
         $template = [
-            ['id_jenis' => 'H002', 'opsi_apd' => ['H-fir-0001']],
-            ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000', 'H-fir-0000', 'H-bro-0001']],
-            ['id_jenis' => 'G001', 'opsi_apd' => ['G-glo-0000', 'G-glo-0001', 'G-alt-0000']],
-            ['id_jenis' => 'G002', 'opsi_apd' => ['G-alt-0001', 'G-alt-0002']],
-            ['id_jenis' => 'T001', 'opsi_apd' => ['T-fir-0000', 'T-pol-0000']],
-            ['id_jenis' => 'T002', 'opsi_apd' => ['T-yoh-0000', 'T-pol-0001']],
-            ['id_jenis' => 'B001', 'opsi_apd' => ['B-yoh-0000', 'B-ari-0000']],
-            ['id_jenis' => 'B002', 'opsi_apd' => ['B-ari-0001']],
-            ['id_jenis' => 'A001', 'opsi_apd' => ['A-dar-0000']],
-            ['id_jenis' => 'A002', 'opsi_apd' => ['A-ari-0000']],
-            ['id_jenis' => 'A003', 'opsi_apd' => ['A-tho-0000']],
-            ['id_jenis' => 'A004', 'opsi_apd' => ['A-uni-0000']],
+                    'L001' => [
+                                ['id_jenis' => 'H002', 'opsi_apd' => ['H-fir-0001']],
+                                ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000']],
+                                ['id_jenis' => 'G001', 'opsi_apd' => ['G-glo-0000']],
+                                ['id_jenis' => 'G002', 'opsi_apd' => ['G-alt-0001']],
+                                ['id_jenis' => 'T001', 'opsi_apd' => ['T-fir-0000']],
+                                ['id_jenis' => 'T002', 'opsi_apd' => ['T-yoh-0000']],
+                                ['id_jenis' => 'B001', 'opsi_apd' => ['B-yoh-0000']],
+                                ['id_jenis' => 'B002', 'opsi_apd' => ['B-ari-0001']],
+                                ['id_jenis' => 'A001', 'opsi_apd' => ['A-dar-0000']],
+                                ['id_jenis' => 'A002', 'opsi_apd' => ['A-ari-0000']],
+                                ['id_jenis' => 'A003', 'opsi_apd' => ['A-tho-0000']],
+                                ['id_jenis' => 'A004', 'opsi_apd' => ['A-uni-0000']]
+                                ]
+                    ,
+                    'L002' => [
+                                ['id_jenis' => 'H002', 'opsi_apd' => ['H-fir-0001']],
+                                ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000']],
+                                ['id_jenis' => 'G001', 'opsi_apd' => ['G-glo-0000']],
+                                ['id_jenis' => 'G002', 'opsi_apd' => ['G-alt-0001']],
+                                ['id_jenis' => 'T001', 'opsi_apd' => ['T-fir-0000']],
+                                ['id_jenis' => 'T002', 'opsi_apd' => ['T-yoh-0000']],
+                                ['id_jenis' => 'B001', 'opsi_apd' => ['B-yoh-0000']],
+                                ['id_jenis' => 'B002', 'opsi_apd' => ['B-ari-0001']],
+                                ['id_jenis' => 'A001', 'opsi_apd' => ['A-dar-0000']],
+                                ['id_jenis' => 'A002', 'opsi_apd' => ['A-ari-0000']],
+                                ['id_jenis' => 'A003', 'opsi_apd' => ['A-tho-0000']],
+                                ['id_jenis' => 'A004', 'opsi_apd' => ['A-uni-0000']]
+                                ]
+                    ,
+                    'L003' => [
+                                ['id_jenis' => 'H002', 'opsi_apd' => ['H-fir-0001']],
+                                ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000']],
+                                ['id_jenis' => 'G001', 'opsi_apd' => ['G-glo-0000']],
+                                ['id_jenis' => 'G002', 'opsi_apd' => ['G-alt-0001']],
+                                ['id_jenis' => 'T001', 'opsi_apd' => ['T-fir-0000']],
+                                ['id_jenis' => 'T002', 'opsi_apd' => ['T-yoh-0000']],
+                                ['id_jenis' => 'B001', 'opsi_apd' => ['B-yoh-0000']],
+                                ['id_jenis' => 'B002', 'opsi_apd' => ['B-ari-0001']],
+                                ['id_jenis' => 'A001', 'opsi_apd' => ['A-dar-0000']],
+                                ['id_jenis' => 'A002', 'opsi_apd' => ['A-ari-0000']],
+                                ['id_jenis' => 'A003', 'opsi_apd' => ['A-tho-0000']],
+                                ['id_jenis' => 'A004', 'opsi_apd' => ['A-uni-0000']]
+                                ]
+                    ,
+                    'L004' => [
+                                ['id_jenis' => 'H002', 'opsi_apd' => ['H-fir-0001']],
+                                ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000']],
+                                ['id_jenis' => 'G001', 'opsi_apd' => ['G-glo-0000']],
+                                ['id_jenis' => 'G002', 'opsi_apd' => ['G-alt-0001']],
+                                ['id_jenis' => 'T001', 'opsi_apd' => ['T-fir-0000']],
+                                ['id_jenis' => 'T002', 'opsi_apd' => ['T-yoh-0000']],
+                                ['id_jenis' => 'B001', 'opsi_apd' => ['B-yoh-0000']],
+                                ['id_jenis' => 'B002', 'opsi_apd' => ['B-ari-0001']],
+                                ['id_jenis' => 'A001', 'opsi_apd' => ['A-dar-0000']],
+                                ['id_jenis' => 'A002', 'opsi_apd' => ['A-ari-0000']],
+                                ['id_jenis' => 'A003', 'opsi_apd' => ['A-tho-0000']],
+                                ['id_jenis' => 'A004', 'opsi_apd' => ['A-uni-0000']]
+                                ]
+                    ,
+                    'K001' => [
+                                ['id_jenis' => 'H002', 'opsi_apd' => ['H-fir-0001']],
+                                ['id_jenis' => 'G001', 'opsi_apd' => ['G-glo-0000']],
+                                ['id_jenis' => 'G002', 'opsi_apd' => ['G-alt-0001']],
+                                ['id_jenis' => 'T001', 'opsi_apd' => ['T-fir-0000']],
+                                ['id_jenis' => 'B001', 'opsi_apd' => ['B-yoh-0000']],
+                                ['id_jenis' => 'A001', 'opsi_apd' => ['A-dar-0000']],
+                                ['id_jenis' => 'A002', 'opsi_apd' => ['A-ari-0000']],
+                                ['id_jenis' => 'A004', 'opsi_apd' => ['A-uni-0000']]
+                                ]
+                    ,
+                    'S001' => [
+                                ['id_jenis' => 'H002', 'opsi_apd' => ['H-fir-0001']],
+                                ['id_jenis' => 'G001', 'opsi_apd' => ['G-glo-0000']],
+                                ['id_jenis' => 'T001', 'opsi_apd' => ['T-fir-0000']],
+                                ['id_jenis' => 'B001', 'opsi_apd' => ['B-yoh-0000']],
+                                ]
+                    
         ];
 
         error_log('populating jenis');
@@ -217,6 +289,11 @@ class TesMongodbSeeder extends Seeder
             Penempatan::create($item);
         }
 
+        error_log('populating provinsi');
+        foreach ($provinsi as $item) {
+            Provinsi::create($item);
+        }
+
         error_log('populating wilayah');
         foreach ($wilayah as $item) {
             Wilayah::create($item);
@@ -227,8 +304,8 @@ class TesMongodbSeeder extends Seeder
 
         error_log('populating template');
         $tmp = InputApdTemplate::create([
-            'periode' => [$per->id],
-            'jabatan' => $jab,
+            'nama' => 'contoh template untuk periode triwulan 2023',
+            'id_periode' => $per->id,
             'template' => $template,
         ]);
 
@@ -251,7 +328,8 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'L004',
             'id_wilayah' => '1',
             'id_penempatan' => '1.11',
-            'id_grup' => 'B'
+            'id_grup' => 'B',
+            'aktif' => true,
         ]);
 
         $akun[1] = Pegawai::create([
@@ -261,6 +339,7 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'L001',
             'id_wilayah' => '1',
             'id_penempatan' => '1.11.01',
+            'aktif' => true,
             'id_grup' => 'B'
         ]);
 
@@ -271,6 +350,7 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'K001',
             'id_wilayah' => '1',
             'id_penempatan' => '1.11',
+            'aktif' => true,
             'id_grup' => 'S'
         ]);
 
@@ -281,6 +361,7 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'K005',
             'id_wilayah' => '1',
             'id_penempatan' => 'D_1',
+            'aktif' => true,
             'id_grup' => 'S'
         ]);
 
@@ -291,6 +372,7 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'K003',
             'id_wilayah' => '1',
             'id_penempatan' => '11',
+            'aktif' => true,
             'id_grup' => 'S'
         ]);
 
@@ -301,6 +383,7 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'K001',
             'id_wilayah' => '1',
             'id_penempatan' => '1.11',
+            'aktif' => true,
             'id_grup' => 'S'
         ]);
 
@@ -311,6 +394,7 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'L001',
             'id_wilayah' => '2',
             'id_penempatan' => '2.11',
+            'aktif' => true,
             'id_grup' => 'B'
         ]);
 
@@ -321,6 +405,7 @@ class TesMongodbSeeder extends Seeder
             'id_jabatan' => 'K004',
             'id_wilayah' => '1',
             'id_penempatan' => '11',
+            'aktif' => true,
             'id_grup' => 'S'
         ]);
 

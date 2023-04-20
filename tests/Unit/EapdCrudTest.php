@@ -10,6 +10,7 @@ use App\Models\Eapd\Mongodb\ApdKondisi;
 use App\Models\Eapd\Mongodb\ApdList;
 use App\Models\Eapd\Mongodb\ApdSize;
 use App\Models\Eapd\Mongodb\Grup;
+use App\Models\Eapd\Mongodb\InputApd;
 use App\Models\Eapd\Mongodb\InputApdTemplate;
 use App\Models\Eapd\Mongodb\Jabatan;
 use App\Models\Eapd\Mongodb\Pegawai;
@@ -36,26 +37,10 @@ class EapdCrudTest extends TestCase
      */
     public function test_insert()
     {
-        $opsi_kondisi = [];
-        $status_apd = StatusApd::toArray();
-        // for($i = 0; $i++; $i < count($status_apd))
-        foreach($status_apd as $key => $status)
-        {
-
-            $opsi_kondisi[$key] = $key;
-
-        }
-
-        // untuk filter grup
-        $grup = Grup::project(['value'=>'$_id','text'=>'$nama_grup'])
-                        ->get()
-                        ->toArray();
-        $opsi_grup = [];
-        foreach($grup as $p)
-        {
-            $opsi_grup[$p['value']] = $p['text'];
-        }
-       print_r($opsi_kondisi);
+        $adc = new ApdDataController;
+        $data_dinas = $adc->hitungCapaianInputDinas(PeriodeInputApd::get()->first()->id);
+        $pos = Penempatan::where('_id','like',"1.11%")->where("keterangan",'=','pos')->get();
+        print_r($data_dinas);
 
         $this->assertTrue(true);
     }
