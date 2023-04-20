@@ -168,7 +168,27 @@
                     </a>
                 </li>
                 @endif
-                
+                @if (auth()->user()->data->jabatan->level_user == 'admin_dinas')
+                <li class="nav-item {{ (Route::currentRouteName() =='periode-setting')? 'menu-open' :''}}">
+                    <a href="{{route('periode-setting')}}"
+                        class="nav-link {{ (Route::currentRouteName() =='periode-setting')? 'active' :''}}">
+                        <i class="nav-icon fas fa-paperclip"></i>
+                        <p>
+                            Periode Setting
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item {{ (Route::currentRouteName() =='pengaturan-barang')? 'menu-open' :''}}">
+                    <a href="{{route('pengaturan-barang')}}"
+                        class="nav-link {{ (Route::currentRouteName() =='pengaturan-barang')? 'active' :''}}">
+                        <i class="nav-icon fas fa-cogs"></i>
+                        <p>
+                            Pengaturan Barang
+                        </p>
+                    </a>
+                </li>
+                @endif
+
                 <li class="nav-header border-bottom"><i class="nav-icon fas fa-book"></i><span></span> Manual Book</li>
                 <li class="nav-item">
                     <a href="" onclick="alert('Coming soon'); return false" target="_blank" class="nav-link">

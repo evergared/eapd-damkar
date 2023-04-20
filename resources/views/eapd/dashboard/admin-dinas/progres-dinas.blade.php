@@ -1,6 +1,8 @@
+
  @extends('eapd.layouts.adminlte-dashboard',['title'=>'Laporan Dinas'])
 
 @section('content')
+
 
 
 @include('eapd.dashboard.komponen.breadcrumbs',[ 'halamanJudul'=>'Laporan Dinas','halaman'=>'progres-dinas'])
@@ -14,6 +16,7 @@
               <section class="container-fluid">
                 <div class="col-12">
                   <div class="card card-primary card-outline card-outline-tabs">
+
 
                     <div class="card-header p-0 border-bottom-0">
                       <ul class="nav nav-tabs" id="progress-dinas-tablist" role="tablist">
@@ -61,6 +64,7 @@
                 @endpush
                 @endonce
                 <livewire:eapd.modal.modal-detail-progress-sudin>
+
                 {{-- <livewire:eapd.modal.modal-progres-dinas> --}}
 
             </div>

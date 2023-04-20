@@ -30,7 +30,7 @@ class DashboardController extends Controller
         if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
             return view("eapd.dashboard.admin-sektor.main-sektor");
         else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
-            return view("eapd.dashboard.admin-sudin.main-sektor");
+            return view("eapd.dashboard.admin-sudin.main-sudin");
         else if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
             return view("eapd.dashboard.admin-dinas.main-dinas");
         else
@@ -162,18 +162,20 @@ class DashboardController extends Controller
             return view('eapd.dashboard.halaman-pegawai.main-pegawai');
     }
 
-    public function tampilRunningText(Request $r)
+    public function tampilPeriodeSetting(Request $r)
     {
         if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
-            return view("eapd.dashboard.admin-dinas.running-text");
+            return view("eapd.dashboard.admin-dinas.periode-setting");
+
         else
             return view('eapd.dashboard.halaman-pegawai.main-pegawai');
     }
 
-    public function tampilTemplateEapd(Request $r)
+    public function tampilPengaturanBarang(Request $r)
     {
         if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
-            return view("eapd.dashboard.admin-dinas.template-eapd");
+            return view("eapd.dashboard.admin-dinas.pengaturan-barang");
+
         else
             return view('eapd.dashboard.halaman-pegawai.main-pegawai');
     }

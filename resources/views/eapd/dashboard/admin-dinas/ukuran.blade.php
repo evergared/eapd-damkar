@@ -1,3 +1,4 @@
+
 @extends('eapd.layouts.adminlte-dashboard',['title'=>'Ukuran'])
 
 
@@ -12,6 +13,7 @@
             <div class="col-lg-12 mt-2">
                 <div class="card">
                     <div class="card-body">
+
                         
                         @livewireStyles
                         @livewire('eapd.form.ukuran')
