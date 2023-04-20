@@ -27,7 +27,9 @@ class DashboardController extends Controller
         if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
             return view("eapd.dashboard.admin-sektor.main-sektor");
         else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
-            return view("eapd.dashboard.admin-sudin.main-sektor");
+            return view("eapd.dashboard.admin-sudin.main-sudin");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
+            return view("eapd.dashboard.admin-dinas.main-dinas");
         else
             return view('eapd.dashboard.halaman-pegawai.main-pegawai');
     }
@@ -38,6 +40,8 @@ class DashboardController extends Controller
             return view("eapd.dashboard.admin-sektor.profil");
         else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
             return view("eapd.dashboard.admin-sudin.profil");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
+            return view("eapd.dashboard.admin-dinas.profil");
         else
             return view('eapd.dashboard.halaman-pegawai.profil');
     }
@@ -48,6 +52,8 @@ class DashboardController extends Controller
             return view("eapd.dashboard.admin-sektor.request-item");
         else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
             return view("eapd.dashboard.admin-sudin.request-item");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
+            return view("eapd.dashboard.admin-dinas.request-item");
         else
             return view('eapd.dashboard.halaman-pegawai.request-item');
     }
@@ -58,6 +64,8 @@ class DashboardController extends Controller
             return view("eapd.dashboard.admin-sektor.ukuran");
         else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
             return view("eapd.dashboard.admin-sudin.ukuran");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
+            return view("eapd.dashboard.admin-dinas.ukuran");
         else
             return view('eapd.dashboard.halaman-pegawai.ukuran');
     }
@@ -69,6 +77,8 @@ class DashboardController extends Controller
             return view("eapd.dashboard.admin-sektor.apdku");
         else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
             return view("eapd.dashboard.admin-sudin.apdku");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
+            return view("eapd.dashboard.admin-dinas.apdku");
         else
             return view('eapd.dashboard.halaman-pegawai.apdku');
     }
@@ -79,6 +89,8 @@ class DashboardController extends Controller
             return view("eapd.dashboard.admin-sektor.print-laporan");
         else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
             return view("eapd.dashboard.admin-sudin.print-laporan");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
+            return view("eapd.dashboard.admin-dinas.print-laporan");
         else
             return view('eapd.dashboard.halaman-pegawai.main-pegawai');
     }
@@ -89,6 +101,8 @@ class DashboardController extends Controller
             return view("eapd.dashboard.admin-sektor.data-ukuran");
         else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
             return view("eapd.dashboard.admin-sudin.data-ukuran");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
+            return view("eapd.dashboard.admin-dinas.data-ukuran");
         else
             return view('eapd.dashboard.halaman-pegawai.main-pegawai');
     }
@@ -99,6 +113,8 @@ class DashboardController extends Controller
             return view("eapd.dashboard.admin-sektor.data-distribusi");
         else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
             return view("eapd.dashboard.admin-sudin.data-distribusi");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
+            return view("eapd.dashboard.admin-dinas.data-distribusi");
         else
             return view('eapd.dashboard.halaman-pegawai.main-pegawai');
     }
@@ -134,13 +150,16 @@ class DashboardController extends Controller
             // $adc->hitungCapaianInputSektor(Auth::user()->data->sektor, $maks_inputan, $value_inputan, $periode);
             // $adc->hitungCapaianInputSektor(Auth::user()->data->sektor, $maks_inputan, $value_tervalidasi, $periode, 3);
 
-            return view("eapd.dashboard.admin-sudin.progres-sektor"
-            // , [
-            //     'maks_inputan' => $maks_inputan,
-            //     'value_inputan' => $value_inputan,
-            //     'value_tervalidasi' => $value_tervalidasi
-            // ]
+            return view(
+                "eapd.dashboard.admin-sudin.progres-sektor"
+                // , [
+                //     'maks_inputan' => $maks_inputan,
+                //     'value_inputan' => $value_inputan,
+                //     'value_tervalidasi' => $value_tervalidasi
+                // ]
             );
+        } else if (Auth::user()->data->jabatan->level_user == 'admin_dinas') {
+            return view("eapd.dashboard.admin-dinas.progres-dinas");
         } else
             return view("eapd.dashboard.halaman-pegawai.main-pegawai");
     }
@@ -151,6 +170,24 @@ class DashboardController extends Controller
             return view("eapd.dashboard.admin-sektor.kepegawaian");
         else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
             return view("eapd.dashboard.admin-sudin.kepegawaian");
+        else if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
+            return view("eapd.dashboard.admin-dinas.kepegawaian");
+        else
+            return view('eapd.dashboard.halaman-pegawai.main-pegawai');
+    }
+
+    public function tampilPeriodeSetting(Request $r)
+    {
+        if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
+            return view("eapd.dashboard.admin-dinas.periode-setting");
+        else
+            return view('eapd.dashboard.halaman-pegawai.main-pegawai');
+    }
+
+    public function tampilPengaturanBarang(Request $r)
+    {
+        if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
+            return view("eapd.dashboard.admin-dinas.pengaturan-barang");
         else
             return view('eapd.dashboard.halaman-pegawai.main-pegawai');
     }

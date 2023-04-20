@@ -93,7 +93,7 @@
                         </p>
                     </a>
                 </li>
-                @if (auth()->user()->data->jabatan->level_user == 'admin_sektor' || auth()->user()->data->jabatan->level_user == 'admin_sudin')
+                @if (auth()->user()->data->jabatan->level_user == 'admin_sektor' || auth()->user()->data->jabatan->level_user == 'admin_sudin' || auth()->user()->data->jabatan->level_user == 'admin_dinas')
                 <li class="nav-item {{ (Route::currentRouteName() =='print-laporan' || Route::currentRouteName() =='progres-sektor' || Route::currentRouteName() =='data-ukuran' || Route::currentRouteName() =='data-distribusi')? 'menu-open' :''}}">
                     <a 
                         class="nav-link">
@@ -136,6 +136,26 @@
                         <i class="nav-icon fas fa-user-edit"></i>
                         <p>
                             Kepegawaian
+                        </p>
+                    </a>
+                </li>
+                @endif
+                @if (auth()->user()->data->jabatan->level_user == 'admin_dinas')
+                <li class="nav-item {{ (Route::currentRouteName() =='periode-setting')? 'menu-open' :''}}">
+                    <a href="{{route('periode-setting')}}"
+                        class="nav-link {{ (Route::currentRouteName() =='periode-setting')? 'active' :''}}">
+                        <i class="nav-icon fas fa-paperclip"></i>
+                        <p>
+                            Periode Setting
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item {{ (Route::currentRouteName() =='pengaturan-barang')? 'menu-open' :''}}">
+                    <a href="{{route('pengaturan-barang')}}"
+                        class="nav-link {{ (Route::currentRouteName() =='pengaturan-barang')? 'active' :''}}">
+                        <i class="nav-icon fas fa-cogs"></i>
+                        <p>
+                            Pengaturan Barang
                         </p>
                     </a>
                 </li>
