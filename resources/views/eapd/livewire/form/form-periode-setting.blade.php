@@ -1,5 +1,4 @@
 <div>
-   <div class="container-fluid">
             <div class="row">
                 <section class="d-flex justify-content-center col-lg-12 connectedSortable">
                     <div class="col-lg-12 card card-info">
@@ -9,7 +8,7 @@
                         <!-- /.card-header -->
                         <!-- form start -->
                         <form class="form-horizontal" id="form-periode-setting">
-                          <div class="mb-3 card collapse bg-gradient-secondary fade show active" id="info-kepegawaian-1">
+                          <div class="my-3 card collapse bg-gradient-secondary fade show active" id="info-kepegawaian-1">
                             <div class="card-body">
                               <div class="card-tools">
                                   <button type="button" class="close" data-toggle="collapse"
@@ -429,7 +428,6 @@
                     <!-- /.card -->
                 </section>
             </div>
-    </div>
     <livewire:eapd.modal.modal-periode-setting>
     
 </div>
