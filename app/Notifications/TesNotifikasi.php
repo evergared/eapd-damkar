@@ -37,6 +37,7 @@ class TesNotifikasi extends Notification implements ShouldBroadcast
     public function via($notifiable)
     {
         return ['database'];
+        // return ['database','broadcast']; <-- pakai ini nanti
     }
 
     /**
@@ -67,11 +68,11 @@ class TesNotifikasi extends Notification implements ShouldBroadcast
         ];
     }
 
-    public function broadcastOn()
+    public function toBroadcast()
     {
         $chanel = 'danton-1.11-B';
         error_log('broadcast pada '.$chanel);
-        return new Channel('tes');
-        // return new PrivateChannel($chanel);
+        // return new Channel('tes');
+        return new PrivateChannel($chanel);
     }
 }

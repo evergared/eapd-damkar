@@ -64,7 +64,7 @@ class Pegawai extends Model
         return $this->hasMany(InputApd::class, 'id_pegawai', '_id');
     }
 
-    public function sektor()
+    public function getSektorAttribute()
     {
         try{
             /**
