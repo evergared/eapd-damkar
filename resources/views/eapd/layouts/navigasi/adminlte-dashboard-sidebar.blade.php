@@ -130,33 +130,6 @@
                         </li>
                     </ul>
                 </li>
-
-                @if (auth()->user()->data->jabatan->level_user == 'admin_dinas')
-                    <li class="nav-item {{ (Route::currentRouteName() =='running-text' )? 'menu-open' :''}}">
-                        <a 
-                            class="nav-link">
-                            <i class="nav-icon fas fa-flag"></i>
-                            <p>
-                                Pengaturan Web
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item {{ (Route::currentRouteName() =='running-text')? 'menu-open' :''}}">
-                            <a href="{{route('running-text')}}" class="nav-link {{ (Route::currentRouteName() =='running-text')? 'active' :''}}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Notice Text Berjalan</p>
-                            </a>
-                            </li>
-                            <li class="nav-item {{ (Route::currentRouteName() =='template-eapd')? 'menu-open' :''}}">
-                                <a href="{{route('template-eapd')}}" class="nav-link {{ (Route::currentRouteName() =='template-eapd')? 'active' :''}}">
-                                  <i class="far fa-circle nav-icon"></i>
-                                  <p>Edit Template APD</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @endif
                 
                 <li class="nav-item {{ (Route::currentRouteName() =='kepegawaian')? 'menu-open' :''}}">
                     <a href="{{route('kepegawaian')}}"
@@ -174,7 +147,7 @@
                         class="nav-link {{ (Route::currentRouteName() =='periode-setting')? 'active' :''}}">
                         <i class="nav-icon fas fa-paperclip"></i>
                         <p>
-                            Periode Setting
+                            Pengaturan Periode
                         </p>
                     </a>
                 </li>
