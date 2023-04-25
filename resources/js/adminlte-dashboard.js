@@ -1,5 +1,4 @@
 
-import '../../node_modules/admin-lte/plugins/jquery/jquery.min.js';
 $.widget.bridge('uibutton',$.ui.button);
 
 import '../../node_modules/admin-lte/plugins/jquery-ui/jquery-ui.min.js';
