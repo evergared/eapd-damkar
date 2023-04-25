@@ -149,9 +149,11 @@ class TesMongodbSeeder extends Seeder
         ];
 
         $periode = [
-            'nama_periode' => 'triwulan 2023',
+            'nama_periode' => 'contoh periode input triwulan 2023',
             'tgl_awal' => '2023-01-01',
-            'tgl_akhir' => '2023-04-01'
+            'tgl_akhir' => '2023-04-01',
+            'aktif' => true,
+            'pesan_berjalan' => "Periode input untuk triwulan 2023 sudah dimulai! Pesan ini hanya contoh"
         ];
 
         $template = [

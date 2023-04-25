@@ -43,6 +43,7 @@
                 {{-- end collapse-list-periode-loading --}}
 
                 {{-- start tabel-list-periode --}}
+                @livewire('eapd.datatable.tabel-list-periode')
                 {{-- end tabel-list-periode --}}
             </div>
             <div class="card-footer text-right">
