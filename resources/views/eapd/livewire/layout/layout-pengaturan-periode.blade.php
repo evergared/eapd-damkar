@@ -47,7 +47,7 @@
                 {{-- end tabel-list-periode --}}
             </div>
             <div class="card-footer text-right">
-                <button class="btn btn-primary">Buat Periode Baru</button>
+                <button class="btn btn-primary" wire:click='CardListPeriodeBuatPeriodeBaru'>Buat Periode Baru</button>
             </div>
         </div>
         {{-- end card-list-periode --}}
@@ -68,19 +68,23 @@
                     <div class="collapse fade show active" id="collapse-card-form-periode">
                         <div class="card col-sm-12" id="card-form-periode">
                             <div class="card-header">
-                                <h5>Detail Periode</h5>
+                                @if ($card_form_periode_formEditMode)
+                                    <h5>Detil Periode (ID Periode : {{$card_form_periode_formIdPeriode}})</h5>
+                                @else
+                                    <h5>Buat Periode Baru</h5>
+                                @endif
                             </div>
                             <div class="card-body">
                                 {{-- Nama Periode --}}
                                 <div class="form-group">
                                     <label for="input-nama-periode">Nama Periode</label>
-                                    <input type="text" class="form-control" id="input-nama-periode">
+                                    <input type="text" class="form-control" id="input-nama-periode" wire:model="card_form_periode_formNamaPeriode">
                                 </div>
                                 {{-- Tanggal Awal --}}
                                 <div class="form-group">
                                     <label for="input-tanggal-awal">Tanggal Awal</label>
                                     <div class="input-group date" id="input-group-tanggal-awal" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input" data-target="#input-group-tanggal-awal">
+                                        <input type="text" class="form-control datetimepicker-input" data-target="#input-group-tanggal-awal" wire:model="card_form_periode_formTglAwal">
                                         <div class="input-group-append" data-target="#input-group-tanggal-awal" data-toggle="datetimepicker">
                                             <div class="input-group-text">
                                                 <i class="fa fa-calendar"></i>
@@ -92,7 +96,7 @@
                                 <div class="form-group">
                                         <label>Tanggal Akhir :</label>
                                         <div class="input-group date" id="reservationdatetime" data-target-input="nearest">
-                                            <input type="text" class="form-control datetimepicker-input" data-target="#reservationdatetime"/>
+                                            <input type="text" class="form-control datetimepicker-input" data-target="#reservationdatetime" wire:model="card_form_periode_formTglAkhir">
                                             <div class="input-group-append" data-target="#reservationdatetime" data-toggle="datetimepicker">
                                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                             </div>
@@ -101,13 +105,13 @@
                                 {{-- Pesan Berjalan --}}
                                 <div class="form-group">
                                     <label for="input-pesan-berjalan">Pesan Berjalan</label>
-                                    <textarea type="textarea" class="form-control" id="input-pesan-berjalan"></textarea>
+                                    <textarea type="textarea" class="form-control" id="input-pesan-berjalan" wire:model="card_form_periode_formPesanBerjalan"></textarea>
                                 </div>
                                 {{-- switch Aktif --}}
                                 <div class="form-group">
                                     <label>Aktif ? </label>
                                     <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" id="switch-periode-aktif">
+                                        <input type="checkbox" class="custom-control-input" id="switch-periode-aktif" wire:model="card_form_periode_formAktif">
                                         <label class="custom-control-label" for="switch-periode-aktif"></label>
                                     </div>
                                 </div>
@@ -115,11 +119,11 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="col">
-                                        <button class="btn btn-info">Atur Template Inputan APD</button>
+                                        <button class="btn btn-info" wire:click='CardFormPeriodeAturTemplateInputanApd'>Atur Template Inputan APD</button>
                                     </div>
                                     <div class="col text-right">
-                                        <button class="btn btn-primary">Simpan</button>
-                                        <button class="btn btn-secondary">Reset</button>
+                                        <button class="btn btn-primary" wire:click='CardFormPeriodeSimpan'>Simpan</button>
+                                        <button class="btn btn-secondary" wire:click='CardFormPeriodeReset'>Reset</button>
                                     </div>
                                 </div>
                                 
@@ -152,8 +156,14 @@
                                             <div>
                                                 Dibawah ini merupakan kendali untuk mengatur Template Inputan APD per Jabatan.<br>
                                                 Kendali ini mengatur tipe apd apa saja yang perlu diinput oleh pegawai pada periode yang telah dipilih  <br>
-                                                berikut APD apa saja yang perlu diinput <br>
-                                                Klik tombol "Tambah Banyak" untuk penambahan secara seragam
+                                                berikut APD apa saja yang perlu diinput. <br>
+                                                <ul>
+                                                    <li>Jabatan melambangkan bahwa template ini efektif untuk pegawai dengan jabatan tersebut.</li>
+                                                    <li>Jenis APD melambangkan kategori apd apa saja yang harus diinput oleh pegawai.</li>
+                                                    <li>Opsi APD melambangkan apd apa saja yang menjadi pilihan saat melakukan inputan.</li>
+                                                </ul>
+                                                
+                                                Klik tombol "Tambah Banyak" untuk penambahan secara seragam.
                                             </div>
                                         </div>
                                     </div>
@@ -194,7 +204,11 @@
                         <div class="card" id="card-single-template-inputan-apd">
                             <div class="card-header">
                                 <div class="card-title">
-                                    <h5>Tambah/Edit Template Inputan APD</h5>
+                                    @if ($card_single_template_inputan_apd_formEditMode)
+                                        <h5>Edit Template Inputan APD</h5>
+                                    @else
+                                        <h5>Tambah Template Inputan APD</h5>
+                                    @endif
                                 </div>
                                 <div class="card-tools text-right">
                                     <a>&larr; <u>kembali</u></a>
@@ -204,26 +218,32 @@
                                 {{-- Jabatan --}}
                                 <div class="form-group form-inline row">
                                     <label for="input-single-template-jabatan" class="col-sm-2 col-form-label col-form-label-lg">Jabatan</label>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4 input-group">
                                         <input type="text" class="form-control" id="input-single-template-jabatan" disabled>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-info"><u>Ubah</u></button>
+                                        </div>
                                     </div>
-                                    <button class="btn btn-outline-info"><u>Ubah</u></button>
                                 </div>
                                 {{-- Jenis APD --}}
                                 <div class="form-group form-inline row">
                                     <label for="input-single-template-jenis-apd" class="col-sm-2 col-form-label col-form-label-lg">Jenis APD</label>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4 input-group">
                                         <input type="text" class="form-control" id="input-single-template-jenis-apd" disabled>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-info"><u>Ubah</u></button>
+                                        </div>
                                     </div>
-                                    <button class="btn btn-outline-info"><u>Ubah</u></button>
                                 </div>
                                 {{-- APD --}}
                                 <div class="form-group form-inline row">
                                     <label for="input-single-template-apd" class="col-sm-2 col-form-label col-form-label-lg">APD</label>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4 input-group">
                                         <input type="text" class="form-control" id="input-single-template-apd" disabled>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-info"><u>Ubah</u></button>
+                                        </div>
                                     </div>
-                                    <button class="btn btn-outline-info"><u>Ubah</u></button>
                                 </div>
                             </div>
                             <div class="card-footer text-right">
@@ -305,17 +325,14 @@
     </section>
 
     @push('stack-body')
-        
+        {{-- untuk date picker --}}
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-k6/Bkb8Fxf/c1Tkyl39yJwcOZ1P4cRrJu77p83zJjN2Z55prbFHxPs9vN7q3l3+tSMGPDdoH51AEU8Vgo1cgAA==" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg==" crossorigin="anonymous" />
 
-        {{-- <link href="http://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet"/> --}}
-        {{-- <script src="http://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script> --}}
-
-        <link href="https://cdn.datatables.net/v/bs4/dt-1.13.4/fh-3.3.2/r-2.4.1/sc-2.1.1/sp-2.1.2/datatables.min.css" rel="stylesheet"/>
- 
-<script src="https://cdn.datatables.net/v/bs4/dt-1.13.4/fh-3.3.2/r-2.4.1/sc-2.1.1/sp-2.1.2/datatables.min.js"></script>
+        {{-- untuk import datatable --}}
+        <link href="https://cdn.datatables.net/v/bs4/dt-1.13.4/b-2.3.6/fh-3.3.2/r-2.4.1/sc-2.1.1/sr-1.2.2/datatables.min.css" rel="stylesheet"/>
+        <script src="https://cdn.datatables.net/v/bs4/dt-1.13.4/b-2.3.6/fh-3.3.2/r-2.4.1/sc-2.1.1/sr-1.2.2/datatables.min.js"></script>
 
         <script>
             var data = <?php echo json_encode($tabel_template_data)?>;
@@ -324,6 +341,7 @@
                 // tabel-template
                 var tabel_template = $("#tabel-template").DataTable({
                     data:data,
+                    destroy:true,
                     columns:[
                         {data:"index"},
                         {data:"jabatan"},
@@ -340,8 +358,14 @@
                     ]
                 });
 
-                $('#tabel-template #tabel-template-edit').on('click',function(event){
-                    alert(tabel_template.row(event.currentTarget).column().data());
+                window.addEventListener("JS_InisiasiTabelTemplate",event=>{
+                    tabel_template.draw();
+                })
+
+                $('#tabel-template tbody').on('click','#tabel-template-edit',function(){
+                    var data = tabel_template.row($(this).parents('tr')).data();
+                    
+                    Livewire.emit('TabelTemplateEdit',JSON.stringify(data["index"]));
                 });
             })
 

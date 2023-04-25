@@ -14,9 +14,15 @@ class TabelListPeriode extends DataTableComponent
     protected $model = PeriodeInputApd::class;
     protected $index = 0;
 
+    protected $listners = [
+        "RefreshTabelListPeriode"
+    ];
+
+    #region rappasoft function
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setRefreshVisible();
         $this->setAdditionalSelects(['nama_periode','tgl_awal','tgl_akhir','aktif']);
     }
 
@@ -37,12 +43,19 @@ class TabelListPeriode extends DataTableComponent
                 ->sortable(),
             Column::make("Tgl akhir", "tgl_akhir")
                 ->sortable(),
-            BooleanColumn::make('Aktif ?',"aktif")
+            BooleanColumn::make('Aktif?',"aktif")
                 ->sortable(),
             Column::make('Tindakan')
                 ->label(function($row){
-                    return view('eapd.livewire.kolom-tambahan-datatable.kolom-tindakan-tabel-list-periode',['id'=>$row->id]);
+                    return view('eapd.livewire.kolom-tambahan-datatable.kolom-tindakan-tabel-list-periode',['id'=>$row->id,'aktif'=>$row->aktif]);
                 })
         ];
     }
+    #endregion
+
+    public function RefreshTabelListPeriode()
+    {
+        $this->emitSelf("refreshDatatable");
+    }
+
 }
