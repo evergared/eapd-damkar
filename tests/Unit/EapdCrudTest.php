@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Enum\StatusApd;
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\ApdRekapController;
+use App\Http\Controllers\PeriodeInputController;
 use App\Models\Eapd\Mongodb\ApdJenis;
 use App\Models\Eapd\Mongodb\ApdKondisi;
 use App\Models\Eapd\Mongodb\ApdList;
@@ -37,10 +38,19 @@ class EapdCrudTest extends TestCase
      */
     public function test_insert()
     {
-        $adc = new ApdDataController;
-        $data_dinas = $adc->hitungCapaianInputDinas(PeriodeInputApd::get()->first()->id);
-        $pos = Penempatan::where('_id','like',"1.11%")->where("keterangan",'=','pos')->get();
-        print_r($data_dinas);
+        $adc = new PeriodeInputController;
+        $id_periode = PeriodeInputApd::get()->first()->id;
+        $dataset = $adc->muatTemplateSebagaiTabelDatasetArray($id_periode);
+        print_r($dataset);
+
+        $datatable = $adc->bangunDataTabelTemplateDariDataset($dataset);
+        print_r($datatable);
+
+        $dataset_return = $adc->ubahDataTabelTemplateKeDataset($datatable);
+        print_r($dataset_return);
+
+        // print_r(InputApdTemplate::where('id_periode',$id_periode)->get()->first()->template);
+        print_r($adc->ubahDatasetArrayTemplateKeTemplate($dataset_return));
 
         $this->assertTrue(true);
     }

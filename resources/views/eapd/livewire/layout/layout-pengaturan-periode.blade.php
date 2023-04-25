@@ -152,7 +152,7 @@
                                             <div>
                                                 Dibawah ini merupakan kendali untuk mengatur Template Inputan APD per Jabatan.<br>
                                                 Kendali ini mengatur tipe apd apa saja yang perlu diinput oleh pegawai pada periode yang telah dipilih  <br>
-                                                Berikut APD apa saja yang perlu diinput <br>
+                                                berikut APD apa saja yang perlu diinput <br>
                                                 Klik tombol "Tambah Banyak" untuk penambahan secara seragam
                                             </div>
                                         </div>
@@ -160,6 +160,17 @@
                                     {{-- end collapse-card-tabel-inputan-apd-info --}}
 
                                     {{-- start tabel-template --}}
+                                    <table class="table text-nowrap" id="tabel-template">
+                                        <thead class="text-center table-bordered">
+                                            <tr class="table-head-fixed">
+                                                <th>No</th>
+                                                <th>[ID Jabatan] Jabatan</th>
+                                                <th>[ID Jenis] Jenis APD Yang Harus Diinput</th>
+                                                <th>[ID APD] Opsi APD</th>
+                                                <th>Tindakan</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                     {{-- end tabel-template --}}
                                 </div>
                                 <div class="card-footer">
@@ -170,6 +181,7 @@
                                         </div>
                                         <div class="col text-right">
                                             <button class="btn btn-primary">Simpan</button>
+                                            <button class="btn btn-danger">Kosongkan</button>
                                         </div>
                                     </div>
                                 </div>
@@ -293,7 +305,49 @@
     </section>
 
     @push('stack-body')
-        <script src=""></script>
+        
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-k6/Bkb8Fxf/c1Tkyl39yJwcOZ1P4cRrJu77p83zJjN2Z55prbFHxPs9vN7q3l3+tSMGPDdoH51AEU8Vgo1cgAA==" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg==" crossorigin="anonymous" />
+
+        {{-- <link href="http://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet"/> --}}
+        {{-- <script src="http://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script> --}}
+
+        <link href="https://cdn.datatables.net/v/bs4/dt-1.13.4/fh-3.3.2/r-2.4.1/sc-2.1.1/sp-2.1.2/datatables.min.css" rel="stylesheet"/>
+ 
+<script src="https://cdn.datatables.net/v/bs4/dt-1.13.4/fh-3.3.2/r-2.4.1/sc-2.1.1/sp-2.1.2/datatables.min.js"></script>
+
+        <script>
+            var data = <?php echo json_encode($tabel_template_data)?>;
+
+            $(document).ready(function(){
+                // tabel-template
+                var tabel_template = $("#tabel-template").DataTable({
+                    data:data,
+                    columns:[
+                        {data:"index"},
+                        {data:"jabatan"},
+                        {data:"jenis_apd"},
+                        {data:"opsi_apd"},
+                        {
+                            data:null,
+                            defaultContent:
+                                "<div class='btn-group' role='group' aria-label='tindakan'>"+
+                                "<button type='button' id='tabel-template-edit' class='btn btn-info mx-1'>Edit</button>"+
+                                "<button type='button' id='tabel-template-hapus' class='btn btn-danger mx-1'>Hapus</button>"+
+                                "</div>"
+                        }
+                    ]
+                });
+
+                $('#tabel-template #tabel-template-edit').on('click',function(event){
+                    alert(tabel_template.row(event.currentTarget).column().data());
+                });
+            })
+
+
+        </script>
+        
     @endpush
 
 </div>
