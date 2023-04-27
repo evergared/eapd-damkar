@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Eapd\Layout;
 
 use App\Http\Controllers\PeriodeInputController;
+use App\Models\Eapd\Mongodb\InputApdTemplate;
 use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use Livewire\Component;
 use Throwable;
@@ -28,7 +29,25 @@ class LayoutPengaturanPeriode extends Component
         $card_form_periode_formAktif_cache = false;
 
     // variabel untuk card tabel inputan apd
-    public $tabel_template_data = [];
+    public 
+        $tabel_template_data = [],
+        $tabel_template_data_cache = [],
+        $tabel_template_data_original = [],
+        $tabel_template_pageCurrent = 0,
+        $tabel_template_pageTotal = 0,
+        $tabel_template_toolsCari = "",
+        $tabel_template_toolsCari_column = "jabatan",
+        $tabel_template_toolsCari_column_option = [
+            ['text'=>'Jabatan','value'=>'jabatan'],
+            ['text'=>'Jenis APD','value'=>'jenis_apd'],
+            ['text'=>'APD','value'=>'opsi_apd'],
+            ['text'=>'No','value'=>'index'],
+            ],
+        $tabel_template_toolsCari_init = false,
+        $tabel_template_toolsPerPage = 5,
+        $tabel_template_toolsPerPage_option = [5,10,25,50,100,0],
+        $tabel_template_toolsSort_column = "",
+        $tabel_template_toolsSort_order = "asc";
 
     // variabel untuk card single template inputan apd
     public 
@@ -62,7 +81,7 @@ class LayoutPengaturanPeriode extends Component
     {
         $pic = new PeriodeInputController;
         $this->card_form_periode_formIdPeriode_cache = $pic->ambilIdPeriodeInput();
-        $this->InisiasiTabelTemplate();
+        // $this->InisiasiTabelTemplate();
     }
     #endregion
 
@@ -72,6 +91,7 @@ class LayoutPengaturanPeriode extends Component
         try{
 
             $periode = PeriodeInputApd::find($value);
+            $template = InputApdTemplate::where('id_periode',$value)->get()->first();
 
             $newPeriode = new PeriodeInputApd;
             $newPeriode->nama_periode = "salinan ".$periode->nama_periode;
@@ -80,6 +100,12 @@ class LayoutPengaturanPeriode extends Component
             $newPeriode->pesan_berjalan = $periode->pesan_berjalan;
             $newPeriode->aktif = false;
             $newPeriode->save();
+
+            $newTemplate = new InputApdTemplate;
+            $newTemplate->nama = 'template inputan '.$newPeriode->nama_periode;
+            $newTemplate->id_periode = $newPeriode->id;
+            $newTemplate->template = $template->template;
+            $newTemplate->save();
 
             $this->emit("RefreshTabelListPeriode");
 
@@ -150,9 +176,10 @@ class LayoutPengaturanPeriode extends Component
         try{
 
             $periode = PeriodeInputApd::find($value);
+            $template = InputApdTemplate::where('id_periode',$value)->get()->first();
 
             $periode->delete();
-
+            $template->delete();
             $this->emit("RefreshTabelListPeriode");
 
         }
@@ -178,7 +205,6 @@ class LayoutPengaturanPeriode extends Component
     #region card form periode
     public function CardFormPeriodeAturTemplateInputanApd()
     {
-        if($this->card_form_periode_formEditMode)
             $this->InisiasiTabelTemplate();
     }
 
@@ -207,14 +233,90 @@ class LayoutPengaturanPeriode extends Component
     #region card tabel inputan apd function
     public function InisiasiTabelTemplate()
     {
-        $pic = new PeriodeInputController;
-        $this->tabel_template_data = $pic->bangunDataTabelTemplateDariDataset($pic->muatTemplateSebagaiTabelDatasetArray($this->card_form_periode_formIdPeriode_cache));
-        $this->dispatchBrowserEvent("JS_InisiasiTabelTemplate");
+        if($this->card_form_periode_formIdPeriode_cache != "")
+        {
+            $pic = new PeriodeInputController;
+            $this->tabel_template_data = $this->tabel_template_data_cache = $this->tabel_template_data_original = $pic->bangunDataTabelTemplateDariDataset($pic->muatTemplateSebagaiTabelDatasetArray($this->card_form_periode_formIdPeriode_cache));
+            $this->TabelTemplatePerPageChange();
+        }
+        else
+        {
+            $this->tabel_template_data = [] ; $this->tabel_template_data_cache = [];
+            $this->tabel_template_data_original = [];
+        }
+    }
+
+    public function TabelTemplateCari()
+    {
+        $this->tabel_template_data = $this->tabel_template_data_cache = array_filter($this->tabel_template_data_cache,function($data){
+            return is_int(mb_stripos($data[$this->tabel_template_toolsCari_column],$this->tabel_template_toolsCari));
+        });
+        $this->tabel_template_toolsCari_init = true;
+        $this->TabelTemplatePerPageChange();
+    }
+
+    public function TabelTemplateCariReset()
+    {
+        $this->tabel_template_data = $this->tabel_template_data_cache = $this->tabel_template_data_original;
+        $this->tabel_template_toolsCari_init = false;
+    }
+
+    public function TabelTemplatePerPageChange()
+    {
+        $this->tabel_template_data = $this->tabel_template_data_cache;
+
+        if($this->tabel_template_toolsPerPage != 0)
+        {
+            $this->tabel_template_data = array_slice($this->tabel_template_data,$this->tabel_template_pageCurrent,$this->tabel_template_toolsPerPage);
+
+            $this->TabelTemplatePaginate();
+        }
+        
+    }
+
+    public function TabelTemplatePaginate()
+    {
+        $this->tabel_template_pageTotal = ceil(count($this->tabel_template_data_cache)/$this->tabel_template_toolsPerPage);
+
+        error_log('paginate : '.$this->tabel_template_pageTotal);
+    }
+
+    public function TabelTemplatePageNavigate($value)
+    {
+        if($value == 'max')
+            $this->tabel_template_pageCurrent = $value;
+
+    }
+
+    public function TabelTemplateSortirKolom($value)
+    {
+        if($this->tabel_template_toolsSort_column != $value)
+        {
+            $this->tabel_template_toolsSort_order = 'asc';
+            $this->tabel_template_toolsSort_column = $value;
+        }
+        else
+        {
+            if($this->tabel_template_toolsSort_order == 'asc')
+                $this->tabel_template_toolsSort_order = 'dsc';
+            else
+                $this->tabel_template_toolsSort_order = 'asc';
+        }
+
+        $sorted_column = array_column($this->tabel_template_data,$this->tabel_template_toolsSort_column);
+
+        if($this->tabel_template_toolsSort_order == 'asc')
+            array_multisort($sorted_column,SORT_ASC,$this->tabel_template_data);
+        else
+            array_multisort($sorted_column,SORT_DESC,$this->tabel_template_data);
+
     }
 
     public function TabelTemplateEdit($value)
     {
         error_log('message : '.$value);
+        $this->dispatchBrowserEvent("JS_TabelTemplateEdit");
+
     }
 
     public function TabelTemplateHapus($value)

@@ -163,24 +163,117 @@
                                                     <li>Opsi APD melambangkan apd apa saja yang menjadi pilihan saat melakukan inputan.</li>
                                                 </ul>
                                                 
-                                                Klik tombol "Tambah Banyak" untuk penambahan secara seragam.
+                                                Klik tombol "Tambah Banyak" untuk penambahan secara seragam.<br>
+                                                Template yang baru ditambahkan akan muncul di urut paling akhir sebelum di simpan.
                                             </div>
                                         </div>
                                     </div>
                                     {{-- end collapse-card-tabel-inputan-apd-info --}}
 
                                     {{-- start tabel-template --}}
-                                    <table class="table text-nowrap" id="tabel-template">
-                                        <thead class="text-center table-bordered">
-                                            <tr class="table-head-fixed">
-                                                <th>No</th>
-                                                <th>[ID Jabatan] Jabatan</th>
-                                                <th>[ID Jenis] Jenis APD Yang Harus Diinput</th>
-                                                <th>[ID APD] Opsi APD</th>
-                                                <th>Tindakan</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-6">
+                                                <div class="input-group input-group-sm" style="width: 250px;">
+                                                    <input type="text" class="form-control" id="table-template-tools-cari" placeholder="Cari" wire:model="tabel_template_toolsCari">
+                                                    <div class="input-group-append">
+                                                        <select class="form-control-sm" id="tabel-template-tools-cari-column" wire:model="tabel_template_toolsCari_column">
+                                                            @foreach ($tabel_template_toolsCari_column_option as $item)
+                                                                <option value="{{$item['value']}}">{{$item['text']}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <button class="btn btn-secondary" wire:click="TabelTemplateCari"><i class="fa fa-search"></i></button>
+                                                        @if ($tabel_template_toolsCari_init)
+                                                            <small><a class="ml-1" href="#table-template-tools-cari" wire:click="TabelTemplateCariReset">reset</a></small>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 col-md-6">
+                                                <div class="input-group input-group-sm float-sm-right" style="width: 160px;">
+                                                    <div class="input-group-prepend mr-1">
+                                                        Tampilkan
+                                                    </div>
+                                                    <select class="form-control" id="tabel-template-tools-perPage" wire:model="tabel_template_toolsPerPage" wire:change='TabelTemplatePerPageChange()'>
+                                                        @foreach ($tabel_template_toolsPerPage_option as $item)
+                                                            @if ($item == 0)
+                                                                <option value="0">Semua</option>
+                                                            @else
+                                                                <option>{{$item}}</option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row table-responsive">
+                                            <table class="table table-bordered table-hover text-nowrap" id="tabel-template">
+                                                <thead class="text-center table-bordered">
+                                                    <tr class="table-head-fixed">
+                                                        <th wire:click="TabelTemplateSortirKolom('index')">No @if($tabel_template_toolsSort_column == "index") <i class="fa fa-chevron-circle-{{($tabel_template_toolsSort_order == "asc")? "up" : "down"}}"></i> @endif </th>
+                                                        <th wire:click="TabelTemplateSortirKolom('jabatan')">[ID Jabatan] Jabatan @if($tabel_template_toolsSort_column == "jabatan") <i class="fa fa-chevron-circle-{{($tabel_template_toolsSort_order == "asc")? "up" : "down"}}"></i> @endif </th>
+                                                        <th wire:click="TabelTemplateSortirKolom('jenis_apd')">[ID Jenis] Jenis APD Yang Harus Diinput @if($tabel_template_toolsSort_column == "jenis_apd") <i class="fa fa-chevron-circle-{{($tabel_template_toolsSort_order == "asc")? "up" : "down"}}"></i> @endif </th>
+                                                        <th wire:click="TabelTemplateSortirKolom('opsi_apd')">[ID APD] Opsi APD @if($tabel_template_toolsSort_column == "opsi_apd") <i class="fa fa-chevron-circle-{{($tabel_template_toolsSort_order == "asc")? "up" : "down"}}"></i> @endif </th>
+                                                        <th>Tindakan</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (is_array($tabel_template_data))
+                                                        @forelse ($tabel_template_data as $item)
+                                                            <tr>
+                                                                <td>{{$item["index"]}}</td>
+                                                                <td>{{$item["jabatan"]}}</td>
+                                                                <td>{{$item["jenis_apd"]}}</td>
+                                                                <td>{{$item["opsi_apd"]}}</td>
+                                                                <td>
+                                                                    <div class='btn-group' role='group' aria-label='tindakan'>
+                                                                        <button type='button' id='tabel-template-edit' class='btn btn-info mx-1' wire:click="TabelTemplateEdit({{$item['index']}})">Edit</button>
+                                                                        <button type='button' id='tabel-template-hapus' class='btn btn-danger mx-1' wire:click="TabelTemplateHapus({{$item['index']}})">Hapus</button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        @empty
+                                                            <tr>
+                                                                <td colspan="5" class="jumbotron text-center">
+                                                                    Tidak ada yang dapat ditampilkan.
+                                                                </td>
+                                                            </tr>
+                                                        @endforelse
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="5" class="jumbotron text-center">
+                                                                Tidak ditemukan data untuk {{$tabel_template_toolsCari}}.
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                    
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row text-muted">
+                                            @if (is_array($tabel_template_data))
+                                                <span class="font-italic">Menampilkan <strong>{{count($tabel_template_data)}}</strong> dari <strong>{{count($tabel_template_data_cache)}}</strong> hasil</span>
+                                            @endif
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            @if ($tabel_template_pageTotal > 1)
+                                                <nav aria-label="Tabel Template Navigasi">
+                                                    <ul class="pagination">
+                                                        <li class="page-item"><a class="page-link" href="#table-template">Previous</a></li>
+                                                        <li class="page-item"><a class="page-link" href="#table-template"><i class="fa fa-angle-double-left"></i></a></li>
+                                                        <li class="page-item"><a class="page-link" href="#table-template">1</a></li>
+                                                        <li class="page-item"><a class="page-link" href="#table-template">2</a></li>
+                                                        <li class="page-item"><a class="page-link" href="#table-template">3</a></li>
+                                                        <li class="page-item"><a class="page-link" href="#table-template"><i class="fa fa-angle-double-right"></i></a></li>
+                                                        <li class="page-item"><a class="page-link" href="#table-template">Next</a></li>
+                                                    </ul>
+                                                </nav>
+                                            @endif
+                                            
+                                        </div>
+                                    </div>
+                                    
                                     {{-- end tabel-template --}}
                                 </div>
                                 <div class="card-footer">
@@ -329,49 +422,6 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-k6/Bkb8Fxf/c1Tkyl39yJwcOZ1P4cRrJu77p83zJjN2Z55prbFHxPs9vN7q3l3+tSMGPDdoH51AEU8Vgo1cgAA==" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg==" crossorigin="anonymous" />
-
-        {{-- untuk import datatable --}}
-        <link href="https://cdn.datatables.net/v/bs4/dt-1.13.4/b-2.3.6/fh-3.3.2/r-2.4.1/sc-2.1.1/sr-1.2.2/datatables.min.css" rel="stylesheet"/>
-        <script src="https://cdn.datatables.net/v/bs4/dt-1.13.4/b-2.3.6/fh-3.3.2/r-2.4.1/sc-2.1.1/sr-1.2.2/datatables.min.js"></script>
-
-        <script>
-            var data = <?php echo json_encode($tabel_template_data)?>;
-
-            $(document).ready(function(){
-                // tabel-template
-                var tabel_template = $("#tabel-template").DataTable({
-                    data:data,
-                    destroy:true,
-                    columns:[
-                        {data:"index"},
-                        {data:"jabatan"},
-                        {data:"jenis_apd"},
-                        {data:"opsi_apd"},
-                        {
-                            data:null,
-                            defaultContent:
-                                "<div class='btn-group' role='group' aria-label='tindakan'>"+
-                                "<button type='button' id='tabel-template-edit' class='btn btn-info mx-1'>Edit</button>"+
-                                "<button type='button' id='tabel-template-hapus' class='btn btn-danger mx-1'>Hapus</button>"+
-                                "</div>"
-                        }
-                    ]
-                });
-
-                window.addEventListener("JS_InisiasiTabelTemplate",event=>{
-                    tabel_template.draw();
-                })
-
-                $('#tabel-template tbody').on('click','#tabel-template-edit',function(){
-                    var data = tabel_template.row($(this).parents('tr')).data();
-                    
-                    Livewire.emit('TabelTemplateEdit',JSON.stringify(data["index"]));
-                });
-            })
-
-
-        </script>
-        
     @endpush
 
 </div>
