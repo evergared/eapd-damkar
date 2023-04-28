@@ -75,6 +75,14 @@
                                 @endif
                             </div>
                             <div class="card-body">
+
+                                {{-- start collapse-list-periode-loading --}}
+                                    <div wire:loading>
+                                            <div class="spinner-border spinner-border-sm text-info" role="status"></div>
+                                            <small> Memproses . . .</small>
+                                    </div>
+                                {{-- end collapse-list-periode-loading --}}
+
                                 {{-- Nama Periode --}}
                                 <div class="form-group">
                                     <label for="input-nama-periode">Nama Periode</label>
@@ -170,6 +178,13 @@
                                     </div>
                                     {{-- end collapse-card-tabel-inputan-apd-info --}}
 
+                                    {{-- start collapse-list-periode-loading --}}
+                                    <div wire:loading>
+                                            <div class="spinner-border spinner-border-sm text-info" role="status"></div>
+                                            <small> Memproses . . .</small>
+                                    </div>
+                                    {{-- end collapse-list-periode-loading --}}
+
                                     {{-- start tabel-template --}}
                                     <div>
                                         <div class="row">
@@ -219,9 +234,9 @@
                                                 </thead>
                                                 <tbody>
                                                     @if (is_array($tabel_template_data))
-                                                        @forelse ($tabel_template_data as $item)
+                                                        @forelse ($tabel_template_data as $index => $item)
                                                             <tr>
-                                                                <td>{{$item["index"]}}</td>
+                                                                <td>{{/*$index + 1*/$item["index"]}}</td>
                                                                 <td>{{$item["jabatan"]}}</td>
                                                                 <td>{{$item["jenis_apd"]}}</td>
                                                                 <td>{{$item["opsi_apd"]}}</td>
@@ -260,13 +275,14 @@
                                             @if ($tabel_template_pageTotal > 1)
                                                 <nav aria-label="Tabel Template Navigasi">
                                                     <ul class="pagination">
-                                                        <li class="page-item"><a class="page-link" href="#table-template">Previous</a></li>
-                                                        <li class="page-item"><a class="page-link" href="#table-template"><i class="fa fa-angle-double-left"></i></a></li>
-                                                        <li class="page-item"><a class="page-link" href="#table-template">1</a></li>
-                                                        <li class="page-item"><a class="page-link" href="#table-template">2</a></li>
-                                                        <li class="page-item"><a class="page-link" href="#table-template">3</a></li>
-                                                        <li class="page-item"><a class="page-link" href="#table-template"><i class="fa fa-angle-double-right"></i></a></li>
-                                                        <li class="page-item"><a class="page-link" href="#table-template">Next</a></li>
+                                                        <li class="page-item"><a class="page-link" href="#table-template" wire:click="TabelTemplatePageNavigate({{($tabel_template_pageCurrent > 0)? $tabel_template_pageCurrent - 1:1}})" >Previous</a></li>
+                                                        <li class="page-item"><a class="page-link" href="#table-template" wire:click="TabelTemplatePageNavigate('min')" ><i class="fa fa-angle-double-left"></i></a></li>
+                                                        @for ($i = 0; $i < $tabel_template_pageTotal; $i++)
+                                                            <li class="page-item {{($tabel_template_pageCurrent == $i+1)? "active" : ""}}"><a class="page-link" href="#table-template" wire:click="TabelTemplatePageNavigate({{$i+1}})" >{{$i+1}}</a></li>
+                                                        @endfor
+                                                        
+                                                        <li class="page-item"><a class="page-link" href="#table-template" wire:click="TabelTemplatePageNavigate('max')" ><i class="fa fa-angle-double-right"></i></a></li>
+                                                        <li class="page-item"><a class="page-link" href="#table-template" wire:click="TabelTemplatePageNavigate({{($tabel_template_pageCurrent < $tabel_template_pageTotal)? $tabel_template_pageCurrent + 1:$tabel_template_pageTotal}})" >Next</a></li>
                                                     </ul>
                                                 </nav>
                                             @endif
@@ -283,8 +299,8 @@
                                             <button class="btn btn-info">Tambah Satu</button>
                                         </div>
                                         <div class="col text-right">
-                                            <button class="btn btn-primary">Simpan</button>
-                                            <button class="btn btn-danger">Kosongkan</button>
+                                            <button class="btn btn-primary" wire:click="CardTabelInputanApdSimpan">Simpan</button>
+                                            <button class="btn btn-danger" wire:click="CardTabelInputanApdKosongkan">Kosongkan</button>
                                         </div>
                                     </div>
                                 </div>
@@ -308,13 +324,21 @@
                                 </div>
                             </div>
                             <div class="card-body">
+
+                                {{-- start collapse-list-periode-loading --}}
+                                    <div wire:loading>
+                                            <div class="spinner-border spinner-border-sm text-info" role="status"></div>
+                                            <small> Memproses . . .</small>
+                                    </div>
+                                {{-- end collapse-list-periode-loading --}}
+
                                 {{-- Jabatan --}}
                                 <div class="form-group form-inline row">
                                     <label for="input-single-template-jabatan" class="col-sm-2 col-form-label col-form-label-lg">Jabatan</label>
                                     <div class="col-sm-4 input-group">
-                                        <input type="text" class="form-control" id="input-single-template-jabatan" disabled>
+                                        <input type="text" class="form-control" id="input-single-template-jabatan" value="{{$card_single_template_inputan_apd_formJabatan}}" disabled>
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-info"><u>Ubah</u></button>
+                                            <button class="btn btn-outline-info" data-toggle="modal" wire:click="$set('modal_ubah_single_inputan_apd_mode','jabatan')" data-target="#modal-ubah-single-template-inputan-apd"><u>Ubah</u></button>
                                         </div>
                                     </div>
                                 </div>
@@ -322,9 +346,9 @@
                                 <div class="form-group form-inline row">
                                     <label for="input-single-template-jenis-apd" class="col-sm-2 col-form-label col-form-label-lg">Jenis APD</label>
                                     <div class="col-sm-4 input-group">
-                                        <input type="text" class="form-control" id="input-single-template-jenis-apd" disabled>
+                                        <input type="text" class="form-control" id="input-single-template-jenis-apd" value="{{$card_single_template_inputan_apd_formJenisApd}}" disabled>
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-info"><u>Ubah</u></button>
+                                            <button class="btn btn-outline-info" data-toggle="modal" wire:click="$emit('InisiasiTabelAtributTemplateSingle','jenis_apd')" data-target="#modal-ubah-single-template-inputan-apd"><u>Ubah</u></button>
                                         </div>
                                     </div>
                                 </div>
@@ -332,9 +356,9 @@
                                 <div class="form-group form-inline row">
                                     <label for="input-single-template-apd" class="col-sm-2 col-form-label col-form-label-lg">APD</label>
                                     <div class="col-sm-4 input-group">
-                                        <input type="text" class="form-control" id="input-single-template-apd" disabled>
+                                        <input type="text" class="form-control" id="input-single-template-apd" value="{{$card_single_template_inputan_apd_formApd}}" disabled>
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-info"><u>Ubah</u></button>
+                                            <button class="btn btn-outline-info" data-toggle="modal" wire:click="$emit('InisiasiTabelAtributTemplateSingle','opsi_apd')" data-target="#modal-ubah-single-template-inputan-apd"><u>Ubah</u></button>
                                         </div>
                                     </div>
                                 </div>
@@ -358,6 +382,14 @@
                                 </div>
                             </div>
                             <div class="card-body">
+
+                                {{-- start collapse-list-periode-loading --}}
+                                <div wire:loading>
+                                        <div class="spinner-border spinner-border-sm text-info" role="status"></div>
+                                        <small> Memproses . . .</small>
+                                </div>
+                                {{-- end collapse-list-periode-loading --}}
+
                                 <h6><i>Klik pada item untuk menghapus</i></h6>
                                 <div class="card-group">
                                     {{-- card untuk jabatan --}}
@@ -414,6 +446,47 @@
             </div>
         </div>
         {{-- end card-detail-periode --}}
+
+        {{-- start modal ubah single template inputan apd --}}
+        <div class="modal fade" id="modal-ubah-single-template-inputan-apd" tabindex="-1" role="document" wire:ignore.self>
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            Tambah
+                        </h5>
+                        <button type="button" class="close" data-toggle="modal"
+                            data-target="#modal-ubah-single-template-inputan-apd" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {{-- start collapse-list-periode-loading --}}
+                        <div wire:loading>
+                            <div class="spinner-border spinner-border-sm text-info" role="status"></div>
+                            <small> Memproses . . .</small>
+                        </div>
+                        {{-- end collapse-list-periode-loading --}}
+
+                        {{-- start bagian untuk tabel --}}
+                        @if ($modal_ubah_single_inputan_apd_mode == "jabatan")
+                            @livewire("eapd.datatable.tabel-jabatan-template-single")
+                            
+                        @elseif($modal_ubah_single_inputan_apd_mode == "jenis_apd")
+
+                        @elseif($modal_ubah_single_inputan_apd_mode == "opsi_apd")
+
+                        @else
+                            <div class="jumbotron text-center">
+                                Memuat data . . .
+                            </div>
+                        @endif
+                        {{-- end bagian untuk tabel --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- end modal ubah single template inputan apd --}}
 
     </section>
 
