@@ -66,9 +66,19 @@ class LayoutPengaturanPeriode extends Component
         $card_single_template_inputan_apd_formApd = "",
         $card_single_template_inputan_apd_formApd_id = "";
 
-    // variabel untuk modal ubah single inputan apd
+    // variabel untuk card multi template inputan apd
+    public
+        $card_multi_template_inputan_apd_listJabatan = [],
+        $card_multi_template_inputan_apd_listJenisApd = [],
+        $card_multi_template_inputan_apd_listApd = [];
+
+    // variabel untuk modal ubah single template inputan apd
     public
         $modal_ubah_single_inputan_apd_mode = "";
+
+    // variabel untuk modal ubah multi template inputan apd
+    public
+        $modal_ubah_multi_inputan_apd_mode = "";
     
 
     protected $listeners = [
@@ -82,6 +92,11 @@ class LayoutPengaturanPeriode extends Component
         // card tabel inputan apd
         'TabelTemplateEdit',
         'TabelTemplateHapus',
+
+        // card multi template inputan apd
+        'CardMultiTemplateTerimaJabatan',
+        'CardMultiTemplateTerimaJenisApd',
+        'CardMultiTemplateTerimaOpsiApd',
 
         // modal ubah single template inputan apd
         'TabelJabatanTemplateSinglePilih',
@@ -438,58 +453,6 @@ class LayoutPengaturanPeriode extends Component
     }
     #endregion
 
-    #region modal ubah single template inputan apd
-    public function TabelJabatanTemplateSinglePilih($value)
-    {
-        try{
-            error_log('jabatan telah dipilih');
-            $this->card_single_template_inputan_apd_formJabatan_id = $value;
-            $this->card_single_template_inputan_apd_formJabatan = Jabatan::find($value)->nama_jabatan;
-        }
-        catch(Throwable $e)
-        {
-            error_log("Modal Ubah Single Template Inputan Apd : Gagal dalam menambahkan jabatan ".$e);
-            $this->card_single_template_inputan_apd_formJabatan = "";
-            $this->card_single_template_inputan_apd_formJabatan_id = "";
-        }
-        
-    }
-
-    public function TabelJenisApdTemplateSinglePilih($value)
-    {
-        try{
-            error_log('jenis apd telah dipilih '.$value);
-            $this->card_single_template_inputan_apd_formJenisApd_id = $value;
-            $this->card_single_template_inputan_apd_formJenisApd = ApdJenis::find($value)->nama_jenis;
-            $this->card_single_template_inputan_apd_formApd = "";
-            $this->card_single_template_inputan_apd_formApd_id = "";
-        }
-        catch(Throwable $e)
-        {
-            error_log("Modal Ubah Single Template Inputan Apd : Gagal dalam menambahkan jenis apd ".$e);
-            $this->card_single_template_inputan_apd_formJenisApd = "";
-            $this->card_single_template_inputan_apd_formJenisApd_id = "";
-        }
-        
-    }
-
-    public function TabelApdTemplateSinglePilih($value)
-    {
-        try{
-            error_log("apd telah dipilih");
-            $this->card_single_template_inputan_apd_formApd_id = $value;
-            $this->card_single_template_inputan_apd_formApd = ApdList::find($value)->nama_apd;
-        }
-        catch(Throwable $e)
-        {
-            error_log("Modal Ubah Single Template Inputan Apd : Gagal dalam menambahkan apd ".$e);
-            $this->card_single_template_inputan_apd_formApd = "";
-            $this->card_single_template_inputan_apd_formApd_id = "";
-        }
-        
-    }
-    #endregion
-
     #region card single template inputan apd
     public function CardSingleTemplateInputanApdOpsiApdUbah()
     {
@@ -547,6 +510,99 @@ class LayoutPengaturanPeriode extends Component
         {
             error_log("Card Single Template Inputan Apd : Gagal dalam menyimpan ".$e);
         }
+    }
+    #endregion
+
+    #region card multi template inputan apd
+    public function CardMultiTemplateTerimaJabatan($value)
+    {
+        try{
+            $sukses = 0;
+            $gagal = 0;
+            $jumlah = count($value);
+            foreach($value as $index => $val)
+            {
+                try{
+                    $id_jabatan = $val;
+                    $nama_jabatan = Jabatan::find($id_jabatan)->nama_jabatan;
+                    $this->card_multi_template_inputan_apd_listJabatan[$index] = ["id_jabatan" => $id_jabatan,"nama_jabatan" => $nama_jabatan];
+                    $sukses++;
+                }
+                catch(Throwable $e)
+                {
+                    $gagal++;
+                }
+            }
+        }
+        catch(Throwable $e)
+        {
+            error_log("Card Multi Termplate Inputan Apd : Gagal dalam menerima jabatan terpilih ".$e);
+        }
+    }
+
+    public function CardMultiTemplateTambahJabatan()
+    {
+        $this->emit("TabelJabatanTemplateMultiTerima",$this->card_multi_template_inputan_apd_listJabatan);
+    }
+    #endregion
+
+    #region modal ubah single template inputan apd
+    public function TabelJabatanTemplateSinglePilih($value)
+    {
+        try{
+            error_log('jabatan telah dipilih');
+            $this->card_single_template_inputan_apd_formJabatan_id = $value;
+            $this->card_single_template_inputan_apd_formJabatan = Jabatan::find($value)->nama_jabatan;
+        }
+        catch(Throwable $e)
+        {
+            error_log("Modal Ubah Single Template Inputan Apd : Gagal dalam menambahkan jabatan ".$e);
+            $this->card_single_template_inputan_apd_formJabatan = "";
+            $this->card_single_template_inputan_apd_formJabatan_id = "";
+        }
+        
+    }
+
+    public function TabelJenisApdTemplateSinglePilih($value)
+    {
+        try{
+            error_log('jenis apd telah dipilih '.$value);
+            $this->card_single_template_inputan_apd_formJenisApd_id = $value;
+            $this->card_single_template_inputan_apd_formJenisApd = ApdJenis::find($value)->nama_jenis;
+            $this->card_single_template_inputan_apd_formApd = "";
+            $this->card_single_template_inputan_apd_formApd_id = "";
+        }
+        catch(Throwable $e)
+        {
+            error_log("Modal Ubah Single Template Inputan Apd : Gagal dalam menambahkan jenis apd ".$e);
+            $this->card_single_template_inputan_apd_formJenisApd = "";
+            $this->card_single_template_inputan_apd_formJenisApd_id = "";
+        }
+        
+    }
+
+    public function TabelApdTemplateSinglePilih($value)
+    {
+        try{
+            error_log("apd telah dipilih");
+            $this->card_single_template_inputan_apd_formApd_id = $value;
+            $this->card_single_template_inputan_apd_formApd = ApdList::find($value)->nama_apd;
+        }
+        catch(Throwable $e)
+        {
+            error_log("Modal Ubah Single Template Inputan Apd : Gagal dalam menambahkan apd ".$e);
+            $this->card_single_template_inputan_apd_formApd = "";
+            $this->card_single_template_inputan_apd_formApd_id = "";
+        }
+        
+    }
+    #endregion
+
+
+    #region modal ubah multi template inputan apd
+    public function ModalUbahMultiTemplateInputanApdSimpan()
+    {
+        $this->emit('TabelJabatanTemplateMultiPilih');
     }
     #endregion
 }

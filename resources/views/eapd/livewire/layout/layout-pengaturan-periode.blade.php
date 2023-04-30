@@ -413,7 +413,7 @@
                                             </div>
                                         </div>
                                         <div class="card-footer text-center">
-                                            <a style="cursor:pointer;"><u>+tambah</u></a>
+                                            <a style="cursor:pointer;" data-toggle="modal" data-target="#modal-ubah-multi-template-inputan-apd"><u>+tambah</u></a>
                                         </div>
                                     </div>
                                     {{-- card untuk jenis apd --}}
@@ -463,7 +463,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">
-                            Tambah
+                            Tambah Satu Atribut Inputan
                         </h5>
                         <button type="button" class="close" data-toggle="modal"
                             data-target="#modal-ubah-single-template-inputan-apd" aria-label="Close">
@@ -499,6 +499,30 @@
             </div>
         </div>
         {{-- end modal ubah single template inputan apd --}}
+
+        {{-- start modal ubah multi template inputan apd --}}
+        <div class="modal fade" id="modal-ubah-multi-template-inputan-apd" tabindex="-1" role="document" wire:ignore.self>
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal header">
+                        <h5 class="modal-title">
+                            Tambah Banyak Atribut Inputan
+                        </h5>
+                        <button type="button" class="close" data-toggle="modal"
+                            data-target="#modal-ubah-multi-template-inputan-apd" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @livewire('eapd.datatable.tabel-jabatan-template-multi')
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- end modal ubah multi template inputan apd --}}
 
     </section>
 
