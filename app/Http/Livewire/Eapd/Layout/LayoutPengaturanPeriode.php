@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\Eapd\Layout;
 
 use App\Http\Controllers\PeriodeInputController;
+use App\Models\Eapd\Mongodb\ApdJenis;
+use App\Models\Eapd\Mongodb\ApdList;
 use App\Models\Eapd\Mongodb\InputApdTemplate;
 use App\Models\Eapd\Mongodb\Jabatan;
 use App\Models\Eapd\Mongodb\PeriodeInputApd;
@@ -35,6 +37,7 @@ class LayoutPengaturanPeriode extends Component
         $tabel_template_data = [],
         $tabel_template_data_cache = [],
         $tabel_template_data_original = [],
+        $tabel_template_data_original_cache = [],
         $tabel_template_pageCurrent = 1,
         $tabel_template_pageTotal = 0,
         $tabel_template_toolsCari = "",
@@ -54,6 +57,7 @@ class LayoutPengaturanPeriode extends Component
     // variabel untuk card single template inputan apd
     public 
         $card_single_template_inputan_apd_formEditMode = false,
+        $card_single_template_inputan_apd_formIndex = "",
 
         $card_single_template_inputan_apd_formJabatan = "",
         $card_single_template_inputan_apd_formJabatan_id = "",
@@ -80,7 +84,9 @@ class LayoutPengaturanPeriode extends Component
         'TabelTemplateHapus',
 
         // modal ubah single template inputan apd
-        'TabelJabatanTemplateSinglePilih'
+        'TabelJabatanTemplateSinglePilih',
+        'TabelApdTemplateSinglePilih',
+        'TabelJenisApdTemplateSinglePilih',
     ];
 
     #region livewire function
@@ -245,17 +251,31 @@ class LayoutPengaturanPeriode extends Component
     #region card tabel inputan apd function
     public function InisiasiTabelTemplate()
     {
+        // ini mengambil dari database
+
         if($this->card_form_periode_formIdPeriode_cache != "")
         {
             $pic = new PeriodeInputController;
-            $this->tabel_template_data = $this->tabel_template_data_cache = $this->tabel_template_data_original = $pic->bangunDataTabelTemplateDariDataset($pic->muatTemplateSebagaiTabelDatasetArray($this->card_form_periode_formIdPeriode_cache));
+            $this->tabel_template_data = $this->tabel_template_data_cache = $this->tabel_template_data_original = $this->tabel_template_data_original_cache = $pic->bangunDataTabelTemplateDariDataset($pic->muatTemplateSebagaiTabelDatasetArray($this->card_form_periode_formIdPeriode_cache));
             $this->TabelTemplatePerPageChange();
         }
         else
         {
             $this->tabel_template_data = [] ; $this->tabel_template_data_cache = [];
-            $this->tabel_template_data_original = [];
+            $this->tabel_template_data_original = $this->tabel_template_data_original_cache = [];
         }
+    }
+
+    public function RereshTabelTemplate()
+    {
+        $this->tabel_template_data = $this->tabel_template_data_cache = $this->tabel_template_data_original;
+        $this->TabelTemplatePerPageChange();
+    }
+
+    public function RefreshTabelTemplate()
+    {
+        $this->tabel_template_data = $this->tabel_template_data_cache = $this->tabel_template_data_original;
+        $this->TabelTemplatePerPageChange();
     }
 
     public function TabelTemplateCari()
@@ -350,13 +370,17 @@ class LayoutPengaturanPeriode extends Component
 
     public function TabelTemplateEdit($value)
     {
-        $data = $this->tabel_template_data_original[array_search($value, array_column($this->tabel_template_data_original,'index'))];
+        $index = array_search($value, array_column($this->tabel_template_data_original,'index'));
+        $data = $this->tabel_template_data_original[$index];
+        $this->card_single_template_inputan_apd_formIndex = $value;
         $this->card_single_template_inputan_apd_formJabatan = Str::after($data['jabatan'],"] ");
         $this->card_single_template_inputan_apd_formJabatan_id = Str::between($data['jabatan'],"[","]");
         $this->card_single_template_inputan_apd_formJenisApd = Str::after($data['jenis_apd'],"] ");
         $this->card_single_template_inputan_apd_formJenisApd_id = Str::between($data['jenis_apd'],"[","]");
         $this->card_single_template_inputan_apd_formApd = Str::after($data['opsi_apd'], "] ");
         $this->card_single_template_inputan_apd_formApd_id = Str::between($data['opsi_apd'],"[","]");
+
+        $this->card_single_template_inputan_apd_formEditMode = true;
         $this->dispatchBrowserEvent("JS_TabelTemplateEdit");
 
     }
@@ -376,6 +400,7 @@ class LayoutPengaturanPeriode extends Component
     public function CardTabelInputanApdTambahSatu()
     {
         $this->card_single_template_inputan_apd_formEditMode = false;
+        $this->CardSingleTemplateInputanApdKosongkan();
 
     }
 
@@ -402,6 +427,11 @@ class LayoutPengaturanPeriode extends Component
        
     }
 
+    public function CardTabelInputanApdReset()
+    {
+        $this->tabel_template_data_original = $this->tabel_template_data_original_cache;
+    }
+
     public function CardTabelInputanApdKosongkan()
     {
         $this->tabel_template_data = $this->tabel_template_data_cache = $this->tabel_template_data_original = [];
@@ -412,15 +442,111 @@ class LayoutPengaturanPeriode extends Component
     public function TabelJabatanTemplateSinglePilih($value)
     {
         try{
-            $card_single_template_inputan_apd_formJabatan_id = $value;
-            $card_single_template_inputan_apd_formJabatan = Jabatan::find($value)->nama_jabatan;
+            error_log('jabatan telah dipilih');
+            $this->card_single_template_inputan_apd_formJabatan_id = $value;
+            $this->card_single_template_inputan_apd_formJabatan = Jabatan::find($value)->nama_jabatan;
         }
         catch(Throwable $e)
         {
-            $card_single_template_inputan_apd_formJabatan = "";
-            $card_single_template_inputan_apd_formJabatan_id = "";
+            error_log("Modal Ubah Single Template Inputan Apd : Gagal dalam menambahkan jabatan ".$e);
+            $this->card_single_template_inputan_apd_formJabatan = "";
+            $this->card_single_template_inputan_apd_formJabatan_id = "";
         }
         
+    }
+
+    public function TabelJenisApdTemplateSinglePilih($value)
+    {
+        try{
+            error_log('jenis apd telah dipilih '.$value);
+            $this->card_single_template_inputan_apd_formJenisApd_id = $value;
+            $this->card_single_template_inputan_apd_formJenisApd = ApdJenis::find($value)->nama_jenis;
+            $this->card_single_template_inputan_apd_formApd = "";
+            $this->card_single_template_inputan_apd_formApd_id = "";
+        }
+        catch(Throwable $e)
+        {
+            error_log("Modal Ubah Single Template Inputan Apd : Gagal dalam menambahkan jenis apd ".$e);
+            $this->card_single_template_inputan_apd_formJenisApd = "";
+            $this->card_single_template_inputan_apd_formJenisApd_id = "";
+        }
+        
+    }
+
+    public function TabelApdTemplateSinglePilih($value)
+    {
+        try{
+            error_log("apd telah dipilih");
+            $this->card_single_template_inputan_apd_formApd_id = $value;
+            $this->card_single_template_inputan_apd_formApd = ApdList::find($value)->nama_apd;
+        }
+        catch(Throwable $e)
+        {
+            error_log("Modal Ubah Single Template Inputan Apd : Gagal dalam menambahkan apd ".$e);
+            $this->card_single_template_inputan_apd_formApd = "";
+            $this->card_single_template_inputan_apd_formApd_id = "";
+        }
+        
+    }
+    #endregion
+
+    #region card single template inputan apd
+    public function CardSingleTemplateInputanApdOpsiApdUbah()
+    {
+        $this->modal_ubah_single_inputan_apd_mode = "opsi_apd";
+        $this->emit("RefreshTabelAtributTemlateSingle",$this->card_single_template_inputan_apd_formJenisApd_id);
+    }
+
+    public function CardSingleTemplateInputanApdKosongkan()
+    {
+        $this->card_single_template_inputan_apd_formApd = "";
+        $this->card_single_template_inputan_apd_formApd_id = "";
+        $this->card_single_template_inputan_apd_formJabatan = "";
+        $this->card_single_template_inputan_apd_formJabatan_id = "";
+        $this->card_single_template_inputan_apd_formJenisApd = "";
+        $this->card_single_template_inputan_apd_formJenisApd_id = "";
+    }
+
+    public function CardSingleTemplateInputanApdSimpan()
+    {
+        try{
+
+            $pic = new PeriodeInputController;
+
+            $new_data = [
+                    "id_jabatan" => $this->card_single_template_inputan_apd_formJabatan_id,
+                    "id_jenis" =>  $this->card_single_template_inputan_apd_formJenisApd_id,
+                    "id_apd" => $this->card_single_template_inputan_apd_formApd_id
+                ];
+            $new_data = $pic->bangunDataTabelTemplateDariDataset(array($new_data));
+
+
+            if($this->card_single_template_inputan_apd_formEditMode)
+            {
+                // dd($new_data[0]);
+
+                $this->tabel_template_data_original[array_search($this->card_single_template_inputan_apd_formIndex,array_column($this->tabel_template_data_original,'index'))]
+                    = [
+                        "index" => $this->card_single_template_inputan_apd_formIndex,
+                        "jabatan" => $new_data[0]["jabatan"],
+                        "jenis_apd" => $new_data[0]["jenis_apd"],
+                        "opsi_apd" => $new_data[0]["opsi_apd"]
+                    ];
+                
+            }
+            else
+            {
+                $new_data[0]["index"] = count($this->tabel_template_data_original)+1;
+                $this->tabel_template_data_original[count($this->tabel_template_data_original)] = $new_data[0];
+            }
+
+            $this->RefreshTabelTemplate();
+                
+        }
+        catch(Throwable $e)
+        {
+            error_log("Card Single Template Inputan Apd : Gagal dalam menyimpan ".$e);
+        }
     }
     #endregion
 }

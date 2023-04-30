@@ -296,10 +296,11 @@
                                     <div class="row">
                                         <div class="col text-left">
                                             <button class="btn btn-info">Tambah Banyak</button>
-                                            <button class="btn btn-info">Tambah Satu</button>
+                                            <button class="btn btn-info" wire:click="CardTabelInputanApdTambahSatu">Tambah Satu</button>
                                         </div>
                                         <div class="col text-right">
                                             <button class="btn btn-primary" wire:click="CardTabelInputanApdSimpan">Simpan</button>
+                                            <button class="btn btn-secondary" wire:click="CardTabelInputanApdReset" @if($tabel_template_data_original === $tabel_template_data_original_cache) disabled @endif>Reset</button>
                                             <button class="btn btn-danger" wire:click="CardTabelInputanApdKosongkan">Kosongkan</button>
                                         </div>
                                     </div>
@@ -341,6 +342,9 @@
                                             <button class="btn btn-outline-info" data-toggle="modal" wire:click="$set('modal_ubah_single_inputan_apd_mode','jabatan')" data-target="#modal-ubah-single-template-inputan-apd"><u>Ubah</u></button>
                                         </div>
                                     </div>
+                                    @if ($card_single_template_inputan_apd_formJabatan_id != "")
+                                        <div class="form-text text-muted">ID Jabatan : <strong>{{$card_single_template_inputan_apd_formJabatan_id}}</strong></div>
+                                    @endif
                                 </div>
                                 {{-- Jenis APD --}}
                                 <div class="form-group form-inline row">
@@ -348,9 +352,12 @@
                                     <div class="col-sm-4 input-group">
                                         <input type="text" class="form-control" id="input-single-template-jenis-apd" value="{{$card_single_template_inputan_apd_formJenisApd}}" disabled>
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-info" data-toggle="modal" wire:click="$emit('InisiasiTabelAtributTemplateSingle','jenis_apd')" data-target="#modal-ubah-single-template-inputan-apd"><u>Ubah</u></button>
+                                            <button class="btn btn-outline-info" data-toggle="modal" wire:click="$set('modal_ubah_single_inputan_apd_mode','jenis_apd')" data-target="#modal-ubah-single-template-inputan-apd"><u>Ubah</u></button>
                                         </div>
                                     </div>
+                                    @if ($card_single_template_inputan_apd_formJenisApd_id != "")
+                                        <div class="form-text text-muted">ID Jenis APD : <strong>{{$card_single_template_inputan_apd_formJenisApd_id}}</strong></div>
+                                    @endif
                                 </div>
                                 {{-- APD --}}
                                 <div class="form-group form-inline row">
@@ -358,13 +365,16 @@
                                     <div class="col-sm-4 input-group">
                                         <input type="text" class="form-control" id="input-single-template-apd" value="{{$card_single_template_inputan_apd_formApd}}" disabled>
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-info" data-toggle="modal" wire:click="$emit('InisiasiTabelAtributTemplateSingle','opsi_apd')" data-target="#modal-ubah-single-template-inputan-apd"><u>Ubah</u></button>
+                                            <button class="btn btn-outline-info" data-toggle="modal" wire:click="CardSingleTemplateInputanApdOpsiApdUbah" data-target="#modal-ubah-single-template-inputan-apd" @if($card_single_template_inputan_apd_formJenisApd_id == "") disabled @endif><u>Ubah</u></button>
                                         </div>
                                     </div>
+                                    @if ($card_single_template_inputan_apd_formApd_id != "")
+                                        <div class="form-text text-muted">ID APD : <strong>{{$card_single_template_inputan_apd_formApd_id}}</strong></div>
+                                    @endif
                                 </div>
                             </div>
                             <div class="card-footer text-right">
-                                <button class="btn btn-primary">Simpan</button>
+                                <button class="btn btn-primary" wire:click="CardSingleTemplateInputanApdSimpan">Simpan</button>
                             </div>
                         </div>
                     </div>
@@ -473,8 +483,10 @@
                             @livewire("eapd.datatable.tabel-jabatan-template-single")
                             
                         @elseif($modal_ubah_single_inputan_apd_mode == "jenis_apd")
+                            @livewire("eapd.datatable.tabel-jenis-apd-template-single")
 
                         @elseif($modal_ubah_single_inputan_apd_mode == "opsi_apd")
+                            @livewire("eapd.datatable.tabel-apd-template-single")
 
                         @else
                             <div class="jumbotron text-center">
