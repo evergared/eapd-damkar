@@ -12,10 +12,23 @@ use Illuminate\Http\Request;
 use Throwable;
 
 /**
- * Kelas yang mengatur periode input dan template input apd di periode tersebut.
+ * Kelas yang mengatur periode input dan template atau acuan input apd di periode tersebut.
  */
 class PeriodeInputController extends Controller
 {
+
+    /**
+     * Bentuk dari data template :
+     * - template : data acuan untuk input yang diambil dari database
+     * - tabel dataset / dataset : template yang diubah menjadi array biasa
+     * - datatabel template : dataset yang bentuknya diubah untuk disajikan dengan tabel html
+     * 
+     * function terkait : 
+     * - muatTemplateSebagaiTabelDatasetArray : template -> dataset
+     * - bangunDataTabelTemplateDariDataset : dataset -> datatabel template
+     * - ubahDataTabelTemplateKeDataset : datatabel template -> dataset
+     * - ubahDatasetArrayTemplateKeTemplate : dataset -> template
+     */
     public function ambilIdPeriodeInput($tanggal = null)
     {
         if($tanggal == null)
