@@ -11,29 +11,36 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 use Throwable;
 
-class TabelJabatanTemplateSingle extends DataTableComponent
+class TabelApdTemplateSingle extends DataTableComponent
 {
 
     // https://rappasoft.com/docs/laravel-livewire-tables/v2/misc/multiple-tables#content-setting-the-table-name-and-data
-    public string $tableName = "Table_Jabatan_Template_Single";
-    public array $Table_Jabatan_Template_Single = [];
+
+    public string $tableName = "Tabel_Apd_Template_Single";
+    public array $Tabel_Apd_Template_Single = [];
+
+    public string $id_jenis = "";
 
     protected $index = 0;
 
     protected $listeners = [
-        'InisiasiTabelJabatanTemplateSingle'
+        "RefreshTabelAtributTemlateSingle"
     ];
 
     #region Rappasoft function
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['_id','nama_jabatan']);
+        $this->setRefreshVisible();
+        $this->setAdditionalSelects(['_id','nama_apd']);
     }
 
     public function builder(): Builder
     {
-        return Jabatan::query();
+        if($this->id_jenis)
+            return ApdList::query()->where("id_jenis",$this->id_jenis);
+
+        return ApdList::query();
     }
 
     public function columns(): array
@@ -41,34 +48,35 @@ class TabelJabatanTemplateSingle extends DataTableComponent
         $this->index = $this->page > 1 ? ($this->page - 1) * $this->perPage : 0;
 
         return [
-            Column::make("ID Jabatan", "_id")
+            Column::make("ID APD", "_id")
                 ->sortable()
                 ->searchable(
                     fn(Builder $query, string $kata_pencarian)=> $query->orWhere('_id','like','%'.$kata_pencarian.'%')
                 ),
-            Column::make("Nama Jabatan", "nama_jabatan")
+            Column::make("Nama APD", "nama_apd")
                 ->sortable()
                 ->searchable(
-                    fn(Builder $query, string $kata_pencarian)=> $query->orWhere('nama_jabatan','like','%'.$kata_pencarian.'%')
-                ),
+                    fn(Builder $query, string $kata_pencarian)=> $query->orWhere('nama_apd','like','%'.$kata_pencarian.'%')
+                    ),
             LinkColumn::make('Tindakan')
                 ->title(fn()=>"Pilih")
                 ->attributes(function($row){
                     return [
                     'class' => 'btn btn-primary',
-                    'onclick' => "Livewire.emit('TabelJabatanTemplateSinglePilih','".$row->id."')",
+                    'onclick' => "Livewire.emit('TabelApdTemplateSinglePilih','".$row->id."')",
                     'data-toggle' => "modal",
                     'data-target' => "#modal-ubah-single-template-inputan-apd"
                     ];
                 })
-                ->location(fn()=>"#modal-ubah-single-template-inputan-apd")  
+                ->location(fn()=>"#modal-ubah-single-template-inputan-apd")
         ];
     }
     #endregion
 
-    public function InisiasiTabelJabatanTemplateSingle()
+    public function RefreshTabelAtributTemlateSingle($value)
     {
-        $this->emitSelf('refreshDatatable');
+        $this->id_jenis = $value;
+        $this->emitSelf("refreshDatatable");
     }
     
 }
