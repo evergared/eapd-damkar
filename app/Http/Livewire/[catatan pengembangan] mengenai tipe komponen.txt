@@ -1,0 +1,4 @@
+- Datatable : untuk livewire yang bertugas menyajikan tabel data, jika komponen tersebut dibuat secara terpisah atau untuk dapat dipanggil berkali-kali oleh komponen lain.
+- Form : untuk livewire yang bertugas hanya menyajikan form dan fungsi form tersebut.
+- Modal : untuk livewire yang bertugas hanya menyajikan modal dan fungsi modal tersebut.
+- Layout : untuk livewire yang berisi beragam tipe (datatable, form, modal, dsb) atau yang tidak termasuk kategori diatas, masukan di file komponen ini untuk mempermudah.
