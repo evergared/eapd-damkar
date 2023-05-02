@@ -69,7 +69,7 @@
                         <div class="card col-sm-12" id="card-form-periode">
                             <div class="card-header">
                                 @if ($card_form_periode_formEditMode)
-                                    <h5>Detil Periode (ID Periode : {{$card_form_periode_formIdPeriode}})</h5>
+                                    <h5>Detil Periode (ID Periode : {{$card_form_periode_formIdPeriode_cache}})</h5>
                                 @else
                                     <h5>Buat Periode Baru</h5>
                                 @endif
@@ -83,16 +83,27 @@
                                     </div>
                                 {{-- end collapse-list-periode-loading --}}
 
+                                {{-- ID Periode --}}
+                                <div class="form-group">
+                                    <label for="input-id-periode">ID Periode</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="input-id-periode" wire:model="card_form_periode_formIdPeriode" @if(!$card_form_periode_formEditId) disabled @endif >
+                                        <div class="input-group-append">
+                                            <button class="btn btn-info" wire:click="$set('card_form_periode_formEditId',1)">Ubah</button>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-muted">Id periode akan di generate secara otomatis oleh sistem ketika disimpan. Namun jika anda ingin mengganti / membuat id baru untuk periode ini, silahkan klik ubah.</small>
+                                </div>
                                 {{-- Nama Periode --}}
                                 <div class="form-group">
                                     <label for="input-nama-periode">Nama Periode</label>
-                                    <input type="text" class="form-control" id="input-nama-periode" wire:model="card_form_periode_formNamaPeriode">
+                                    <input type="text" class="form-control" id="input-nama-periode" wire:model="card_form_periode_formNamaPeriode" wire:ignore.self>
                                 </div>
                                 {{-- Tanggal Awal --}}
                                 <div class="form-group">
                                     <label for="input-tanggal-awal">Tanggal Awal</label>
                                     <div class="input-group date" id="input-group-tanggal-awal" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input" data-target="#input-group-tanggal-awal" wire:model="card_form_periode_formTglAwal">
+                                        <input type="text" class="form-control datetimepicker-input" data-target="#input-group-tanggal-awal" wire:model="card_form_periode_formTglAwal" wire:ignore.self>
                                         <div class="input-group-append" data-target="#input-group-tanggal-awal" data-toggle="datetimepicker">
                                             <div class="input-group-text">
                                                 <i class="fa fa-calendar"></i>
@@ -104,7 +115,7 @@
                                 <div class="form-group">
                                         <label>Tanggal Akhir :</label>
                                         <div class="input-group date" id="reservationdatetime" data-target-input="nearest">
-                                            <input type="text" class="form-control datetimepicker-input" data-target="#reservationdatetime" wire:model="card_form_periode_formTglAkhir">
+                                            <input type="text" class="form-control datetimepicker-input" data-target="#reservationdatetime" wire:model="card_form_periode_formTglAkhir" wire:ignore.self>
                                             <div class="input-group-append" data-target="#reservationdatetime" data-toggle="datetimepicker">
                                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                             </div>
@@ -113,13 +124,13 @@
                                 {{-- Pesan Berjalan --}}
                                 <div class="form-group">
                                     <label for="input-pesan-berjalan">Pesan Berjalan</label>
-                                    <textarea type="textarea" class="form-control" id="input-pesan-berjalan" wire:model="card_form_periode_formPesanBerjalan"></textarea>
+                                    <textarea type="textarea" class="form-control" id="input-pesan-berjalan" wire:model="card_form_periode_formPesanBerjalan" wire:ignore.self></textarea>
                                 </div>
                                 {{-- switch Aktif --}}
                                 <div class="form-group">
                                     <label>Aktif ? </label>
                                     <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" id="switch-periode-aktif" wire:model="card_form_periode_formAktif">
+                                        <input type="checkbox" class="custom-control-input" id="switch-periode-aktif" wire:model="card_form_periode_formAktif" wire:ignore.self>
                                         <label class="custom-control-label" for="switch-periode-aktif"></label>
                                     </div>
                                 </div>
@@ -277,9 +288,22 @@
                                                     <ul class="pagination">
                                                         <li class="page-item"><a class="page-link" href="#table-template" wire:click="TabelTemplatePageNavigate({{($tabel_template_pageCurrent > 0)? $tabel_template_pageCurrent - 1:1}})" >Previous</a></li>
                                                         <li class="page-item"><a class="page-link" href="#table-template" wire:click="TabelTemplatePageNavigate('min')" ><i class="fa fa-angle-double-left"></i></a></li>
-                                                        @for ($i = 0; $i < $tabel_template_pageTotal; $i++)
+                                                        {{-- @for ($i = 0; $i < $tabel_template_pageTotal; $i++)
                                                             <li class="page-item {{($tabel_template_pageCurrent == $i+1)? "active" : ""}}"><a class="page-link" href="#table-template" wire:click="TabelTemplatePageNavigate({{$i+1}})" >{{$i+1}}</a></li>
+                                                        @endfor --}}
+                                                        @if ($tabel_template_pageCurrent - ($tabel_template_toolsPerPage_showLimit/2) > 0)
+                                                                <li class="page-item"><a class="page-link">...</a></li>
+                                                            @endif
+                                                        @for ($i = $tabel_template_pageCurrent - floor($tabel_template_toolsPerPage_showLimit/2); $i < $tabel_template_pageCurrent + floor($tabel_template_toolsPerPage_showLimit/2); $i++)
+                                                            @if($i < 0)
+                                                            @elseif($i >= $tabel_template_pageTotal)
+                                                            @else
+                                                                <li class="page-item {{($tabel_template_pageCurrent == $i+1)? "active" : ""}}"><a class="page-link" href="#table-template" wire:click="TabelTemplatePageNavigate({{$i+1}})" >{{$i+1}}</a></li>
+                                                            @endif
                                                         @endfor
+                                                        @if ($tabel_template_pageCurrent + ($tabel_template_toolsPerPage_showLimit/2) <= $tabel_template_pageTotal)
+                                                                <li class="page-item"><a class="page-link">...</a></li>
+                                                        @endif
                                                         
                                                         <li class="page-item"><a class="page-link" href="#table-template" wire:click="TabelTemplatePageNavigate('max')" ><i class="fa fa-angle-double-right"></i></a></li>
                                                         <li class="page-item"><a class="page-link" href="#table-template" wire:click="TabelTemplatePageNavigate({{($tabel_template_pageCurrent < $tabel_template_pageTotal)? $tabel_template_pageCurrent + 1:$tabel_template_pageTotal}})" >Next</a></li>
@@ -382,7 +406,7 @@
 
                     {{-- start collapse-card-multi-template-inputan-apd --}}
                     <div class="collapse fade show active" id="collapse-card-multi-template-inputan-apd">
-                        <div class="card" id="collapse-card-multi-template-inputan-apd">
+                        <div class="card" id="card-multi-template-inputan-apd">
                             <div class="card-header">
                                 <div class="card-title">
                                     <h5>Tambah Template Inputan APD</h5>
@@ -405,49 +429,79 @@
                                     {{-- card untuk jabatan --}}
                                     <div class="card">
                                         <div class="card-header">
-                                            Jabatan
+                                            Jabatan @if (count($card_multi_template_inputan_apd_listJabatan) > 0) ({{count($card_multi_template_inputan_apd_listJabatan)}}) @endif
                                         </div>
-                                        <div class="card-body">
-                                            <div class="jumbotron text-center">
-                                                klik <u>+tambah</u> untuk menambahkan data.
-                                            </div>
+                                        <div class="card-body" style="max-height: 300px; overflow-y:auto ">
+                                            @if (count($card_multi_template_inputan_apd_listJabatan) > 0)
+                                                <ol>
+                                                    @foreach ($card_multi_template_inputan_apd_listJabatan as $index => $item)
+                                                        <li>
+                                                           <a href="#card-multi-template-inputan-apd" wire:click="CardMultiTemplateHapusJabatan({{$index}})">{{$item["nama_jabatan"]}}</a> 
+                                                        </li>
+                                                    @endforeach
+                                                </ol>
+                                            @else
+                                                <div class="jumbotron text-center">
+                                                    klik <u>+tambah</u> untuk menambahkan data.
+                                                </div>
+                                            @endif
                                         </div>
                                         <div class="card-footer text-center">
-                                            <a style="cursor:pointer;" data-toggle="modal" data-target="#modal-ubah-multi-template-inputan-apd"><u>+tambah</u></a>
+                                            <a style="cursor:pointer;" data-toggle="modal" data-target="#modal-ubah-multi-template-inputan-apd" wire:click="CardMultiTemplateTambahJabatan"><u>+tambah</u></a>
                                         </div>
                                     </div>
                                     {{-- card untuk jenis apd --}}
                                     <div class="card">
                                         <div class="card-header">
-                                            Jenis APD
+                                            Jenis APD @if (count($card_multi_template_inputan_apd_listJenisApd) > 0) ({{count($card_multi_template_inputan_apd_listJenisApd)}}) @endif
                                         </div>
-                                        <div class="card-body">
-                                            <div class="jumbotron text-center">
-                                                klik <u>+tambah</u> untuk menambahkan data.
-                                            </div>
+                                        <div class="card-body" style="max-height: 300px; overflow-y:auto ">
+                                            @if (count($card_multi_template_inputan_apd_listJenisApd) > 0)
+                                                <ol>
+                                                    @foreach ($card_multi_template_inputan_apd_listJenisApd as $index => $item)
+                                                        <li>
+                                                           <a href="#card-multi-template-inputan-apd" wire:click="CardMultiTemplateHapusJenisApd({{$index}})">{{$item["nama_jenis"]}}</a> 
+                                                        </li>
+                                                    @endforeach
+                                                </ol>
+                                            @else
+                                                <div class="jumbotron text-center">
+                                                    klik <u>+tambah</u> untuk menambahkan data.
+                                                </div>
+                                            @endif
                                         </div>
                                         <div class="card-footer text-center">
-                                            <a style="cursor:pointer;"><u>+tambah</u></a>
+                                            <a style="cursor:pointer;" data-toggle="modal" data-target="#modal-ubah-multi-template-inputan-apd" wire:click="CardMultiTemplateTambahJenisApd"><u>+tambah</u></a>
                                         </div>
                                     </div>
                                     {{-- card untuk Apd --}}
                                     <div class="card">
                                         <div class="card-header">
-                                            APD
+                                            APD @if (count($card_multi_template_inputan_apd_listApd) > 0) ({{count($card_multi_template_inputan_apd_listApd)}}) @endif
                                         </div>
-                                        <div class="card-body">
-                                            <div class="jumbotron text-center">
-                                                klik <u>+tambah</u> untuk menambahkan data.
-                                            </div>
+                                        <div class="card-body" style="max-height: 300px; overflow-y:auto ">
+                                            @if (count($card_multi_template_inputan_apd_listApd) > 0)
+                                                <ol>
+                                                    @foreach ($card_multi_template_inputan_apd_listApd as $index => $item)
+                                                        <li>
+                                                           <a href="#card-multi-template-inputan-apd" wire:click="CardMultiTemplateHapusApd({{$index}})">{{$item["nama_apd"]}}</a> 
+                                                        </li>
+                                                    @endforeach
+                                                </ol>
+                                            @else
+                                                <div class="jumbotron text-center">
+                                                    klik <u>+tambah</u> untuk menambahkan data.
+                                                </div>
+                                            @endif
                                         </div>
                                         <div class="card-footer text-center">
-                                            <a style="cursor:pointer;"><u>+tambah</u></a>
+                                            <a @if($card_multi_template_inputan_apd_listJenisApd) style="cursor:pointer;" @else style="pointer-events: none;" @endif data-toggle="modal" data-target="#modal-ubah-multi-template-inputan-apd" wire:click="CardMultiTemplateTambahApd"><u>+tambah</u></a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-footer text-right">
-                                <button class="btn btn-primary">Simpan</button>
+                                <button class="btn btn-primary" wire:click="CardMultiTemplateSimpan">Simpan</button>
                             </div>
                         </div>
                     </div>
@@ -504,7 +558,7 @@
         <div class="modal fade" id="modal-ubah-multi-template-inputan-apd" tabindex="-1" role="document" wire:ignore.self>
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                    <div class="modal header">
+                    <div class="modal-header">
                         <h5 class="modal-title">
                             Tambah Banyak Atribut Inputan
                         </h5>
@@ -514,10 +568,22 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        @livewire('eapd.datatable.tabel-jabatan-template-multi')
+                        @if ($modal_ubah_multi_inputan_apd_mode == "jabatan")
+                            @livewire('eapd.datatable.tabel-jabatan-template-multi')
+                            
+                        @elseif ($modal_ubah_multi_inputan_apd_mode == "jenis_apd")
+                            @livewire('eapd.datatable.tabel-jenis-apd-template-multi')
+
+                        @elseif ($modal_ubah_multi_inputan_apd_mode == "opsi_apd")
+                            @livewire('eapd.datatable.tabel-apd-template-multi')
+                        @else
+                            <div class="jumbotron text-center">
+                                Memuat data...
+                            </div>
+                        @endif
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary">Simpan</button>
+                        <button class="btn btn-primary" wire:click='ModalUbahMultiTemplateInputanApdSimpan' data-toggle="modal" data-target="#modal-ubah-multi-template-inputan-apd">Simpan</button>
                     </div>
                 </div>
             </div>

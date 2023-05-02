@@ -2,6 +2,8 @@
 
 namespace App\Models\Eapd\Mongodb;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Database\Eloquent\Model;
 use Jenssegers\Mongodb\Eloquent\Model;
@@ -22,6 +24,27 @@ class PeriodeInputApd extends Model
         'tgl_awal' => 'date',
         'tgl_akhir' => 'date'
     ];
+
+    public function getTglAwalAttribute($value)
+    {
+        return Carbon::parse($value,"Asia/Jakarta")->toDateString();
+    }
+
+    public function setTglAwalAttribute($value)
+    {
+        $this->attributes["tgl_awal"] = Carbon::parse($value,"Asia/Jakarta")->toDateString();
+    }
+
+    public function getTglAkhirAttribute($value)
+    {
+        return Carbon::parse($value,"Asia/Jakarta")->toDateString();
+    }
+
+    public function setTglAkhirAttribute($value)
+    {
+        $this->attributes["tgl_akhir"] = Carbon::parse($value,"Asia/Jakarta")->toDateString();
+    }
+
 
     public function input_apd()
     {

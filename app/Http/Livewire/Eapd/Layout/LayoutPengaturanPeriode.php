@@ -18,6 +18,7 @@ class LayoutPengaturanPeriode extends Component
     // variabel untuk card form periode
     public 
         $card_form_periode_formEditMode = false,
+        $card_form_periode_formEditId = false,
 
         $card_form_periode_formIdPeriode = "",
         $card_form_periode_formNamaPeriode = "",
@@ -50,6 +51,7 @@ class LayoutPengaturanPeriode extends Component
             ],
         $tabel_template_toolsCari_init = false,
         $tabel_template_toolsPerPage = 5,
+        $tabel_template_toolsPerPage_showLimit = 5,
         $tabel_template_toolsPerPage_option = [5,10,25,50,100,0],
         $tabel_template_toolsSort_column = "",
         $tabel_template_toolsSort_order = "asc";
@@ -96,7 +98,7 @@ class LayoutPengaturanPeriode extends Component
         // card multi template inputan apd
         'CardMultiTemplateTerimaJabatan',
         'CardMultiTemplateTerimaJenisApd',
-        'CardMultiTemplateTerimaOpsiApd',
+        'CardMultiTemplateTerimaApd',
 
         // modal ubah single template inputan apd
         'TabelJabatanTemplateSinglePilih',
@@ -244,6 +246,57 @@ class LayoutPengaturanPeriode extends Component
     public function CardFormPeriodeSimpan()
     {
         try{
+            
+            if($this->card_form_periode_formEditMode)
+                $periode = PeriodeInputApd::find($this->card_form_periode_formIdPeriode_cache);
+            else
+                $periode = new PeriodeInputApd;
+            
+            if($this->card_form_periode_formIdPeriode != "" || $this->card_form_periode_formIdPeriode != $this->card_form_periode_formIdPeriode_cache)
+                $periode->id = $this->card_form_periode_formIdPeriode;
+
+            $periode->nama_periode = $this->card_form_periode_formNamaPeriode;
+            $periode->tgl_awal = $this->card_form_periode_formTglAwal;
+            $periode->tgl_akhir = $this->card_form_periode_formTglAkhir;
+            $periode->pesan_berjalan = $this->card_form_periode_formPesanBerjalan;
+            $periode->aktif = $this->card_form_periode_formAktif;
+
+            $periode->save();
+
+            // jika aktif, nonaktifkan semua entry kecuali periode yang baru disimpan
+            if($this->card_form_periode_formAktif)
+                PeriodeInputApd::where('id','!=',$periode->id)->where('aktif',true)->update(['aktif'=>false]);
+
+
+            if($input = InputApdTemplate::where('id_periode',$this->card_form_periode_formIdPeriode)->get()->first())
+            {
+                if(count($this->tabel_template_data_original) > 0)
+                    if(!($this->tabel_template_data_original === $this->tabel_template_data_original_cache)){
+                        $pic = new PeriodeInputController;
+                        $input->template = $pic->ubahDatasetArrayTemplateKeTemplate($pic->ubahDataTabelTemplateKeDataset($this->tabel_template_data_original));
+                        $input->save();
+                    }
+
+                if($periode->id != $input->id_periode)
+                {
+                    $input->id_periode = $periode->id;
+                    $input->save();
+                }
+            }
+            else
+            {
+                $newTemplate = new InputApdTemplate;
+                $newTemplate->nama = 'template inputan '.$this->card_form_periode_formNamaPeriode;
+                $newTemplate->id_periode = $periode->id;
+                if(count($this->tabel_template_data_original) > 0)
+                {
+                    $pic = new PeriodeInputController;
+                    $newTemplate->template = $pic->ubahDatasetArrayTemplateKeTemplate($pic->ubahDataTabelTemplateKeDataset($this->tabel_template_data_original));
+                }
+                else
+                    $newTemplate->template = [];
+                $newTemplate->save();
+            }
 
         }
         catch(Throwable $e)
@@ -423,15 +476,15 @@ class LayoutPengaturanPeriode extends Component
     {
         try{
             
-            $template_inputan = InputApdTemplate::where('id_periode',$this->card_form_periode_formIdPeriode_cache)->get()->first();
+            // $template_inputan = InputApdTemplate::where('id_periode',$this->card_form_periode_formIdPeriode_cache)->get()->first();
 
-            $pic = new PeriodeInputController;
+            // $pic = new PeriodeInputController;
         
-            $template_inputan->template = $pic->ubahDatasetArrayTemplateKeTemplate($pic->ubahDataTabelTemplateKeDataset($this->tabel_template_data_original));
+            // $template_inputan->template = $pic->ubahDatasetArrayTemplateKeTemplate($pic->ubahDataTabelTemplateKeDataset($this->tabel_template_data_original));
 
-            $template_inputan->save();
+            // $template_inputan->save();
 
-            $this->InisiasiTabelTemplate();
+            // $this->InisiasiTabelTemplate();
 
             error_log('Card Tabel Inputan APD : Berhasil menyimpan data');
         }
@@ -540,9 +593,156 @@ class LayoutPengaturanPeriode extends Component
         }
     }
 
+    public function CardMultiTemplateTerimaJenisApd($value)
+    {
+        try{
+            $sukses = 0;
+            $gagal = 0;
+            $jumlah = count($value);
+            foreach($value as $index => $val)
+            {
+                try{
+                    $id_jenis = $val;
+                    $nama_jenis = ApdJenis::find($id_jenis)->nama_jenis;
+                    $this->card_multi_template_inputan_apd_listJenisApd[$index] = ["id_jenis" => $id_jenis,"nama_jenis" => $nama_jenis];
+                    $sukses++;
+                }
+                catch(Throwable $e)
+                {
+                    $gagal++;
+                }
+            }
+        }
+        catch(Throwable $e)
+        {
+            error_log("Card Multi Termplate Inputan Apd : Gagal dalam menerima jenis apd terpilih ".$e);
+        }
+    }
+
+    public function CardMultiTemplateTerimaApd($value)
+    {
+        try{
+            $sukses = 0;
+            $gagal = 0;
+            $jumlah = count($value);
+            foreach($value as $index => $val)
+            {
+                try{
+                    $id_apd = $val;
+                    $nama_apd = ApdList::find($id_apd)->nama_apd;
+                    $this->card_multi_template_inputan_apd_listApd[$index] = ["id_apd" => $id_apd,"nama_apd" => $nama_apd];
+                    $sukses++;
+                }
+                catch(Throwable $e)
+                {
+                    $gagal++;
+                }
+            }
+        }
+        catch(Throwable $e)
+        {
+            error_log("Card Multi Termplate Inputan Apd : Gagal dalam menerima opsi apd terpilih ".$e);
+        }
+    }
+
     public function CardMultiTemplateTambahJabatan()
     {
+        $this->modal_ubah_multi_inputan_apd_mode = "jabatan";
         $this->emit("TabelJabatanTemplateMultiTerima",$this->card_multi_template_inputan_apd_listJabatan);
+    }
+
+    public function CardMultiTemplateTambahJenisApd()
+    {
+        $this->modal_ubah_multi_inputan_apd_mode = "jenis_apd";
+        $this->emit("TabelJenisApdTemplateMultiTerima",$this->card_multi_template_inputan_apd_listJenisApd);
+    }
+
+    public function CardMultiTemplateTambahApd()
+    {
+        $this->modal_ubah_multi_inputan_apd_mode = "opsi_apd";
+        $this->emit("TabelApdTemplateMultiGantiParameter",$this->card_multi_template_inputan_apd_listJenisApd);
+        //$this->emit("TabelApdTemplateMultiTerima",$this->card_multi_template_inputan_apd_listApd);
+    }
+
+    public function CardMultiTemplateHapusJabatan($index)
+    {
+        try{
+            unset($this->card_multi_template_inputan_apd_listJabatan[$index]);
+            array_values($this->card_multi_template_inputan_apd_listJabatan);
+        }
+        catch(Throwable $e)
+        {
+            error_log("Card Multi Template Inputan Apd : Gagal dalam menghapus jabatan dari list ".$e);
+        }
+    }
+
+    public function CardMultiTemplateHapusJenisApd($index)
+    {
+        try{
+            unset($this->card_multi_template_inputan_apd_listJenisApd[$index]);
+            array_values($this->card_multi_template_inputan_apd_listJenisApd);
+        }
+        catch(Throwable $e)
+        {
+            error_log("Card Multi Template Inputan Apd : Gagal dalam menghapus jenis apd dari list ".$e);
+        }
+    }
+
+    public function CardMultiTemplateHapusApd($index)
+    {
+        try{
+            unset($this->card_multi_template_inputan_apd_listApd[$index]);
+            array_values($this->card_multi_template_inputan_apd_listApd);
+        }
+        catch(Throwable $e)
+        {
+            error_log("Card Multi Template Inputan Apd : Gagal dalam menghapus opsi apd dari list ".$e);
+        }
+    }
+
+    public function CardMultiTemplateSimpan()
+    {
+        if(count($this->card_multi_template_inputan_apd_listApd) > 0 && count($this->card_multi_template_inputan_apd_listJenisApd) > 0 && count($this->card_multi_template_inputan_apd_listJabatan) > 0)
+        {
+            try{
+                $pic = new PeriodeInputController;
+                $data = [];
+                $jumlah_data_tabel = count($this->tabel_template_data_original);
+                $jumlah_data_sekarang = 0;
+
+                foreach($this->card_multi_template_inputan_apd_listJabatan as $jabatan)
+                {
+                    foreach($this->card_multi_template_inputan_apd_listJenisApd as $jenis)
+                    {
+                        foreach($this->card_multi_template_inputan_apd_listApd as $apd)
+                        {
+                                array_push($data,["id_jabatan" => $jabatan["id_jabatan"],"id_jenis" => $jenis["id_jenis"], "id_apd" => $apd["id_apd"]]);
+                        }
+                    }
+                }
+
+                $processed_data = $pic->bangunDataTabelTemplateDariDataset($data);
+                if(count($this->tabel_template_data_original) > 0)
+                    $jumlah_data_tabel += 1;
+                $jumlah_data_sekarang = 0;
+                foreach($processed_data as $p)
+                {
+                    $this->tabel_template_data_original[$jumlah_data_tabel + $jumlah_data_sekarang] = [
+                        "index" => $jumlah_data_tabel + $jumlah_data_sekarang + 1,
+                        "jabatan" => $p["jabatan"],
+                        "jenis_apd" => $p["jenis_apd"],
+                        "opsi_apd" => $p["opsi_apd"]
+                    ];
+                    $jumlah_data_sekarang++;
+                }
+                $this->RefreshTabelTemplate();
+
+            }
+            catch(Throwable $e)
+            {
+                error_log("Card Multi Template Inputan Apd : Gagal dalam menambahkan data secara seragam ".$e);
+            }
+        }
     }
     #endregion
 
@@ -602,7 +802,13 @@ class LayoutPengaturanPeriode extends Component
     #region modal ubah multi template inputan apd
     public function ModalUbahMultiTemplateInputanApdSimpan()
     {
-        $this->emit('TabelJabatanTemplateMultiPilih');
-    }
+        switch($this->modal_ubah_multi_inputan_apd_mode)
+        {
+            case "jabatan" : $this->emit('TabelJabatanTemplateMultiPilih');break;
+            case "jenis_apd" : $this->emit('TabelJenisApdTemplateMultiPilih');break;
+            case "opsi_apd" : $this->emit('TabelApdTemplateMultiPilih');break;
+            default : return;break;
+        }
+        }
     #endregion
 }
