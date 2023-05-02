@@ -86,6 +86,7 @@ class LayoutPengaturanPeriode extends Component
     protected $listeners = [
         // card list periode
         'TabelListPeriodeClone',
+        'TabelListPeriodeTesPesanBerjalan',
         'TabelListPeriodeAktifkan',
         'TabelListPeriodeNonAktifkan',
         'TabelListPeriodeDetil',
@@ -148,6 +149,20 @@ class LayoutPengaturanPeriode extends Component
         catch(Throwable $e)
         {
             error_log("Tabel List Periode : Gagal dalam cloning periode ".$e);
+        }
+    }
+
+    public function TabelListPeriodeTesPesanBerjalan($value)
+    {
+        try{
+
+            if($pesan = PeriodeInputApd::find($value)->pesan_berjalan)
+                $this->emitTo('eapd.layout.layout-marquee-pengumuman-berjalan','TerimaPesanTes',$pesan);
+
+        }
+        catch(Throwable $e)
+        {
+            error_log("Tabel List Periode : Gagal dalam mengetes pesan periode ".$e);
         }
     }
 

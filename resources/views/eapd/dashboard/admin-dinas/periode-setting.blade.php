@@ -4,7 +4,7 @@
 
 
 @include('eapd.dashboard.komponen.breadcrumbs',[ 'halamanJudul'=>'Print Laporan','halaman'=>'print-laporan'])
-@include('eapd.dashboard.komponen.marquee-informasi')
+@include('eapd.dashboard.komponen.marquee-informasi',["mode_tes" => true, "aktif" => false])
 <section class="content">
 
     <div class="container-fluid">
