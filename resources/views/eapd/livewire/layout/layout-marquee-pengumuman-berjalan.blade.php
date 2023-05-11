@@ -35,8 +35,8 @@
                         }
                         
                         .marquee span {
-                        float: left;
-                        width: 38%;
+                        float: right;
+                        width: 60%;
                         }
                         
                         @keyframes marquee {
