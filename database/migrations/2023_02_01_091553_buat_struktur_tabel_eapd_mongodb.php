@@ -151,6 +151,7 @@ return new class extends Migration
                 $t->text('nama_size');
                 $t->longText('opsi')->default(new Expression('(JSON_ARRAY())'))->comment('json');
                 $t->text('keterangan')->nullable();
+                $t->boolean('boleh_dihapus')->default(true);
                 $t->timestamps();
             });
         }
@@ -160,6 +161,7 @@ return new class extends Migration
                 $t->text('nama_kondisi');
                 $t->json('opsi')->comment('json');
                 $t->text('keterangan')->nullable();
+                $t->boolean('boleh_dihapus')->default(true);
                 $t->timestamps();
             });
         }

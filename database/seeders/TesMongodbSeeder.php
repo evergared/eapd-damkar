@@ -245,33 +245,39 @@ class TesMongodbSeeder extends Seeder
         error_log('populating kondisi umum');
         $kondisi_umum = ApdKondisi::create(
             [
-                'nama_kondisi' => 'umum',
-                'opsi' => $kondisiUmum
+                'nama_kondisi' => 'default',
+                'opsi' => $kondisiUmum,
+                'boleh_dihapus' => false
             ]
         );
 
         error_log('populating kondisi helm');
         $kondisi_helm = ApdKondisi::create([
-            'nama_kondisi' => 'helm umum',
-            'opsi' => $kondisiHelmUmum
+            'nama_kondisi' => 'helm default',
+            'opsi' => $kondisiHelmUmum,
+            'boleh_dihapus' => true
         ]);
 
         error_log('populating size kosong');
         $size_kosong = ApdSize::create([
             'nama_size' => 'kosong',
-            'opsi' => ['Tidak Memiliki Standar Ukuran']
+            'opsi' => ['Tidak Memiliki Standar Ukuran'],
+            'boleh_dihapus' => false
+
         ]);
 
         error_log('populating size umum');
         $size_umum = ApdSize::create([
             'nama_size' => 'umum',
-            'opsi' => $sizeUmum
+            'opsi' => $sizeUmum,
+            'boleh_dihapus' => true
         ]);
 
         error_log('populating size sepatu');
         $size_sepatu_umum = ApdSize::create([
             'nama_size' => 'sepatu umum',
-            'opsi' => $sizeSepatu
+            'opsi' => $sizeSepatu,
+            'boleh_dihapus' => true
         ]);
 
         error_log('populating grup');
