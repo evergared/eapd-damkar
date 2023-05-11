@@ -12,7 +12,7 @@
     <div class="container-fluid">
         
             @livewireStyles
-            @livewire('eapd.form.form-pengaturan-barang')
+            @livewire('eapd.layout.layout-pengaturan-barang')
     </div>
 </section>
 
