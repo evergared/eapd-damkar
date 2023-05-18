@@ -2,13 +2,16 @@
 
 namespace App\Http\Livewire\Eapd\Layout;
 
+use App\Models\Eapd\Mongodb\ApdJenis;
 use Livewire\Component;
+use Throwable;
 
 class LayoutPengaturanBarang extends Component
 {
     // variabel card detail jenis
     public
         $detail_jenis_edit_mode = false, 
+        $detail_jenis_edit_id = false, 
         $detail_jenis_id = "",
         $detail_jenis_nama = "",
         $detail_jenis_keterangan = "",
@@ -68,6 +71,13 @@ class LayoutPengaturanBarang extends Component
         $detail_kerusakan_text_rusak_berat_cache = "",
         $detail_kerusakan_keterangan_cache = "";
 
+    protected $listeners = [
+
+        // card detail jenis
+        "EditJenis" => "CardDetailJenisEditJenis"
+
+    ];
+
 
     #region Livewire Function
     public function render()
@@ -76,5 +86,84 @@ class LayoutPengaturanBarang extends Component
     }
     #endregion
 
+    #region card detail jenis
+    public function CardDetailJenisTambahJenisBaru()
+    {
+        $this->detail_jenis_edit_mode = false;
+        $this->detail_jenis_edit_id = false;
+        $this->detail_jenis_id = "";
+        $this->detail_jenis_nama = "";
+        $this->detail_jenis_keterangan = "";
+        $this->detail_jenis_id_cache = "";
+        $this->detail_jenis_nama_cache = "";
+        $this->detail_jenis_keterangan_cache = "";
+    }
+
+    public function CardDetailJenisEditJenis($id)
+    {
+        try{
+
+            $jenis = ApdJenis::find($id);
+
+            $this->detail_jenis_edit_mode = true;
+            $this->detail_jenis_edit_id = false;
+            $this->detail_jenis_id = $this->detail_jenis_id_cache = $jenis->id;
+            $this->detail_jenis_nama = $this->detail_jenis_nama_cache = $jenis->nama_jenis;
+            $this->detail_jenis_keterangan = $this->detail_jenis_keterangan_cache = $jenis->keterangan;
+
+        }
+        catch(Throwable $e)
+        {
+
+            error_log("Card Detail Jenis : Gagal saat mengedit jenis ".$e);
+            $this->detail_jenis_edit_mode = true;
+            $this->detail_jenis_edit_id = false;
+            $this->detail_jenis_id = "";
+            $this->detail_jenis_nama = "";
+            $this->detail_jenis_keterangan = "";
+            $this->detail_jenis_id_cache = "";
+            $this->detail_jenis_nama_cache = "";
+            $this->detail_jenis_keterangan_cache = "";
+
+        }
+    }
+
+    public function CardDetailJenisReset()
+    {
+        $this->detail_jenis_edit_id = false;
+        $this->detail_jenis_id = "";
+        $this->detail_jenis_nama = "";
+        $this->detail_jenis_keterangan = "";
+        $this->detail_jenis_id_cache = "";
+        $this->detail_jenis_nama_cache = "";
+        $this->detail_jenis_keterangan_cache = "";
+    }
+
+    public function CardDetailJenisSimpan()
+    {
+        try{
+            if($this->detail_jenis_edit_mode)
+                $jenis = ApdJenis::find($this->detail_jenis_id_cache);
+            else
+                $jenis = new ApdJenis();
+            
+            if($this->detail_jenis_id != "")
+                $jenis->id = $this->detail_jenis_id;
+            
+            $jenis->nama_jenis = $this->detail_jenis_nama;
+            $jenis->keterangan = $this->detail_jenis_keterangan;
+
+            $jenis->save();
+            
+        }
+        catch(Throwable $e)
+        {
+            error_log("Card Detail Jenis : Gagal dalam menyimpan data jenis ".$e);
+        }
+    }
+    #endregion
+
+    #region card detail barang
     
+    #endregion
 }

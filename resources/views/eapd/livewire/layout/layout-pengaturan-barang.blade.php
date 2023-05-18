@@ -52,7 +52,7 @@
                                 {{-- end tabel pengaturan jenis --}}
                             </div>
                             <div class="card-footer">
-                                <button type="button" data-toggle="collapse" data-target="#collapse-card-detail-jenis" class="btn bg-gradient-primary float-right">Tambah Jenis APD</button>
+                                <button type="button" data-toggle="collapse" data-target="#collapse-card-detail-jenis" class="btn bg-gradient-primary float-right" wire:click="CardDetailJenisTambahJenisBaru">Tambah Jenis APD</button>
                             </div>
                         </div>
                     </div>
@@ -181,7 +181,12 @@
         <div class="col-lg-12 collapse fade show active" id="collapse-card-detail-jenis">
             <div class="card " id="card-detail-jenis">
                 <div class="card-header">
-                    <h3 class="card-title">Form Tambah Jenis APD</h3>
+                    @if ($detail_jenis_edit_mode)
+                        <h3 class="card-title">Form Edit Jenis APD</h3>
+                    @else
+                        <h3 class="card-title">Form Tambah Jenis APD</h3>
+                    @endif
+
                     <div class="card-tools">
                         <button type="button" class="close" data-toggle="collapse"
                             data-target="#collapse-card-detail-jenis" aria-label="Close">
@@ -195,9 +200,9 @@
                     <div class="form-group">
                         <label for="detail-jenis-id">ID Jenis</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="detail-jenis-id" placeholder="Jika kosong, ID akan dibuat secara otomatis oleh sistem" disabled>
+                            <input type="text" class="form-control" id="detail-jenis-id" placeholder="Jika kosong, ID akan dibuat secara otomatis oleh sistem" wire:model="detail_jenis_id" @if(!$detail_jenis_edit_id) disabled @endif>
                             <div class="input-group-append">
-                                <button class="btn btn-info">Ubah</button>
+                                <button class="btn btn-info" wire:click="$set('detail_jenis_edit_id',1)">Ubah</button>
                             </div>
                         </div>
                         <small class="form-text text-muted">Klik ubah untuk mengubah ID, jika kosong ID akan diisi secara acak oleh sistem.</small>
@@ -205,18 +210,18 @@
                     {{-- Nama Jenis --}}
                     <div class="form-group">
                         <label for="detail-jenis-nama">Nama Jenis</label>
-                        <input type="text" class="form-control" id="detail-jenis-nama">
+                        <input type="text" class="form-control" id="detail-jenis-nama" wire:model="detail_jenis_nama">
                     </div>
                     {{-- keterangan --}}
                     <div class="form-group">
                         <label for="detail-jenis-keterangan">Keterangan / Catatan Tambahan</label>
-                        <textarea class="form-control" id="detail-jenis-keterangan" cols="10" rows="5"></textarea>
+                        <textarea class="form-control" id="detail-jenis-keterangan" cols="10" rows="5" wire:model="detail_jenis_keterangan"></textarea>
                     </div>
                 {{-- end form tambah/edit jenis apd --}}
                 </div>
                 <div class="card-footer">
-                    <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-primary float-right mx-1">Simpan</button>
-                    <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-secondary float-right mx-1">Reset</button>
+                    <button type="button" class="btn bg-gradient-primary float-right mx-1" wire:click="CardDetailJenisSimpan">Simpan</button>
+                    <button type="button" class="btn bg-gradient-secondary float-right mx-1" wire:click="CardDetailJenisReset">Reset</button>
                 </div>
             </div>
         </div>
