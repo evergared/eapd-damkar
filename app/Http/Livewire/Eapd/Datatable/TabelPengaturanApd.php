@@ -2,20 +2,28 @@
 
 namespace App\Http\Livewire\Eapd\Datatable;
 
+use App\Http\Controllers\ApdDataController;
+use App\Http\Controllers\FileController;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Eapd\Mongodb\ApdJenis;
 use App\Models\Eapd\Mongodb\ApdKondisi;
 use App\Models\Eapd\Mongodb\ApdList;
 use App\Models\Eapd\Mongodb\ApdSize;
+use Error;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
+use Throwable;
 
 class TabelPengaturanApd extends DataTableComponent
 {
     public string $tableName = "Tabel_Pengaturan_Apd";
     public array $Tabel_Pengaturan_Apd = [];
+
+    protected $listeners = [
+        "TabelPengaturanBarangApdHapus" => "hapusBarang"
+    ];
 
     #region Rappasoft function
     public function configure(): void
@@ -42,6 +50,15 @@ class TabelPengaturanApd extends DataTableComponent
             Column::make("Merk", "merk")
                 ->searchable(fn(Builder $query, string $kata_pencarian) => $query->orWhere('merk','like','%'.$kata_pencarian.'%'))
                 ->sortable(),
+            Column::make("Gambar APD","image")
+                ->format(function($value,$row){
+                    
+                    $adc = new ApdDataController;
+                    $gambar = $adc->siapkanGambarTemplateBesertaPathnya($value,$row->id_jenis,$row->_id);
+
+                    return view('eapd.livewire.kolom-tambahan-datatable.kolom-gambar-apd-tabel-pengaturan-apd',["gambar_apd" => $gambar]);
+                })
+                ->deselected(),
             Column::make("Jenis APD", "id_jenis")
                 ->format(fn($value)=>ApdJenis::find($value)->nama_jenis)
                 ->searchable(function(Builder $query, string $kata_pencarian){
@@ -86,4 +103,22 @@ class TabelPengaturanApd extends DataTableComponent
         ];
     }
     #endregion
+
+    #region fungsi tambahan
+    public function hapusBarang($id_apd)
+    {
+        try{
+
+            $barang = ApdList::find($id_apd);
+            // $barang->delete();
+            error_log("barang dihapus");
+
+        }
+        catch(Throwable $e)
+        {
+            error_log("Tabel Pengaturan Apd : Gagal saat menghapus apd ".$e);
+        }
+    }
+    #endregion
+
 }
