@@ -90,6 +90,29 @@ class FileController extends Controller
     }
 
     /**
+     * Mengganti nama file gambar dari foto apd yang diupload oleh admin sebagai gambar template yang muncul saat user melakukan input
+     * 
+     * @return string nama file baru untuk di simpan di database
+     */
+    public function prosesNamaFileApdItem($id_apd = 'gambar_apd', $tipe_file = 'jpg', $urutan = null)
+    {
+        try{
+
+            if(is_null($urutan))
+                return $id_apd . '.' . $tipe_file;
+            else
+                return $id_apd . '_' . $urutan . '.' . $tipe_file;
+
+        }
+        catch(Throwable $e)
+        {
+            error_log("File Controller : Gagal memproses nama file apd item ".$e);
+            Log::error("File Controller : Gagal memproses nama file apd item ".$e);
+            return ;
+        }
+    }
+
+    /**
      * Mengganti nama file gambar dari foto profil yang diupload user
      * 
      * @return String nama file baru untuk di simpan di database
@@ -116,7 +139,7 @@ class FileController extends Controller
 
     public function buatPathFileApdItem($id_jenis, $id_apd)
     {
-        // return self::$apdItemBasePath . '/' . $id_jenis . '/' . $id_apd;
-        return self::$apdPlaceholderBasePath;
+        return self::$apdItemBasePath . '/' . $id_jenis . '/' . $id_apd;
+        // return self::$apdPlaceholderBasePath;
     }
 }

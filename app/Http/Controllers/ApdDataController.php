@@ -1110,6 +1110,14 @@ class ApdDataController extends Controller
         }
     }
 
+    /**
+     * Fungsi untuk menyiapkan gambar apd template dan pathnya yang telah di upload oleh admin.
+     * @param string $stringGambar string yang didapat dari field image pada tabel ApdList.
+     * @param string $id_jenis id dari jenis apd.
+     * @param string $id_apd id dari apd yang gambarnya ingin diambil
+     * 
+     * @return string|array lokasi fisik/path dari file gambar yang disimpan di server.
+     */
     public function siapkanGambarTemplateBesertaPathnya($stringGambar,$id_jenis, $id_apd)
     {
         try {
