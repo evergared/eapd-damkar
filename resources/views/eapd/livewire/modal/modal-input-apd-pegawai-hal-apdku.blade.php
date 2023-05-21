@@ -322,9 +322,9 @@
                                 <select class="form-control" wire:model.defer='size_apd_user'>
                                     <option value="" disabled>Pilih ukuran APD</option>
                                     @if (!is_null($size_apd))
-                                    @foreach ($size_apd as $size)
-                                    <option>{{$size}}</option>
-                                    @endforeach
+                                        @foreach ($size_apd as $size)
+                                            <option>{{$size}}</option>
+                                        @endforeach
                                     @endif
                                 </select>
                                 @error('size_apd_user')

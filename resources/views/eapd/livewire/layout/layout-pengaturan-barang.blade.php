@@ -7,23 +7,23 @@
                 {{-- navigasi kendali utama --}}
                 <ul class="nav nav-pills" id="card-kendali-utama-tablist" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link active" id="pengaturan-jenis-tab" data-toggle="tab" data-target="#pengaturan-jenis-tabpanel" type="button" role="tab" aria-controls="pengaturan-jenis-tabpanel" aria-selected="true">Jenis APD</a>
+                        <a class="nav-link active" id="pengaturan-jenis-tab" data-toggle="tab" data-target="#pengaturan-jenis-tabpanel" type="button" role="tab" aria-controls="pengaturan-jenis-tabpanel" aria-selected="true" wire:ignore.self>Jenis APD</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="pengaturan-barang-tab" data-toggle="tab" data-target="#pengaturan-barang-tabpanel" type="button" role="tab" aria-controls="pengaturan-barang-tabpanel" aria-selected="false">Barang APD</a>
+                        <a class="nav-link" id="pengaturan-barang-tab" data-toggle="tab" data-target="#pengaturan-barang-tabpanel" type="button" role="tab" aria-controls="pengaturan-barang-tabpanel" aria-selected="false" wire:ignore.self>Barang APD</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="pengaturan-ukuran-tab" data-toggle="tab" data-target="#pengaturan-ukuran-tabpanel" type="button" role="tab" aria-controls="pengaturan-ukuran-tabpanel" aria-selected="false">Opsi Ukuran</a>
+                        <a class="nav-link" id="pengaturan-ukuran-tab" data-toggle="tab" data-target="#pengaturan-ukuran-tabpanel" type="button" role="tab" aria-controls="pengaturan-ukuran-tabpanel" aria-selected="false" wire:ignore.self>Opsi Ukuran</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="pengaturan-kerusakan-tab" data-toggle="tab" data-target="#pengaturan-kerusakan-tabpanel" type="button" role="tab" aria-controls="pengaturan-kerusakan-tabpanel" aria-selected="false">Opsi Kerusakan</a>
+                        <a class="nav-link" id="pengaturan-kerusakan-tab" data-toggle="tab" data-target="#pengaturan-kerusakan-tabpanel" type="button" role="tab" aria-controls="pengaturan-kerusakan-tabpanel" aria-selected="false" wire:ignore.self>Opsi Kerusakan</a>
                     </li>                     
                 </ul>
             </div>
             <div class="card-body">
                 <div class="tab-content" id="card-kendali-utama-tablistContent">
                     {{-- start pengaturan jenis --}}
-                    <div class="tab-pane fade show active" id="pengaturan-jenis-tabpanel" role="tabpanel" aria-labelledby="#pengaturan-jenis-tab">
+                    <div class="tab-pane fade show active" id="pengaturan-jenis-tabpanel" role="tabpanel" aria-labelledby="#pengaturan-jenis-tab" wire:ignore.self>
                         <div class="card card-info mx-n3 my-n3">
                             <div class="card-header">
                                 <h3 class="card-title">Pengaturan Jenis APD</h3>
@@ -59,7 +59,7 @@
                     {{-- end pengaturan jenis --}}
 
                     {{-- start pengaturan barang --}}
-                    <div class="tab-pane fade" id="pengaturan-barang-tabpanel" role="tabpanel" aria-labelledby="#pengaturan-barang-tab">
+                    <div class="tab-pane fade" id="pengaturan-barang-tabpanel" role="tabpanel" aria-labelledby="#pengaturan-barang-tab" wire:ignore.self>
                         <div class="card card-info mx-n3 my-n3">
                             <div class="card-header">
                                 <h3 class="card-title">Pengaturan APD</h3>
@@ -96,7 +96,7 @@
                     {{-- end pengaturan barang --}}
 
                     {{-- start pengaturan ukuran --}}
-                    <div class="tab-pane fade" id="pengaturan-ukuran-tabpanel" role="tabpanel" aria-labelledby="#pengaturan-ukuran-tab">
+                    <div class="tab-pane fade" id="pengaturan-ukuran-tabpanel" role="tabpanel" aria-labelledby="#pengaturan-ukuran-tab" wire:ignore.self>
                         <div class="card card-info mx-n3 my-n3">
                             <div class="card-header">
                                 <h3 class="card-title">Pengaturan Opsi Ukuran APD</h3>
@@ -135,7 +135,7 @@
                     {{-- end pengaturan ukuran --}}
 
                     {{-- start pengaturan kerusakan --}}
-                    <div class="tab-pane fade" id="pengaturan-kerusakan-tabpanel" role="tabpanel" aria-labelledby="#pengaturan-kerusakan-tab">
+                    <div class="tab-pane fade" id="pengaturan-kerusakan-tabpanel" role="tabpanel" aria-labelledby="#pengaturan-kerusakan-tab" wire:ignore.self>
                         <div class="card card-info mx-n3 my-n3">
                             <div class="card-header">
                                 <h3 class="card-title">Pengaturan Opsi Kerusakan APD</h3>
@@ -231,7 +231,11 @@
         <div class="col-lg-12 collapse fade show active" id="collapse-card-detail-barang">
             <div class="card " id="card-detail-barang">
                 <div class="card-header">
-                    <h3 class="card-title">Form Tambah Barang APD</h3>
+                    @if ($detail_barang_edit_mode)
+                        <h3 class="card-title">Form Edit Detail Barang APD</h3>
+                    @else
+                        <h3 class="card-title">Form Tambah Barang APD</h3>
+                    @endif
                     <div class="card-tools">
                         <button type="button" class="close" data-toggle="collapse"
                             data-target="#collapse-card-detail-barang" aria-label="Close">
@@ -245,34 +249,63 @@
                     <div class="form-group">
                         <label for="detail-barang-id">ID Barang</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="detail-barang-id" placeholder="Jika kosong, ID akan dibuat secara otomatis oleh sistem" disabled>
+                            <input type="text" class="form-control" id="detail-barang-id" placeholder="Jika kosong, ID akan dibuat secara otomatis oleh sistem" wire:model="detail_barang_id" @if(!$detail_barang_edit_id) disabled @endif>
                             <div class="input-group-append">
-                                <button class="btn btn-info">Ubah</button>
+                                <button class="btn btn-info" wire:click="$set('detail_barang_edit_id',1)">Ubah</button>
                             </div>
                         </div>
-                        <small class="form-text text-muted">Klik ubah untuk mengubah ID, jika kosong ID akan diisi berdasarkan jenis dan merk barang acak oleh sistem.</small>
+                        <small class="form-text text-muted">Klik ubah untuk mengubah ID, jika kosong ID akan diisi berdasarkan jenis dan merk barang oleh sistem.</small>
                     </div>
                     {{-- Nama barang --}}
                     <div class="form-group">
                         <label for="detail-barang-nama">Nama Barang</label>
-                        <input type="text" class="form-control" id="detail-barang-nama">
+                        <input type="text" class="form-control" id="detail-barang-nama" wire:model="detail_barang_nama">
                     </div>
                     {{-- Merk barang --}}
                     <div class="form-group">
                         <label for="detail-barang-merk">Merk / Pembuat</label>
-                        <input type="text" class="form-control" id="detail-barang-merk">
+                        <input type="text" class="form-control" id="detail-barang-merk" wire:model="detail_barang_merk">
                     </div>
                     {{-- Jenis barang --}}
                     <div class="form-group">
                         <label for="detail-barang-jenis">Jenis / Kategori Barang</label>
-                        <select class="form-control" id="detail-barang-jenis">
+                        <select class="form-control" id="detail-barang-jenis" wire:model="detail_barang_jenis">
                             <option value="" disabled>Pilih Jenis / Kategori</option>
+                            @forelse ($detail_barang_opsi_jenis as $item)
+                                <option value="{{$item['value']}}">{{$item['text']}}</option>
+                            @empty
+                                
+                            @endforelse
+                        </select>
+                    </div>
+                    {{-- Ukuran barang --}}
+                    <div class="form-group">
+                        <label for="detail-barang-ukuran">Tipe Opsi Ukuran Barang</label>
+                        <select class="form-control" id="detail-barang-ukuran" wire:model="detail_barang_ukuran">
+                            <option value="" disabled>Pilih Tipe Ukuran</option>
+                            @forelse ($detail_barang_opsi_ukuran as $item)
+                                <option value="{{$item['value']}}">{{$item['text']}}</option>
+                            @empty
+                                
+                            @endforelse
+                        </select>
+                    </div>
+                    {{-- Kerusakan barang --}}
+                    <div class="form-group">
+                        <label for="detail-barang-kerusakan">Tipe Opsi Kerusakan Barang</label>
+                        <select class="form-control" id="detail-barang-kerusakan" wire:model="detail_barang_kerusakan">
+                            <option value="" disabled>Pilih Tipe Kerusakan</option>
+                            @forelse ($detail_barang_opsi_kerusakan as $item)
+                                <option value="{{$item['value']}}">{{$item['text']}}</option>
+                            @empty
+                                
+                            @endforelse
                         </select>
                     </div>
                     {{-- Gambar Barang --}}
                     <div class="form-control">
                         <label for="detail-barang-gambar">Gambar (maks. 3)</label>
-                        <input type="file" id="detail-barang-gambar" multiple>
+                        <input type="file" id="detail-barang-gambar" multiple wire:model="detail_barang_gambar">
                     </div>
                     {{-- keterangan --}}
                     <div class="form-group">
@@ -283,7 +316,7 @@
                 </div>
                 <div class="card-footer">
                     <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-primary float-right mx-1">Simpan</button>
-                    <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-secondary float-right mx-1">Reset</button>
+                    <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-secondary float-right mx-1" wire:click="CardDetailBarangReset">Reset</button>
                 </div>
             </div>
         </div>
@@ -305,7 +338,7 @@
                 {{-- start form tambah/edit ukuran apd --}}
                     {{-- ID ukuran --}}
                     <div class="form-group">
-                        <label for="detail-ukuran-id">ID Jenis</label>
+                        <label for="detail-ukuran-id">ID Opsi Ukuran</label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="detail-ukuran-id" placeholder="Jika kosong, ID akan dibuat secara otomatis oleh sistem" disabled>
                             <div class="input-group-append">
@@ -322,38 +355,30 @@
                     {{-- Opsi Ukuran --}}
                     <div class="form-group">
                         <label>Atur Opsi Ukuran</label>
-                        <small class="form-text text-muted">Value merupakan nilai yang akan di simpan di database, Text merupakan tulisan yang tampil ke user saat mereka menginput.</small>
+                        <small class="form-text text-muted">Klik pada ukuran dibawah untuk menghapus.</small>
                         <div class="card-body">
-                            <table class="table table-striped table-bordered">
+                            <table class="table table-striped table-bordered" id="tabel-item-opsi-ukuran">
                                 <thead>
-                                    <th>Value</th>
-                                    <th>Text</th>
+                                    <th>Ukuran</th>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>XL</td>
-                                        <td>XL</td>
-                                    </tr>
-                                    <tr>
-                                        <td>L</td>
-                                        <td>L</td>
-                                    </tr>
-                                    <tr>
-                                        <td>M</td>
-                                        <td>M</td>
-                                    </tr>
-                                    <tr>
-                                        <td>S</td>
-                                        <td>S</td>
-                                    </tr>
+                                    @forelse ($detail_ukuran_opsi as $index => $item)
+                                        <tr>
+                                            <td><a href="#tabel-item-opsi-ukuran" wire:click="CardDetailUkuranHapusOpsiUkuran({{$index}})">{{$item}}</a></td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td class="jumbotron text-center">Tidak ada yang dapat ditampilkan, silahkan tambah opsi baru.</td>
+                                        </tr>
+                                    @endforelse
+                                    
                                 </tbody>
                             </table>
                         </div>
                         <div class="px-4">
                             <h6>Tambah Opsi Baru</h6>
                             <div class="row">
-                                <div class="col"><input type="text" class="form-control" placeholder="Value"></div>
-                                <div class="col"><input type="text" class="form-control" placeholder="Text"></div>
+                                <input type="text" class="form-control" placeholder="Opsi Ukuran Baru">
                             </div>
                             <div class="row">
                                 <button class="btn btn-primary float-right" type="button">Simpan Opsi Baru</button>
@@ -461,5 +486,41 @@
         </div>
         {{-- end card detail kerusakan --}}
 
+        {{-- start modal tampil gambar apd --}}
+        <div class="modal fade" id="modal-tampil-gambar-apd" tabindex="-1" role="document" wire:ignore.self>
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Gambar APD Terpilih</h4>
+                        <button type="button" class="close" data-toggle="modal"
+                            data-target="#modal-tampil-gambar-apd" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @if ($modal_tampil_gambar_apd_gambar_preview)
+                            <img src="{{$modal_tampil_gambar_apd_gambar_preview}}" class="img-fluid" alt="Gambar APD Terpilih">
+                        @else
+                            <div class="jumbotron text-center">
+                                Tidak ada yang dapat ditampilkan.
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- end modal tampil gambar apd --}}
+
     </section>
+
+    {{-- start javascript --}}
+    @push('stack-body')
+        <script>
+            window.addEventListener('showModalTampilGambarApd',event=>{
+                $('#modal-tampil-gambar-apd').modal('show');
+            })
+        </script>        
+    @endpush
+    {{-- end javascript --}}
+
 </div>
