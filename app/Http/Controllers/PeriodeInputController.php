@@ -205,4 +205,23 @@ class PeriodeInputController extends Controller
             return [];
         }
     }
+
+    #region untuk fitur pengaturan barang
+
+    /**
+     * Untuk menyesuaikan template ketika ada id jenis yang di hapus
+     */
+    public function sesuaikanTemplatePascaHapusJenisApd(string $id_jenis)
+    {
+        try{
+
+            
+
+        }
+        catch(Throwable $e)
+        {
+
+        }
+    }
+    #endregion
 }

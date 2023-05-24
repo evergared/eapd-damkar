@@ -64,7 +64,8 @@ class TabelPengaturanUkuranApd extends DataTableComponent
                         ->attributes(fn($row)=>[
                             "class" => "btn btn-danger mx-1",
                             "type" => "button",
-                            'onclick' => "Livewire.emit('TabelPengaturanUkuranApdHapus','".$row->id."')",
+                            "onclick" => "confirm('Hapus opsi ukuran?') || event.stopImmediatePropagation()",
+                            'wire:click' => "\$emit('TabelPengaturanUkuranApdHapus','".$row->id."')",
                         ])
                         ->location(fn()=> "#card-kendali-utama"),
                     

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Eapd\Mongodb\PeriodeInputApd;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -25,15 +26,7 @@ class FileController extends Controller
      * - proses untuk mitigasi server over capacity? menggunakan aws s3 bucket utk menyimpan foto stlh rekap atau lgsg hapus dg cron job / manual?
      */
 
-    /**
-     * Daftar isi : 
-     * - $apdUploadBasePath
-     * - $apdItemBasePath
-     * - $avatarUploadBasePath
-     * - prosesNamaFileApdUpload()
-     * - prosesNamaFileApdItem()
-     * - prosesNamaFileAvatarUpload()
-     */
+    
 
 
     /**
@@ -141,5 +134,17 @@ class FileController extends Controller
     {
         return self::$apdItemBasePath . '/' . $id_jenis . '/' . $id_apd;
         // return self::$apdPlaceholderBasePath;
+    }
+
+    public function hapusFolderApdItem($id_jenis, $id_apd)
+    {
+        try{
+        Storage::deleteDirectory($this->buatPathFileApdItem($id_jenis, $id_apd));
+
+        }
+        catch(Throwable $e)
+        {
+            error_log("File Controller : Gagal menghapus directory apd item");
+        }
     }
 }

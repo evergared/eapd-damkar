@@ -63,7 +63,8 @@ class TabelPengaturanJenisApd extends DataTableComponent
                         ->attributes(fn($row)=>[
                             "class" => "btn btn-danger mx-1",
                             "type" => "button",
-                            'onclick' => "Livewire.emit('TabelPengaturanJenisApdHapus','".$row->id."')",
+                            "onclick" => "confirm('Hapus Kategori/Jenis APD ini?') || event.stopImmediatePropagation()",
+                            'wire:click' => "\$emit('TabelPengaturanJenisApdHapus','".$row->id."')",
                         ])
                         ->location(fn()=> "#card-kendali-utama"),
                     

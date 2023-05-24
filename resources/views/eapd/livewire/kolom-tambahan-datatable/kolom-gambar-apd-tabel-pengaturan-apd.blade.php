@@ -13,7 +13,7 @@ Tidak ada gambar yang diupload.
         <a class="apd-foto" 
         wire:click="$emit('TampilSatuGambarApd','{{$i}}')"
             style="cursor: pointer;">
-            <img alt="APD" class="table-avatar w-50 h-50"
+            <img alt="APD" class="table-avatar w-25 h-25"
                 src="{{asset($i)}}">
         </a>
     @endforeach
@@ -25,7 +25,7 @@ Tidak ada gambar yang diupload.
     <a class="apd-foto" 
     wire:click="$emit('TampilSatuGambarApd','{{$gambar_apd}}')"
         style="cursor: pointer;">
-        <img alt="APD" class="table-avatar w-50 h-50"
+        <img alt="APD" class="table-avatar w-25 h-25"
             src="{{asset($gambar_apd)}}">
     </a>
     

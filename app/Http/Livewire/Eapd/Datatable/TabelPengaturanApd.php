@@ -21,9 +21,7 @@ class TabelPengaturanApd extends DataTableComponent
     public string $tableName = "Tabel_Pengaturan_Apd";
     public array $Tabel_Pengaturan_Apd = [];
 
-    protected $listeners = [
-        "TabelPengaturanBarangApdHapus" => "hapusBarang"
-    ];
+    
 
     #region Rappasoft function
     public function configure(): void
@@ -95,7 +93,8 @@ class TabelPengaturanApd extends DataTableComponent
                         ->attributes(fn($row)=>[
                             "class" => "btn btn-danger mx-1",
                             "type" => "button",
-                            'onclick' => "Livewire.emit('TabelPengaturanBarangApdHapus','".$row->id."')",
+                            "onclick" => "confirm('Hapus APD ini?') || event.stopImmediatePropagation()",
+                            'wire:click' => "\$emit('TabelPengaturanBarangApdHapus','".$row->id."')",
                         ])
                         ->location(fn()=> "#card-kendali-utama"),
                     

@@ -29,6 +29,14 @@
                                 <h3 class="card-title">Pengaturan Jenis APD</h3>
                             </div>
                             <div class="card-body">
+                                @if (session()->has('pengaturan_jenis_danger'))
+                                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                                        {{session('pengaturan_jenis_danger')}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @endif
                                 {{-- start info pengaturan jenis --}}
                                 <div class="mb-3 card collapse bg-gradient-secondary fade show active" id="info-pengaturan-jenis">
                                     <div class="card-body">
@@ -65,6 +73,14 @@
                                 <h3 class="card-title">Pengaturan APD</h3>
                             </div>
                             <div class="card-body">
+                                @if (session()->has('pengaturan_barang_danger'))
+                                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                                        {{session('pengaturan_barang_danger')}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @endif
                                 {{-- start info pengaturan barang --}}
                                 <div class="mb-3 card collapse bg-gradient-secondary fade show active" id="info-pengaturan-barang">
                                     <div class="card-body">
@@ -89,7 +105,7 @@
                                 {{-- end tabel pengaturan barang --}}
                             </div>
                             <div class="card-footer">
-                                <button type="button" aria-controls="card-detail-barang" class="btn bg-gradient-primary float-right">Tambah APD Baru</button>
+                                <button type="button" aria-controls="card-detail-barang" class="btn bg-gradient-primary float-right" wire:click="CardDetailBarangTambahBarangBaru">Tambah APD Baru</button>
                             </div>
                         </div>
                     </div>
@@ -102,6 +118,14 @@
                                 <h3 class="card-title">Pengaturan Opsi Ukuran APD</h3>
                             </div>
                             <div class="card-body">
+                                @if (session()->has('pengaturan_pengaturan_danger'))
+                                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                                        {{session('pengaturan_pengaturan_danger')}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @endif
                                 {{-- start info pengaturan ukuran --}}
                                 <div class="mb-3 card collapse bg-gradient-secondary fade show active" id="info-pengaturan-ukuran">
                                     <div class="card-body">
@@ -128,7 +152,7 @@
                                 {{-- end tabel pengaturan ukuran --}}
                             </div>
                             <div class="card-footer">
-                                <button type="button" aria-controls="card-detail-ukuran" class="btn bg-gradient-primary float-right">Tambah Opsi Ukuran APD</button>
+                                <button type="button" aria-controls="card-detail-ukuran" class="btn bg-gradient-primary float-right" wire:click="CardDetailUkuranTambahUkuranBaru">Tambah Opsi Ukuran APD</button>
                             </div>
                         </div>
                     </div>
@@ -141,6 +165,14 @@
                                 <h3 class="card-title">Pengaturan Opsi Kerusakan APD</h3>
                             </div>
                             <div class="card-body">
+                                @if (session()->has('pengaturan_kerusakan_danger'))
+                                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                                        {{session('pengaturan_kerusakan_danger')}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @endif
                                 {{-- start info pengaturan kerusakan --}}
                                 <div class="mb-3 card collapse bg-gradient-secondary fade show active" id="info-pengaturan-kerusakan">
                                     <div class="card-body">
@@ -166,7 +198,7 @@
                                 {{-- end tabel pengaturan kerusakan --}}
                             </div>
                             <div class="card-footer">
-                                <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-primary float-right">Tambah Opsi Kerusakan APD</button>
+                                <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-primary float-right" wire:click="CardDetailKerusakanTambahKerusakanBaru">Tambah Opsi Kerusakan APD</button>
                             </div>
                         </div>
                     </div>
@@ -178,7 +210,7 @@
         {{-- end card-kendali-utama --}}
 
         {{-- start card detail jenis --}}
-        <div class="col-lg-12 collapse fade show active" id="collapse-card-detail-jenis">
+        <div class="col-lg-12 collapse fade" id="collapse-card-detail-jenis">
             <div class="card " id="card-detail-jenis">
                 <div class="card-header">
                     @if ($detail_jenis_edit_mode)
@@ -195,18 +227,32 @@
                     </div>
                 </div>
                 <div class="card-body">
+                @if (session()->has('detail_jenis_danger'))
+                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                        {{session('detail_jenis_danger')}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+                @if (session()->has('detail_jenis_success'))
+                    <div class="alert alert-success alert-dismissable fade show" role="alert">
+                        {{session('detail_jenis_success')}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
                 {{-- start form tambah/edit jenis apd --}}
+                @if (!$detail_jenis_edit_mode)
                     {{-- ID Jenis --}}
                     <div class="form-group">
                         <label for="detail-jenis-id">ID Jenis</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="detail-jenis-id" placeholder="Jika kosong, ID akan dibuat secara otomatis oleh sistem" wire:model="detail_jenis_id" @if(!$detail_jenis_edit_id) disabled @endif>
-                            <div class="input-group-append">
-                                <button class="btn btn-info" wire:click="$set('detail_jenis_edit_id',1)">Ubah</button>
-                            </div>
+                            <input type="text" class="form-control" id="detail-jenis-id" placeholder="Jika kosong, ID akan dibuat secara otomatis oleh sistem" wire:model="detail_jenis_id">
                         </div>
-                        <small class="form-text text-muted">Klik ubah untuk mengubah ID, jika kosong ID akan diisi secara acak oleh sistem.</small>
                     </div>
+                @endif
                     {{-- Nama Jenis --}}
                     <div class="form-group">
                         <label for="detail-jenis-nama">Nama Jenis</label>
@@ -228,7 +274,7 @@
         {{-- end card detail jenis --}}
 
         {{-- start card detail barang --}}
-        <div class="col-lg-12 collapse fade show active" id="collapse-card-detail-barang">
+        <div class="col-lg-12 collapse fade" id="collapse-card-detail-barang">
             <div class="card " id="card-detail-barang">
                 <div class="card-header">
                     @if ($detail_barang_edit_mode)
@@ -244,7 +290,24 @@
                     </div>
                 </div>
                 <div class="card-body">
+                @if (session()->has('detail_barang_danger'))
+                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                        {{session('detail_barang_danger')}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+                @if (session()->has('detail_barang_success'))
+                    <div class="alert alert-success alert-dismissable fade show" role="alert">
+                        {{session('detail_barang_success')}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
                 {{-- start form tambah/edit barang apd --}}
+                @if (!$detail_barang_edit_mode)
                     {{-- ID barang --}}
                     <div class="form-group">
                         <label for="detail-barang-id">ID Barang</label>
@@ -256,6 +319,7 @@
                         </div>
                         <small class="form-text text-muted">Klik ubah untuk mengubah ID, jika kosong ID akan diisi berdasarkan jenis dan merk barang oleh sistem.</small>
                     </div>
+                @endif
                     {{-- Nama barang --}}
                     <div class="form-group">
                         <label for="detail-barang-nama">Nama Barang</label>
@@ -264,12 +328,12 @@
                     {{-- Merk barang --}}
                     <div class="form-group">
                         <label for="detail-barang-merk">Merk / Pembuat</label>
-                        <input type="text" class="form-control" id="detail-barang-merk" wire:model="detail_barang_merk">
+                        <input type="text" class="form-control" id="detail-barang-merk" wire:model="detail_barang_merk" wire:change='CardDetailBarangGenerateId'>
                     </div>
                     {{-- Jenis barang --}}
                     <div class="form-group">
                         <label for="detail-barang-jenis">Jenis / Kategori Barang</label>
-                        <select class="form-control" id="detail-barang-jenis" wire:model="detail_barang_jenis">
+                        <select class="form-control" id="detail-barang-jenis" wire:model="detail_barang_jenis" wire:change='CardDetailBarangGenerateId'>
                             <option value="" disabled>Pilih Jenis / Kategori</option>
                             @forelse ($detail_barang_opsi_jenis as $item)
                                 <option value="{{$item['value']}}">{{$item['text']}}</option>
@@ -303,9 +367,18 @@
                         </select>
                     </div>
                     {{-- Gambar Barang --}}
-                    <div class="form-control">
+                    <div class="form-group">
                         <label for="detail-barang-gambar">Gambar (maks. 3)</label>
-                        <input type="file" id="detail-barang-gambar" multiple wire:model="detail_barang_gambar">
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="detail-barang-gambar" multiple wire:model="detail_barang_gambar_upload">
+                                <label class="custom-file-label" for="detail-barang-gambar">Pilih Gambar</label>
+                            </div>
+                            <div class="input-group-append">
+                                {{-- <span class="input-group-text">Preview</span> --}}
+                                <button class="btn btn-info" data-toggle="modal" data-target="#modal-preview-gambar-detail-barang">Preview</button>
+                            </div>
+                        </div>
                     </div>
                     {{-- keterangan --}}
                     <div class="form-group">
@@ -315,7 +388,7 @@
                 {{-- end form tambah/edit barang apd --}}
                 </div>
                 <div class="card-footer">
-                    <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-primary float-right mx-1">Simpan</button>
+                    <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-primary float-right mx-1" wire:click="CardDetailBarangSimpan">Simpan</button>
                     <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-secondary float-right mx-1" wire:click="CardDetailBarangReset">Reset</button>
                 </div>
             </div>
@@ -323,7 +396,7 @@
         {{-- end card detail barang --}}
 
         {{-- start card detail ukuran --}}
-        <div class="col-lg-12 collapse fade show active" id="collapse-card-detail-ukuran">
+        <div class="col-lg-12 collapse fade" id="collapse-card-detail-ukuran">
             <div class="card " id="card-detail-ukuran">
                 <div class="card-header">
                     <h3 class="card-title">Form Tambah Opsi Ukuran APD</h3>
@@ -335,22 +408,36 @@
                     </div>
                 </div>
                 <div class="card-body">
+                @if (session()->has('detail_ukuran_danger'))
+                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                        {{session('detail_ukuran_danger')}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+                @if (session()->has('detail_ukuran_success'))
+                    <div class="alert alert-success alert-dismissable fade show" role="alert">
+                        {{session('detail_ukuran_success')}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
                 {{-- start form tambah/edit ukuran apd --}}
+                @if (!$detail_ukuran_edit_mode)
                     {{-- ID ukuran --}}
                     <div class="form-group">
                         <label for="detail-ukuran-id">ID Opsi Ukuran</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="detail-ukuran-id" placeholder="Jika kosong, ID akan dibuat secara otomatis oleh sistem" disabled>
-                            <div class="input-group-append">
-                                <button class="btn btn-info">Ubah</button>
-                            </div>
+                            <input type="text" class="form-control" id="detail-ukuran-id" placeholder="Jika kosong, ID akan dibuat secara otomatis oleh sistem" wire:model="detail_ukuran_id">
                         </div>
-                        <small class="form-text text-muted">Klik ubah untuk mengubah ID, jika kosong ID akan diisi secara acak oleh sistem.</small>
                     </div>
+                @endif
                     {{-- Nama ukuran --}}
                     <div class="form-group">
                         <label for="detail-ukuran-nama">Nama Opsi Ukuran</label>
-                        <input type="text" class="form-control" id="detail-ukuran-nama">
+                        <input type="text" class="form-control" id="detail-ukuran-nama" wire:model="detail_ukuran_nama">
                     </div>
                     {{-- Opsi Ukuran --}}
                     <div class="form-group">
@@ -378,10 +465,10 @@
                         <div class="px-4">
                             <h6>Tambah Opsi Baru</h6>
                             <div class="row">
-                                <input type="text" class="form-control" placeholder="Opsi Ukuran Baru">
+                                <input type="text" class="form-control" placeholder="Opsi Ukuran Baru" wire:model="detail_ukuran_new_value">
                             </div>
                             <div class="row">
-                                <button class="btn btn-primary float-right" type="button">Simpan Opsi Baru</button>
+                                <button class="btn btn-primary float-right" type="button" wire:click="CardDetailUkuranTambahOpsiUkuran">Simpan Opsi Baru</button>
                             </div>                                                                          
                         </div>
                         
@@ -389,20 +476,20 @@
                     {{-- keterangan --}}
                     <div class="form-group">
                         <label for="detail-ukuran-keterangan">Keterangan / Catatan Tambahan</label>
-                        <textarea class="form-control" id="detail-ukuran-keterangan" cols="10" rows="5"></textarea>
+                        <textarea class="form-control" id="detail-ukuran-keterangan" cols="10" rows="5" wire:model="detail_ukuran_keterangan"></textarea>
                     </div>
                 {{-- end form tambah/edit ukuran apd --}}
                 </div>
                 <div class="card-footer">
-                    <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-primary float-right mx-1">Simpan</button>
-                    <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-secondary float-right mx-1">Reset</button>
+                    <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-primary float-right mx-1" wire:click="CardDetailUkuranSimpan">Simpan</button>
+                    <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-secondary float-right mx-1" wire:click="CardDetailUkuranReset">Reset</button>
                 </div>
             </div>
         </div>
         {{-- end card detail ukuran --}}
 
         {{-- start card detail kerusakan --}}
-        <div class="col-lg-12 collapse fade show active" id="collapse-card-detail-kerusakan">
+        <div class="col-lg-12 collapse fade" id="collapse-card-detail-kerusakan">
             <div class="card " id="card-detail-kerusakan">
                 <div class="card-header">
                     <h3 class="card-title">Form Tambah Opsi Kerusakan APD</h3>
@@ -414,22 +501,36 @@
                     </div>
                 </div>
                 <div class="card-body">
+                @if (session()->has('detail_kerusakan_danger'))
+                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                        {{session('detail_kerusakan_danger')}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+                @if (session()->has('detail_kerusakan_success'))
+                    <div class="alert alert-success alert-dismissable fade show" role="alert">
+                        {{session('detail_kerusakan_success')}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
                 {{-- start form tambah/edit kerusakan apd --}}
+                @if (!$detail_kerusakan_edit_mode)
                     {{-- ID kerusakan --}}
                     <div class="form-group">
                         <label for="detail-kerusakan-id">ID Opsi Kerusakan</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="detail-kerusakan-id" placeholder="Jika kosong, ID akan dibuat secara otomatis oleh sistem" disabled>
-                            <div class="input-group-append">
-                                <button class="btn btn-info">Ubah</button>
-                            </div>
+                            <input type="text" class="form-control" id="detail-kerusakan-id" placeholder="Jika kosong, ID akan dibuat secara otomatis oleh sistem" wire:model="detail_kerusakan_id">
                         </div>
-                        <small class="form-text text-muted">Klik ubah untuk mengubah ID, jika kosong ID akan diisi secara acak oleh sistem.</small>
                     </div>
+                @endif
                     {{-- Nama kerusakan --}}
                     <div class="form-group">
                         <label for="detail-kerusakan-nama">Nama Opsi Kerusakan</label>
-                        <input type="text" class="form-control" id="detail-kerusakan-nama">
+                        <input type="text" class="form-control" id="detail-kerusakan-nama" wire:model="detail_kerusakan_nama">
                     </div>
                     {{-- Opsi Kerusakan --}}
                     <div class="form-group">
@@ -448,25 +549,25 @@
                                 <div class="form-group row">
                                     <label for="detail-kerusakan-opsi-baik" class="col-sm-2 col-form-label">baik</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="detail-kerusakan-opsi-baik" placeholder="Baik">
+                                        <input type="text" class="form-control" id="detail-kerusakan-opsi-baik" placeholder="Baik" wire:model='detail_kerusakan_text_baik'>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="detail-kerusakan-opsi-rusak-ringan" class="col-sm-2 col-form-label">rusakRingan</label>
+                                    <label for="detail-kerusakan-opsi-rusak-ringan" class="col-sm-2 col-form-label">rusak ringan</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="detail-kerusakan-opsi-rusak-ringan" placeholder="Rusak Ringan">
+                                        <input type="text" class="form-control" id="detail-kerusakan-opsi-rusak-ringan" placeholder="Rusak Ringan" wire:model='detail_kerusakan_text_rusak_ringan'>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="detail-kerusakan-opsi-rusak-sedang" class="col-sm-2 col-form-label">rusakSedang</label>
+                                    <label for="detail-kerusakan-opsi-rusak-sedang" class="col-sm-2 col-form-label">rusak sedang</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="detail-kerusakan-opsi-rusak-sedang" placeholder="Rusak Sedang">
+                                        <input type="text" class="form-control" id="detail-kerusakan-opsi-rusak-sedang" placeholder="Rusak Sedang" wire:model='detail_kerusakan_text_rusak_sedang'>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="detail-kerusakan-opsi-rusak-berat" class="col-sm-2 col-form-label">rusakBerat</label>
+                                    <label for="detail-kerusakan-opsi-rusak-berat" class="col-sm-2 col-form-label">rusak berat</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="detail-kerusakan-opsi-rusak-berat" placeholder="Rusak Berat">
+                                        <input type="text" class="form-control" id="detail-kerusakan-opsi-rusak-berat" placeholder="Rusak Berat" wire:model='detail_kerusakan_text_rusak_berat'>
                                     </div>
                                 </div>
                             </div>
@@ -474,13 +575,13 @@
                     {{-- keterangan --}}
                     <div class="form-group">
                         <label for="detail-kerusakan-keterangan">Keterangan / Catatan Tambahan</label>
-                        <textarea class="form-control" id="detail-kerusakan-keterangan" cols="10" rows="5"></textarea>
+                        <textarea class="form-control" id="detail-kerusakan-keterangan" cols="10" rows="5" wire:model='detail_kerusakan_keterangan'></textarea>
                     </div>
                 {{-- end form tambah/edit kerusakan apd --}}
                 </div>
                 <div class="card-footer">
-                    <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-primary float-right mx-1">Simpan</button>
-                    <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-secondary float-right mx-1">Reset</button>
+                    <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-primary float-right mx-1" wire:click='CardDetailKerusakanSimpan'>Simpan</button>
+                    <button type="button" aria-controls="card-detail-kerusakan" class="btn bg-gradient-secondary float-right mx-1" wire:click='CardDetailKerusakanReset'>Reset</button>
                 </div>
             </div>
         </div>
@@ -511,6 +612,117 @@
         </div>
         {{-- end modal tampil gambar apd --}}
 
+        {{-- start modal preview gambar detail barang --}}
+        <div class="modal fade" id="modal-preview-gambar-detail-barang" tabindex="-1" role="document" wire:ignore:self>
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Preview Gambar APD</h4>
+                        <button type="button" class="close" data-toggle="modal"
+                            data-target="#modal-preview-gambar-detail-barang" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="nav nav-pills" id="modal-gambar-tablist" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" id="preview-gambar-tab" data-toggle="tab" data-target="#preview-gambar-tabpanel" type="button" role="tab" aria-controls="preview-gambar-tabpanel" aria-selected="true" wire:ignore.self>Preview Gambar</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="gambar-sebelumnya-tab" data-toggle="tab" data-target="#gambar-sebelumnya-tabpanel" type="button" role="tab" aria-controls="gambar-sebelumnya-tabpanel" aria-selected="true" wire:ignore.self>Gambar Sebelumnya</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="preview-gambar-tablistContent">
+                            <div class="tab-pane fade show active" id="preview-gambar-tabpanel" role="tabpanel" aria-labelledby="#preview-gambar-tab" wire:ignore.self>
+                                @if ($detail_barang_gambar_upload && !($errors->has('detail_barang_gambar_upload.*')))
+                                    <div class="text-center mb-3">
+                                        Berikut merupakan preview gambar yang akan diupload. Pastikan klik simpan untuk menyimpan perubahan.
+                                    </div>
+                                    @if (count($detail_barang_gambar_upload)>1)
+                                        <img class="upload-preview product-image" src="{{ $detail_barang_gambar_upload[0]->temporaryUrl() }}"
+                                        alt="APD">
+                                        <div class="col-12 upload-preview product-image-thumbs">
+                                            @foreach ($detail_barang_gambar_upload as $index => $gbr)
+                                                @if ($index === array_key_first($detail_barang_gambar_upload))
+                                                    <div class="upload-preview product-image-thumb active">
+                                                        <img src="{{ $gbr->temporaryUrl() }}">
+                                                    </div>
+                                                @else
+                                                    <div class="upload-preview product-image-thumb">
+                                                        <img src="{{ $gbr->temporaryUrl() }}">
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <img class="upload-preview product-image" src="{{ $detail_barang_gambar_upload[0]->temporaryUrl() }}"
+                                        alt="APD">
+                                    @endif
+                                    <script>
+                                        $(document).ready(function() {
+                                                $('.upload-preview.product-image-thumb').on('click', function () {
+                                                    var $image_element = $(this).find('img')
+                                                    $('.upload-preview.product-image').prop('src', $image_element.attr('src'))
+                                                    $('.upload-preview.product-image-thumb.active').removeClass('active')
+                                                    $(this).addClass('active')
+                                                    })
+                                                })
+                                    </script>
+                                @else
+                                    <div class="jumbotron text-center">
+                                        Tidak ada yang dapat ditampilkan, silahkan upload gambar untuk APD.
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="tab-pane fade" id="gambar-sebelumnya-tabpanel" role="tabpanel" aria-labelledby="#gambar-sebelumnya-tab" wire:ignore.self>
+                                @if ($detail_barang_gambar)
+                                    <div class="text-center mb-3">
+                                        Berikut merupakan gambar yang saat ini ada di database.
+                                    </div>
+                                    @if (count($detail_barang_gambar)>1)
+                                        <img class="gambar-sebelumnya product-image" src="{{ asset($detail_barang_gambar[0]) }}"
+                                        alt="APD">
+                                        <div class="col-12 gambar-sebelumnya product-image-thumbs">
+                                            @foreach ($detail_barang_gambar as $index => $gbr)
+                                                @if ($index === array_key_first($detail_barang_gambar))
+                                                    <div class="gambar-sebelumnya product-image-thumb active">
+                                                        <img src="{{ asset($gbr)}}">
+                                                    </div>
+                                                @else
+                                                    <div class="gambar-sebelumnya product-image-thumb">
+                                                        <img src="{{ asset($gbr)}}">
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    <script>
+                                        $(document).ready(function() {
+                                                $('.gambar-sebelumnya.product-image-thumb').on('click', function () {
+                                                    var $image_element = $(this).find('img')
+                                                    $('.gambar-sebelumnya.product-image').prop('src', $image_element.attr('src'))
+                                                    $('.gambar-sebelumnya.product-image-thumb.active').removeClass('active')
+                                                    $(this).addClass('active')
+                                                    })
+                                                })
+                                    </script>
+                                    @else
+                                        <img class="upload-preview product-image" src="{{ asset($detail_barang_gambar[0]) }}"
+                                        alt="APD">
+                                    @endif
+                                        
+                                @else
+                                    <div class="jumbotron text-center">
+                                        Tidak ada yang dapat ditampilkan.
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- end modal preview gambar detail barang --}}
+
     </section>
 
     {{-- start javascript --}}
@@ -519,6 +731,23 @@
             window.addEventListener('showModalTampilGambarApd',event=>{
                 $('#modal-tampil-gambar-apd').modal('show');
             })
+
+            window.addEventListener('card_detail_jenis_tampil',event=>{
+                $("#collapse-card-detail-jenis").collapse("show");
+            })
+
+            window.addEventListener('card_detail_barang_tampil',event=>{
+                $("#collapse-card-detail-barang").collapse("show");
+            })
+
+            window.addEventListener('card_detail_ukuran_tampil',event=>{
+                $("#collapse-card-detail-ukuran").collapse("show");
+            })
+
+            window.addEventListener('card_detail_kerusakan_tampil',event=>{
+                $("#collapse-card-detail-kerusakan").collapse("show");
+            })
+
         </script>        
     @endpush
     {{-- end javascript --}}
