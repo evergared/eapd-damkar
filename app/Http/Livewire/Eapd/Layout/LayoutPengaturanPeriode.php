@@ -214,6 +214,8 @@ class LayoutPengaturanPeriode extends Component
             $this->card_form_periode_formPesanBerjalan = $this->card_form_periode_formPesanBerjalan_cache = $periode->pesan_berjalan;
             $this->card_form_periode_formAktif = $this->card_form_periode_formAktif_cache = $periode->aktif;
 
+            $this->dispatchBrowserEvent("card_detail_periode_tampil");
+
         }
         catch(Throwable $e)
         {
@@ -249,6 +251,8 @@ class LayoutPengaturanPeriode extends Component
             $this->card_form_periode_formTglAkhir = $this->card_form_periode_formTglAkhir_cache = "";
             $this->card_form_periode_formPesanBerjalan = $this->card_form_periode_formPesanBerjalan_cache = "";
             $this->card_form_periode_formAktif = $this->card_form_periode_formAktif_cache = false;
+
+            $this->dispatchBrowserEvent("card_detail_periode_tampil");
     }
     #endregion
 
@@ -256,6 +260,8 @@ class LayoutPengaturanPeriode extends Component
     public function CardFormPeriodeAturTemplateInputanApd()
     {
             $this->InisiasiTabelTemplate();
+            $this->dispatchBrowserEvent("card_tabel_inputan_tampil");
+
     }
 
     public function CardFormPeriodeSimpan()
@@ -478,12 +484,18 @@ class LayoutPengaturanPeriode extends Component
 
     public function CardTabelInputanApdTambahBanyak()
     {
+        $this->card_multi_template_inputan_apd_listApd = [];
+        $this->card_multi_template_inputan_apd_listJabatan = [];
+        $this->card_multi_template_inputan_apd_listJenisApd = [];
+        $this->dispatchBrowserEvent("card_single_template_inputan_apd_tampil");
     }
 
     public function CardTabelInputanApdTambahSatu()
     {
         $this->card_single_template_inputan_apd_formEditMode = false;
         $this->CardSingleTemplateInputanApdKosongkan();
+        $this->dispatchBrowserEvent("card_single_template_inputan_apd_tampil");
+
 
     }
 
