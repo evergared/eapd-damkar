@@ -210,7 +210,7 @@
         {{-- end card-kendali-utama --}}
 
         {{-- start card detail jenis --}}
-        <div class="col-lg-12 collapse fade" id="collapse-card-detail-jenis">
+        <div class="col-lg-12 collapse fade" id="collapse-card-detail-jenis" wire:ignore.self>
             <div class="card " id="card-detail-jenis">
                 <div class="card-header">
                     @if ($detail_jenis_edit_mode)
@@ -274,7 +274,7 @@
         {{-- end card detail jenis --}}
 
         {{-- start card detail barang --}}
-        <div class="col-lg-12 collapse fade" id="collapse-card-detail-barang">
+        <div class="col-lg-12 collapse fade" id="collapse-card-detail-barang" wire:ignore.self>
             <div class="card " id="card-detail-barang">
                 <div class="card-header">
                     @if ($detail_barang_edit_mode)
@@ -396,7 +396,7 @@
         {{-- end card detail barang --}}
 
         {{-- start card detail ukuran --}}
-        <div class="col-lg-12 collapse fade" id="collapse-card-detail-ukuran">
+        <div class="col-lg-12 collapse fade" id="collapse-card-detail-ukuran" wire:ignore.self>
             <div class="card " id="card-detail-ukuran">
                 <div class="card-header">
                     <h3 class="card-title">Form Tambah Opsi Ukuran APD</h3>
@@ -489,7 +489,7 @@
         {{-- end card detail ukuran --}}
 
         {{-- start card detail kerusakan --}}
-        <div class="col-lg-12 collapse fade" id="collapse-card-detail-kerusakan">
+        <div class="col-lg-12 collapse fade" id="collapse-card-detail-kerusakan" wire:ignore.self>
             <div class="card " id="card-detail-kerusakan">
                 <div class="card-header">
                     <h3 class="card-title">Form Tambah Opsi Kerusakan APD</h3>
