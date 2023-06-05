@@ -53,7 +53,7 @@
         {{-- end card-list-periode --}}
         
         {{-- start card-detail-periode --}}
-        <div class="col-sm-12 collapse fade show active" id="collapse-card-detail-periode">
+        <div class="col-sm-12 collapse fade" id="collapse-card-detail-periode" wire:ignore.self>
             <div class="card " id="card-detail-periode">
                 <div class="card-header">
                     <div class="card-tools">
@@ -65,7 +65,7 @@
                 </div>
                 <div class="card-body">
                     {{-- start collapse-card-form-periode --}}
-                    <div class="collapse fade show active" id="collapse-card-form-periode">
+                    <div class="collapse fade show active" id="collapse-card-form-periode" wire:ignore.self>
                         <div class="card col-sm-12" id="card-form-periode">
                             <div class="card-header">
                                 @if ($card_form_periode_formEditMode)
@@ -82,6 +82,15 @@
                                             <small> Memproses . . .</small>
                                     </div>
                                 {{-- end collapse-list-periode-loading --}}
+
+                                @if (session()->has('pengaturan_jenis_danger'))
+                                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                                        {{session('pengaturan_jenis_danger')}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @endif
 
                                 {{-- ID Periode --}}
                                 <div class="form-group">
@@ -152,13 +161,13 @@
                     {{-- end collapse-card-form-periode --}}
 
                     {{-- start collapse-card-tabel-inputan-apd --}}
-                        <div class="collapse fade show active" id="collapse-card-tabel-inputan-apd">
+                        <div class="collapse fade" id="collapse-card-tabel-inputan-apd" wire:ignore.self>
                             <div class="card" id="card-tabel-inputan-apd">
                                 <div class="card-header">
                                     <div class="card-title">
                                         <h5>Atur Template Inputan APD</h5>
                                     </div>
-                                    <div class="card-tools text-right">
+                                    <div class="card-tools text-right" style="cursor:pointer;" onclick="kembaliKeFormPeriode()">
                                         <a>&larr; <u>kembali</u></a>
                                     </div>
                                 </div>
@@ -319,7 +328,7 @@
                                 <div class="card-footer">
                                     <div class="row">
                                         <div class="col text-left">
-                                            <button class="btn btn-info">Tambah Banyak</button>
+                                            <button class="btn btn-info" wire:click="CardTabelInputanApdTambahBanyak">Tambah Banyak</button>
                                             <button class="btn btn-info" wire:click="CardTabelInputanApdTambahSatu">Tambah Satu</button>
                                         </div>
                                         <div class="col text-right">
@@ -334,7 +343,7 @@
                     {{-- end collapse-card-tabel-inputan-apd --}}
 
                     {{-- start collapse-card-single-template-inputan-apd --}}
-                    <div class="collapse fade show active" id="collapse-card-single-template-inputan-apd">
+                    <div class="collapse fade" id="collapse-card-single-template-inputan-apd" wire:ignore.self>
                         <div class="card" id="card-single-template-inputan-apd">
                             <div class="card-header">
                                 <div class="card-title">
@@ -344,7 +353,7 @@
                                         <h5>Tambah Template Inputan APD</h5>
                                     @endif
                                 </div>
-                                <div class="card-tools text-right">
+                                <div class="card-tools text-right" style="cursor:pointer;" onclick="kembaliKeTabelInputanApdDariSingle()">
                                     <a>&larr; <u>kembali</u></a>
                                 </div>
                             </div>
@@ -405,13 +414,13 @@
                     {{-- end collapse-card-single-template-inputan-apd --}}
 
                     {{-- start collapse-card-multi-template-inputan-apd --}}
-                    <div class="collapse fade show active" id="collapse-card-multi-template-inputan-apd">
+                    <div class="collapse fade" id="collapse-card-multi-template-inputan-apd" wire:ignore.self>
                         <div class="card" id="card-multi-template-inputan-apd">
                             <div class="card-header">
                                 <div class="card-title">
                                     <h5>Tambah Template Inputan APD</h5>
                                 </div>
-                                <div class="card-tools text-right">
+                                <div class="card-tools text-right" style="cursor:pointer;" onclick="kembaliKeTabelInputanApdDariMulti()">
                                     <a>&larr; <u>kembali</u></a>
                                 </div>
                             </div>
@@ -598,6 +607,61 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-k6/Bkb8Fxf/c1Tkyl39yJwcOZ1P4cRrJu77p83zJjN2Z55prbFHxPs9vN7q3l3+tSMGPDdoH51AEU8Vgo1cgAA==" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg==" crossorigin="anonymous" />
+
+        <script>
+            function keTabelInputanApd()
+            {
+                $("#collapse-card-form-periode").hide(500);  
+                $("#collapse-card-tabel-inputan-apd").collapse("show");
+            }
+
+            function keSingleTemplate()
+            {
+                $("#collapse-card-tabel-inputan-apd").hide(500)
+                $("#collapse-card-single-template-inputan-apd").collapse("show")
+            }
+
+            function keMultiTemplate()
+            {
+                $("#collapse-card-tabel-inputan-apd").hide(500)
+                $("#collapse-card-multi-template-inputan-apd").collapse("show")
+            }
+
+            function kembaliKeFormPeriode()
+            {
+                $("#collapse-card-form-periode").show(500);
+                $("#collapse-card-tabel-inputan-apd").collapse("hide");
+            }
+
+            function kembaliKeTabelInputanApdDariSingle()
+            {
+                $("#collapse-card-tabel-inputan-apd").show(500)
+                $("#collapse-card-single-template-inputan-apd").collapse("hide")
+            }
+
+            function kembaliKeTabelInputanApdDariMulti()
+            {
+                $("#collapse-card-tabel-inputan-apd").show(500)
+                $("#collapse-card-multi-template-inputan-apd").collapse("hide")
+            }
+
+
+            window.addEventListener("card_detail_periode_tampil", event=> {
+                $("#collapse-card-detail-periode").collapse('show')
+            })
+
+            window.addEventListener("card_tabel_inputan_tampil", event=> {
+                keTabelInputanApd()
+            })
+
+            window.addEventListener("card_single_template_inputan_apd_tampil", event=> {
+                keSingleTemplate()
+            })
+
+            window.addEventListener("card_multi_template_inputan_apd_tampil", event=> {
+                keMultiTemplate()
+            })
+        </script>
     @endpush
 {{-- end Tempat untuk javascript --}}
 
