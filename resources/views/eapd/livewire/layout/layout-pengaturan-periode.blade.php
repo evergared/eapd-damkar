@@ -35,6 +35,26 @@
                       </div>
                 {{-- end collapse-list-periode-info --}}
 
+                {{-- start alert status --}}
+                @if (session()->has('card_list_periode_success'))
+                    <div class="alert alert-success alert-dismissable fade show" role="alert">
+                        {{session('card_list_periode_success')}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+
+                @if (session()->has('card_list_periode_danger'))
+                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                        {{session('card_list_periode_danger')}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+                {{-- end alert status --}}
+
                 {{-- start collapse-list-periode-loading --}}
                     <div wire:loading>
                             <div class="spinner-border spinner-border-sm" role="status"></div>
@@ -83,14 +103,25 @@
                                     </div>
                                 {{-- end collapse-list-periode-loading --}}
 
-                                @if (session()->has('pengaturan_jenis_danger'))
-                                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
-                                        {{session('pengaturan_jenis_danger')}}
+                                {{-- start alert status --}}
+                                @if (session()->has('card_form_periode_success'))
+                                    <div class="alert alert-success alert-dismissable fade show" role="alert">
+                                        {{session('card_form_periode_success')}}
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                 @endif
+
+                                @if (session()->has('card_form_periode_danger'))
+                                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                                        {{session('card_form_periode_danger')}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @endif
+                                {{-- end alert status --}}
 
                                 {{-- ID Periode --}}
                                 <div class="form-group">
@@ -204,6 +235,26 @@
                                             <small> Memproses . . .</small>
                                     </div>
                                     {{-- end collapse-list-periode-loading --}}
+
+                                    {{-- start alert status --}}
+                                    @if (session()->has('tabel_inputan_apd_success'))
+                                        <div class="alert alert-success alert-dismissable fade show" role="alert">
+                                            {{session('tabel_inputan_apd_success')}}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    @endif
+
+                                    @if (session()->has('tabel_inputan_apd_danger'))
+                                        <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                                            {{session('tabel_inputan_apd_danger')}}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    @endif
+                                    {{-- end alert status --}}
 
                                     {{-- start tabel-template --}}
                                     <div>
@@ -366,6 +417,26 @@
                                     </div>
                                 {{-- end collapse-list-periode-loading --}}
 
+                                {{-- start alert status --}}
+                                    @if (session()->has('card_template_single_success'))
+                                        <div class="alert alert-success alert-dismissable fade show" role="alert">
+                                            {{session('card_template_single_success')}}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    @endif
+
+                                    @if (session()->has('card_template_single_danger'))
+                                        <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                                            {{session('card_template_single_danger')}}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    @endif
+                                    {{-- end alert status --}}
+
                                 {{-- Jabatan --}}
                                 <div class="form-group form-inline row">
                                     <label for="input-single-template-jabatan" class="col-sm-2 col-form-label col-form-label-lg">Jabatan</label>
@@ -432,6 +503,63 @@
                                         <small> Memproses . . .</small>
                                 </div>
                                 {{-- end collapse-list-periode-loading --}}
+
+                                {{-- start alert status --}}
+                                @if (session()->has('card_template_multi_success'))
+                                    <div class="alert alert-success alert-dismissable fade show" role="alert">
+                                        {{session('card_template_multi_success')}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @endif
+
+                                @if (session()->has('card_template_multi_danger'))
+                                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                                        {{session('card_template_multi_danger')}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @endif
+
+                                @if (session()->has('card_template_multi_hasil_sukses'))
+                                    <div class="alert alert-success alert-dismissable fade show" role="alert">
+                                        Berhasil menambahkan <strong>{{session('card_template_multi_hasil_sukses')["sukses"]}}</strong> dari <strong>{{session('card_template_multi_hasil_sukses')["jumlah"]}}</strong> {{session('card_template_multi_hasil_sukses')["tipe"]}}.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @endif
+
+                                @if (session()->has('card_template_multi_hasil_gagal'))
+                                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                                        Gagal menambahkan <strong>{{session('card_template_multi_hasil_gagal')["gagal"]}}</strong> dari <strong>{{session('card_template_multi_hasil_gagal')["jumlah"]}}</strong> {{session('card_template_multi_hasil_gagal')["tipe"]}}.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @endif
+
+                                @if (session()->has('card_template_multi_hasil_multi'))
+                                    <div class="alert alert-grey alert-dismissable fade show" role="alert">
+                                        Berhasil menambahkan <strong>{{session('card_template_multi_hasil_multi')["sukses"]}}</strong> dari <strong>{{session('card_template_multi_hasil_multi')["jumlah"]}}</strong> {{session('card_template_multi_hasil_multi')["tipe"]}},
+                                        namun gagal menambahkan <strong>{{session('card_template_multi_hasil_multi')["gagal"]}}</strong> dari <strong>{{session('card_template_multi_hasil_multi')["jumlah"]}}</strong> {{session('card_template_multi_hasil_multi')["tipe"]}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @endif
+
+                                @if (session()->has('card_template_multi_hasil_none'))
+                                    <div class="alert alert-caution alert-dismissable fade show" role="alert">
+                                        {{session('card_template_multi_hasil_none')}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @endif
+                                {{-- end alert status --}}
 
                                 <h6><i>Klik pada item untuk menghapus</i></h6>
                                 <div class="card-group">

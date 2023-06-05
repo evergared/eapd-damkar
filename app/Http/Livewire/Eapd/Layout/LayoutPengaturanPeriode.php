@@ -494,7 +494,7 @@ class LayoutPengaturanPeriode extends Component
         $this->card_multi_template_inputan_apd_listApd = [];
         $this->card_multi_template_inputan_apd_listJabatan = [];
         $this->card_multi_template_inputan_apd_listJenisApd = [];
-        $this->dispatchBrowserEvent("card_multi_template_inputan_apd_tampil");
+        $this->dispatchBrowserEvent("card_template_multi_inputan_apd_tampil");
     }
 
     public function CardTabelInputanApdTambahSatu()
@@ -632,21 +632,21 @@ class LayoutPengaturanPeriode extends Component
             // pesan untuk status
             // sukses semua
             if($sukses > 0)
-                session()->flash("card_multi_template_hasil_sukses",["sukses" => $sukses,"tipe" => "Jabatan"]);
+                session()->flash("card_template_multi_hasil_sukses",["jumlah" => $jumlah,"sukses" => $sukses,"tipe" => "Jabatan"]);
             // sukses sebagian
             elseif($sukses > 0 && $gagal > 0)
-                session()->flash("card_multi_template_hasil_multi",["sukses" => $sukses, "gagal" => $gagal,"tipe" => "Jabatan"]);
+                session()->flash("card_template_multi_hasil_multi",["jumlah" => $jumlah,"sukses" => $sukses, "gagal" => $gagal,"tipe" => "Jabatan"]);
             // gagal semua
             elseif($gagal > 0)
-                session()->flash("card_multi_template_hasil_gagal",["gagal" => $gagal,"tipe" => "Jabatan"]);
+                session()->flash("card_template_multi_hasil_gagal",["jumlah" => $jumlah,"gagal" => $gagal,"tipe" => "Jabatan"]);
             // tidak ada perubahan
             elseif($sukses == 0 && $gagal == 0)
-                session()->flash("card_multi_template_hasil_none","Tidak ada perubahan yang terjadi");
+                session()->flash("card_template_multi_hasil_none","Tidak ada perubahan yang terjadi");
 
         }
         catch(Throwable $e)
         {
-            session()->flash("card_multi_template_danger","Terjadi kesalahan saat memproses permintaan!");
+            session()->flash("card_template_multi_danger","Terjadi kesalahan saat memproses permintaan!");
             error_log("Card Multi Termplate Inputan Apd : Gagal dalam menerima jabatan terpilih ".$e);
         }
     }
@@ -674,20 +674,20 @@ class LayoutPengaturanPeriode extends Component
             // pesan untuk status
             // sukses semua
             if($sukses > 0)
-                session()->flash("card_multi_template_hasil_sukses",["sukses" => $sukses,"tipe" => "Jenis APD"]);
+                session()->flash("card_template_multi_hasil_sukses",["jumlah" => $jumlah,"sukses" => $sukses,"tipe" => "Jenis APD"]);
             // sukses sebagian
             elseif($sukses > 0 && $gagal > 0)
-                session()->flash("card_multi_template_hasil_multi",["sukses" => $sukses, "gagal" => $gagal,"tipe" => "Jenis APD"]);
+                session()->flash("card_template_multi_hasil_multi",["jumlah" => $jumlah,"sukses" => $sukses, "gagal" => $gagal,"tipe" => "Jenis APD"]);
             // gagal semua
             elseif($gagal > 0)
-                session()->flash("card_multi_template_hasil_gagal",["gagal" => $gagal,"tipe" => "Jenis APD"]);
+                session()->flash("card_template_multi_hasil_gagal",["jumlah" => $jumlah,"gagal" => $gagal,"tipe" => "Jenis APD"]);
             // tidak ada perubahan
             elseif($sukses == 0 && $gagal == 0)
-                session()->flash("card_multi_template_hasil_none","Tidak ada perubahan yang terjadi");
+                session()->flash("card_template_multi_hasil_none","Tidak ada perubahan yang terjadi");
         }
         catch(Throwable $e)
         {
-            session()->flash("card_multi_template_danger","Terjadi kesalahan saat memproses permintaan!");
+            session()->flash("card_template_multi_danger","Terjadi kesalahan saat memproses permintaan!");
             error_log("Card Multi Termplate Inputan Apd : Gagal dalam menerima jenis apd terpilih ".$e);
         }
     }
@@ -715,20 +715,20 @@ class LayoutPengaturanPeriode extends Component
             // pesan untuk status
             // sukses semua
             if($sukses > 0)
-                session()->flash("card_multi_template_hasil_sukses",["sukses" => $sukses,"tipe" => "Barang APD"]);
+                session()->flash("card_template_multi_hasil_sukses",["jumlah" => $jumlah,"sukses" => $sukses,"tipe" => "Barang APD"]);
             // sukses sebagian
             elseif($sukses > 0 && $gagal > 0)
-                session()->flash("card_multi_template_hasil_multi",["sukses" => $sukses, "gagal" => $gagal,"tipe" => "Barang APD"]);
+                session()->flash("card_template_multi_hasil_multi",["jumlah" => $jumlah,"sukses" => $sukses, "gagal" => $gagal,"tipe" => "Barang APD"]);
             // gagal semua
             elseif($gagal > 0)
-                session()->flash("card_multi_template_hasil_gagal",["gagal" => $gagal,"tipe" => "Barang APD"]);
+                session()->flash("card_template_multi_hasil_gagal",["jumlah" => $jumlah,"gagal" => $gagal,"tipe" => "Barang APD"]);
             // tidak ada perubahan
             elseif($sukses == 0 && $gagal == 0)
-                session()->flash("card_multi_template_hasil_none","Tidak ada perubahan yang terjadi");
+                session()->flash("card_template_multi_hasil_none","Tidak ada perubahan yang terjadi");
         }
         catch(Throwable $e)
         {
-            session()->flash("card_multi_template_danger","Terjadi kesalahan saat memproses permintaan!");
+            session()->flash("card_template_multi_danger","Terjadi kesalahan saat memproses permintaan!");
             error_log("Card Multi Termplate Inputan Apd : Gagal dalam menerima opsi apd terpilih ".$e);
         }
     }
@@ -824,13 +824,13 @@ class LayoutPengaturanPeriode extends Component
                     $jumlah_data_sekarang++;
                 }
                 $this->RefreshTabelTemplate();
-                session()->flash("card_multi_template_success","Berhasil menambahkan data!");
+                session()->flash("card_template_multi_success","Berhasil menambahkan data!");
                 
 
             }
             catch(Throwable $e)
             {
-                session()->flash("card_multi_template_danger","Gagal menambahkan data!");
+                session()->flash("card_template_multi_danger","Gagal menambahkan data!");
                 error_log("Card Multi Template Inputan Apd : Gagal dalam menambahkan data secara seragam ".$e);
             }
         }
