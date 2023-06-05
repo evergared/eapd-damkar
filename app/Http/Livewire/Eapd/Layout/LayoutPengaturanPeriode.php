@@ -144,11 +144,13 @@ class LayoutPengaturanPeriode extends Component
             $newTemplate->save();
 
             $this->emit("RefreshTabelListPeriode");
+            session()->flash("card_list_periode_success","Berhasil menggandakan periode! Tunggu sesaat untuk melihat hasil.");
 
         }
         catch(Throwable $e)
         {
             error_log("Tabel List Periode : Gagal dalam cloning periode ".$e);
+            session()->flash("card_list_periode_danger","Gagal menggandakan periode!");
         }
     }
 
@@ -233,11 +235,13 @@ class LayoutPengaturanPeriode extends Component
             $periode->delete();
             $template->delete();
             $this->emit("RefreshTabelListPeriode");
+            session()->flash("card_list_periode_success","Berhasil menghapus periode yang dipilih.");
 
         }
         catch(Throwable $e)
         {
             error_log("Tabel List Periode : Gagal dalam menghapus periode ".$e);
+            session()->flash("card_list_periode_danger","Gagal menghapus periode yang dipilih.");
         }
     }
 
@@ -319,10 +323,13 @@ class LayoutPengaturanPeriode extends Component
                 $newTemplate->save();
             }
 
+            session()->flash("card_form_periode_success","Data periode berhasil disimpan!");
+
         }
         catch(Throwable $e)
         {
             error_log("Card Form Periode : Gagal dalam menyimpan periode ".$e);
+            session()->flash("card_form_periode_danger","Data periode gagal disimpan!");
         }
     }
 
@@ -487,7 +494,7 @@ class LayoutPengaturanPeriode extends Component
         $this->card_multi_template_inputan_apd_listApd = [];
         $this->card_multi_template_inputan_apd_listJabatan = [];
         $this->card_multi_template_inputan_apd_listJenisApd = [];
-        $this->dispatchBrowserEvent("card_single_template_inputan_apd_tampil");
+        $this->dispatchBrowserEvent("card_multi_template_inputan_apd_tampil");
     }
 
     public function CardTabelInputanApdTambahSatu()
@@ -503,21 +510,27 @@ class LayoutPengaturanPeriode extends Component
     {
         try{
             
-            // $template_inputan = InputApdTemplate::where('id_periode',$this->card_form_periode_formIdPeriode_cache)->get()->first();
+            if($this->card_form_periode_formEditMode)
+            {
+                $template_inputan = InputApdTemplate::where('id_periode',$this->card_form_periode_formIdPeriode_cache)->get()->first();
 
-            // $pic = new PeriodeInputController;
-        
-            // $template_inputan->template = $pic->ubahDatasetArrayTemplateKeTemplate($pic->ubahDataTabelTemplateKeDataset($this->tabel_template_data_original));
+                $pic = new PeriodeInputController;
+            
+                $template_inputan->template = $pic->ubahDatasetArrayTemplateKeTemplate($pic->ubahDataTabelTemplateKeDataset($this->tabel_template_data_original));
 
-            // $template_inputan->save();
+                $template_inputan->save();
 
-            // $this->InisiasiTabelTemplate();
+                $this->InisiasiTabelTemplate();
 
-            error_log('Card Tabel Inputan APD : Berhasil menyimpan data');
+                error_log('Card Tabel Inputan APD : Berhasil menyimpan data');
+            }
+
+            session()->flash("tabel_inputan_apd_success","Data berhasil disimpan! Pastikan anda menyimpan periode untuk menerapkan perubahan.");
         }
         catch(Throwable $e)
         {
             error_log('Card Tabel Inputan APD : Gagal menyimpan data array template ke database '.$e);
+            session()->flash("tabel_inputan_apd_danger","Data berhasil disimpan!");
         }
        
     }
@@ -584,10 +597,12 @@ class LayoutPengaturanPeriode extends Component
             }
 
             $this->RefreshTabelTemplate();
+            session()->flash("card_template_single_success","Berhasil menambahkan data!");
                 
         }
         catch(Throwable $e)
         {
+            session()->flash("card_template_single_danger","Gagal menambahkan data!");
             error_log("Card Single Template Inputan Apd : Gagal dalam menyimpan ".$e);
         }
     }
@@ -613,9 +628,25 @@ class LayoutPengaturanPeriode extends Component
                     $gagal++;
                 }
             }
+
+            // pesan untuk status
+            // sukses semua
+            if($sukses > 0)
+                session()->flash("card_multi_template_hasil_sukses",["sukses" => $sukses,"tipe" => "Jabatan"]);
+            // sukses sebagian
+            elseif($sukses > 0 && $gagal > 0)
+                session()->flash("card_multi_template_hasil_multi",["sukses" => $sukses, "gagal" => $gagal,"tipe" => "Jabatan"]);
+            // gagal semua
+            elseif($gagal > 0)
+                session()->flash("card_multi_template_hasil_gagal",["gagal" => $gagal,"tipe" => "Jabatan"]);
+            // tidak ada perubahan
+            elseif($sukses == 0 && $gagal == 0)
+                session()->flash("card_multi_template_hasil_none","Tidak ada perubahan yang terjadi");
+
         }
         catch(Throwable $e)
         {
+            session()->flash("card_multi_template_danger","Terjadi kesalahan saat memproses permintaan!");
             error_log("Card Multi Termplate Inputan Apd : Gagal dalam menerima jabatan terpilih ".$e);
         }
     }
@@ -639,9 +670,24 @@ class LayoutPengaturanPeriode extends Component
                     $gagal++;
                 }
             }
+
+            // pesan untuk status
+            // sukses semua
+            if($sukses > 0)
+                session()->flash("card_multi_template_hasil_sukses",["sukses" => $sukses,"tipe" => "Jenis APD"]);
+            // sukses sebagian
+            elseif($sukses > 0 && $gagal > 0)
+                session()->flash("card_multi_template_hasil_multi",["sukses" => $sukses, "gagal" => $gagal,"tipe" => "Jenis APD"]);
+            // gagal semua
+            elseif($gagal > 0)
+                session()->flash("card_multi_template_hasil_gagal",["gagal" => $gagal,"tipe" => "Jenis APD"]);
+            // tidak ada perubahan
+            elseif($sukses == 0 && $gagal == 0)
+                session()->flash("card_multi_template_hasil_none","Tidak ada perubahan yang terjadi");
         }
         catch(Throwable $e)
         {
+            session()->flash("card_multi_template_danger","Terjadi kesalahan saat memproses permintaan!");
             error_log("Card Multi Termplate Inputan Apd : Gagal dalam menerima jenis apd terpilih ".$e);
         }
     }
@@ -665,9 +711,24 @@ class LayoutPengaturanPeriode extends Component
                     $gagal++;
                 }
             }
+
+            // pesan untuk status
+            // sukses semua
+            if($sukses > 0)
+                session()->flash("card_multi_template_hasil_sukses",["sukses" => $sukses,"tipe" => "Barang APD"]);
+            // sukses sebagian
+            elseif($sukses > 0 && $gagal > 0)
+                session()->flash("card_multi_template_hasil_multi",["sukses" => $sukses, "gagal" => $gagal,"tipe" => "Barang APD"]);
+            // gagal semua
+            elseif($gagal > 0)
+                session()->flash("card_multi_template_hasil_gagal",["gagal" => $gagal,"tipe" => "Barang APD"]);
+            // tidak ada perubahan
+            elseif($sukses == 0 && $gagal == 0)
+                session()->flash("card_multi_template_hasil_none","Tidak ada perubahan yang terjadi");
         }
         catch(Throwable $e)
         {
+            session()->flash("card_multi_template_danger","Terjadi kesalahan saat memproses permintaan!");
             error_log("Card Multi Termplate Inputan Apd : Gagal dalam menerima opsi apd terpilih ".$e);
         }
     }
@@ -763,10 +824,13 @@ class LayoutPengaturanPeriode extends Component
                     $jumlah_data_sekarang++;
                 }
                 $this->RefreshTabelTemplate();
+                session()->flash("card_multi_template_success","Berhasil menambahkan data!");
+                
 
             }
             catch(Throwable $e)
             {
+                session()->flash("card_multi_template_danger","Gagal menambahkan data!");
                 error_log("Card Multi Template Inputan Apd : Gagal dalam menambahkan data secara seragam ".$e);
             }
         }
