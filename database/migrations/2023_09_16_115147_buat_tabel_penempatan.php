@@ -32,6 +32,13 @@ return new class extends Migration
             });
         }
 
+        if(Schema::hasTable('admin_list'))
+        {
+            Schema::table('admin_list', function(Blueprint $t){
+                $t->foreign('id_penempatan')->references('id_penempatan')->on('penempatan')->nullOnDelete();
+            });
+        }
+
     }
 
     /**
@@ -41,21 +48,12 @@ return new class extends Migration
      */
     public function down()
     {
-        if(Schema::hasTable('wilayah')){
-            Schema::table('penempatan',function (Blueprint $t){
-                $t->dropForeign('penempatan_id_wilayah_foreign');
-            });
-        }
-        if(Schema::hasTable('kecamatan')){
-            Schema::table('penempatan',function (Blueprint $t){
-                $t->dropForeign('penempatan_id_kecamatan_foreign');
-            });
-        }   
-        if(Schema::hasTable('kelurahan')){
-            Schema::table('penempatan',function (Blueprint $t){
-                $t->dropForeign('penempatan_id_kelurahan_foreign');
-            });
-        }      
+        Schema::table('pegawai', function(Blueprint $t){
+            $t->dropForeign('pegawai_id_penempatan_foreign');
+        });
+        Schema::table('admin_list', function(Blueprint $t){
+            $t->dropForeign('admin_list_id_penempatan_foreign');
+        });
         Schema::dropIfExists('penempatan');
     }
 };

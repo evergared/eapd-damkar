@@ -27,7 +27,7 @@ return new class extends Migration
                 $t->string('grup')->nullable();
                 // $t->string('id_atasan')->nullable()->comment('id dari atasan langsung pegawai ini');
                 $t->boolean('aktif')->default(true);
-                
+                $t->timestamps();
             }); 
         }
     }

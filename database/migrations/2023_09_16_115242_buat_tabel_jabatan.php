@@ -36,9 +36,9 @@ return new class extends Migration
      */
     public function down()
     {
-        if(Schema::hasTable('input_apd_template')){
-            Schema::table('input_apd_template',function (Blueprint $t){
-                $t->dropForeign('input_apd_template_id_jabatan_foreign');
+        if(Schema::hasTable('pegawai')){
+            Schema::table('pegawai',function (Blueprint $t){
+                $t->dropForeign('pegawai_id_jabatan_foreign');
             });
         }
         Schema::dropIfExists('jabatan');

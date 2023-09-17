@@ -39,16 +39,11 @@ return new class extends Migration
      */
     public function down()
     {
-        if(Schema::hasTable('apd_size')){
-            Schema::table('apd_list',function (Blueprint $t){
-                $t->dropForeign('apd_list_id_size_foreign');
-            });
-        }
-        if(Schema::hasTable('apd_kondisi')){
-            Schema::table('apd_list',function (Blueprint $t){
-                $t->dropForeign('apd_list_id_kondisi_foreign');
-            });
-        }
+        
+        Schema::table('apd_list',function (Blueprint $t){
+            $t->dropForeign('apd_list_id_jenis_foreign');
+        });
+        
         if(Schema::hasTable('input_apd')){
             Schema::table('input_apd',function (Blueprint $t){
                 $t->dropForeign('input_apd_id_apd_foreign');

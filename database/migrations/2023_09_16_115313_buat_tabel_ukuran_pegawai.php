@@ -36,11 +36,10 @@ return new class extends Migration
      */
     public function down()
     {
-        if(Schema::hasTable('input_apd_template')){
-            Schema::table('ukuran_pegawai',function (Blueprint $t){
-                $t->dropForeign('ukuran_pegawai_id_template_foreign');
-            });
-        }
+        
+        Schema::table('ukuran_pegawai',function (Blueprint $t){
+            $t->dropForeign('ukuran_pegawai_id_pegawai_foreign');
+        });
         Schema::dropIfExists('ukuran_pegawai');
     }
 };

@@ -52,7 +52,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('keluhan_reply',function (Blueprint $t){
-            $t->dropForeign('id_parent_reply_keluhan_reply_foreign');
+            $t->dropForeign('keluhan_reply_id_parent_reply_foreign');
         });
 
         Schema::dropIfExists('keluhan_reply');

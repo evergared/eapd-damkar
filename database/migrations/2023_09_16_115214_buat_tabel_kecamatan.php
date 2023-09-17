@@ -36,6 +36,9 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::table('penempatan',function (Blueprint $t){
+            $t->dropForeign('penempatan_id_kecamatan_foreign');
+        });
         Schema::dropIfExists('kecamatan');
     }
 };

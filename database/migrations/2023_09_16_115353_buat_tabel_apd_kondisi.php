@@ -35,6 +35,12 @@ return new class extends Migration
      */
     public function down()
     {
+        if(Schema::hasTable('apd_list'))
+        {
+            Schema::table('apd_list', function(Blueprint $t){
+                $t->dropForeign('apd_list_id_kondisi_foreign');
+            });
+        }
         Schema::dropIfExists('apd_kondisi');
     }
 };
