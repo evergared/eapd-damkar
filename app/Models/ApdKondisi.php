@@ -9,7 +9,7 @@ class ApdKondisi extends Model
     protected   $table = 'apd_kondisi',
                 $primaryKey = 'id_kondisi';
     
-    protected $timestamps = false;
+    public $timestamps = false;
 
     protected $fillable = [
         'id_kondisi',

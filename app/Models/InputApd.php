@@ -12,7 +12,7 @@ class InputApd extends Model
     protected   $table = 'input_apd',
                 $primaryKey = 'id_inputan';
     
-    protected $timestamps = false;
+    public $timestamps = false;
 
     protected $fillable = [
         'id_inputan',

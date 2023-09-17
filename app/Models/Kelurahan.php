@@ -9,8 +9,10 @@ class Kelurahan extends Model
     protected   $table = 'kelurahan',
                 $primaryKey = 'id_kelurahan';
     
-    protected $timestamps = false;
+    public $timestamps = false;
 
+    protected $keyType = 'string';
+   
     protected $fillable = [
         'id_kelurahan',
         'nama_kelurahan',

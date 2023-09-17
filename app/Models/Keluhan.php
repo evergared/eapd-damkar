@@ -12,6 +12,8 @@ class Keluhan extends Model
     protected   $table = "keluhan",
                 $primaryKey = 'id_keluhan';
 
+    protected $keyType = 'string';
+    
     protected $fillable = [
         'id_keluhan',
         'id_kategori',

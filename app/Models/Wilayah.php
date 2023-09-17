@@ -9,8 +9,10 @@ class Wilayah extends Model
     protected   $table = 'wilayah',
                 $primaryKey = 'id_wilayah';
     
-    protected $timestamps = false;
+    public $timestamps = false;
 
+    protected $keyType = 'string';
+    
     protected $fillable = [
         'id_wilayah',
         'nama_wilayah',

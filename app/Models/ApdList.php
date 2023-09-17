@@ -10,8 +10,10 @@ class ApdList extends Model
     protected   $table = 'apd_list',
                 $primaryKey = 'id_apd';
     
-    protected $timestamps = false;
+    public $timestamps = false;
 
+    protected $keyType = 'string';
+    
     protected $fillable = [
         'id_apd',
         'nama_apd',

@@ -10,7 +10,7 @@ class PeriodeInputApd extends Model
     protected   $table = 'periode_input_apd',
                 $primaryKey = 'id_periode';
     
-    protected $timestamps = false;
+    public $timestamps = false;
 
     protected $fillable = [
         'id_periode',

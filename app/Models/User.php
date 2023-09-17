@@ -9,7 +9,8 @@ class User extends Model
     protected   $table = 'user',
                 $primaryKey = 'id_pegawai';
 
-    protected $timestamps = false;
+    public $timestamps = false;
+    protected $keyType = 'string';
     
     protected $fillable = [
         'id_pegawai',

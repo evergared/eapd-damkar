@@ -9,8 +9,10 @@ class Kecamatan extends Model
     protected   $table = 'kecamatan',
                 $primaryKey = 'id_kecamatan';
     
-    protected $timestamps = false;
+    public $timestamps = false;
 
+    protected $keyType = 'string';
+   
     protected $fillable = [
         'id_kecamatan',
         'nama_kecamatan',

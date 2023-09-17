@@ -12,6 +12,8 @@ class Pegawai extends Model
     protected   $table = 'pegawai',
                 $primaryKey = 'id_pegawai';
     
+    protected $keyType = 'string';
+    
     protected $fillable = [
         'nip',
         'nrk',

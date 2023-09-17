@@ -9,7 +9,7 @@ class ApdSize extends Model
     protected   $table = 'apd_size',
                 $primaryKey = 'id_size';
     
-    protected $timestamps = false;
+    public $timestamps = false;
 
     protected $fillable = [
         'id_size',

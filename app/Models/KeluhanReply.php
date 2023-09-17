@@ -12,6 +12,8 @@ class KeluhanReply extends Model
     protected   $table = 'keluhan_reply',
                 $primaryKey = 'id_reply';
     
+    protected $keyType = 'string';
+    
     protected $fillable = [
         'id_reply',
         'id_parent_reply',

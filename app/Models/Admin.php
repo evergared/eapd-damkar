@@ -9,7 +9,9 @@ class Admin extends Model
     protected   $table = 'admin',
                 $primaryKey = 'id_admin';
     
-    protected $timestamps = false;
+    protected $keyType = 'string';
+    
+    public $timestamps = false;
 
     protected $fillable = [
         'id_admin',

@@ -10,7 +10,9 @@ class ApdJenis extends Model
     protected   $table = 'apd_jenis',
                 $primaryKey = 'id_jenis';
     
-    protected $timestamps = false;
+    public $timestamps = false;
+
+    protected $keyType = 'string';
 
     protected $fillable = [
         'id_jenis',

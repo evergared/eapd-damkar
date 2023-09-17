@@ -10,7 +10,7 @@ class InputApdTemplate extends Model
     protected   $table = 'input_apd_template',
                 $primaryKey = 'id_template';
     
-    protected $timestamps = false;
+    public $timestamps = false;
 
     protected $fillable = [
         'id_template',

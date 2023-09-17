@@ -9,8 +9,10 @@ class Jabatan extends Model
     protected   $table = 'jabatan',
                 $primaryKey = 'id_jabatan';
     
-    protected $timestamps = false;
+    public $timestamps = false;
 
+    protected $keyType = 'string';
+    
     protected $fillable = [
         'id_jabatan',
         'nama_jabatan',

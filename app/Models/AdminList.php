@@ -9,7 +9,9 @@ class AdminList extends Model
     protected   $table = 'admin_list',
                 $primaryKey = 'id_admin';
 
-    protected $timestamps = false;
+    public $timestamps = false;
+    
+    protected $keyType = 'string';
     
     protected $fillable = [
         'id_pegawai',

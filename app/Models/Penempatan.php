@@ -10,7 +10,9 @@ class Penempatan extends Model
     protected   $table = 'penempatan',
                 $primaryKey = 'id_penempatan';
     
-    protected $timestamps = false;
+    public $timestamps = false;
+
+    protected $keyType = 'string';
 
     protected $fillable = [
         'id_penempatan',

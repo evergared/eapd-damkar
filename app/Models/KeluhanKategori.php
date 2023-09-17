@@ -9,7 +9,7 @@ class KeluhanKategori extends Model
     protected   $table = 'keluhan_kategori',
                 $primaryKey = 'id_kategori';
 
-    protected $timestamps = false;
+    public $timestamps = false;
 
     protected $fillable = [
         'id_kategori',

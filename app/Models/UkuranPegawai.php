@@ -9,7 +9,7 @@ class UkuranPegawai extends Model
 {
     protected   $table = 'ukuran_pegawai';
 
-    protected $timestamps = false;
+    public $timestamps = false;
     
     protected $fillable = [
         'id_pegawai',
