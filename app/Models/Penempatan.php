@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Penempatan extends Model
+{
+    protected   $table = 'penempatan',
+                $primaryKey = 'id_penempatan';
+    
+    protected $timestamps = false;
+
+    protected $fillable = [
+        'id_penempatan',
+        'nama_penempatan',
+        'id_kelurahan',
+        'id_kecamatan',
+        'id_wilayah',
+        'tipe',
+        'keterangan'
+    ];
+
+    public function kelurahan()
+    {
+        return $this->belongsTo(Kelurahan::class, 'id_kelurahan', 'id_kelurahan');
+    }
+
+    public function kecamatan()
+    {
+        return $this->belongsTo(Kecamatan::class, 'id_kecamatan', 'id_kecamatan');
+    }
+
+    public function wilayah()
+    {
+        return $this->belongsTo(Wilayah::class, 'id_wilayah', 'id_wilayah');
+    }
+
+    public function pegawai()
+    {
+        return $this->hasMany(Pegawai::class, 'id_penempatan', 'id_penempatan');
+    }
+
+    public function admin_list()
+    {
+        return $this->hasMany(AdminList::class, 'id_penempatan', 'id_penempatan');
+    }
+}

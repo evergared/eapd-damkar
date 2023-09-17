@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class Admin extends Model
 {
-    protected   $table = 'user',
-                $primaryKey = 'id_pegawai';
-
-    protected $timestamps = false;
+    protected   $table = 'admin',
+                $primaryKey = 'id_admin';
     
+    protected $timestamps = false;
+
     protected $fillable = [
-        'id_pegawai',
+        'id_admin',
         'password'
     ];
 
@@ -23,6 +23,6 @@ class User extends Model
 
     public function data()
     {
-        return $this->belongsTo(Pegawai::class, 'id_pegawai', 'id_pegawai');
+        return $this->belongsTo(AdminList::class, 'id_admin', 'id_admin');
     }
 }
