@@ -15,7 +15,7 @@ return new class extends Migration
     {
         if (!Schema::hasTable('keluhan_kategori')) {
             Schema::create('keluhan_kategori', function (Blueprint $t) {
-                $t->id('id_kategori');
+                $t->id('id_kategori')->autoIncrement();
                 $t->text('nama_kategori');
                 $t->text('keterangan');
             });
