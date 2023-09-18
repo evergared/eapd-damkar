@@ -84,4 +84,14 @@ class Pegawai extends Model
     {
         return $this->hasMany($this, 'penanggung_jawab', 'id_pegawai');
     }
+
+    public function list_plt()
+    {
+        return $this->hasMany($this, 'id_pegawai_plt', 'id_pegawai');
+    }
+
+    public function plt()
+    {
+        return $this->belongsTo($this, 'id_pegawai_plt', 'id_pegawai');
+    }
 }
