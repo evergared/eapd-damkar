@@ -6,6 +6,7 @@ use App\Models\Pegawai;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class TesUserSeeder extends Seeder
 {
@@ -22,7 +23,7 @@ class TesUserSeeder extends Seeder
         {
             User::create([
                 'id_pegawai' => $pegawai->id_pegawai,
-                'password' => '123456'
+                'password' => Hash::make('123456')
             ]);
         }
     }

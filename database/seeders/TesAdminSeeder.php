@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Admin;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class TesAdminSeeder extends Seeder
 {
@@ -18,7 +19,7 @@ class TesAdminSeeder extends Seeder
         Admin::create([
             'id' => 'admineapd',
             'nama_akun' => 'Super Admin EAPD',
-            'password' => 'eapdDamkar@123'
+            'password' => Hash::make('eapdDamkar@123')
         ]);
     }
 }
