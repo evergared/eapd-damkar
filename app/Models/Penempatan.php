@@ -16,6 +16,7 @@ class Penempatan extends Model
 
     protected $fillable = [
         'id_penempatan',
+        'id_parent_penempatan',
         'nama_penempatan',
         'id_kelurahan',
         'id_kecamatan',
@@ -47,5 +48,15 @@ class Penempatan extends Model
     public function admin_list()
     {
         return $this->hasMany(AdminList::class, 'id_penempatan', 'id_penempatan');
+    }
+
+    public function atasan()
+    {
+        return $this->belongsTo($this, 'id_parent_penempatan', 'id_penempatan');
+    }
+
+    public function bawahan()
+    {
+        return $this->hasMany($this, 'id_parent_penempatan', 'id_penempatan');
     }
 }
