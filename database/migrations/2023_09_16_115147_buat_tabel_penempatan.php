@@ -56,9 +56,6 @@ return new class extends Migration
         Schema::table('pegawai', function(Blueprint $t){
             $t->dropForeign('pegawai_id_penempatan_foreign');
         });
-        Schema::table('admin_list', function(Blueprint $t){
-            $t->dropForeign('admin_list_id_penempatan_foreign');
-        });
         Schema::table('penempatan', function(Blueprint $t){
             $t->dropForeign('penempatan_id_parent_penempatan_foreign');
         });
