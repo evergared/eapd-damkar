@@ -38,5 +38,46 @@ class TesPegawaiSeeder extends Seeder
                 'grup' => $dataGrup[rand(0, count($dataGrup) - 1)],
             ]);
         }
+
+        $kasek_1 = Pegawai::create([
+            'nrk' => '0111',
+            'nip' => '31740111',
+            'nama' => 'Kasek 1.11',
+            'id_jabatan' => 'K001',
+            'id_penempatan' => '1.11',
+            'grup' => '-',
+        ])->id_pegawai;
+
+        $pengendali_1 = Pegawai::create([
+            'nrk' => '0011',
+            'nip' => '31740011',
+            'nama' => 'Pengendali 1.11 grup A',
+            'id_jabatan' => 'L002',
+            'id_penempatan' => '1.11',
+            'penanggung_jawab' => $kasek_1,
+            'grup' => 'A',
+        ])->id_pegawai;
+
+        Pegawai::create([
+            'nrk' => '0001',
+            'nip' => '31740001',
+            'nama' => 'Anggota Asn sektor 1.11 A 1',
+            'id_jabatan' => 'L001',
+            'id_penempatan' => '1.11',
+            'penanggung_jawab' => $pengendali_1,
+            'grup' => 'A',
+        ]);
+
+        Pegawai::create([
+            'nrk' => '0002',
+            'nip' => '31740002',
+            'nama' => 'Anggota Asn sektor 1.11 A 2',
+            'id_jabatan' => 'L001',
+            'id_penempatan' => '1.11',
+            'penanggung_jawab' => $pengendali_1,
+            'grup' => 'A',
+        ]);
+
+        
     }
 }

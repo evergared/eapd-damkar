@@ -32,5 +32,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TesPenempatanSeeder::class);
         $this->call(TesJabatanSeeder::class);
         $this->call(TesPegawaiSeeder::class);
+        $this->call(TesUserSeeder::class);
+        $this->call(TesAdminSeeder::class);
     }
 }
