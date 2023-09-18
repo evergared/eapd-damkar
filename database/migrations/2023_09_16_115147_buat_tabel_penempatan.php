@@ -16,12 +16,17 @@ return new class extends Migration
         if (!Schema::hasTable('penempatan')) {
             Schema::create('penempatan', function (Blueprint $t) {
                 $t->string('id_penempatan')->primary();
+                $t->string('id_parent_penempatan')->nullable();
                 $t->string('nama_penempatan')->nullable();
                 $t->string('id_wilayah')->nullable();
                 $t->string('id_kecamatan')->nullable();
                 $t->string('id_kelurahan')->nullable();
                 $t->string('tipe')->nullable();
                 $t->text('keterangan')->nullable();
+            });
+
+            Schema::table('penempatan', function(Blueprint $t){
+                $t->foreign('id_parent_penempatan')->references('id_penempatan')->on('penempatan')->nullOnDelete();
             });
         }
 
@@ -53,6 +58,9 @@ return new class extends Migration
         });
         Schema::table('admin_list', function(Blueprint $t){
             $t->dropForeign('admin_list_id_penempatan_foreign');
+        });
+        Schema::table('penempatan', function(Blueprint $t){
+            $t->dropForeign('penempatan_id_parent_penempatan_foreign');
         });
         Schema::dropIfExists('penempatan');
     }

@@ -16,19 +16,26 @@ return new class extends Migration
         if (!Schema::hasTable('pegawai')) {
             Schema::create('pegawai', function (Blueprint $t) {
                 $t->ulid('id_pegawai')->primary();
+                $t->string('id_pegawai_plt')->nullable();
                 $t->string('nrk', 10)->unique()->nullable()->comment('no pjlp');
                 $t->string('nip', 20)->unique()->nullable()->comment('nik pjlp');
                 $t->text('nama');
-                $t->text('profile_img')->nullable();
-                $t->string('no_telp', 20)->nullable();
-                $t->text('email')->nullable();
-                $t->string('id_jabatan')->nullable();
                 $t->string('id_penempatan')->nullable();
+                $t->string('id_jabatan')->nullable();
+                $t->string('akun')->nullable()->comment('isi jika pegawai merupakan admin verifikator');
+                $t->string('no_telp', 20)->nullable();
+                $t->text('profile_img')->nullable();
+                $t->text('email')->nullable();
                 $t->string('grup')->nullable();
-                // $t->string('id_atasan')->nullable()->comment('id dari atasan langsung pegawai ini');
+                $t->string('penanggung_jawab')->nullable();
                 $t->boolean('aktif')->default(true);
                 $t->timestamps();
-            }); 
+            });
+            
+            Schema::table('pegawai', function (Blueprint $t){
+                $t->foreign('id_pegawai_plt')->references('id_pegawai')->on('pegawai')->nullOnDelete();
+                $t->foreign('penanggung_jawab')->references('id_pegawai')->on('pegawai')->nullOnDelete();
+            });
         }
     }
 
@@ -42,14 +49,6 @@ return new class extends Migration
         if(Schema::hasTable('user')){
             Schema::table('user',function (Blueprint $t){
                 $t->dropForeign('user_id_pegawai_foreign');
-            });
-        }
-
-        if (Schema::hasTable('admin_list')) {
-            Schema::table('admin_list', function (Blueprint $t) {
-
-                $t->dropForeign('admin_list_id_pegawai_foreign');
-                $t->dropForeign('admin_list_id_pegawai_plt_foreign');
             });
         }
 
@@ -85,6 +84,12 @@ return new class extends Migration
                 $t->dropForeign('ukuran_pegawai_id_pegawai_foreign');
             });
         }
+
+        Schema::table('pegawai',function (Blueprint $t){
+            $t->dropForeign('pegawai_penanggung_jawab_foreign');
+            $t->dropForeign('pegawai_id_pegawai_plt_foreign');
+        });
+
         Schema::dropIfExists('pegawai');
     }
 };

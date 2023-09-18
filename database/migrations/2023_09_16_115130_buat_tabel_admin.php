@@ -15,16 +15,10 @@ return new class extends Migration
     {
         if (!Schema::hasTable('admin')) {
             Schema::create('admin', function (Blueprint $table) {
-                $table->string('id_admin')->primary();
+                $table->string('id')->primary()->comment('id untuk login');
+                $table->string('nama_akun')->nullable();
                 $table->string('password');
                 $table->rememberToken()->nullable();
-            });
-        }
-
-        if(Schema::hasTable('admin_list'))
-        {
-            Schema::table('admin', function(Blueprint $t){
-                $t->foreign('id_admin')->references('id_admin')->on('admin_list');
             });
         }
     }
