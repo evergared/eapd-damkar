@@ -15,7 +15,6 @@ class Pegawai extends Model
     protected $keyType = 'string';
     
     protected $fillable = [
-        'id_pegawai_plt',
         'nip',
         'nrk',
         'nama',
@@ -23,7 +22,6 @@ class Pegawai extends Model
         'id_jabatan',
         'profile_img',
         'no_telp',
-        'akun',
         'email',
         'grup',
         'penanggung_jawab',
@@ -85,13 +83,4 @@ class Pegawai extends Model
         return $this->hasMany($this, 'penanggung_jawab', 'id_pegawai');
     }
 
-    public function list_plt()
-    {
-        return $this->hasMany($this, 'id_pegawai_plt', 'id_pegawai');
-    }
-
-    public function plt()
-    {
-        return $this->belongsTo($this, 'id_pegawai_plt', 'id_pegawai');
-    }
 }

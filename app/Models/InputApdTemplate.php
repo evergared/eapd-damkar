@@ -20,11 +20,6 @@ class InputApdTemplate extends Model
         'template'
     ];
 
-    public function ukuran_pegawai()
-    {
-        return $this->hasMany(UkuranPegawai::class, 'id_template', 'id_template');
-    }
-
     public function jabatan()
     {
         return $this->belongsTo(Jabatan::class, 'id_jabatan', 'id_jabatan');

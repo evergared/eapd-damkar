@@ -13,7 +13,7 @@ class UkuranPegawai extends Model
     
     protected $fillable = [
         'id_pegawai',
-        'id_template',
+        'history',
         'list_ukuran',
         'terakhir_diisi'
     ];
@@ -23,8 +23,4 @@ class UkuranPegawai extends Model
         return $this->belongsTo(Pegawai::class, 'id_pegawai', 'id_pegawai');
     }
 
-    public function template()
-    {
-        return $this->belongsTo(InputApdTemplate::class, 'id_template', 'id_template');
-    }
 }

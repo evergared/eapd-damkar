@@ -14,6 +14,8 @@ class AdminList extends Model
     protected $keyType = 'string';
     
     protected $fillable = [
+        'id_admin',
+        'nama_akun',
         'id_pegawai',
         'id_pegawai_plt',
         'id_penempatan'
