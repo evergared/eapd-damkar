@@ -20,7 +20,7 @@ Route::get('/', function () {
 
     if (Auth::check())
         return redirect()->route('dashboard');
-    return view('eapd/halaman-depan');
+    return view('eapd/dashboard-depan');
     // return view('tes/welcome');
 });
 
@@ -47,5 +47,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/data-distribusi', [\App\Http\Controllers\DashboardController::class, 'tampilDataDistribusi'])->name('data-distribusi');
     Route::get('/periode-setting', [\App\Http\Controllers\DashboardController::class, 'tampilPeriodeSetting'])->name('periode-setting');
     Route::get('/pengaturan-barang', [\App\Http\Controllers\DashboardController::class, 'tampilPengaturanBarang'])->name('pengaturan-barang');
-
 });
