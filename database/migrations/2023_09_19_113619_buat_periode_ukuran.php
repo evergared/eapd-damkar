@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('admin')) {
-            Schema::create('admin', function (Blueprint $table) {
-                $table->string('id')->primary()->comment('id untuk login');
-                // $table->string('nama_akun')->nullable();
-                $table->string('password');
-                $table->rememberToken()->nullable();
+        if (!Schema::hasTable('periode_ukuran')) {
+            Schema::create('periode_ukuran', function (Blueprint $t) {
+                $t->id()->autoIncrement();
+                $t->string('nama')->default('periode input ukuran');
+                $t->date('tgl_awal');
+                $t->date('tgl_akhir');
             });
+
         }
     }
 
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admin');
+        Schema::dropIfExists('periode_ukuran');
     }
 };

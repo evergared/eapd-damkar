@@ -16,9 +16,10 @@ return new class extends Migration
         if (!Schema::hasTable('ukuran_pegawai')) {
             Schema::create('ukuran_pegawai', function (Blueprint $t) {
                 $t->foreignUlid('id_pegawai');
-                $t->foreignUlid('id_template');
+                // $t->foreignUlid('id_template');
                 $t->string('terakhir_diisi')->nullable();
                 $t->longText('list_ukuran')->comment('berupa json')->nullable();
+                $t->longText('history')->comment('berupa json, berisi log perubahan ukuran yang dilakukan user')->nullable();
             });
         }
 

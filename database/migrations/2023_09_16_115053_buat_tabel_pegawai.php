@@ -16,24 +16,24 @@ return new class extends Migration
         if (!Schema::hasTable('pegawai')) {
             Schema::create('pegawai', function (Blueprint $t) {
                 $t->ulid('id_pegawai')->primary();
-                $t->string('id_pegawai_plt')->nullable();
+                // $t->string('id_pegawai_plt')->nullable();
                 $t->string('nrk', 10)->unique()->nullable()->comment('no pjlp');
                 $t->string('nip', 20)->unique()->nullable()->comment('nik pjlp');
                 $t->text('nama');
                 $t->string('id_penempatan')->nullable();
                 $t->string('id_jabatan')->nullable();
-                $t->string('akun')->nullable()->comment('isi jika pegawai merupakan admin verifikator');
+                // $t->string('akun')->nullable()->comment('isi jika pegawai merupakan admin verifikator');
                 $t->string('no_telp', 20)->nullable();
                 $t->text('profile_img')->nullable();
                 $t->text('email')->nullable();
                 $t->string('grup')->nullable();
-                $t->string('penanggung_jawab')->nullable();
+                $t->string('penanggung_jawab')->nullable()->comment('siapa atasannya');
                 $t->boolean('aktif')->default(true);
                 $t->timestamps();
             });
             
             Schema::table('pegawai', function (Blueprint $t){
-                $t->foreign('id_pegawai_plt')->references('id_pegawai')->on('pegawai')->nullOnDelete();
+                // $t->foreign('id_pegawai_plt')->references('id_pegawai')->on('pegawai')->nullOnDelete();
                 $t->foreign('penanggung_jawab')->references('id_pegawai')->on('pegawai')->nullOnDelete();
             });
         }
@@ -87,7 +87,7 @@ return new class extends Migration
 
         Schema::table('pegawai',function (Blueprint $t){
             $t->dropForeign('pegawai_penanggung_jawab_foreign');
-            $t->dropForeign('pegawai_id_pegawai_plt_foreign');
+            // $t->dropForeign('pegawai_id_pegawai_plt_foreign');
         });
 
         Schema::dropIfExists('pegawai');

@@ -23,12 +23,12 @@ return new class extends Migration
             });
         }
 
-        if(Schema::hasTable('ukuran_pegawai'))
-        {
-            Schema::table('ukuran_pegawai', function(Blueprint $t){
-                $t->foreign('id_template')->references('id_template')->on('input_apd_template');
-            });
-        }
+        // if(Schema::hasTable('ukuran_pegawai'))
+        // {
+        //     Schema::table('ukuran_pegawai', function(Blueprint $t){
+        //         $t->foreign('id_template')->references('id_template')->on('input_apd_template');
+        //     });
+        // }
 
         if(Schema::hasTable('jabatan'))
         {
@@ -56,12 +56,12 @@ return new class extends Migration
             $t->dropForeign('input_apd_template_id_jabatan_foreign');
             $t->dropForeign('input_apd_template_id_periode_foreign');
         });
-        if(Schema::hasTable('ukuran_pegawai'))
-        {
-            Schema::table('ukuran_pegawai', function(Blueprint $t){
-                $t->dropForeign('ukuran_pegawai_id_template_foreign');
-            });
-        }
+        // if(Schema::hasTable('ukuran_pegawai'))
+        // {
+        //     Schema::table('ukuran_pegawai', function(Blueprint $t){
+        //         $t->dropForeign('ukuran_pegawai_id_template_foreign');
+        //     });
+        // }
         Schema::dropIfExists('input_apd_template');
     }
 };
