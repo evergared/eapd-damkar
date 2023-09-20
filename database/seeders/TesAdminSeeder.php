@@ -19,7 +19,9 @@ class TesAdminSeeder extends Seeder
         Admin::create([
             'id' => 'admineapd',
             'nama_akun' => 'Super Admin EAPD',
-            'password' => Hash::make('eapdDamkar@123')
+            'password' => Hash::make('damkar123')
         ]);
+
+        
     }
 }

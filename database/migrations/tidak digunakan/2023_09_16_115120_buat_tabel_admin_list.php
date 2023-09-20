@@ -44,11 +44,7 @@ return new class extends Migration
                 $t->dropForeign('admin_id_admin_foreign');
             });
         }
-        if(Schema::hasTable('penempatan')){
-            Schema::table('admin_list',function (Blueprint $t){
-                $t->dropForeign('admin_list_id_penempatan_foreign');
-            });
-        }     
+          
         Schema::dropIfExists('admin_list');
     }
 };

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-require __DIR__ . '/auth.php';
+// require __DIR__ . '/auth.php';
 
 Route::get('/', function () {
 
@@ -48,12 +48,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/periode-setting', [\App\Http\Controllers\DashboardController::class, 'tampilPeriodeSetting'])->name('periode-setting');
     Route::get('/pengaturan-barang', [\App\Http\Controllers\DashboardController::class, 'tampilPengaturanBarang'])->name('pengaturan-barang');
 
+
+});
+
+Route::middleware('auth:admin')->group(function(){
+    Route::get('/superuser/home', function(){
+        return view('tes-auth');
+    });
 });
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

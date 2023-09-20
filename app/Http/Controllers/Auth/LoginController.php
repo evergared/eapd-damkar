@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Pegawai;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -36,5 +39,43 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+        $this->middleware('guest:admin')->except('logout');
+    }
+
+    public function showLoginForm()
+    {
+        return view('eapd.auth.login');
+    }
+
+    public function username()
+    {
+        return 'nrk';
+    }
+
+    protected function attemptLogin(Request $request)
+    {
+        error_log('attempt login');
+        $cred = $this->credentials($request);
+
+        if(strpos($cred[$this->username()], 'admin'))
+        {
+            return Auth::guard('admin')->attempt($this->credentials($request), $request->boolean('remember'));
+        }
+        else
+        {
+            $pegawai = Pegawai::where('nrk', $cred[$this->username()])->first();
+
+            if(is_null($pegawai))
+                $pegawai = Pegawai::where('nip', $cred[$this->username()])->first();
+            
+            if($pegawai)
+            {
+                $new_cred = ["id_pegawai" => $pegawai->id_pegawai, "password" => $cred["password"]];
+                return $this->guard()->attempt($new_cred, $request->boolean('remember'));
+            }
+
+            return false;
+
+        }
     }
 }
