@@ -54,15 +54,16 @@ class LoginController extends Controller
 
     protected function attemptLogin(Request $request)
     {
-        error_log('attempt login');
         $cred = $this->credentials($request);
 
-        if(strpos($cred[$this->username()], 'admin'))
+        if(str_contains($cred[$this->username()], 'admin'))
         {
-            return Auth::guard('admin')->attempt($this->credentials($request), $request->boolean('remember'));
+            $new_cred = ["id" => $cred[$this->username()], "password" => $cred["password"]];
+            return Auth::guard('admin')->attempt($new_cred, $request->boolean('remember'));
         }
         else
         {
+
             $pegawai = Pegawai::where('nrk', $cred[$this->username()])->first();
 
             if(is_null($pegawai))
