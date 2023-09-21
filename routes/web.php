@@ -18,8 +18,12 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
 
-    if (Auth::check())
+    if (Auth::guard('web')->check())
         return redirect()->route('dashboard');
+    
+    if (Auth::guard('admin')->check())
+        return redirect()->to('/superuser/home');
+
     return view('eapd/halaman-depan');
     // return view('tes/welcome');
 });
@@ -52,6 +56,18 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth:admin')->group(function(){
+
+    Route::get('/superuser',function(){
+        if(Auth::guard('admin')->check())
+        {
+            return redirect()->to('/superuser/home');
+        }
+        else
+        {
+            return redirect()->to('/')->with('alert-warning','Silahkan login kembali menggunakan akun admin untuk mengakses dashboard admin.');
+        }
+    });
+
     Route::get('/superuser/home', function(){
         return view('tes-auth');
     });
@@ -59,6 +75,5 @@ Route::middleware('auth:admin')->group(function(){
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 

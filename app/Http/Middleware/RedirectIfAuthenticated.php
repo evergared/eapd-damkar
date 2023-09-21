@@ -26,7 +26,7 @@ class RedirectIfAuthenticated
             if($guard == 'admin' && Auth::guard($guard)->check())
                 return redirect('/superuser/home');
 
-            if (Auth::guard($guard)->check()) {
+            if ($guard == 'web' && Auth::guard($guard)->check()) {
                 return redirect(RouteServiceProvider::HOME);
             }
         }

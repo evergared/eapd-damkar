@@ -13,6 +13,10 @@
     </div>
     <div class="card-body">
 
+        @if (session()->has('alert-warning'))
+            {{ session('alert-warning') }}
+        @endif  
+
         @isset($pesan)
         <div class="alert alert-info" role="alert">
             {{ $pesan }}
