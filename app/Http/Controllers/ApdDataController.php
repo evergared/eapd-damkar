@@ -6,20 +6,21 @@ use App\Enum\KeberadaanApd;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Models\Eapd\Mongodb\ApdList;
-use App\Models\Eapd\Mongodb\InputApdTemplate;
-use App\Models\Eapd\Mongodb\Jabatan;
+use App\Models\ApdList;
+use App\Models\InputApdTemplate;
+use App\Models\Jabatan;
 use App\Enum\VerifikasiApd as verif;
 use App\Enum\StatusApd as status;
-use App\Models\Eapd\Mongodb\ApdJenis;
-use App\Models\Eapd\Mongodb\InputApd;
-use App\Models\Eapd\Mongodb\Pegawai;
-use App\Models\Eapd\Mongodb\Penempatan;
-use App\Models\Eapd\Mongodb\PeriodeInputApd;
-use App\Models\Eapd\Mongodb\Provinsi;
-use App\Models\Eapd\Mongodb\Wilayah;
+use App\Models\ApdJenis;
+use App\Models\InputApd;
+use App\Models\Pegawai;
+use App\Models\Penempatan;
+use App\Models\PeriodeInputApd;
+use App\Models\Provinsi;
+use App\Models\Wilayah;
 use Carbon\Carbon;
 use Error;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -303,6 +304,63 @@ class ApdDataController extends Controller
         }
     }
 
+    #region Method hitung capaian inputan
+
+    public function hitungCapaianInputPegawai($id_pegawai, int|array &$maks, int|array &$capaian, $id_periode = 1, $target_verifikasi = 0)
+    {
+        $pegawai = Pegawai::find($id_pegawai);
+        $yang_harus_diinput = 0;
+        $yang_telah_diinput = 0;
+
+        // ambil apa saja yang harus diinput oleh pegawai
+        $template =  $this->muatListInputApdDariTemplate($id_periode,$pegawai->id_jabatan);
+
+
+        // apakah template kosong? (tidak ada yang perlu diinput oleh pegawai tersebut)
+        if(!(is_null($template)))
+        {
+            // template tidak kosong (ada yang perlu diinput oleh pegawai tersebut)
+
+            // query apa saja yang perlu diinput oleh pegawai tersebut
+            foreach($template as $t)
+            {
+                $yang_harus_diinput++;
+
+            }
+
+            // muat apa saja yang telah diinput oleh si pegawai
+            $inputan = $this->muatInputanPegawai($id_periode,$pegawai->id,$target_verifikasi);
+
+            // apakah pegawai pernah menginput
+            if(is_array($inputan) && count($inputan) !== 0)
+            {
+
+                // pegawai pernah menginput
+
+                // query apa saja yang telah diinput oleh pegawai tersebut
+                foreach($inputan as $i)
+                {
+                    if($target_verifikasi != 0)
+                    {
+                        if($i['status_verifikasi'] == verif::tryFrom($target_verifikasi)->label)
+                        {
+                            $yang_telah_diinput++;   
+
+                        }
+                    }
+                    else
+                        $yang_telah_diinput++;
+
+                }
+
+            }
+
+        }
+
+        $maks = $yang_harus_diinput;
+        $capaian = $yang_telah_diinput;
+    }
+
     public function hitungCapaianInputPos($pos, int|array &$maks, int|array &$capaian, $id_periode, $target_verifikasi = 0)
     {
         try{
@@ -314,28 +372,12 @@ class ApdDataController extends Controller
 
             foreach($array_pegawai as $pegawai)
             {
-                $template = $this->muatListInputApdDariTemplate($id_periode, $pegawai->id_jabatan);
-
-                if(!is_null($template))
-                {
-                    foreach($template as $t)
-                        $yang_harus_diinput++;
-                    $inputan = $this->muatInputanPegawai($id_periode, $pegawai->id,$target_verifikasi);
-
-                    if(is_array($inputan) && count($inputan) !== 0)
-                    {
-                        foreach($inputan as $i)
-                        {
-                            if($target_verifikasi != 0)
-                            {
-                                if($i["status_verifikasi"] == verif::tryFrom($target_verifikasi)->label)
-                                    $yang_telah_diinput++;
-                            }
-                            else
-                                $yang_telah_diinput++;
-                        }
-                    }
-                }
+                $max = 0;
+                $input = 0;
+                $this->hitungCapaianInputanPegawai($pegawai['id_pegawai'], $max, $input, $id_periode, $target_verifikasi);
+                
+                $yang_harus_diinput = $yang_harus_diinput + $max;
+                $yang_telah_diinput = $yang_telah_diinput + $input;
             }
 
             $maks = $yang_harus_diinput;
@@ -367,50 +409,12 @@ class ApdDataController extends Controller
             // menghitung apa yg harus diinput dan apa yang telah diinput oleh tiap pegawai
             foreach($array_pegawai as $pegawai)
             {
-                // ambil apa saja yang harus diinput oleh pegawai
-                $template =  $this->muatListInputApdDariTemplate($id_periode,$pegawai->id_jabatan);
-
-
-                // apakah template kosong? (tidak ada yang perlu diinput oleh pegawai tersebut)
-                if(!(is_null($template)))
-                {
-                    // template tidak kosong (ada yang perlu diinput oleh pegawai tersebut)
-
-                    // query apa saja yang perlu diinput oleh pegawai tersebut
-                    foreach($template as $t)
-                    {
-                        $yang_harus_diinput++;
-
-                    }
-
-                    // muat apa saja yang telah diinput oleh si pegawai
-                    $inputan = $this->muatInputanPegawai($id_periode,$pegawai->id,$target_verifikasi);
-
-                    // apakah pegawai pernah menginput
-                    if(is_array($inputan) && count($inputan) !== 0)
-                    {
-
-                        // pegawai pernah menginput
-
-                        // query apa saja yang telah diinput oleh pegawai tersebut
-                        foreach($inputan as $i)
-                        {
-                            if($target_verifikasi != 0)
-                            {
-                                if($i['status_verifikasi'] == verif::tryFrom($target_verifikasi)->label)
-                                {
-                                    $yang_telah_diinput++;   
-
-                                }
-                            }
-                            else
-                                $yang_telah_diinput++;
-
-                        }
-
-                    }
-
-                }
+                $max = 0;
+                $input = 0;
+                $this->hitungCapaianInputPegawai($pegawai['id_pegawai'], $max, $input, $id_periode, $target_verifikasi);
+                
+                $yang_harus_diinput = $yang_harus_diinput + $max;
+                $yang_telah_diinput = $yang_telah_diinput + $input;
             }
 
 
@@ -431,8 +435,8 @@ class ApdDataController extends Controller
         try{
 
             // ambil list semua sektor di suatu wilayah
-            $list_sektor = Penempatan::where('id_wilayah','=',$sudin)->where('keterangan','=','sektor')->get()->pluck('id');
-
+            $list_sektor = Penempatan::where('id_parent_penempatan','=',$sudin)->where('keterangan','=','sektor')->get();
+            
             $yang_harus_diinput = 0;
             $yang_telah_diinput = 0;
 
@@ -452,13 +456,42 @@ class ApdDataController extends Controller
         }
         catch(Throwable $e)
         {
-            error_log('Gagal menghitung capaian input sudin untuk wilayah '.$sudin.' '.$e);
+            error_log('Apd Data Controller Error : kesalahan saat menghitung capaian input tingkat sudin untuk sudin  '.$sudin.' at hitungCapaianInputSudin() '.$e);
+            Log::info('Apd Data Controller Error : kesalahan saat menghitung capaian input tingkat sudin untuk sudin  '.$sudin.' at hitungCapaianInputSudin() '.$e);
             $maks = 0;
             $capaian = 0;
         }
     }
 
-    public function hitungCapaianInputDinas($id_periode,)
+    public function hitungCapaianInputSubbag($subbag, int|array &$maks, int|array &$capaian, $id_periode = 1, $target_verifikasi = 0)
+    {
+
+        try{
+            $list_pegawai = Pegawai::where('id_penempatan',$subbag)->get();
+
+            $yg_harus_diinput = 0;
+            $yg_telah_diinput = 0;
+
+            foreach($list_pegawai as $pegawai)
+            {
+                $max = 0;
+                $input = 0;
+                $this->hitungCapaianInputPegawai($pegawai['id_pegawai'], $max, $input, $id_periode, $target_verifikasi);
+                
+                $yg_harus_diinput = $yg_harus_diinput + $max;
+                $yg_telah_diinput = $yg_telah_diinput + $input;
+            }
+        }
+        catch(Throwable $e)
+        {
+            error_log('Apd Data Controller Error : kesalahan saat menghitung capaian input subbag dg id penempatan  '.$subbag.' at hitungCapaianInputSubbag() '.$e);
+            Log::info('Apd Data Controller Error : kesalahan saat menghitung capaian input subbag dg id penempatan  '.$subbag.' at hitungCapaianInputSubbag() '.$e);
+            $maks = 0;
+            $capaian = 0;
+        }
+    }
+
+    public function hitungCapaianInputDinas($id_periode)
     {
         $data_capaian = [];
 
@@ -480,7 +513,132 @@ class ApdDataController extends Controller
         //         ]
         //     ]
         // ]
+        try{
 
+            $capaian_dinas = [];
+
+            $list_sudin = Penempatan::where('tipe','sudin')->get();
+            $list_subbag_dinas = Penempatan::where('id_parent_penempatan', 'D_1')->where('tipe', 'subbag')->get();
+
+            foreach($list_subbag_dinas as $subbag)
+            {
+                $maks = 0;
+                $terinput = 0;
+                $tervalidasi = 0;
+
+                $this->hitungCapaianInputSubbag($subbag['id_penempatan'], $maks, $terinput, $id_periode);
+                $this->hitungCapaianInputSubbag($subbag['id_penempatan'], $maks, $tervalidasi, $id_periode, 3);
+
+                $capaian_dinas[$subbag['nama_penempatan']] = [
+                    'value_max' => $maks,
+                    'value_inputan' => $terinput,
+                    'value_validasi' => $tervalidasi
+                ];
+            }
+
+            foreach($list_sudin as $sudin)
+            {
+                $capaian_sudin = [];
+
+                // hitung subbag sudin tsb
+                $list_subbag_sudin = Penempatan::where('id_parent_penempatan', $sudin['id_penempatan'])->where('tipe','subbag')->get();
+                foreach($list_subbag_sudin as $subbag)
+                {
+                    
+                    $maks = 0;
+                    $terinput = 0;
+                    $tervalidasi =0;
+                    $this->hitungCapaianInputSubbag($subbag->id_penempatan, $maks, $terinput, $id_periode);
+                    $this->hitungCapaianInputSubbag($subbag->id_penempatan, $maks, $tervalidasi, $id_periode, 3);
+
+                    $capaian_sudin[$subbag['nama_penempatan']] = [
+                        'value_max' => $maks,
+                        'value_inputan' => $terinput,
+                        'value_validasi' => $tervalidasi
+                    ];
+                }
+
+                // hitung tiap sektor dan pos dibawahnya
+                $list_sektor = Penempatan::where('id_parent_penempatan', $sudin['id_penempatan'])->where('tipe','sektor')->get();
+                foreach($list_sektor as $sektor)
+                {
+                    $capaian_sektor = [];
+                    
+                    // hitung satgas dan kasek
+                    $list_pegawai_sektor_nonpos = Pegawai::where('id_penempatan',$sektor['id_penempatan'])->get();
+                    $maks = 0;
+                    $terinput = 0;
+                    $tervalidasi = 0;
+                    foreach($list_pegawai_sektor_nonpos as $pegawai)
+                    {
+                        $max = 0;
+                        $input = 0;
+                        $validasi = 0;
+                        $this->hitungCapaianInputPegawai($pegawai['id_pegawai'], $max, $input, $id_periode);
+                        $this->hitungCapaianInputPegawai($pegawai['id_pegawai'], $max, $validasi, $id_periode, 3);
+                        
+                        $maks = $maks + $max;
+                        $terinput = $terinput + $input;
+                        $tervalidasi = $tervalidasi + $validasi;
+                    }
+
+                    $capaian_nonpos = [
+                        'value_max' => $maks,
+                        'value_inputan' => $terinput,
+                        'value_validasi' => $tervalidasi
+                    ];
+
+
+                    //hitung pegawai tiap pos
+                    $capaian_pos = [];
+                    $list_pos = Penempatan::where('id_parent_penempatan', $sektor['id_penempatan'])->where('tipe','pos')->get();
+                    foreach($list_pos as $pos)
+                    {
+                        $max = 0;
+                        $input = 0;
+                        $validasi = 0;
+
+                        $list_pegawai = Pegawai::where('id_penempatan', $pos['id_penempatan'])->get();
+
+                        foreach($list_pegawai as $pegawai)
+                        {
+                            $maks = 0;
+                            $terinput = 0;
+                            $tervalidasi =0;
+
+                            $this->hitungCapaianInputPegawai($pegawai['id_pegawai'], $maks, $terinput, $id_periode);
+                            $this->hitungCapaianInputPegawai($pegawai['id_pegawai'], $maks, $tervalidasi, $id_periode, 3);
+
+                            $max = $max + $maks;
+                            $input = $input + $terinput;
+                            $validasi = $validasi + $tervalidasi;
+                        }
+
+                        $capaian_pos[$pos['nama_penempatan']] = [
+                            'value_max' => $max,
+                            'value_inputan' => $input,
+                            'value_validasi' => $validasi
+                        ];
+
+                    }
+
+                    $capaian_sektor = $capaian_pos;
+                    $capaian_sektor['non-pos'] = $capaian_nonpos;
+
+                    $capaian_sudin[$sektor['nama_penempatan']] = $capaian_sektor;
+                }
+
+                $capaian_dinas[$sudin['nama_penempatan']] = $capaian_sudin;
+            }
+
+            $data_capaian = $capaian_dinas;
+        }
+        catch(Throwable $e)
+        {
+            error_log("Apd Data Controller error : kesalahan saat menghitung angka capaian input apd tingkat dinas at hitungCapaianInputDinas() ".$e);
+           Log::info("Apd Data Controller error : kesalahan saat menghitung angka capaian input apd tingkat dinas at hitungCapaianInputDinas() ".$e);
+            continue;
+        }
         try{
 
             // hitung berapa banyak provinsi
@@ -601,6 +759,7 @@ class ApdDataController extends Controller
             return $data_capaian;
         }
     }
+#endregion
 
     /**
      * Bangun list yang akan digunakan untuk thumbnail di halaman apdku.
