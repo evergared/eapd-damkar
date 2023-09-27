@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Pegawai;
 use App\Models\Jabatan;
 use Carbon\Carbon;
 // use PHPUnit\Framework\TestCase;
@@ -17,8 +17,8 @@ class ExampleTest extends TestCase
      */
     public function test_that_true_is_true()
     {
-            $jabatan = Jabatan::pluck('id_jabatan')->all();
-            print_r($jabatan);
+            $jabatan = Jabatan::where('id_jabatan','like','K%')->get()->first();
+            print_r($jabatan['id_jabatan']);
             $this->assertTrue(true);
 
     }

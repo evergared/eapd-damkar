@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Eapd\Mongodb\ApdJenis;
-use App\Models\Eapd\Mongodb\ApdList;
-use App\Models\Eapd\Mongodb\InputApdTemplate;
-use App\Models\Eapd\Mongodb\Jabatan;
-use App\Models\Eapd\Mongodb\PeriodeInputApd;
+use App\Models\ApdJenis;
+use App\Models\ApdList;
+use App\Models\InputApdTemplate;
+use App\Models\Jabatan;
+use App\Models\PeriodeInputApd;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Throwable;

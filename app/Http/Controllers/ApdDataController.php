@@ -34,6 +34,7 @@ class ApdDataController extends Controller
      */
     public static $jumlahBatasUploadGambar = 3;
 
+    #region Untuk testing
     /**
      * Digunakan untuk contoh, muat mock list untuk digunakan sebagai template inputan
      * @param string $id_jenis jenis apd yang akan digunakan
@@ -72,6 +73,8 @@ class ApdDataController extends Controller
     {
         return ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000', 'H-fir-0000', 'H-bro-0001']];
     }
+    #endregion
+
 
     public function muatOpsiApd(string $id_jenis, $id_periode = 1, $id_jabatan = "")
     {
@@ -104,13 +107,13 @@ class ApdDataController extends Controller
 
             // jika parameter periode tidak diisi, maka ambil periode paling atas
             if($id_periode == 1)
-            $id_periode = PeriodeInputApd::get()->first()->id;
+            $id_periode = PeriodeInputApd::get()->first()->id_periode;
 
-            $template_pada_periode = InputApdTemplate::where("id_periode",$id_periode)->get()->first()->template;
+            $template_pada_periode = InputApdTemplate::where("id_periode",$id_periode)->where("id_jabatan", $id_jabatan)->get()->first()->template;
             // dd($template_pada_periode);
             
-            if(array_key_exists($id_jabatan,$template_pada_periode))
-                return $template_pada_periode[$id_jabatan];
+            if(!is_null($template_pada_periode))
+                return $template_pada_periode;
             
             error_log('template input apd tidak ditemukan untuk jabatan '.$id_jabatan);
             return [];
@@ -135,16 +138,16 @@ class ApdDataController extends Controller
 
             // jika parameter id_pegawai kosong, ambil nrk dan jabatan user
             if ($id_pegawai == "") {
-                $id_pegawai = Auth::user()->id;
+                $id_pegawai = Auth::user()->id_pegawai;
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
             // jika paramter id_pegawai diisi, cukup ambil jabatan user
             else {
-                $id_jabatan = Pegawai::where('_id', '=', $id_pegawai)->first()->id_jabatan;
+                $id_jabatan = Pegawai::where('id_pegawai', '=', $id_pegawai)->first()->id_jabatan;
             }
 
             if($id_periode == 1)
-            $id_periode = PeriodeInputApd::get()->first()->id;
+            $id_periode = PeriodeInputApd::get()->first()->id_periode;
 
             // array kosong untuk return
             $list = [];
@@ -181,7 +184,7 @@ class ApdDataController extends Controller
                             // masukan ke $list
                             array_push($list, [
                                 'id_jenis' => $id_jenis,
-                                'nama_jenis' => ApdJenis::where('_id', '=', $id_jenis)->first()->nama_jenis,
+                                'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
                                 'id_apd' => $input->id_apd,
                                 'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                                 'status_keberadaan' => KeberadaanApd::tryFrom($input->keberadaan)->label,
@@ -209,7 +212,7 @@ class ApdDataController extends Controller
                         // masukan ke $list
                         array_push($list, [
                             'id_jenis' => $id_jenis,
-                            'nama_jenis' => ApdJenis::where('_id', '=', $id_jenis)->first()->nama_jenis,
+                            'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
                             'id_apd' => $input->id_apd,
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
                             'status_keberadaan' => KeberadaanApd::tryFrom($input->keberadaan)->label,
@@ -243,7 +246,7 @@ class ApdDataController extends Controller
             error_log('start muat satu inputan pegawai');
             // jika parameter nrk kosong, ambil nrk dan jabatan user
             if ($id_pegawai == "") {
-                $id_pegawai = Auth::user()->id;
+                $id_pegawai = Auth::user()->id_pegawai;
                 // $id_jabatan = Auth::user()->data->id_jabatan;
             }
             // jika paramter nrk diisi, cukup ambil jabatan user
@@ -254,7 +257,7 @@ class ApdDataController extends Controller
             error_log('hit pegawai id check pass '.$id_pegawai);
 
             if($id_periode == 1)
-            $id_periode = PeriodeInputApd::get()->first()->id;
+            $id_periode = PeriodeInputApd::get()->first()->id_periode;
             error_log('hit id_periode id check pass '.$id_periode);
 
             error_log('id_jenis : '.$id_jenis);
@@ -275,7 +278,7 @@ class ApdDataController extends Controller
 
                 return [
                             'id_jenis' => $id_jenis,
-                            'nama_jenis' => ApdJenis::where('_id', '=', $id_jenis)->first()->nama_jenis,
+                            'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
                             'id_apd' => $input->id_apd,
                             'size_apd' => ($input->size)?$input->size:"-",
                             'data_terakhir_update' => $input->data_diupdate,
@@ -397,7 +400,7 @@ class ApdDataController extends Controller
         try{
 
             if($id_periode == 1)
-                $id_periode = PeriodeInputApd::get()->first()->id;
+                $id_periode = PeriodeInputApd::get()->first()->id_periode;
 
             // ambil daftar seluruh pegawai di sektor (termasuk staff dan kasie sektor)
             $array_pegawai = Pegawai::where('id_penempatan','like',$sektor.'%')->get();
@@ -632,132 +635,16 @@ class ApdDataController extends Controller
             }
 
             $data_capaian = $capaian_dinas;
+
+            return $data_capaian;
         }
         catch(Throwable $e)
         {
             error_log("Apd Data Controller error : kesalahan saat menghitung angka capaian input apd tingkat dinas at hitungCapaianInputDinas() ".$e);
-           Log::info("Apd Data Controller error : kesalahan saat menghitung angka capaian input apd tingkat dinas at hitungCapaianInputDinas() ".$e);
-            continue;
-        }
-        try{
-
-            // hitung berapa banyak provinsi
-            $list_provinsi = Provinsi::all();
-
-            foreach($list_provinsi as $provinsi)
-            {
-                // hitung capaian inputan dalam suatu provinsi
-                // reserved fitur untuk upgrade di masa depan
-                $data_provinsi = [];
-                try{
-                    
-                    // ambil semua wilayah/sudin yang ada di provinsi
-                    $list_wilayah = Wilayah::where('id_provinsi',$provinsi->id)->get();
-                    $data_sudin = [];
-                    foreach($list_wilayah as $wilayah)
-                    {
-                        try{
-                                error_log("id wilayah : ".$wilayah->id);
-                                $sudin = Penempatan::where('id_wilayah',$wilayah->id)->where('keterangan','sudin')->get()->first();
-                                error_log("id sudin : ".$sudin->id);
-                                $max_sudin = 0;
-                                $value_validasi_sudin = 0;
-                                $value_inputan_sudin = 0;
-                                $this->hitungCapaianInputSudin($sudin->id,$max_sudin,$value_inputan_sudin,$id_periode);
-                                $this->hitungCapaianInputSudin($sudin->id,$max_sudin,$value_validasi_sudin,$id_periode,3);
-                                error_log("value inputan sudin : ".$value_inputan_sudin);
-
-                                // hitung capaian inputan pada tiap sektor dalam sudin
-                                $data_sektor = [];
-                                $list_sektor = Penempatan::where('id_wilayah',$wilayah->id)->where("keterangan","sektor")->get();
-                                foreach($list_sektor as $sektor)
-                                {
-                                    try{
-                                        error_log("sektor id : ".$sektor->id);
-                                            $max_sektor = 0;
-                                            $value_inputan_sektor = 0;
-                                            $value_validasi_sektor = 0;
-
-                                            $this->hitungCapaianInputSektor($sektor->id,$max_sektor,$value_inputan_sektor,$id_periode);
-                                            $this->hitungCapaianInputSektor($sektor->id,$max_sektor,$value_validasi_sektor,$id_periode,3);
-
-                                            //hitung capaian inputan pada tiap pos dalam sektor
-                                            $data_pos = [];
-                                            $list_pos = Penempatan::where('_id','like',$sektor->id."%")->where("keterangan","pos")->get();
-                                            error_log("pos count : ".count($list_pos));
-                                            foreach($list_pos as $pos)
-                                            {
-                                                try{
-                                                    error_log("pos id : ".$pos->id);
-                                                        $max_pos = 0;
-                                                        $value_inputan_pos = 0;
-                                                        $value_validasi_pos = 0;
-
-                                                        $this->hitungCapaianInputPos($pos->id,$max_pos,$value_inputan_pos,$id_periode);
-                                                        $this->hitungCapaianInputPos($pos->id,$max_pos,$value_validasi_pos,$id_periode,3);
-                                                        
-                                                        $data_pos[$pos->nama_penempatan] = [
-                                                                                                "value_max" => $max_pos,
-                                                                                                "value_inputan" => $value_inputan_pos,
-                                                                                                "value_validasi" => $value_validasi_pos
-                                                        ];
-                                                }
-                                                catch(Throwable $e)
-                                                {
-                                                    error_log("gagal dalam mengumpulkan data pos");
-                                                    continue;
-                                                }
-                                                
-                                            }
-
-                                            $data_sektor[$sektor->nama_penempatan] = [
-                                                                                        "value_max" => $max_sektor,
-                                                                                        "value_inputan" => $value_inputan_sektor,
-                                                                                        "value_validasi" => $value_validasi_sektor,
-                                                                                        "pos" => $data_pos];
-                                    }
-                                    catch(Throwable $e)
-                                    {
-                                        error_log("gagal dalam mengumpulkan data sektor");
-                                        continue;
-                                    }
-                                    
-                                }
-
-                                $data_sudin[$sudin->nama_penempatan] = [
-                                                                        "value_max" => $max_sudin,
-                                                                        "value_inputan" => $value_inputan_sudin,
-                                                                        "value_validasi" => $value_validasi_sudin,
-                                                                        "sektor" => $data_sektor];
-
-                        }
-                        catch(Throwable $e)
-                        {
-                            error_log("gagal dalam mengumpulkan data sudin");
-                            continue;
-                        }
-                    }
-
-                    $data_provinsi = $data_sudin;
-
-                }
-                catch(Throwable $e)
-                {
-                    error_log('kesalahan saat mengumpulkan data capaian input provinsi ');
-                    $data_provinsi = [];
-                    continue;
-                }
-
-                $data_capaian[$provinsi->nama_provinsi] = $data_provinsi;
-            }
-
+            Log::info("Apd Data Controller error : kesalahan saat menghitung angka capaian input apd tingkat dinas at hitungCapaianInputDinas() ".$e);
             return $data_capaian;
         }
-        catch(Throwable $e)
-        {
-            error_log('Terjadi kesalahan saat menghitung capaian input dinas '.$e);
-            return $data_capaian;
-        }
+
     }
 #endregion
 
@@ -779,7 +666,7 @@ class ApdDataController extends Controller
             // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
             if($id_periode == 1)
             {
-                $id_periode = PeriodeInputApd::get()->first()->id;
+                $id_periode = PeriodeInputApd::get()->first()->id_periode;
             }
 
             error_log("id_periode : ".$id_periode);
@@ -800,7 +687,7 @@ class ApdDataController extends Controller
                 $warnaVerifikasi = $sdc->ubahVerifikasiApdKeWarnaBootstrap($statusVerifikasi->value);
                 $statusKerusakan = $this->ambilStatusKerusakan($item['id_jenis'], "", $id_periode);
                 $warnaKerusakan = $sdc->ubahKondisiApdKeWarnaBootstrap($statusKerusakan);
-                $nama_jenis = ApdJenis::where('_id', '=', $item['id_jenis'])->first()->nama_jenis;
+                $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
 
                 array_push($template, [
                     'id_jenis' => $item['id_jenis'],
@@ -840,7 +727,7 @@ class ApdDataController extends Controller
                 error_log('id dari opsi yang dicari : '.$id_apd);
 
                 // ambil data tersebut
-                $model = ApdList::where('_id', '=', $id_apd)->first();
+                $model = ApdList::where('id_apd', '=', $id_apd)->first();
 
                 $nama_apd = $model->nama_apd;
                 $merk_apd = $model->merk_apd;
@@ -890,7 +777,7 @@ class ApdDataController extends Controller
         $array = [];
 
 
-        $model = ApdList::where('_id', '=', $id_apd)->first();
+        $model = ApdList::where('id_apd', '=', $id_apd)->first();
 
         $nama_apd = $model->nama_apd;
         $merk_apd = $model->merk_apd;
@@ -943,7 +830,7 @@ class ApdDataController extends Controller
 
              error_log('buat list sektor');
             // buat daftar seluruh sektor yang ada di id_wilayah tsb
-            $list_sektor = Penempatan::where('id_wilayah','=',$id_wilayah)->where('keterangan','=','sektor')->pluck('_id')->toArray();
+            $list_sektor = Penempatan::where('id_wilayah','=',$id_wilayah)->where('keterangan','=','sektor')->pluck('id_penempatan')->toArray();
             error_log('list sektor = '.count($list_sektor));
 
             // siapkan array untuk menampung data yang akan di return
@@ -965,7 +852,7 @@ class ApdDataController extends Controller
                 }
 
                 // list pos
-                $list_pos = Penempatan::where('_id','like',$sektor.'.%')->where('keterangan','=','pos')->pluck('_id')->toArray();
+                $list_pos = Penempatan::where('id_penempatan','like',$sektor.'.%')->where('keterangan','=','pos')->pluck('id_penempatan')->toArray();
                 array_push($list_pos,$sektor);
                 $data_pos = array();
                 error_log('jumlah pos '.count($list_pos));
@@ -1144,16 +1031,16 @@ class ApdDataController extends Controller
             }
             elseif($tingkat_penempatan == "sektor")
             {
-                $penempatan_ids = Penempatan::where('id','like',$penempatan.'%')->get()->pluck('id');
+                $penempatan_ids = Penempatan::where('id_penempatan','like',$penempatan.'%')->get()->pluck('id_penempatan');
             }
             elseif($tingkat_penempatan == "sudin")
             {
                 $wil = Penempatan::find($penempatan)->id_wilayah;
-                $penempatan_ids = Penempatan::where('id_wilayah',$wil)->get()->pluck('id');
+                $penempatan_ids = Penempatan::where('id_wilayah',$wil)->get()->pluck('id_penempatan');
             }
             elseif($tingkat_penempatan == "dinas")
             {
-                $penempatan_ids = Penempatan::where('id','like','#'.filter_var($penempatan,FILTER_SANITIZE_NUMBER_INT).'%')->get()->pluck('id');
+                $penempatan_ids = Penempatan::where('id_penempatan','like','#'.filter_var($penempatan,FILTER_SANITIZE_NUMBER_INT).'%')->get()->pluck('id_penempatan');
             }
             error_log('tingkat penempatan : '.$tingkat_penempatan);
             error_log('id penempatan yang dikumpulkan : '.$penempatan_ids);
@@ -1361,7 +1248,7 @@ class ApdDataController extends Controller
     {
         if($tanggal == null)
             {
-                return PeriodeInputApd::get()->first()->id;
+                return PeriodeInputApd::get()->first()->id_periode;
             }
         // where tanggal awal < $tanggal < tanggal akhir -> value('id')
     }
@@ -1407,7 +1294,7 @@ class ApdDataController extends Controller
             $targetApd = $opsiApd[0];
 
             // ambil gambar apd tersebut
-            $gambarApd = ApdList::where('_id', '=', $targetApd)->first()->image;
+            $gambarApd = ApdList::where('id_apd', '=', $targetApd)->first()->image;
 
             // ambil gambar pertama dari apd tersebut
             $gbr = $this->ambilGambarPertama($gambarApd);
@@ -1437,12 +1324,12 @@ class ApdDataController extends Controller
         try {
 
             if ($id_pegawai == "")
-                $id_pegawai = Auth::user()->id;
+                $id_pegawai = Auth::user()->id_pegawai;
 
             // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
             if($id_periode == 1)
             {
-                $id_periode = PeriodeInputApd::get()->first()->id;
+                $id_periode = PeriodeInputApd::get()->first()->id_periode;
             }
 
             return verif::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first()->verifikasi_status);
@@ -1458,12 +1345,12 @@ class ApdDataController extends Controller
         try {
 
             if ($id_pegawai == "")
-                $id_pegawai = Auth::user()->id;
+                $id_pegawai = Auth::user()->id_pegawai;
 
             // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
             if($id_periode == 1)
             {
-                $id_periode = PeriodeInputApd::get()->first()->id;
+                $id_periode = PeriodeInputApd::get()->first()->id_periode;
             }
 
             return status::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first()->kondisi);

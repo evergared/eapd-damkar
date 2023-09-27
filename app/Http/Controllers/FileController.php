@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Eapd\Mongodb\PeriodeInputApd;
+use App\Models\PeriodeInputApd;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -120,16 +120,27 @@ class FileController extends Controller
         }
     }
 
+    /**
+     * Buat path untuk menampung foto inputan apd user
+     * 
+     * @return String path untuk menyimpan foto inputan user
+     */
     public function buatPathFileApdUpload($id_pegawai, $id_jenis, $id_periode)
     {
         if($id_periode === 1 || $id_periode == null)
-        $id_periode = PeriodeInputApd::get()->first()->id;
+        $id_periode = PeriodeInputApd::get()->first()->id_periode;
 
-        $periode = Str::slug(PeriodeInputApd::where('_id', '=', $id_periode)->first()->nama_periode);
+        $periode = Str::slug($id_periode);
+        // $periode = Str::slug(PeriodeInputApd::where('id_periode', '=', $id_periode)->first()->nama_periode);
 
-        return self::$apdUploadBasePath . '/' . $id_pegawai . '/' . $periode . '/' . $id_jenis;
+        return self::$apdUploadBasePath . '/' . $periode . '/' . $id_pegawai . '/' . $id_jenis;
     }
 
+    /**
+     * Buat path untuk menampung foto template apd dari admin
+     * 
+     * @return String path folder template apd
+     */
     public function buatPathFileApdItem($id_jenis, $id_apd)
     {
         return self::$apdItemBasePath . '/' . $id_jenis . '/' . $id_apd;
