@@ -4,9 +4,9 @@ namespace App\Http\Livewire\Eapd\Datatable;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Eapd\Mongodb\Jabatan;
-use App\Models\Eapd\Mongodb\ApdJenis;
-use App\Models\Eapd\Mongodb\ApdList;
+use App\Models\Jabatan;
+use App\Models\ApdJenis;
+use App\Models\ApdList;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 use Throwable;
@@ -27,8 +27,8 @@ class TabelJabatanTemplateSingle extends DataTableComponent
     #region Rappasoft function
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['_id','nama_jabatan']);
+        $this->setPrimaryKey('id_jabatan');
+        $this->setAdditionalSelects(['id_jabatan','nama_jabatan']);
     }
 
     public function builder(): Builder
@@ -41,10 +41,10 @@ class TabelJabatanTemplateSingle extends DataTableComponent
         $this->index = $this->page > 1 ? ($this->page - 1) * $this->perPage : 0;
 
         return [
-            Column::make("ID Jabatan", "_id")
+            Column::make("ID Jabatan", "id_jabatan")
                 ->sortable()
                 ->searchable(
-                    fn(Builder $query, string $kata_pencarian)=> $query->orWhere('_id','like','%'.$kata_pencarian.'%')
+                    fn(Builder $query, string $kata_pencarian)=> $query->orWhere('id_jabatan','like','%'.$kata_pencarian.'%')
                 ),
             Column::make("Nama Jabatan", "nama_jabatan")
                 ->sortable()

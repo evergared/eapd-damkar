@@ -5,8 +5,8 @@ namespace App\Http\Livewire\Eapd\Layout;
 use App\Enum\StatusApd;
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\ApdRekapController;
-use App\Models\Eapd\Mongodb\InputApd;
-use App\Models\Eapd\Mongodb\PeriodeInputApd;
+use App\Models\InputApd;
+use App\Models\PeriodeInputApd;
 use Livewire\Component;
 use Throwable;
 
@@ -36,7 +36,7 @@ class LayoutRekapApdAdminSektor extends Component
         $apr = new ApdRekapController;
         $adc = new ApdDataController;
         $periode = $adc->ambilIdPeriodeInput();
-        $this->nama_periode = PeriodeInputApd::where('_id','=',$periode)->first()->nama_periode;
+        $this->nama_periode = PeriodeInputApd::where('id_periode','=',$periode)->first()->nama_periode;
         $this->id_periode = $periode;
         $this->data_rekap_apd = $apr->bangunDataTabelRekapApdSektor($this->id_periode);
     }

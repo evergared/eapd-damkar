@@ -4,9 +4,9 @@ namespace App\Http\Livewire\Eapd\Datatable;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Eapd\Mongodb\Jabatan;
-use App\Models\Eapd\Mongodb\ApdJenis;
-use App\Models\Eapd\Mongodb\ApdList;
+use App\Models\Jabatan;
+use App\Models\ApdJenis;
+use App\Models\ApdList;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 use Throwable;
@@ -23,8 +23,8 @@ class TabelJenisApdTemplateSingle extends DataTableComponent
     #region Rappasoft function
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['_id','nama_jenis']);
+        $this->setPrimaryKey('id_jenis');
+        $this->setAdditionalSelects(['id_jenis','nama_jenis']);
     }
 
     public function builder(): Builder
@@ -37,10 +37,10 @@ class TabelJenisApdTemplateSingle extends DataTableComponent
         $this->index = $this->page > 1 ? ($this->page - 1) * $this->perPage : 0;
 
         return [
-            Column::make("ID Jenis APD", "_id")
+            Column::make("ID Jenis APD", "id_jenis")
                 ->sortable()
                 ->searchable(
-                    fn(Builder $query, string $kata_pencarian)=> $query->orWhere('_id','like','%'.$kata_pencarian.'%')
+                    fn(Builder $query, string $kata_pencarian)=> $query->orWhere('id_jenis','like','%'.$kata_pencarian.'%')
                 ),
             Column::make("Nama Jenis APD", "nama_jenis")
                 ->sortable()
@@ -52,7 +52,7 @@ class TabelJenisApdTemplateSingle extends DataTableComponent
                 ->attributes(function($row){
                     return [
                     'class' => 'btn btn-primary',
-                    'onclick' => "Livewire.emit('TabelJenisApdTemplateSinglePilih','".$row->id."')",
+                    'onclick' => "Livewire.emit('TabelJenisApdTemplateSinglePilih','".$row->id_jenis."')",
                     'data-toggle' => "modal",
                     'data-target' => "#modal-ubah-single-template-inputan-apd"
                     ];

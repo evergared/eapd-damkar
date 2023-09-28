@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Eapd\Layout;
 
 use App\Http\Controllers\ApdDataController;
-use App\Models\Eapd\Mongodb\PeriodeInputApd;
+use App\Models\PeriodeInputApd;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Throwable;

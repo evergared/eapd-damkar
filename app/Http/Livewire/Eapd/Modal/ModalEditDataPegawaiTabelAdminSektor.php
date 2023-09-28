@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\Eapd\Modal;
 
-use App\Models\Eapd\Mongodb\Grup;
-use App\Models\Eapd\Mongodb\Pegawai;
-use App\Models\Eapd\Mongodb\Penempatan;
+use App\Models\Grup;
+use App\Models\Pegawai;
+use App\Models\Penempatan;
 use App\Models\User;
 use App\Enum\TipeJabatan;
-use App\Models\Eapd\Mongodb\HistoryTabelPegawai;
+use App\Models\HistoryTabelPegawai;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
@@ -90,7 +90,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
 
 
             // ambil data pegawai
-            $pegawai = Pegawai::where('_id','=',$this->id_pegawai)->first();
+            $pegawai = Pegawai::where('id_pegawai','=',$this->id_pegawai)->first();
 
             // inisiasi data lainnya
             $this->nrk = $this->cache_nrk = $pegawai->nrk;
@@ -111,7 +111,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             //ambil data pos sektor, kecuali nama sektor
             $this->list_penempatan = [];
             
-            $query_penempatan = Penempatan::where('_id','like',Auth::user()->data->sektor.'%')
+            $query_penempatan = Penempatan::where('id_penempatan','like',Auth::user()->data->sektor.'%')
                     // ->where('id_penempatan','!=',Auth::user()->data->sektor)
                     ->get();
 
@@ -128,18 +128,23 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             // ambil data grup
             $this->list_grup = [];
             
-            $query_grup = Grup::all();
+            $query_grup = [
+                ["id" => "A", "nama" => "Ambon"],
+                ["id" => "B", "nama" => "Bandung"],
+                ["id" => "C", "nama" => "Cepu"],
+                ["id" => "non-grup", "nama" => "Non Grup"]
+            ];
 
             foreach($query_grup as $q)
             {
                 array_push($this->list_grup,[
-                    'value' => $q->id_grup,
-                    'text' => $q->nama_grup
+                    'value' => $q["id"],
+                    'text' => $q["nama"]
                 ]);
             }
 
             // cek apakah ada user dengan id_pegawai tersebut
-            $this->user_ditemukan = User::where('_id','=',$this->id_pegawai)->first() != "";
+            $this->user_ditemukan = User::where('id_pegawai','=',$this->id_pegawai)->first() != "";
 
 
             $this->koreksiPenempatanDanGrup();
@@ -159,7 +164,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         try{
 
             // ambil data pegawai mana yang mau diubah
-            $pegawai = Pegawai::where('_id','=',$this->id_pegawai)->first();
+            $pegawai = Pegawai::where('id_pegawai','=',$this->id_pegawai)->first();
 
             // ambil perubahan dari input di modal
             $pegawai->id_grup = $this->grup;
@@ -171,7 +176,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             $pegawai->no_telp = $this->telp;
             $pegawai->aktif = $this->aktif;
 
-            $id_pegawai = $pegawai->id;
+            $id_pegawai = $pegawai->id_pegawai;
 
             // simpan atau update melalui eloquent model
             $pegawai->save();
@@ -181,10 +186,10 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
             error_log('id pegawai dari modal : '.$id_pegawai);
 
             // ambil data pegawai
-            $pegawai = Pegawai::where('_id','=',$id_pegawai)->first();
+            $pegawai = Pegawai::where('id_pegawai','=',$id_pegawai)->first();
 
             // inisiasi ulang data lainnya
-            $this->id_pegawai = $pegawai->id;
+            $this->id_pegawai = $pegawai->id_pegawai;
             $this->nrk = $this->cache_nrk = $pegawai->nrk;
             $this->nama = $this->cache_nama = $pegawai->nama;
             $this->nip = $this->cache_nip = $pegawai->nip;
@@ -221,10 +226,10 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
         {
             try{
                 error_log('hit keterangan edit user '.$id_pegawai);
-                $history = HistoryTabelPegawai::where('id_pegawai','=',$id_pegawai)->first();
-                $history->keterangan_perubahan = $this->keterangan;
+                // $history = HistoryTabelPegawai::where('id_pegawai','=',$id_pegawai)->first();
+                // $history->keterangan_perubahan = $this->keterangan;
                 
-                $history->save();
+                // $history->save();
                 $this->keterangan = "";
 
             }
@@ -250,7 +255,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
 
             error_log('passwrod '.$this->password);
             // ambil user mana yang akan diubah passwordnya
-            $user = User::where('_id','=',$this->id_pegawai)->first();
+            $user = User::where('id_pegawai','=',$this->id_pegawai)->first();
             // buat password dari inputan
             $user->password = Hash::make($this->password);
             // simpan perubahan
@@ -307,7 +312,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
                     // jika penempatannya menggunakan nama sektor
                     if($this->penempatan == Auth::user()->data->sektor)
                     {
-                        $tempat = Penempatan::where('_id','=',Auth::user()->data->sektor)->first()->nama_penempatan;
+                        $tempat = Penempatan::where('id_penempatan','=',Auth::user()->data->sektor)->first()->nama_penempatan;
                         $this->penempatan = "";
                         session()->flash('warning-penempatan','Penempatan '.$tempat.' hanya untuk yang tidak memiliki grup jaga.');
                     }
@@ -323,7 +328,7 @@ class ModalEditDataPegawaiTabelAdminSektor extends Component
                 {
                     if($this->penempatan != Auth::user()->data->sektor)
                     {
-                        $tempat = Penempatan::where('_id','=',Auth::user()->data->sektor)->first()->nama_penempatan;
+                        $tempat = Penempatan::where('id_penempatan','=',Auth::user()->data->sektor)->first()->nama_penempatan;
                         $this->penempatan = "";
                         session()->flash('warning-penempatan','Pilih penempatan '.$tempat.' untuk yang tidak memiliki grup jaga.');
                     }

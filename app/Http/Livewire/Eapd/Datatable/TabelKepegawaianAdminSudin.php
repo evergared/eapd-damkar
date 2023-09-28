@@ -2,15 +2,15 @@
 
 namespace App\Http\Livewire\Eapd\Datatable;
 
-use App\Models\Eapd\Mongodb\Grup;
-use App\Models\Eapd\Mongodb\Jabatan;
+use App\Models\Grup;
+use App\Models\Jabatan;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
-use App\Models\Eapd\Mongodb\Pegawai;
-use App\Models\Eapd\Mongodb\Penempatan;
+use App\Models\Pegawai;
+use App\Models\Penempatan;
 use Illuminate\Support\Facades\Auth;
-use Jenssegers\MongoDB\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
@@ -27,7 +27,7 @@ class TabelKepegawaianAdminSudin extends DataTableComponent
     public function configure(): void
     {
         // $this->setDebugEnabled();
-        $this->setPrimaryKey('_id');
+        $this->setPrimaryKey('id_pegawai');
         $this->setSearchEnabled();
         // $this->setAdditionalSelects(['nama','nrk','nip','profile_img','no_telp','id_grup','id_jabatan','id_penempatan']);
     }
@@ -46,7 +46,7 @@ class TabelKepegawaianAdminSudin extends DataTableComponent
             // ->join('grup','pegawai.id_grup','=','grup._id')
 
             // penempatan sesuai sektor kasie
-            ->select(['nama', 'nrk', 'nip', 'profile_img', 'no_telp', 'id_grup', 'id_jabatan', 'id_penempatan', 'jabatan_pegawai'])
+            ->select(['nama', 'nrk', 'nip', 'profile_img', 'no_telp',  'id_jabatan', 'id_penempatan', 'jabatan_pegawai'])
             ->where('id_wilayah', '=', Auth::user()->data->id_wilayah)
             // ->whereRaw(function($collection){
             //                     return $collection->aggregate([
@@ -77,7 +77,7 @@ class TabelKepegawaianAdminSudin extends DataTableComponent
                     fn (Builder $query, string $kata_pencarian) => $query->orWhere('nama', 'like', '%' . $kata_pencarian . '%')
                 )
                 ->excludeFromColumnSelect(),
-            Column::make('_id')
+            Column::make('id_pegawai')
                 ->hideIf(true),
             Column::make("Nrk", "nrk")
                 ->sortable(
@@ -105,7 +105,7 @@ class TabelKepegawaianAdminSudin extends DataTableComponent
                 ->collapseOnMobile(),
             Column::make("Jabatan", "id_jabatan")
                 ->format(function ($value) {
-                    return Jabatan::where('_id', '=', $value)->first()->nama_jabatan;
+                    return Jabatan::where('id_jabatan', '=', $value)->first()->nama_jabatan;
                 })
                 ->sortable(
                     fn (Builder $query, string $direction) => $query->orderBy('id_jabatan', $direction)
@@ -115,7 +115,7 @@ class TabelKepegawaianAdminSudin extends DataTableComponent
                 ->searchable(
                     fn (Builder $query, $kata_pencarian) =>
                     $query->orWhere(function ($query) use ($kata_pencarian) {
-                        $ids = Jabatan::where('nama_jabatan', 'like', '%' . $kata_pencarian . '%')->get()->pluck('_id');
+                        $ids = Jabatan::where('nama_jabatan', 'like', '%' . $kata_pencarian . '%')->get()->pluck('id_jabatan');
                         foreach ($ids as $id)
                             $query->orWhere('id_jabatan', $id);
                     })
@@ -148,14 +148,11 @@ class TabelKepegawaianAdminSudin extends DataTableComponent
             //     ->hideIf(true),
             Column::make("Penempatan", "id_penempatan")
                 ->format(function ($value) {
-                    return Penempatan::where('_id', '=', $value)->first()->nama_penempatan;
+                    return Penempatan::where('id_penempatan', '=', $value)->first()->nama_penempatan;
                 })
                 ->searchable()
                 ->sortable(),
-            Column::make("Grup Jaga", "id_grup")
-                ->format(function ($value) {
-                    return Grup::where('id_grup', '=', $value)->first()->nama_grup;
-                })
+            Column::make("Grup Jaga", "grup")
                 ->sortable()
                 ->searchable(),
             BooleanColumn::make("Masih Aktif", "aktif")
@@ -186,8 +183,8 @@ class TabelKepegawaianAdminSudin extends DataTableComponent
     public function filters(): array
     {
         // untuk filter penempatan
-        $penempatan = Penempatan::where('_id', 'like', Auth::user()->data->sektor . '%')
-            ->project(['value' => '$_id', 'text' => '$nama_penempatan'])
+        $penempatan = Penempatan::where('id_penempatan', 'like', Auth::user()->data->sektor . '%')
+            ->project(['value' => '$id_penempatan', 'text' => '$nama_penempatan'])
             ->get()
             ->toArray();
 
@@ -197,16 +194,19 @@ class TabelKepegawaianAdminSudin extends DataTableComponent
         }
 
         // untuk filter grup
-        $grup = Grup::project(['value' => '$id_grup', 'text' => '$nama_grup'])
-            ->get()
-            ->toArray();
+        $grup = [
+            ["id" => "A", "nama" => "Ambon"],
+            ["id" => "B", "nama" => "Bandung"],
+            ["id" => "C", "nama" => "Cepu"],
+            ["id" => "non-grup", "nama" => "Non Grup"]
+        ];
         $opsi_grup = [];
         foreach ($grup as $p) {
-            $opsi_grup[$p['value']] = $p['text'];
+            $opsi_grup[$p['id']] = $p['nama'];
         }
 
         return [
-            SelectFilter::make('Penempatan', '_id')
+            SelectFilter::make('Penempatan', 'id_penempatan')
                 ->setFilterPillTitle(' Penempatan di ')
                 ->setFilterPillValues($opsi_penempatan)
                 ->options($opsi_penempatan)

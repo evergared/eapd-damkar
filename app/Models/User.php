@@ -29,4 +29,17 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Pegawai::class, 'id_pegawai', 'id_pegawai');
     }
+
+    public function sektor()
+    {
+        $sektor = Penempatan::find($this->data->id_penempatan);
+
+        if($sektor->keterangan == "sektor")
+            return $sektor->id_penempatan;
+        
+        if($sektor->keterangan == "pos")
+            return $sektor->id_parent_penempatan;
+        
+        return null;
+    }
 }

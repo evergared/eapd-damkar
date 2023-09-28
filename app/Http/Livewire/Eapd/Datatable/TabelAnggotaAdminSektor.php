@@ -3,12 +3,12 @@
 namespace App\Http\Livewire\Eapd\Datatable;
 
 use App\Http\Controllers\ApdDataController;
-use App\Models\Eapd\Mongodb\Jabatan;
+use App\Models\Jabatan;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Eapd\Mongodb\Pegawai;
-use App\Models\Eapd\Mongodb\Penempatan;
-use Jenssegers\MongoDB\Eloquent\Builder;
+use App\Models\Pegawai;
+use App\Models\Penempatan;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
 class TabelAnggotaAdminSektor extends DataTableComponent
@@ -20,7 +20,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('_id');
+        $this->setPrimaryKey('id_pegawai');
         $this->setSearchEnabled();
         $this->setAdditionalSelects(['nama','id_jabatan','id_penempatan']);
     }
@@ -33,7 +33,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
         ->with(['jabatan','penempatan'])
 
         // penempatan sesuai sektor kasie
-        ->where('id_penempatan','like',Auth::user()->data->penempatan->id . '%')
+        ->where('id_penempatan','like',Auth::user()->data->penempatan->id_penempatan . '%')
 
         // jabatan yang akan di query
         // tambahkan jika perlu
@@ -73,7 +73,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                 }),
             Column::make("Jabatan",'id_jabatan')
                 ->format(function($value){
-                    return Jabatan::where('_id','=',$value)->first()->nama_jabatan;
+                    return Jabatan::where('id_jabatan','=',$value)->first()->nama_jabatan;
                 })
                 ->searchable( function($query,$search){
                     $ids = Jabatan::where('nama_jabatan','like','%'.$search.'%')->get()->pluck('id');
@@ -83,7 +83,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                 ->sortable(),
             Column::make("Penempatan", "id_penempatan")
                 ->format(function($value){
-                    return Penempatan::where('_id','=',$value)->first()->nama_penempatan;
+                    return Penempatan::where('id_penempatan','=',$value)->first()->nama_penempatan;
                 })
                 ->searchable(function($query,$search){
                     $ids = Penempatan::where('nama_penempatan','like','%'.$search.'%')->get()->pluck('id');
@@ -129,7 +129,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                     $adc = new ApdDataController;
 
                     // ambil id_pegawai dari baris
-                    $id_pegawai = $row->id;
+                    $id_pegawai = $row->id_pegawai;
 
                     // dapatkan jabatan 
                     $id_jabatan = $row->id_jabatan;

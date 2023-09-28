@@ -3,11 +3,11 @@
 namespace App\Http\Livewire\Eapd\Layout;
 
 use App\Http\Controllers\PeriodeInputController;
-use App\Models\Eapd\Mongodb\ApdJenis;
-use App\Models\Eapd\Mongodb\ApdList;
-use App\Models\Eapd\Mongodb\InputApdTemplate;
-use App\Models\Eapd\Mongodb\Jabatan;
-use App\Models\Eapd\Mongodb\PeriodeInputApd;
+use App\Models\ApdJenis;
+use App\Models\ApdList;
+use App\Models\InputApdTemplate;
+use App\Models\Jabatan;
+use App\Models\PeriodeInputApd;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Throwable;
@@ -139,7 +139,7 @@ class LayoutPengaturanPeriode extends Component
 
             $newTemplate = new InputApdTemplate;
             $newTemplate->nama = 'template inputan '.$newPeriode->nama_periode;
-            $newTemplate->id_periode = $newPeriode->id;
+            $newTemplate->id_periode = $newPeriode->id_periode;
             $newTemplate->template = $template->template;
             $newTemplate->save();
 
@@ -209,7 +209,7 @@ class LayoutPengaturanPeriode extends Component
 
             $this->card_form_periode_formEditMode = true;
 
-            $this->card_form_periode_formIdPeriode = $this->card_form_periode_formIdPeriode_cache = $periode->id;
+            $this->card_form_periode_formIdPeriode = $this->card_form_periode_formIdPeriode_cache = $periode->id_periode;
             $this->card_form_periode_formNamaPeriode = $this->card_form_periode_formNamaPeriode_cache = $periode->nama_periode;
             $this->card_form_periode_formTglAwal = $this->card_form_periode_formTglAwal_cache = $periode->tgl_awal;
             $this->card_form_periode_formTglAkhir = $this->card_form_periode_formTglAkhir_cache = $periode->tgl_akhir;
@@ -304,7 +304,7 @@ class LayoutPengaturanPeriode extends Component
 
                 if($periode->id != $input->id_periode)
                 {
-                    $input->id_periode = $periode->id;
+                    $input->id_periode = $periode->id_periode;
                     $input->save();
                 }
             }
@@ -312,7 +312,7 @@ class LayoutPengaturanPeriode extends Component
             {
                 $newTemplate = new InputApdTemplate;
                 $newTemplate->nama = 'template inputan '.$this->card_form_periode_formNamaPeriode;
-                $newTemplate->id_periode = $periode->id;
+                $newTemplate->id_periode = $periode->id_periode;
                 if(count($this->tabel_template_data_original) > 0)
                 {
                     $pic = new PeriodeInputController;

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\TidakDigunakan;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 // use Alexzvn\LaravelMongoNotifiable\Notifiable;
 
 use Alexzvn\LaravelMongoNotifiable\Notifiable;
-use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Pegawai;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Jenssegers\Mongodb\Auth\User as Authenticatable;
 // use Illuminate\Notifications\Notifiable;

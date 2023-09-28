@@ -4,11 +4,11 @@ namespace App\Http\Livewire\Eapd\Layout;
 
 use App\Enum\VerifikasiApd as verif;
 use Livewire\Component;
-use App\Models\Eapd\Mongodb\Pegawai;
-use App\Models\Eapd\Mongodb\PeriodeInputApd;
+use App\Models\Pegawai;
+use App\Models\PeriodeInputApd;
 use App\Http\Controllers\ApdDataController;
-use App\Models\Eapd\Mongodb\ApdList;
-use App\Models\Eapd\Mongodb\InputApd;
+use App\Models\ApdList;
+use App\Models\InputApd;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
 
@@ -102,16 +102,16 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             $this->periode = $data[1];
 
             if($this->periode == 1)
-            $this->periode = PeriodeInputApd::get()->first()->id;
+            $this->periode = PeriodeInputApd::get()->first()->id_periode;
 
             // ambil nama pegawai
-            $this->nama_pegawai = Pegawai::where('_id', '=', $this->id_pegawai)->first()->nama;
+            $this->nama_pegawai = Pegawai::where('id_pegawai', '=', $this->id_pegawai)->first()->nama;
 
             // ambil nama periode input
-            $this->nama_periode = PeriodeInputApd::where('_id', '=', $this->periode)->first()->nama_periode;
+            $this->nama_periode = PeriodeInputApd::where('id_periode', '=', $this->periode)->first()->nama_periode;
 
             // ambil id jabatan si pengupload
-            $id_jabatan = Pegawai::where('_id', '=', $this->id_pegawai)->first()->id_jabatan;
+            $id_jabatan = Pegawai::where('id_pegawai', '=', $this->id_pegawai)->first()->id_jabatan;
 
             // panggil ApdDataController
             $adc = new ApdDataController;
@@ -225,7 +225,7 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             error_log('id apd yang diverif '.$this->detail_id_apd);
             error_log('id periode yang diverif '.$this->periode);
             
-            $input->verifikasi_oleh = Auth::user()->id;
+            $input->verifikasi_oleh = Auth::user()->id_pegawai;
             $input->verifikasi_status = verif::tryFrom($this->admin_verifikasi)->value;
             $input->komentar_verifikator = $this->admin_komentar;
 
@@ -267,7 +267,7 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             if(!is_null($inputan['id_apd']))
             {
                 $this->detail_id_apd = $inputan['id_apd'];
-                $this->detail_nama_apd = ApdList::where('_id','=',$this->detail_id_apd)->first()->nama_apd;
+                $this->detail_nama_apd = ApdList::where('id_apd','=',$this->detail_id_apd)->first()->nama_apd;
             }
 
             $this->detail_gambar_user = $inputan['gambar_apd'];
@@ -283,7 +283,7 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             if(!is_null($inputan['id_verifikator']))
             {
                 error_log('id verifikator : '.$inputan['id_verifikator']);
-                $verifikator = Pegawai::where('_id','=',$inputan['id_verifikator'])->first();
+                $verifikator = Pegawai::where('id_pegawai','=',$inputan['id_verifikator'])->first();
                 
                 $this->detail_nrk_verifikator = $verifikator->nrk;
                 $this->detail_komentar_verifikator = $inputan['komentar_verifikator'];
@@ -294,7 +294,7 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             
             $adc = new ApdDataController;
 
-            $apd = ApdList::where('_id','=',$this->detail_id_apd)->first();
+            $apd = ApdList::where('id_apd','=',$this->detail_id_apd)->first();
 
             try{
                 $gambar_apd = $apd->image;

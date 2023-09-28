@@ -31,7 +31,7 @@ class ApdRekapController extends Controller
             $sektor = "1.11";
 
         if($id_periode == 1)
-            $id_periode = PeriodeInputApd::get()->first()->id;
+            $id_periode = PeriodeInputApd::get()->first()->id_periode;
         
         try{
             $data_rekap_apd = collect();
@@ -40,7 +40,7 @@ class ApdRekapController extends Controller
             if($semua_inputan = InputApd::where('id_periode','=',$id_periode)->get())
             {
                 $inputan_anggota = $semua_inputan->filter(function($value,$key) use($sektor){
-                    $a = Pegawai::where('_id','=',$value['id_pegawai'])->first();
+                    $a = Pegawai::where('id_pegawai','=',$value['id_pegawai'])->first();
                     $verdict = $a->sektor == $sektor;
                     return $verdict;
                 });
@@ -52,7 +52,7 @@ class ApdRekapController extends Controller
                 // pengulangan untuk ambil rangkuman data berdasarkan list jenis apd yang telah diambil
                 foreach($list_jenis_apd as $apd)
                 {
-                    $nama_jenis_apd = ApdJenis::where('_id','=',$apd->id_jenis)->first()->nama_jenis;
+                    $nama_jenis_apd = ApdJenis::where('id_jenis','=',$apd->id_jenis)->first()->nama_jenis;
 
                     $baik = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::baik()->value)->count();
                     $rusak_ringan = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakRingan()->value)->count();
@@ -108,14 +108,14 @@ class ApdRekapController extends Controller
             $sudin = Auth::user()->data->penempatan->id_wilayah;
 
         if($id_periode == 1)
-            $id_periode = PeriodeInputApd::get()->first()->id;
+            $id_periode = PeriodeInputApd::get()->first()->id_periode;
         
         try{
             
             // dapatkan semua sektor yang ada di sudin
             $list_sektor =  Penempatan::where('id_wilayah','=',$sudin)
                             ->where('keterangan','=','sektor')
-                            ->pluck('id');
+                            ->pluck('id_wilayah');
 
             $data_rekap = collect();
             // pengulangan untuk mengambil rangkuman data inputan tiap sektor
@@ -181,7 +181,7 @@ class ApdRekapController extends Controller
             $sektor = Auth::user()->data->sektor;
         
         if($id_periode == 1)
-            $id_periode = PeriodeInputApd::get()->first()->id;
+            $id_periode = PeriodeInputApd::get()->first()->id_periode;
 
         try
         {
@@ -192,7 +192,7 @@ class ApdRekapController extends Controller
                 error_log('hit semua inputan');
                 error_log('mulai filter');
                 $inputan_anggota = $semua_inputan->filter(function($value,$key) use($sektor){
-                    $a = Pegawai::where('_id','=',$value['id_pegawai'])->first();
+                    $a = Pegawai::where('id_pegawai','=',$value['id_pegawai'])->first();
                     $verdict = $a->sektor == $sektor;
                     error_log('is a->sektor == sektor : '.$verdict);
                     return $verdict;
@@ -205,9 +205,9 @@ class ApdRekapController extends Controller
                 foreach($inputan_anggota as $inputan)
                 {
                     error_log('hit foreach semua inputan anggota');
-                    $pegawai = Pegawai::where('_id','=',$inputan->id_pegawai)->first();
-                    $nama_jenis_apd = ApdJenis::where('_id','=',$inputan->id_jenis)->first()->nama_jenis;
-                    $penempatan = Penempatan::where('_id','=',$pegawai->id_penempatan)->first();
+                    $pegawai = Pegawai::where('id_pegawai','=',$inputan->id_pegawai)->first();
+                    $nama_jenis_apd = ApdJenis::where('id_jenis','=',$inputan->id_jenis)->first()->nama_jenis;
+                    $penempatan = Penempatan::where('id_penempatan','=',$pegawai->id_penempatan)->first();
                     $gambar = $adc->siapkanGambarInputanBesertaPathnya($inputan->image,$inputan->id_pegawai,$inputan->id_jenis,$inputan->id_periode);
 
                     if($target_status != "")

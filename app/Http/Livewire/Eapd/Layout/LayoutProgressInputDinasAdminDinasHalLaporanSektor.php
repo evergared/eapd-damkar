@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Eapd\Layout;
 
 use App\Http\Controllers\ApdDataController;
-use App\Models\Eapd\Mongodb\Wilayah;
+use App\Models\Wilayah;
 use Livewire\Component;
 
 class LayoutProgressInputDinasAdminDinasHalLaporanSektor extends Component

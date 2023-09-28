@@ -41,7 +41,7 @@
                 </a>
                 <a class="d-block">{{ auth()->user()->data->penempatan->id_penempatan}}
                     {{auth()->user()->data->penempatan->nama_penempatan }}</a>
-                <a class="d-block">{{auth()->user()->data->wilayah->nama_wilayah }}</a>
+                <a class="d-block">{{auth()->user()->data->penempatan->wilayah->nama_wilayah }}</a>
             </div>
         </div>
 

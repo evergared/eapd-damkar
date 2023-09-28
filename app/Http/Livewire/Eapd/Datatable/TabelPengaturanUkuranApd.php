@@ -4,9 +4,9 @@ namespace App\Http\Livewire\Eapd\Datatable;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Eapd\Mongodb\ApdJenis;
-use App\Models\Eapd\Mongodb\ApdList;
-use App\Models\Eapd\Mongodb\ApdSize;
+use App\Models\ApdJenis;
+use App\Models\ApdList;
+use App\Models\ApdSize;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;

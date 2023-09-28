@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Eapd\Mongodb\InputApd;
+use App\Models\InputApd;
 
 class TabelRekapApdAnggotaKaton extends DataTableComponent
 {
@@ -12,13 +12,13 @@ class TabelRekapApdAnggotaKaton extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('_id');
+        $this->setPrimaryKey('id_input');
     }
 
     public function columns(): array
     {
         return [
-            Column::make("Id", "_id")
+            Column::make("Id", "id_input")
                 ->sortable(),
             Column::make("Id pegawai", "id_pegawai")
                 ->sortable(),

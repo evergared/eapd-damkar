@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
 
         // $this->call(TesMultiUploadSeeder::class);
         // $this->call(DummyDatabaseSeeder::class);
+        $this->call(TesPeriodeSeeder::class);
         $this->call(TesPenempatanSeeder::class);
         $this->call(TesJabatanSeeder::class);
         $this->call(TesPegawaiSeeder::class);

@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Eapd\Layout;
 
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\PeriodeInputController;
-use App\Models\Eapd\Mongodb\PeriodeInputApd;
+use App\Models\PeriodeInputApd;
 use Livewire\Component;
 use Throwable;
 
@@ -33,7 +33,7 @@ class LayoutCapaianInputanDinas extends Component
         {
             error_log('gagal mengambil periode input saat memuat komponen layout-capaian-inputan-dinas '.$e);
             $periode = PeriodeInputApd::get()->first();
-            $this->id_periode = $periode->id;
+            $this->id_periode = $periode->id_periode;
             $this->nama_periode = $periode->nama_periode;
         }
         

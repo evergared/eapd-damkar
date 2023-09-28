@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Eapd\Form;
 
 use App\Http\Controllers\ApdUkuranController;
-use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Pegawai;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;

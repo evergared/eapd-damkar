@@ -5,12 +5,12 @@ namespace App\Http\Livewire\Eapd\Modal;
 use App\Enum\VerifikasiApd;
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\FileController;
-use App\Models\Eapd\Mongodb\ApdJenis;
-use App\Models\Eapd\Mongodb\ApdList;
-use App\Models\Eapd\Mongodb\Grup;
-use App\Models\Eapd\Mongodb\InputApd;
-use App\Models\Eapd\Mongodb\Pegawai;
-use App\Models\Eapd\Mongodb\Penempatan;
+use App\Models\ApdJenis;
+use App\Models\ApdList;
+use App\Models\Grup;
+use App\Models\InputApd;
+use App\Models\Pegawai;
+use App\Models\Penempatan;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Throwable;
@@ -128,7 +128,7 @@ class ModalDetailProgressSudin extends Component
                 if($this->temp_verifikasi_inputan[$i]['komentar'] != "" && $this->temp_verifikasi_inputan[$i]['komentar'] != $this->cache_verifikasi_inputan[$i]['komentar'])    
                     $inputan->komentar_verifikator = $this->temp_verifikasi_inputan[$i]['komentar'];
 
-                $inputan->verifikasi_oleh = Auth::user()->id;
+                $inputan->verifikasi_oleh = Auth::user()->id_pegawai;
 
                 $inputan->save();
                 $jumlah_berhasil++;

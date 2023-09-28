@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\Eapd\Datatable;
 
-use App\Models\Eapd\Mongodb\Grup;
-use App\Models\Eapd\Mongodb\Jabatan;
+use App\Models\Grup;
+use App\Models\Jabatan;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Eapd\Mongodb\Pegawai;
-use App\Models\Eapd\Mongodb\Penempatan;
+use App\Models\Pegawai;
+use App\Models\Penempatan;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Throwable;
@@ -34,10 +34,10 @@ class TabelDaftarPegawaiModalDataUkuran extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Pegawai::query()->select(['_id','nama','nrk','nip','no_telp','profile_img','id_jabatan','id_wilayah','id_penempatan','id_grup','aktif'])
+        return Pegawai::query()->select(['id_pegawai','nama','nrk','nip','no_telp','profile_img','id_jabatan','id_wilayah','id_penempatan','id_grup','aktif'])
                 ->orWhere(function($query){
                     foreach($this->list_id_pegawai as $id)
-                    $query->orWhere('_id',$id);
+                    $query->orWhere('id_pegawai',$id);
                 });
     }
 
@@ -55,7 +55,7 @@ class TabelDaftarPegawaiModalDataUkuran extends DataTableComponent
                     fn(Builder $query, string $kata_pencarian)=> $query->orWhere('nama','like','%'.$kata_pencarian.'%')
                 )
                 ->excludeFromColumnSelect(),
-            Column::make('_id')
+            Column::make('id_pegawai')
                 ->hideIf(true),
             Column::make("Nrk", "nrk")
                 ->sortable(
@@ -83,7 +83,7 @@ class TabelDaftarPegawaiModalDataUkuran extends DataTableComponent
                 ->collapseOnMobile(),
             Column::make("Jabatan", "id_jabatan")
                 ->format(function($value){
-                    return Jabatan::where('_id','=',$value)->first()->nama_jabatan;
+                    return Jabatan::where('id_jabatan','=',$value)->first()->nama_jabatan;
                 })
                 ->sortable(
                     fn(Builder $query,string $direction)=> $query->orderBy('id_jabatan',$direction)
@@ -93,20 +93,17 @@ class TabelDaftarPegawaiModalDataUkuran extends DataTableComponent
                 ->searchable(
                     fn(Builder $query, $kata_pencarian)=>
                     $query->orWhere(function($query) use($kata_pencarian){
-                            $ids = Jabatan::where('nama_jabatan','like','%'.$kata_pencarian.'%')->get()->pluck('_id');
+                            $ids = Jabatan::where('nama_jabatan','like','%'.$kata_pencarian.'%')->get()->pluck('id_pegawai');
                             foreach($ids as $id)
                                 $query->orWhere('id_jabatan',$id);
                         })),
             Column::make("Penempatan", "id_penempatan")
                 ->format(function($value){
-                    return Penempatan::where('_id','=',$value)->first()->nama_penempatan;
+                    return Penempatan::where('id_pegawai','=',$value)->first()->nama_penempatan;
                 })
                 ->searchable()
                 ->sortable(),
-            Column::make("Grup Jaga", "id_grup")
-                ->format(function($value){
-                    return Grup::where('id_grup','=',$value)->first()->nama_grup;
-                })
+            Column::make("Grup Jaga", "grup")
                 ->sortable()
                 ->searchable(),
             BooleanColumn::make("Masih Aktif", "aktif")

@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Eapd\Modal;
 
-use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Pegawai;
 use Livewire\Component;
 
 class ModalKolomProfilTabelAnggotaKaton extends Component
@@ -28,7 +28,7 @@ class ModalKolomProfilTabelAnggotaKaton extends Component
     public function tampilProfil($value)
     {
 
-        $pegawai = Pegawai::where('_id', '=', $value)->first();
+        $pegawai = Pegawai::where('id_pegawai', '=', $value)->first();
 
         $this->nrk = $pegawai->nrk;
         $this->nip = $pegawai->nip;

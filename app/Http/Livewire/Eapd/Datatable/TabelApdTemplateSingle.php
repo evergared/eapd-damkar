@@ -4,9 +4,9 @@ namespace App\Http\Livewire\Eapd\Datatable;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Eapd\Mongodb\Jabatan;
-use App\Models\Eapd\Mongodb\ApdJenis;
-use App\Models\Eapd\Mongodb\ApdList;
+use App\Models\Jabatan;
+use App\Models\ApdJenis;
+use App\Models\ApdList;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 use Throwable;
@@ -30,9 +30,9 @@ class TabelApdTemplateSingle extends DataTableComponent
     #region Rappasoft function
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
+        $this->setPrimaryKey('id_apd');
         $this->setRefreshVisible();
-        $this->setAdditionalSelects(['_id','nama_apd']);
+        $this->setAdditionalSelects(['id_apd','nama_apd']);
     }
 
     public function builder(): Builder
@@ -48,10 +48,10 @@ class TabelApdTemplateSingle extends DataTableComponent
         $this->index = $this->page > 1 ? ($this->page - 1) * $this->perPage : 0;
 
         return [
-            Column::make("ID APD", "_id")
+            Column::make("ID APD", "id_apd")
                 ->sortable()
                 ->searchable(
-                    fn(Builder $query, string $kata_pencarian)=> $query->orWhere('_id','like','%'.$kata_pencarian.'%')
+                    fn(Builder $query, string $kata_pencarian)=> $query->orWhere('id_apd','like','%'.$kata_pencarian.'%')
                 ),
             Column::make("Nama APD", "nama_apd")
                 ->sortable()

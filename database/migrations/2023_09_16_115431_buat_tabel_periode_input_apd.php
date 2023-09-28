@@ -17,11 +17,11 @@ return new class extends Migration
             Schema::create('periode_input_apd', function (Blueprint $t) {
                 $t->id('id_periode')->autoIncrement();
                 $t->string('nama_periode');
-                $t->date('tgl_awal');
-                $t->date('tgl_akhir');
-                $t->boolean('aktif');
-                $t->text('pesan_berjalan');
-                $t->text('keterangan');
+                $t->date('tgl_awal')->nullable();
+                $t->date('tgl_akhir')->nullable();
+                $t->boolean('aktif')->default(false);
+                $t->text('pesan_berjalan')->nullable();
+                $t->text('keterangan')->nullable();
             });
         }
     }

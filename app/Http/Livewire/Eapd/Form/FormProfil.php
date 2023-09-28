@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Eapd\Form;
 
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
-use App\Models\Eapd\Mongodb\Pegawai;
+use App\Models\Pegawai;
 use App\Http\Controllers\FileController;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -74,7 +74,7 @@ class FormProfil extends Component
 
     public function inisiasi()
     {
-        $pegawai = Pegawai::where('_id', '=', Auth::User()->id)->first();
+        $pegawai = Pegawai::where('id_pegawai', '=', Auth::User()->id)->first();
 
         if (is_null($pegawai->profile_img)) {
             $this->cacheFoto = $this->foto = asset(FileController::$avatarPlaceholder);
@@ -94,9 +94,9 @@ class FormProfil extends Component
         );
 
         if (!is_null($this->password) && $this->password == $this->ulangiPassword)
-            User::where('_id', '=', Auth::User()->id)->update(['password' => Hash::make($this->password)]);
+            User::where('id_pegawai', '=', Auth::User()->id)->update(['password' => Hash::make($this->password)]);
 
-        $pegawai = Pegawai::where('_id', '=', Auth::User()->id)->first();
+        $pegawai = Pegawai::where('id_pegawai', '=', Auth::User()->id)->first();
 
         if ($this->cacheEmail != $this->email)
             $pegawai->email = $this->email;

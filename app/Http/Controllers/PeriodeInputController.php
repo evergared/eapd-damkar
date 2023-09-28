@@ -34,7 +34,7 @@ class PeriodeInputController extends Controller
         if($tanggal == null)
             {
                 // ambil periode pertama yang aktif
-                return PeriodeInputApd::where("aktif",true)->get()->first()->id;
+                return PeriodeInputApd::where("aktif",true)->get()->first()->id_periode;
             }
         // where tanggal awal < $tanggal < tanggal akhir -> value('id')
     }

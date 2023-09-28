@@ -4,8 +4,8 @@ namespace App\Http\Livewire\Eapd\Datatable;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Eapd\Mongodb\Jabatan;
-use Jenssegers\Mongodb\Eloquent\Builder;
+use App\Models\Jabatan;
+use Illuminate\Database\Eloquent\Builder;
 use Throwable;
 
 // use Illuminate\Database\Eloquent\Builder;
@@ -27,8 +27,8 @@ class TabelJabatanTemplateMulti extends DataTableComponent
     #region rappasoft function
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['_id','nama_jabatan']);
+        $this->setPrimaryKey('id_jabatan');
+        $this->setAdditionalSelects(['id_jabatan','nama_jabatan']);
         $this->setBulkActionsEnabled();
         $this->setSelectAllDisabled();
         $this->setSelectAllStatus(false);
@@ -44,9 +44,9 @@ class TabelJabatanTemplateMulti extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make(" id", "_id")
+            Column::make(" id", "id_jabatan")
                 ->sortable()
-                ->searchable(fn(Builder $query, string $kata_pencarian)=> $query->orWhere('_id','like','%'.$kata_pencarian.'%')),
+                ->searchable(fn(Builder $query, string $kata_pencarian)=> $query->orWhere('id_jabatan','like','%'.$kata_pencarian.'%')),
             Column::make("Nama jabatan", "nama_jabatan")
                 ->sortable()
                 ->searchable(fn(Builder $query, string $kata_pencarian)=> $query->orWhere('nama_jabatan','like','%'.$kata_pencarian.'%')),

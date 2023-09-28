@@ -8,10 +8,10 @@ use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\FileController;
 use App\Enum\VerifikasiApd as verif;
 use App\Http\Controllers\StatusDisplayController;
-use App\Models\Eapd\Mongodb\ApdJenis;
-use App\Models\Eapd\Mongodb\ApdList;
+use App\Models\ApdJenis;
+use App\Models\ApdList;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Eapd\Mongodb\InputApd;
+use App\Models\InputApd;
 use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -124,7 +124,7 @@ class ModalInputApdPegawaiHalApdku extends Component
         $this->id_jenis = $tes['id_jenis'];
         $this->opsi_apd = $tes['opsi_apd'];
         $this->data_apd = $adc->bangunItemModalInputApd($tes['opsi_apd']);
-        $this->nama_jenis = ApdJenis::where('_id', '=', $this->id_jenis)->value('nama_jenis');
+        $this->nama_jenis = ApdJenis::where('id_jenis', '=', $this->id_jenis)->value('nama_jenis');
 
 
         $this->hidrasiListApd();
@@ -199,7 +199,7 @@ class ModalInputApdPegawaiHalApdku extends Component
         $this->gambar_apd_template = array();
 
         try {
-            $gbr = ApdList::where('_id', '=', $this->id_apd_user)->value('image');
+            $gbr = ApdList::where('id_apd', '=', $this->id_apd_user)->value('image');
             $this->adaGambarTemplate = $gbr == "" ? false : true;
             $this->gambar_apd_template = explode('||', $gbr);
             // dd($this->gambar_apd_template);
@@ -249,7 +249,7 @@ class ModalInputApdPegawaiHalApdku extends Component
                 // $apd->id_apd = $opsi;
                 // $apd->nama_apd = ApdList::where('id_apd', '=', $opsi)->value('nama_apd');
                 // array_push($this->list_apd, $apd);
-                array_push($this->list_apd, ['id_apd' => $opsi, 'nama_apd' => ApdList::where('_id', '=', $opsi)->value('nama_apd')]);
+                array_push($this->list_apd, ['id_apd' => $opsi, 'nama_apd' => ApdList::where('id_apd', '=', $opsi)->value('nama_apd')]);
             }
         } catch (Throwable $e) {
             // error_log('Gagal melakukan hidrasi list apd untuk id jenis "' . $this->id_jenis .  $e);
@@ -304,7 +304,7 @@ class ModalInputApdPegawaiHalApdku extends Component
                 $this->telahDiverifAdmin = true;
             }
 
-            $this->nama_apd_user = ApdList::where('_id', '=', $this->id_apd_cache)->value('nama_apd');
+            $this->nama_apd_user = ApdList::where('id_apd', '=', $this->id_apd_cache)->value('nama_apd');
 
             $this->sesuaikanPathGambar();
             $this->refreshGambarUser();
@@ -376,7 +376,7 @@ class ModalInputApdPegawaiHalApdku extends Component
 
             $adc = new ApdDataController;
 
-            $id_pegawai = Auth::user()->id;
+            $id_pegawai = Auth::user()->id_pegawai;
 
             /**
              * @todo ambil id dari fungsi pada kelas ApdDataController

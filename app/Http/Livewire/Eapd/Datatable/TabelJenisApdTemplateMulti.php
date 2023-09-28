@@ -2,10 +2,10 @@
 
 namespace App\Http\Livewire\Eapd\Datatable;
 
-use App\Models\Eapd\Mongodb\ApdJenis;
+use App\Models\ApdJenis;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Jenssegers\Mongodb\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Throwable;
 
 // use Illuminate\Database\Eloquent\Builder;
@@ -27,8 +27,8 @@ class TabelJenisApdTemplateMulti extends DataTableComponent
     #region rappasoft function
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['_id','nama_jenis']);
+        $this->setPrimaryKey('id_jenis');
+        $this->setAdditionalSelects(['id_jenis','nama_jenis']);
         $this->setBulkActionsEnabled();
         $this->setSelectAllDisabled();
         $this->setSelectAllStatus(false);
@@ -44,12 +44,12 @@ class TabelJenisApdTemplateMulti extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make(" id", "_id")
+            Column::make(" id", "id_jabatan")
                 ->sortable()
-                ->searchable(fn(Builder $query, string $kata_pencarian)=> $query->orWhere('_id','like','%'.$kata_pencarian.'%')),
+                ->searchable(fn(Builder $query, string $kata_pencarian)=> $query->orWhere('id_jabatan','like','%'.$kata_pencarian.'%')),
             Column::make("Nama Jenis Apd", "nama_jenis")
                 ->sortable()
-                ->searchable(fn(Builder $query, string $kata_pencarian)=> $query->orWhere('nama_JenisApd','like','%'.$kata_pencarian.'%')),
+                ->searchable(fn(Builder $query, string $kata_pencarian)=> $query->orWhere('nama_Jenis','like','%'.$kata_pencarian.'%')),
         ];
     }
     #endregion

@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Eapd\Layout;
 
 use App\Http\Controllers\PeriodeInputController;
-use App\Models\Eapd\Mongodb\PeriodeInputApd;
+use App\Models\PeriodeInputApd;
 use Livewire\Component;
 
 class LayoutMarqueePengumumanBerjalan extends Component
