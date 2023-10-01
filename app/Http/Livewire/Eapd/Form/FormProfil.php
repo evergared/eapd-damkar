@@ -74,7 +74,7 @@ class FormProfil extends Component
 
     public function inisiasi()
     {
-        $pegawai = Pegawai::where('id_pegawai', '=', Auth::User()->id)->first();
+        $pegawai = Pegawai::where('id_pegawai', '=', Auth::User()->id_pegawai)->first();
 
         if (is_null($pegawai->profile_img)) {
             $this->cacheFoto = $this->foto = asset(FileController::$avatarPlaceholder);

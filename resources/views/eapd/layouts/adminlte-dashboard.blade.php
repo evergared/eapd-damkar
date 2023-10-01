@@ -17,15 +17,15 @@
     @vite('resources/css/filter.css')
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> --}}
     <!-- Alpine v3 -->
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    {{-- <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script> --}}
 
     <!-- Focus plugin -->
-    <script defer src="https://unpkg.com/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
+    {{-- <script defer src="https://unpkg.com/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
     <style>
         [x-cloak] {
             display: none !important;
         }
-    </style>
+    </style> --}}
     @stack('stack-head')
 </head>
 
@@ -56,10 +56,9 @@
     @stack('stack-body')
 
     @vite('resources/js/adminlte-dashboard.js')
-    <script src="{{asset('admin-lte/adminlte.min.js')}}">
-    </script>
-    <script src="{{asset('admin-lte/demo.js')}}"></script>
-    <script src="{{asset('admin-lte/filter.js')}}"></script>
+    @vite('public/admin-lte/adminlte.min.js')
+    @vite('public/admin-lte/demo.js')
+    @vite('public/admin-lte/filter.js')
     @include('helper.script-modal')
 </body>
 
