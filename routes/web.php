@@ -39,14 +39,14 @@ Route::middleware('auth')->group(function () {
     })->name('multi');
 
     // Halaman Dashboard
-    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'tampilDashboardPegawai'])->name('dashboard');
-    Route::get('/profil', [\App\Http\Controllers\DashboardController::class, 'tampilprofil'])->name('profil');
-    Route::get('/request-item', [\App\Http\Controllers\DashboardController::class, 'tampilRequestItem'])->name('request-item');
+    Route::get('/dashboard', \App\Http\Livewire\Dashboards\Pegawai\Home\Page::class )->name('dashboard');
+    Route::get('/profil', \App\Http\Livewire\Dashboards\Pegawai\Profil\Page::class)->name('profil');
     Route::get('/apdku', [\App\Http\Controllers\DashboardController::class, 'tampilApdKu'])->name('apdku');
+    Route::get('/ukuranku', \App\Http\Livewire\Dashboards\Pegawai\Ukuranku\Page::class)->name('ukuran');
+    Route::get('/request-item', [\App\Http\Controllers\DashboardController::class, 'tampilRequestItem'])->name('request-item');
     Route::get('/print-laporan', [\App\Http\Controllers\DashboardController::class, 'tampilPrintLaporan'])->name('print-laporan');
     Route::get('/laporan-progress-input', [\App\Http\Controllers\DashboardController::class, 'tampilProgresSektor'])->name('progres-sektor');
     Route::get('/kepegawaian', [\App\Http\Controllers\DashboardController::class, 'tampilKepegawaian'])->name('kepegawaian');
-    Route::get('/ukuran', [\App\Http\Controllers\DashboardController::class, 'tampilUkuran'])->name('ukuran');
     Route::get('/data-ukuran', [\App\Http\Controllers\DashboardController::class, 'tampilDataUkuran'])->name('data-ukuran');
     Route::get('/data-distribusi', [\App\Http\Controllers\DashboardController::class, 'tampilDataDistribusi'])->name('data-distribusi');
     Route::get('/periode-setting', [\App\Http\Controllers\DashboardController::class, 'tampilPeriodeSetting'])->name('periode-setting');

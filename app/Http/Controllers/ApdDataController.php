@@ -107,7 +107,7 @@ class ApdDataController extends Controller
 
             // jika parameter periode tidak diisi, maka ambil periode paling atas
             if($id_periode == 1)
-            $id_periode = PeriodeInputApd::get()->first()->id_periode;
+            $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
 
             $template_pada_periode = InputApdTemplate::where("id_periode",$id_periode)->where("id_jabatan", $id_jabatan)->get()->first()->template;
             // dd($template_pada_periode);
@@ -147,7 +147,7 @@ class ApdDataController extends Controller
             }
 
             if($id_periode == 1)
-            $id_periode = PeriodeInputApd::get()->first()->id_periode;
+            $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
 
             // array kosong untuk return
             $list = [];
@@ -257,7 +257,7 @@ class ApdDataController extends Controller
             error_log('hit pegawai id check pass '.$id_pegawai);
 
             if($id_periode == 1)
-            $id_periode = PeriodeInputApd::get()->first()->id_periode;
+            $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
             error_log('hit id_periode id check pass '.$id_periode);
 
             error_log('id_jenis : '.$id_jenis);
@@ -400,7 +400,7 @@ class ApdDataController extends Controller
         try{
 
             if($id_periode == 1)
-                $id_periode = PeriodeInputApd::get()->first()->id_periode;
+                $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
 
             // ambil daftar seluruh pegawai di sektor (termasuk staff dan kasie sektor)
             $array_pegawai = Pegawai::where('id_penempatan','like',$sektor.'%')->get();
@@ -666,7 +666,7 @@ class ApdDataController extends Controller
             // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
             if($id_periode == 1)
             {
-                $id_periode = PeriodeInputApd::get()->first()->id_periode;
+                $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
             }
 
             error_log("id_periode : ".$id_periode);
@@ -1329,7 +1329,7 @@ class ApdDataController extends Controller
             // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
             if($id_periode == 1)
             {
-                $id_periode = PeriodeInputApd::get()->first()->id_periode;
+                $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
             }
 
             return verif::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first()->verifikasi_status);
@@ -1350,7 +1350,7 @@ class ApdDataController extends Controller
             // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
             if($id_periode == 1)
             {
-                $id_periode = PeriodeInputApd::get()->first()->id_periode;
+                $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
             }
 
             return status::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first()->kondisi);

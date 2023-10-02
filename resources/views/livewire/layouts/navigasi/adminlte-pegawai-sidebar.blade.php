@@ -71,22 +71,21 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item {{ (Route::currentRouteName() =='ukuran')? 'menu-open' :''}}">
+                    <a href="{{route('ukuran')}}"
+                        class="nav-link {{ (Route::currentRouteName() =='ukuran')? 'active' :''}}">
+                        <i class="nav-icon fas fa-suitcase"></i>
+                        <p>
+                            UKURANku
+                        </p>
+                    </a>
+                </li>
                 <li class="nav-item  {{ (Route::currentRouteName() =='request-item')? 'menu-open' :''}}">
                     <a href="{{ route('request-item') }}"
                         class="nav-link {{ (Route::currentRouteName() =='request-item')? 'active' :''}}">
                         <i class="nav-icon fab fa-stack-exchange"></i>
                         <p>
                             Request Item
-                        </p>
-                    </a>
-                </li>
-                
-                <li class="nav-item {{ (Route::currentRouteName() =='ukuran')? 'menu-open' :''}}">
-                    <a href="{{route('ukuran')}}"
-                        class="nav-link {{ (Route::currentRouteName() =='ukuran')? 'active' :''}}">
-                        <i class="nav-icon fas fa-suitcase"></i>
-                        <p>
-                            Ukuran
                         </p>
                     </a>
                 </li>
@@ -159,35 +158,8 @@
                 </li>
                 @endif
 
-                <li class="nav-header border-bottom"><i class="nav-icon fas fa-book"></i><span></span> Manual Book</li>
-                <li class="nav-item">
-                    <a href="" onclick="alert('Coming soon'); return false" target="_blank" class="nav-link">
-                        <p>
-                            Manual User Pegawai
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="" onclick="alert('Coming soon'); return false" target="_blank" class="nav-link">
-                        <p>
-                            Surat Pernyataan Kebenaran
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="" onclick="alert('Coming soon'); return false" target="_blank" class="nav-link">
-                        <p>
-                            Laporan Kehilangan APD
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="" onclick="alert('Coming soon'); return false" target="_blank" class="nav-link">
-                        <p>
-                            Kronologis Kehilangan APD
-                        </p>
-                    </a>
-                </li>
+                <li class="nav-header border-bottom"></li>
+                
                 <li class="nav-item">
                     <form method="POST" action="{{route('logout')}}">
                         @csrf
