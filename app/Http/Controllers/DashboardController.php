@@ -23,18 +23,18 @@ class DashboardController extends Controller
     public function tampilDashboardPegawai(Request $r)
     {
 
-        $arc = new ApdRekapController;
+        // $arc = new ApdRekapController;
 
-        // return dd($arc->bangunDataTabelRekapSektor());
-        // return dd(Auth::user()->data->jabatan->level_user);
-        if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
-            return view("eapd.dashboard.admin-sektor.main-sektor");
-        else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
-            return view("eapd.dashboard.admin-sudin.main-sudin");
-        else if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
-            return view("eapd.dashboard.admin-dinas.main-dinas");
-        else
-            return view('eapd.dashboard.halaman-pegawai.main-pegawai');
+        // // return dd($arc->bangunDataTabelRekapSektor());
+        // // return dd(Auth::user()->data->jabatan->level_user);
+        // if (Auth::user()->data->jabatan->level_user == 'admin_sektor')
+        //     return view("eapd.dashboard.admin-sektor.main-sektor");
+        // else if (Auth::user()->data->jabatan->level_user == 'admin_sudin')
+        //     return view("eapd.dashboard.admin-sudin.main-sudin");
+        // else if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
+        //     return view("eapd.dashboard.admin-dinas.main-dinas");
+        // else
+            return view('dashboards.pegawai.home');
     }
 
     public function tampilProfil(Request $r)

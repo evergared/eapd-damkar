@@ -1,73 +1,61 @@
-@extends('layouts.app')
+@extends('eapd.layouts.adminlte-auth',['title'=>'Login'])
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+<div class="card pt-2 mt-3" style="width: 500px">
+    <div class="card-header text-center">
+        <img src="{{ asset('damkar/logo_dki.png') }}" height="72" width="72">
+        <img src="{{ asset('damkar/logo_damkar_dki.png') }}" height="72" width="72">
+        <h1>eAPD</h1>
+        <p class="mb-0">Sistem Informasi APD Petugas</p>
+        <p class="mb-0" style="color: darkblue">Dinas Penanggulangan Kebakaran dan Penyelamatan</p>
+        <p class="mb-0" style="color: darkblue">Provinsi DKI Jakarta</p>
     </div>
+    <div class="card-body">
+
+        @if (session()->has('alert-warning'))
+            {{ session('alert-warning') }}
+        @endif  
+
+        @isset($pesan)
+        <div class="alert alert-info" role="alert">
+            {{ $pesan }}
+        </div>
+        @endisset
+
+        @isset($error)
+        <div class="alert alert-danger" role="alert">
+            {{ $error }}
+        </div>
+        @endisset
+
+        <form action="{{ route('login')}}" method="post">
+            @csrf
+            <div class="form-group">
+                <label for="nrk">NRK / NO PJLP</label>
+                <input class="form-control" type="text" id="nrk" name="nrk" placeholder="Masukan NRK / NO PJLP">
+                @error('nrk')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input class="form-control" type="password" id="password" name="password"
+                    placeholder="Masukan Password">
+                @error('password')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+            <div>
+                <input class="mr-1" type="checkbox" id="remember" name="remember">
+                Ingat Saya
+            </div>
+    </div>
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+    </form>
 </div>
+
+
 @endsection
