@@ -11,7 +11,7 @@
                           <div class="card-header p-0 pt-1">
                             <ul class="nav nav-tabs" id="navtab-ukuranku" role="tablist">
                               <li class="nav-item">
-                                <a class="nav-link active" id="tab-ukuran-tampil" data-toggle="pill" href="#tab-pane-ukuran-tampil" role="tab" aria-controls="tab-pane-ukuran-tampil" aria-selected="true" wire:ignore.self>List Ukuran</a>
+                                <a class="nav-link active" id="tab-ukuran-tampil" data-toggle="pill" href="#tab-pane-ukuran-tampil" role="tab" aria-controls="tab-pane-ukuran-tampil" aria-selected="true" wire:ignore.self>List Ukuran <span class="badge badge-danger right">6</span></a>
                               </li>
                               <li class="nav-item">
                                 <a class="nav-link" id="tab-ukuran-form" data-toggle="pill" href="#tab-pane-ukuran-form" role="tab" aria-controls="tab-pane-ukuran-form" aria-selected="false" wire:ignore.self>Ubah Ukuran</a>

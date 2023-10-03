@@ -77,6 +77,7 @@
                         <i class="nav-icon fas fa-suitcase"></i>
                         <p>
                             UKURANku
+                            <span class="badge badge-warning right">6</span>
                         </p>
                     </a>
                 </li>
