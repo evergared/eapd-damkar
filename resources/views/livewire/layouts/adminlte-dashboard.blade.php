@@ -44,7 +44,6 @@
     </script>
 
     @stack('stack-body')
-
     @vite('resources/js/adminlte-dashboard.js')
     @vite('public/admin-lte/adminlte.min.js')
     @vite('public/admin-lte/demo.js')

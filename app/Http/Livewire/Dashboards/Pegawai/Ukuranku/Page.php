@@ -26,6 +26,7 @@ class Page extends Component
 
     // untuk menampung value saat user mulai mengisi
     public $ukuranTerisi = [];
+    public $cache_ukuranTerisi = [];
 
     protected $listeners = ['inisiasiFormUkuran'=>'inisiasi'];
 
@@ -65,7 +66,7 @@ class Page extends Component
         }
         catch(Throwable $e)
         {
-
+            error_log('Dashboard Ukuranku Pegawai Error : Kesalahan saat mengambil data user '.$e);
         }
         
     }
@@ -77,30 +78,44 @@ class Page extends Component
             $adc = new ApdDataController;
             if(!is_null($template = $adc->muatListInputApdDariTemplate(1, Auth::user()->data->id_jabatan)))
             {
-                foreach($template as $i => $t)
+                $i = 0;
+                foreach($template as  $t)
                 {
                     // ambil jenis dan apd pertama dalam template tsb untuk dijadikan patokan opsi memilih ukuran
 
                     $id_jenis = $t['id_jenis'];
 
-                    $target_apd = $t['opsi'][0];
+                    $target_apd = $t['opsi_apd'][0];
 
-                    $target_size = ApdList::find($target_apd)->opsi;
+                    error_log('index '.$i);
+
+                    $target_size = ApdList::where('id_apd',$target_apd)->get()->first()->size;
+
+                    // jika apd tersebut tidak memiliki ukuran, skip
+                    if(is_null($target_size))
+                        continue;
 
                     $this->listKebutuhanUkuran[$i] = [
                         "id_jenis" => $id_jenis,
                         "nama_jenis" => ApdJenis::find($id_jenis)->nama_jenis,
-                        "opsi" => $target_size
+                        "opsi" => $target_size->opsi
                     ];
 
                     $this->ukuranTerisi[$i] = '';
+                    $this->cache_ukuranTerisi[$i] = '';
+                    $i++;
+                }
+
+                foreach(array_keys($this->listKebutuhanUkuran) as $tes)
+                {
+                    error_log('print index : '.$tes);
                 }
             }
 
         }
         catch(Throwable $e)
         {
-
+            error_log('Dashboard Ukuranku Pegawai Error : Kesalahan saat menyiapkan template '.$e);
         }
     }
 
@@ -115,18 +130,20 @@ class Page extends Component
                 if($index)
                 {
                     $this->ukuranTerisi[$index] = $ukuran['ukuran'];
+                    $this->cache_ukuranTerisi[$index] = $ukuran['ukuran'];
                 }
             }
 
         }
         catch(Throwable $e)
         {
-
+            error_log('Dashboard Ukuranku Pegawai Error : Kesalahan saat menyesuaikan data dengan template '.$e);
         }
     }
 
     public function simpan()
     {
+        error_log('simpan kepanggil');
         try{
             // iterasi jika isian terisi, maka masukan ke database
             $ukuran = UkuranPegawai::find(Auth::user()->id_pegawai);
@@ -168,7 +185,10 @@ class Page extends Component
             session()->flash('form-fail', 'Data ukuran gagal diubah.');
             error_log('Dashboard Ukuranku Pegawai Error : Kesalahan saat menyimpan '.$e);
         }
-        
-        
+    }
+
+    public function resetForm()
+    {
+        $this->cache_ukuranTerisi = $this->ukuranTerisi;
     }
 }

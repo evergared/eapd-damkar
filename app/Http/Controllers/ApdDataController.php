@@ -119,6 +119,8 @@ class ApdDataController extends Controller
             return [];
 
         } catch (Throwable $e) {
+            error_log("periode ". $id_periode);
+            error_log("jabatan ". $id_jabatan);
             error_log('gagal memuat list template input '.$e);
             return [];
         }
