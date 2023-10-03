@@ -107,7 +107,13 @@ class ApdDataController extends Controller
 
             // jika parameter periode tidak diisi, maka ambil periode paling atas
             if($id_periode == null)
-            $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
+            {
+                $periode = PeriodeInputApd::where('aktif',true)->get()->first();
+                if(is_null($periode))
+                    return [];
+                $id_periode = $periode->id_periode;
+
+            }
 
             $template_pada_periode = InputApdTemplate::where("id_periode",$id_periode)->where("id_jabatan", $id_jabatan)->get()->first()->template;
             // dd($template_pada_periode);

@@ -29,7 +29,12 @@ class Marquee extends Component
     public function mount()
     {
         $pic = new PeriodeInputController;
-        if($periode = PeriodeInputApd::find($pic->ambilIdPeriodeInput()))
+        $id = $pic->ambilIdPeriodeInput();
+
+        if(is_null($id))
+            return;
+        
+        if($periode = PeriodeInputApd::find($id))
         {
             array_push($this->data_yang_ditampilkan,$periode->pesan_berjalan);
             $this->aktif = true;
