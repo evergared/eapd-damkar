@@ -11,17 +11,17 @@
                           <div class="card-header p-0 pt-1">
                             <ul class="nav nav-tabs" id="navtab-ukuranku" role="tablist">
                               <li class="nav-item">
-                                <a class="nav-link active" id="tab-ukuran-tampil" data-toggle="pill" href="#tab-pane-ukuran-tampil" role="tab" aria-controls="tab-pane-ukuran-tampil" aria-selected="true">List Ukuran</a>
+                                <a class="nav-link active" id="tab-ukuran-tampil" data-toggle="pill" href="#tab-pane-ukuran-tampil" role="tab" aria-controls="tab-pane-ukuran-tampil" aria-selected="true" wire:ignore.self>List Ukuran</a>
                               </li>
                               <li class="nav-item">
-                                <a class="nav-link" id="tab-ukuran-form" data-toggle="pill" href="#tab-pane-ukuran-form" role="tab" aria-controls="tab-pane-ukuran-form" aria-selected="false">Ubah Ukuran</a>
+                                <a class="nav-link" id="tab-ukuran-form" data-toggle="pill" href="#tab-pane-ukuran-form" role="tab" aria-controls="tab-pane-ukuran-form" aria-selected="false" wire:ignore.self>Ubah Ukuran</a>
                               </li>
                             </ul>
                           </div>
                           <!-- /.card-header -->
                           <div class="card-body">
                             <div class="tab-content" id="tab-content-ukuranku">
-                              <div class="tab-pane fade active show" id="tab-pane-ukuran-tampil" role="tabpanel" aria-labelledby="tab-ukuran-tampil">
+                              <div class="tab-pane fade active show" id="tab-pane-ukuran-tampil" role="tabpanel" aria-labelledby="tab-ukuran-tampil" wire:ignore.self>
                                 <h2 class="mt-1 mb-4">List Ukuran</h2>
                                 @if ($listUkuran)
                                   <div class="table-responsive">
@@ -51,7 +51,7 @@
                                 @endif
                                 
                               </div>
-                              <div class="tab-pane fade" id="tab-pane-ukuran-form" role="tabpanel" aria-labelledby="tab-ukuran-form">
+                              <div class="tab-pane fade" id="tab-pane-ukuran-form" role="tabpanel" aria-labelledby="tab-ukuran-form" wire:ignore.self>
                                 <h3>Ubah Data Ukuran</h3>
                                 @if ($listKebutuhanUkuran)
                                   <div  class="card bg-secondary collapse fade show active" id="info-form-ukuran" wire:ignore.self>
