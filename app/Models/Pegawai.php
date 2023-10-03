@@ -33,7 +33,7 @@ class Pegawai extends Model
         return $this->hasOne(User::class,'id_pegawai','id_pegawai');
     }
 
-    public function ukuran_pegawai()
+    public function ukuran()
     {
         return $this->hasMany(UkuranPegawai::class, 'id_pegawai', 'id_pegawai');
     }

@@ -103,7 +103,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                     $id_jabatan = $row->id_jabatan;
 
                     // set periode input
-                    $tw = 1; //<-- ini untuk contoh dan test
+                    $tw = null; //<-- ini untuk contoh dan test
                     // $tw = $adc->ambilIdPeriodeInput();  //<--- gunakan ini jika periode input sudah dimasukkan dengan benar di database
 
                     // muat template inputan untuk jabatan tertentu
@@ -135,7 +135,7 @@ class TabelAnggotaAdminSektor extends DataTableComponent
                     $id_jabatan = $row->id_jabatan;
 
                     // set periode input
-                    $tw = 1; //<-- ini untuk contoh dan test
+                    $tw = null; //<-- ini untuk contoh dan test
                     // $tw = $adc->ambilIdPeriodeInput();  //<--- gunakan ini jika periode input sudah dimasukkan dengan benar di database
 
                     // muat template inputan untuk jabatan tertentu

@@ -19,7 +19,8 @@ class TesPeriodeSeeder extends Seeder
             "nama_periode" => "Test Periode",
             "tgl_awal" => "2023-09-01",
             "tgl_akhir" => "2024-01-01",
-            "aktif"=> true,
+            "aktif"=> false,
+            "kumpul_ukuran"=> true,
             "pesan_berjalan" => "Sekarang periode testing sedang berlangsung, coba cek sistem anda."
         ]);
     }

@@ -76,7 +76,7 @@ class ApdDataController extends Controller
     #endregion
 
 
-    public function muatOpsiApd(string $id_jenis, $id_periode = 1, $id_jabatan = "")
+    public function muatOpsiApd(string $id_jenis, $id_periode = null, $id_jabatan = "")
     {
         try{
 
@@ -96,7 +96,7 @@ class ApdDataController extends Controller
      * @param int $id_periode id_periode untuk template yang dicari, dalam bentuk id id_periode
      * @param string $id_jabatan jabatan untuk template yang dicari, dalam bentuk id jabatan
      */
-    public function muatListInputApdDariTemplate($id_periode = 1, $id_jabatan = "")
+    public function muatListInputApdDariTemplate($id_periode = null, $id_jabatan = "")
     {
         try {
 
@@ -106,7 +106,7 @@ class ApdDataController extends Controller
             }
 
             // jika parameter periode tidak diisi, maka ambil periode paling atas
-            if($id_periode == 1)
+            if($id_periode == null)
             $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
 
             $template_pada_periode = InputApdTemplate::where("id_periode",$id_periode)->where("id_jabatan", $id_jabatan)->get()->first()->template;
@@ -134,7 +134,7 @@ class ApdDataController extends Controller
      * @param int $target_verifikasi jika ada status verifikasi yang dicari, masukan value dari enum /App/Enum/VerifikasiApd.php atau integer 1~5
      * @return array list apa saja yang telah diinput oleh pegawai, di dapat dari tabel input_apd
      */
-    public function muatInputanPegawai($id_periode = 1, $id_pegawai = "", $target_verifikasi = 0): array
+    public function muatInputanPegawai($id_periode = null, $id_pegawai = "", $target_verifikasi = 0): array
     {
         try {
 
@@ -148,7 +148,7 @@ class ApdDataController extends Controller
                 $id_jabatan = Pegawai::where('id_pegawai', '=', $id_pegawai)->first()->id_jabatan;
             }
 
-            if($id_periode == 1)
+            if($id_periode == null)
             $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
 
             // array kosong untuk return
@@ -242,7 +242,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function muatSatuInputanPegawai($id_jenis, $id_periode = 1, $id_pegawai = ""): array
+    public function muatSatuInputanPegawai($id_jenis, $id_periode = null, $id_pegawai = ""): array
     {
         try{
             error_log('start muat satu inputan pegawai');
@@ -258,7 +258,7 @@ class ApdDataController extends Controller
 
             error_log('hit pegawai id check pass '.$id_pegawai);
 
-            if($id_periode == 1)
+            if($id_periode == null)
             $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
             error_log('hit id_periode id check pass '.$id_periode);
 
@@ -311,7 +311,7 @@ class ApdDataController extends Controller
 
     #region Method hitung capaian inputan
 
-    public function hitungCapaianInputPegawai($id_pegawai, int|array &$maks, int|array &$capaian, $id_periode = 1, $target_verifikasi = 0)
+    public function hitungCapaianInputPegawai($id_pegawai, int|array &$maks, int|array &$capaian, $id_periode = null, $target_verifikasi = 0)
     {
         $pegawai = Pegawai::find($id_pegawai);
         $yang_harus_diinput = 0;
@@ -397,11 +397,11 @@ class ApdDataController extends Controller
         }
     }
 
-    public function hitungCapaianInputSektor($sektor, int|array &$maks, int|array &$capaian,$id_periode = 1, $target_verifikasi = 0)
+    public function hitungCapaianInputSektor($sektor, int|array &$maks, int|array &$capaian,$id_periode = null, $target_verifikasi = 0)
     {
         try{
 
-            if($id_periode == 1)
+            if($id_periode == null)
                 $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
 
             // ambil daftar seluruh pegawai di sektor (termasuk staff dan kasie sektor)
@@ -435,7 +435,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function hitungCapaianInputSudin($sudin, int|array &$maks, int|array &$capaian,$id_periode = 1, $target_verifikasi = 0)
+    public function hitungCapaianInputSudin($sudin, int|array &$maks, int|array &$capaian,$id_periode = null, $target_verifikasi = 0)
     {
         try{
 
@@ -468,7 +468,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function hitungCapaianInputSubbag($subbag, int|array &$maks, int|array &$capaian, $id_periode = 1, $target_verifikasi = 0)
+    public function hitungCapaianInputSubbag($subbag, int|array &$maks, int|array &$capaian, $id_periode = null, $target_verifikasi = 0)
     {
 
         try{
@@ -656,7 +656,7 @@ class ApdDataController extends Controller
      * @param string $id_jabatan jabatan yang dicari, dalam bentuk id jabatan
      * @return array|string apa saja yang akan ditampilkan untuk thumbnail
      */
-    public function bangunListInputApdDariTemplate($id_periode = 1, $id_jabatan = "")
+    public function bangunListInputApdDariTemplate($id_periode = null, $id_jabatan = "")
     {
         try {
 
@@ -666,7 +666,7 @@ class ApdDataController extends Controller
             }
 
             // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
-            if($id_periode == 1)
+            if($id_periode == null)
             {
                 $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
             }
@@ -1321,7 +1321,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function ambilStatusVerifikasi($id_jenis, $id_pegawai = "", $id_periode = 1)
+    public function ambilStatusVerifikasi($id_jenis, $id_pegawai = "", $id_periode = null)
     {
         try {
 
@@ -1329,7 +1329,7 @@ class ApdDataController extends Controller
                 $id_pegawai = Auth::user()->id_pegawai;
 
             // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
-            if($id_periode == 1)
+            if($id_periode == null)
             {
                 $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
             }
@@ -1342,7 +1342,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function ambilStatusKerusakan($id_jenis, $id_pegawai = "", $id_periode = 1)
+    public function ambilStatusKerusakan($id_jenis, $id_pegawai = "", $id_periode = null)
     {
         try {
 
@@ -1350,7 +1350,7 @@ class ApdDataController extends Controller
                 $id_pegawai = Auth::user()->id_pegawai;
 
             // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
-            if($id_periode == 1)
+            if($id_periode == null)
             {
                 $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
             }

@@ -6,6 +6,7 @@ use App\Models\ApdList;
 use App\Models\InputApdTemplate;
 use App\Models\Pegawai;
 use App\Models\Jabatan;
+use App\Models\PeriodeInputApd;
 use App\Models\UkuranPegawai;
 use Carbon\Carbon;
 // use PHPUnit\Framework\TestCase;
@@ -21,8 +22,8 @@ class ExampleTest extends TestCase
     public function test_that_true_is_true()
     {
             // $jabatan = ApdList::where('id_apd','H-fir-0001')->get()->first()->size->opsi;
-            $jabatan = UkuranPegawai::where("id_pegawai" , Auth::user()->data->id_pegawai)->get()->first();
-            print_r($jabatan->opsi);
+            $jabatan = PeriodeInputApd::where('kumpul_ukuran',true)->first()->id_periode;
+            print_r($jabatan);
             $this->assertTrue(true);
 
     }

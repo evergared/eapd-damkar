@@ -52,7 +52,7 @@ class ModalKolomProgressTabelAnggotaKaton extends Component
             $periode = $data[1];
 
 
-            if($periode == 1)
+            if($periode == null)
             $periode = PeriodeInputApd::get()->first()->id_periode;
 
 

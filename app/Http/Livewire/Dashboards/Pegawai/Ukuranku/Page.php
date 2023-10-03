@@ -22,6 +22,9 @@ class Page extends Component
     // ukuran yang telah diisi oleh pegawai
     public $ukuranPegawai = [];
 
+    // untuk menampung data yang akan ditampilkan di tab-ukuran-tampil
+    public $listUkuran = [];
+
     // ukuran yang harus diisi oleh pegawai
     public $listKebutuhanUkuran = [];
 
@@ -46,14 +49,40 @@ class Page extends Component
         $this->siapkanTemplate();
         $this->ambilDataUser();
         $this->sesuaikanDataDenganTemplate();
+        $this->siapkanListDataUkuran();
     }
 
+    #region Tampil Ukuran
+    public function siapkanListDataUkuran()
+    {
+        try{
+
+            foreach($this->ukuranPegawai as $i => $item)
+            {
+                $this->listUkuran[$i] = [
+                    "index" => $i +1,
+                    "nama" => ApdJenis::find($item["id_jenis"])->nama_jenis,
+                    "ukuran" => $item["value"]
+                ];
+            }
+
+        }
+        catch(Throwable $e)
+        {
+            error_log('Dashboard Ukuranku Pegawai Error : Kesalahan saat menyiapkan data untuk tabbed pane tampil ukuran '.$e);
+        }
+    }
+    #endregion
+
+    #region Form Ukuran
     public function ambilDataUser()
     {
         try
         {
+            $id = Auth::user()->data->id_pegawai;
+
             // ambil inputan terdahulu
-            if(!is_null($inputan = Pegawai::find(Auth::user()->id_pegawai)->ukuran))
+            if(!is_null($inputan = UkuranPegawai::where('id_pegawai',$id)->get()->first()))
             {
                 $this->tanggal = $inputan['terakhir_diisi'];
                 
@@ -63,7 +92,6 @@ class Page extends Component
             {
                 error_log('hit field ukuran tidak ada');
             }
-                error_log('pengetesan selesai');
         }
         catch(Throwable $e)
         {
@@ -75,9 +103,12 @@ class Page extends Component
     public function siapkanTemplate()
     {
         try{
+            // ambil periode pertama yang sedang mengumpulkan ukuran apd
+            $periode = PeriodeInputApd::where('kumpul_ukuran',true)->first()->id_periode;
 
+            // lakukan iterasi jika template yang didapat tidak null
             $adc = new ApdDataController;
-            if(!is_null($template = $adc->muatListInputApdDariTemplate(1, Auth::user()->data->id_jabatan)))
+            if(!is_null($template = $adc->muatListInputApdDariTemplate($periode, Auth::user()->data->id_jabatan)))
             {
                 $i = 0;
                 foreach($template as  $t)
@@ -116,16 +147,24 @@ class Page extends Component
     public function sesuaikanDataDenganTemplate()
     {
         try{
-            error_log('sesuaikan dengan template');
+            error_log('sesuaikan dengan template, count ukuran pegawai : '.count($this->ukuranPegawai));
             foreach($this->ukuranPegawai as $ukuran)
             {
+                error_log('Triger pengulangan');
                 $index = array_search($ukuran['id_jenis'], array_column($this->listKebutuhanUkuran, "id_jenis"));
-                error_log("index ".$index);
-                if($index)
+                error_log('ukuran yang dicari : '.$ukuran['id_jenis']);
+                error_log("index yang di dapat : ".$index);
+                error_log('isi sebenarnya dari array list kebutuhan : '.$this->listKebutuhanUkuran[$index]['id_jenis']);
+                if(!is_bool($index))
                 {
-                    $this->ukuranTerisi[$index] = $ukuran['ukuran'];
-                    $this->cache_ukuranTerisi[$index] = $ukuran['ukuran'];
+                    $this->ukuranTerisi[$index] = $ukuran['value'];
+                    $this->cache_ukuranTerisi[$index] = $ukuran['value'];
                 }
+            }
+
+            foreach($this->ukuranTerisi as $i => $item)
+            {
+                error_log("index ".$i." : ".$item);
             }
 
         }
@@ -198,6 +237,7 @@ class Page extends Component
 
     public function resetForm()
     {
-        $this->cache_ukuranTerisi = $this->ukuranTerisi;
+        $this->ukuranTerisi = $this->cache_ukuranTerisi;
     }
+    #endregion
 }
