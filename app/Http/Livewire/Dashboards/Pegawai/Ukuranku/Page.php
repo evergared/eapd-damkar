@@ -6,6 +6,7 @@ use App\Http\Controllers\ApdDataController;
 use App\Models\ApdJenis;
 use App\Models\ApdList;
 use App\Models\Pegawai;
+use App\Models\PeriodeInputApd;
 use App\Models\UkuranPegawai;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -87,8 +88,6 @@ class Page extends Component
 
                     $target_apd = $t['opsi_apd'][0];
 
-                    error_log('index '.$i);
-
                     $target_size = ApdList::where('id_apd',$target_apd)->get()->first()->size;
 
                     // jika apd tersebut tidak memiliki ukuran, skip
@@ -105,11 +104,6 @@ class Page extends Component
                     $this->cache_ukuranTerisi[$i] = '';
                     $i++;
                 }
-
-                foreach(array_keys($this->listKebutuhanUkuran) as $tes)
-                {
-                    error_log('print index : '.$tes);
-                }
             }
 
         }
@@ -122,11 +116,11 @@ class Page extends Component
     public function sesuaikanDataDenganTemplate()
     {
         try{
-
+            error_log('sesuaikan dengan template');
             foreach($this->ukuranPegawai as $ukuran)
             {
                 $index = array_search($ukuran['id_jenis'], array_column($this->listKebutuhanUkuran, "id_jenis"));
-
+                error_log("index ".$index);
                 if($index)
                 {
                     $this->ukuranTerisi[$index] = $ukuran['ukuran'];
@@ -145,9 +139,12 @@ class Page extends Component
     {
         error_log('simpan kepanggil');
         try{
+            // siapkan data
+            $id_pegawai = Auth::user()->data->id_pegawai;
+            $terakhir_diisi = Carbon::now('Asia/Jakarta')->toDateTimeString();
+            $ukuran = UkuranPegawai::where("id_pegawai" , $id_pegawai)->first();
+            
             // iterasi jika isian terisi, maka masukan ke database
-            $ukuran = UkuranPegawai::find(Auth::user()->id_pegawai);
-
             foreach($this->listKebutuhanUkuran as $i => $data)
             {
                 // cek apakah inputan kosong
@@ -174,9 +171,21 @@ class Page extends Component
                 }
             }
 
-            $ukuran->terakhir_diisi = Carbon::now('Asia/Jakarta')->toDateTimeString();
-            $ukuran->list_ukuran = $this->ukuranPegawai;
-            $ukuran->save();
+            if(is_null($ukuran))
+            {
+                UkuranPegawai::create([
+                    "id_pegawai" => $id_pegawai,
+                    "terakhir_diisi" => $terakhir_diisi,
+                    "list_ukuran" => $this->ukuranPegawai
+                ]);
+            }
+            else
+            {
+                $ukuran->update([
+                    "terakhir_diisi" => $terakhir_diisi,
+                    "list_ukuran" => $this->ukuranPegawai
+                ]);
+            }
             session()->flash('form-success', 'Data ukuran berhasil diubah.');
             $this->inisiasi();
         }
