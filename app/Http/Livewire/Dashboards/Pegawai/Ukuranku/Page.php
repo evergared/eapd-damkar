@@ -192,7 +192,7 @@ class Page extends Component
                     // cek apakah user pernah mengisi jenis tsb
                     $index = array_search($data['id_jenis'], array_column($this->ukuranPegawai, 'id_jenis'));
 
-                    if($index)
+                    if(!is_bool($index))
                     {
                         // ubah value yang sudah terisi
                         $this->ukuranPegawai[$index]['value'] = $this->ukuranTerisi[$i];
