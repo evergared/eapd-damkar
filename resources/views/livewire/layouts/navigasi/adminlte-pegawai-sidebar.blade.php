@@ -71,6 +71,12 @@
                         <i class="nav-icon fas fa-tshirt"></i>
                         <p>
                             APDku
+                            @if ($notif_apdku_belum_isi > 0)
+                                <span class="badge badge-warning right">{{$notif_apdku_belum_isi}}</span>
+                            @endif
+                            @if ($notif_apdku_ditolak)
+                                <span class="badge badge-danger right">{{$notif_apdku_ditolak}}</span>
+                            @endif
                         </p>
                     </a>
                 </li>

@@ -674,7 +674,10 @@ class ApdDataController extends Controller
             // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
             if($id_periode == null)
             {
-                $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
+                $periode = PeriodeInputApd::where('aktif',true)->get()->first();
+                if(is_null($periode))
+                    return [];
+                $id_periode = $periode->id_periode;
             }
 
             error_log("id_periode : ".$id_periode);
@@ -1252,12 +1255,31 @@ class ApdDataController extends Controller
      * @todo Fungsi untuk ambil id id_periode
      * @body Buat fungsi untuk ambil id id_periode di db untuk data id_periode saat insert data input apd
      */
-    public function ambilIdPeriodeInput($tanggal = null)
+    public function ambilIdPeriodeInput($tanggal = null, $test = false)
     {
         if($tanggal == null)
             {
-                return PeriodeInputApd::get()->first()->id_periode;
+                if($test)
+                {
+                    error_log('test true');
+                    return PeriodeInputApd::get()->first()->id_periode;  
+                }
+
+
+                $periode =  PeriodeInputApd::where('aktif',true)->first();
+
+                if(is_null($periode))
+                    return null;
+                
+                return $periode->id_periode;
             }
+        
+        $periode = PeriodeInputApd::where('tgl_awal','<=',$tanggal)->where('tgl_akhir','>=',$tanggal)->get()->first();
+
+        if(is_null($periode))
+            return null;
+        
+        return $periode->id_periode;
         // where tanggal awal < $tanggal < tanggal akhir -> value('id')
     }
 

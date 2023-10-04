@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Layouts\Navigasi;
 
 use App\Http\Controllers\ApdDataController;
 use App\Models\ApdList;
+use App\Models\InputApd;
 use App\Models\InputApdTemplate;
 use App\Models\PeriodeInputApd;
 use App\Models\UkuranPegawai;
@@ -89,8 +90,39 @@ class AdminltePegawaiSidebar extends Component
     {
         try{
 
+            $this->notif_apdku_belum_isi = 0;
+            $this->notif_apdku_ditolak = 0;
 
+            // cek periode yang aktif
+            $periode = PeriodeInputApd::where('aktif', true)->first();
 
+            if(is_null($periode))
+            {
+                $this->notif_apdku_belum_isi = 0;
+                $this->notif_apdku_ditolak = 0;
+                return;
+            }
+
+            // ambil apa saja apd yang perlu diisi
+            $adc = new ApdDataController;
+
+            $template = $adc->muatListInputApdDariTemplate($periode->id_periode, Auth::user()->data->id_jabatan);
+
+            // ambil semua yang telah diinput oleh user
+            $inputan_pegawai = InputApd::where('id_periode',$periode->id_periode)
+                                ->where('id_pegawai',Auth::user()->data->id_pegawai)
+                                ->get();
+            
+            $inputan_terisi = [];
+
+            if(is_null($inputan_pegawai))
+                $inputan_terisi = $inputan_pegawai;
+
+            // cek apakah apd yang diminta sudah diinput oleh pegawai
+            foreach($template as $t)
+            {
+                
+            }
         }
         catch(Throwable $e)
         {
