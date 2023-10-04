@@ -32,6 +32,9 @@ class Page extends Component
     public $ukuranTerisi = [];
     public $cache_ukuranTerisi = [];
 
+    // untuk notif di navigasi nav tabs
+    public $notif_belum_isi = 0;
+
     protected $listeners = ['inisiasiFormUkuran'=>'inisiasi'];
 
     public function render()
@@ -103,6 +106,9 @@ class Page extends Component
     public function siapkanTemplate()
     {
         try{
+
+            $this->notif_belum_isi = 0;
+
             // ambil periode pertama yang sedang mengumpulkan ukuran apd
             $periode = PeriodeInputApd::where('kumpul_ukuran',true)->first()->id_periode;
 
@@ -134,6 +140,7 @@ class Page extends Component
                     $this->ukuranTerisi[$i] = '';
                     $this->cache_ukuranTerisi[$i] = '';
                     $i++;
+                    $this->notif_belum_isi++;
                 }
             }
 
@@ -146,6 +153,7 @@ class Page extends Component
 
     public function sesuaikanDataDenganTemplate()
     {
+
         try{
             error_log('sesuaikan dengan template, count ukuran pegawai : '.count($this->ukuranPegawai));
             foreach($this->ukuranPegawai as $ukuran)
@@ -159,8 +167,14 @@ class Page extends Component
                 {
                     $this->ukuranTerisi[$index] = $ukuran['value'];
                     $this->cache_ukuranTerisi[$index] = $ukuran['value'];
+                    
+                    if($this->notif_belum_isi > 0)
+                        $this->notif_belum_isi--;
                 }
+                
             }
+
+            error_log("notif belum isi : ".$this->notif_belum_isi);
 
             foreach($this->ukuranTerisi as $i => $item)
             {
@@ -227,6 +241,7 @@ class Page extends Component
             }
             session()->flash('form-success', 'Data ukuran berhasil diubah.');
             $this->inisiasi();
+            $this->emit('refreshComponent');
         }
         catch(Throwable $e)
         {

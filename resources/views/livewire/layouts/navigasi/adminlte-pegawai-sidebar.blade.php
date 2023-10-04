@@ -1,3 +1,6 @@
+<div>
+
+
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -77,7 +80,9 @@
                         <i class="nav-icon fas fa-suitcase"></i>
                         <p>
                             UKURANku
-                            <span class="badge badge-warning right">6</span>
+                            @if ($notif_ukuranku_belum_isi > 0)
+                                <span class="badge badge-warning right">{{$notif_ukuranku_belum_isi}}</span>
+                            @endif
                         </p>
                     </a>
                 </li>
@@ -180,3 +185,4 @@
 
     <!-- /.sidebar -->
 </aside>
+</div>
