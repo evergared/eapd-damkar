@@ -1341,7 +1341,7 @@ class ApdDataController extends Controller
                 $gbr = "apd_no-image.png";
 
             // return path agar dapat dengan mudah ditampilkan di .blade.php
-            return 'storage/' . $path . '/' . $gbr;
+            return  $path . '/' . $gbr;
         } catch (Throwable $e) {
 
             // jika exception, berikan no image

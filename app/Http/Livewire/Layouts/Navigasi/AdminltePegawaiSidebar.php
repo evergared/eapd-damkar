@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Layouts\Navigasi;
 
+use App\Enum\StatusApd;
+use App\Enum\VerifikasiApd;
 use App\Http\Controllers\ApdDataController;
 use App\Models\ApdList;
 use App\Models\InputApd;
@@ -20,7 +22,13 @@ class AdminltePegawaiSidebar extends Component
 
     public $notif_apdku_ditolak = 0;
 
-    protected $listeners = ['refreshComponent' => '$refresh'];
+    protected $listeners = [
+        // ketika komponen lain refresh secara global
+        'refreshComponent' => '$refresh',
+
+        // ketika komponen lain hanya meminta sidebar yang di refresh
+        'refreshSidebar' => '$refresh'
+    ];
 
     public function render()
     {
@@ -111,22 +119,40 @@ class AdminltePegawaiSidebar extends Component
             // ambil semua yang telah diinput oleh user
             $inputan_pegawai = InputApd::where('id_periode',$periode->id_periode)
                                 ->where('id_pegawai',Auth::user()->data->id_pegawai)
-                                ->get();
+                                ->get()->toArray();
             
             $inputan_terisi = [];
 
             if(is_null($inputan_pegawai))
                 $inputan_terisi = $inputan_pegawai;
 
-            // cek apakah apd yang diminta sudah diinput oleh pegawai
+            // iterasi untuk cek apakah apd yang diminta sudah diinput oleh pegawai
             foreach($template as $t)
             {
-                
+                $id_jenis_target = $t['id_jenis'];
+
+                $index = array_search($id_jenis_target, array_column($inputan_terisi, 'id_jenis'));
+
+                if(is_bool($index))
+                {
+                    // jika belum isi
+                    $this->notif_apdku_belum_isi++;
+                }
+                else
+                {
+                    // jika sudah isi namun ditolak
+                    $inputan = $inputan_terisi[$index];
+
+                    if( VerifikasiApd::tryFrom($inputan['verifikasi_status'])->equals(VerifikasiApd::tertolak()))
+                        $this->notif_apdku_ditolak++;
+                }
             }
         }
         catch(Throwable $e)
         {
-
+            error_log("Sidebar Pegawai Error : kesalahan saat melakukan pengecekan apdku ".$e);
+            $this->notif_apdku_belum_isi = 0;
+            $this->notif_apdku_ditolak = 0;
         }
     }
 }

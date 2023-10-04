@@ -42,7 +42,7 @@ class FileController extends Controller
     /**
      * Path dasar penyimpanan placeholder apd untuk keperluan tes.
      */
-    public static $apdPlaceholderBasePath = 'img/apd/placeholder';
+    public static $apdPlaceholderBasePath = 'storage/img/apd/placeholder';
 
     /**
      * Path dasar penyimpanan gambar foto profil yang diupload oleh user

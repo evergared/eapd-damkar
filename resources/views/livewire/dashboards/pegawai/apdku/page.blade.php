@@ -91,7 +91,7 @@
     <script>
 
         window.addEventListener('modalInputApd', event=> {
-            modal('modal-input-apd',event.detail.id_jenis,'modalInputApdPegawai')
+            modal('modal-input-apd',event.detail.id_jenis,'inisiasiModalInput')
         })
 
         window.addEventListener('pilihFilterSemua', ()=> {
