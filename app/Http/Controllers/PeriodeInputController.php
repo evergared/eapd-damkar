@@ -29,12 +29,15 @@ class PeriodeInputController extends Controller
      * - ubahDataTabelTemplateKeDataset : datatabel template -> dataset
      * - ubahDatasetArrayTemplateKeTemplate : dataset -> template
      */
-    public function ambilIdPeriodeInput($tanggal = null)
+    public function ambilIdPeriodeInput($tanggal = null, $test = null)
     {
         if($tanggal == null)
             {
-                // ambil periode pertama yang aktif
-                $periode = PeriodeInputApd::where("aktif",true)->get()->first();
+                if($test)
+                    $periode = PeriodeInputApd::get()->first()->id_periode;
+                else
+                    // ambil periode pertama yang aktif
+                    $periode = PeriodeInputApd::where("aktif",true)->get()->first();
 
                 if(is_null($periode))
                     return null;

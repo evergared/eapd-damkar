@@ -248,33 +248,21 @@ class ApdDataController extends Controller
         }
     }
 
-    public function muatSatuInputanPegawai($id_jenis, $id_periode = null, $id_pegawai = ""): array
+    public function muatSatuInputanPegawai($id_jenis, $id_periode = null, $id_pegawai = ""): array|bool|null
     {
         try{
-            error_log('start muat satu inputan pegawai');
-            // jika parameter nrk kosong, ambil nrk dan jabatan user
+            // jika parameter id pegawai kosong
             if ($id_pegawai == "") {
                 $id_pegawai = Auth::user()->id_pegawai;
-                // $id_jabatan = Auth::user()->data->id_jabatan;
             }
-            // jika paramter nrk diisi, cukup ambil jabatan user
-            else {
-                // $id_jabatan = Pegawai::where('_id', '=', $id_pegawai)->first()->id_jabatan;
-            }
-
-            error_log('hit pegawai id check pass '.$id_pegawai);
+            
 
             if($id_periode == null)
-            $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
-            error_log('hit id_periode id check pass '.$id_periode);
+                $id_periode = $this->ambilIdPeriodeInput();
 
-            error_log('id_jenis : '.$id_jenis);
 
-            // cek apakah user telah menginput apd tersebut
             if ($input = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first())
             {
-            error_log('hit input pass');
-
                 $verifikasi_status = "";
                 $verifikasi_label = "";
 
@@ -307,11 +295,13 @@ class ApdDataController extends Controller
                         ];
             }
 
+            return null;
 
         }
         catch(Throwable $e)
         {
-            error_log('gagal muat satu inputan pegawai : '.$e);
+            error_log('Apd Data Controller Error : Kesalahan saat memuat satu inputan pegawai '.$e);
+            return false;
         }
     }
 
@@ -1230,24 +1220,24 @@ class ApdDataController extends Controller
                 if (is_array($gbr)) {
                     $gambar = [];
                     foreach ($gbr as $g) {
-                        array_push($gambar, 'storage/' . $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $g);
+                        array_push($gambar, $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $g);
                     }
                     return $gambar;
                 } else {
                     if ($gbr == "")
-                        return "";
+                        return null;
                     else
-                        return 'storage/' . $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $gbr;
+                        return $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $gbr;
                 }
             }
             else
             {
-                return "";
+                return null;
             }
             
         } catch (Throwable $e) {
             error_log('Gagal menyiapkan gambar inputan user ' . $e);
-            return "";
+            return false;
         }
     }
 
