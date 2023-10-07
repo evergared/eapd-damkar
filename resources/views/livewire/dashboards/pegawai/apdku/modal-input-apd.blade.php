@@ -1,6 +1,7 @@
-    <div>
+
+<div>
         <div wire:ignore.self class="modal fade" id="modal-input-apd" style="display: none;"
-            aria-hidden="true">
+            aria-hidden="true" >
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -10,7 +11,71 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
+                        @if ($gambar_apd_user)
+                                    
+                        <div class="row mb-2" wire:ignore.self>
+                            <div class="collapse" id="previw-gambar">
+                                <a class="btn btn-primary btn-m btn-flat rounded-pill" onclick="$('#previw-gambar').collapse('hide')" style="cursor: pointer;">
+                                    <i class="fa fa-window-close mr-1"></i>
+                                    Tutup Preview
+                                </a>
+                                {{-- Saat User Upload gambar --}}
+                                    @if ($gambar_apd_user && !($errors->has('gambar_apd_user.*')))
+                                    <div class="col-12">
+                                        <span class="text-warning">Gambar berikut merupakan preview gambar yang anda upload,
+                                            pastikan anda menyimpan perubahan.</span>
+    
+                                        {{-- Script untuk preview gambar apd Start--}}
+                                        <script>
+                                            $(document).ready(function() {
+                                                    $('.upload-preview.product-image-thumb').on('click', function () {
+                                                        var $image_element = $(this).find('img')
+                                                        $('.upload-preview.product-image').prop('src', $image_element.attr('src'))
+                                                        $('.upload-preview.product-image-thumb.active').removeClass('active')
+                                                        $(this).addClass('active')
+                                                        })
+                                                    })
+                                        </script>
+                                        {{-- Script untuk preview gambar apd End--}}
+    
+    
+                                        {{-- Upload Gambar lebih dari 1 --}}
+                                        @if (count($gambar_apd_user)>1)
+                                        <img class="upload-preview product-image" src="{{ $gambar_apd_user[0]->temporaryUrl() }}"
+                                            alt="Gambar Apd Anda">
+                                        <div class="col-12 upload-preview product-image-thumbs">
+    
+                                            @foreach ($gambar_apd_user as $key => $gbr)
+                                            @if($key === array_key_first($gambar_apd_user))
+                                            <div class="upload-preview product-image-thumb active">
+                                                <img src="{{$gbr->temporaryUrl()}}" alt="List Gambar Apd">
+                                            </div>
+                                            @else
+                                            <div class="upload-preview product-image-thumb">
+                                                <img src="{{$gbr->temporaryUrl()}}" alt="List Gambar Apd">
+                                            </div>
+    
+                                            @endif
+                                            @endforeach
+                                        </div>
+    
+                                        {{-- Upload Gambar 1 --}}
+                                        @elseif (count($gambar_apd_user) == 1)
+                                        <img class="upload-preview product-image" src="{{$gambar_apd_user[0]->temporaryUrl()}}"
+                                            alt="Gambar Apd Anda">
+    
+                                        @endif
+                                        @else
+                                        <div class="jumbotron jumbotron-fluid text-center">
+                                            Anda belum upload gambar, preview gambar anda akan muncul disini.
+                                        </div>
+                                    </div>
+                                    @endif
+                            </div>
+                        </div>
+                        
+                        @endif
+                        <div class="row" wire:ignore.self>
                             <div class="col-12 col-sm-6" wire:key='tampil-gambar'>
                                 <h3 class="d-inline-block d-sm-none">{{$template_nama_jenis_apd}}</h3>
                                 <ul class="nav nav-tabs" role="tablist" id="gambar-apd-nav-tabs">
@@ -40,7 +105,7 @@
                                             {{-- Kondisi Gambar Template Start --}}
 
 
-                                                <div wire:loading wire:target='selectModelApdDirubah'>
+                                                <div wire:loading>
                                                     <div class="spinner-border text-info" role="status">
                                                         <span class="sr-only">Memuat...</span>
                                                     </div><span class="mx-2 text-info">Memuat...</span>
@@ -111,14 +176,11 @@
                                         <div class="tab-pane fade" id="gambar-apd-user-content" role="tabpanel"
                                             aria-labelledby="gambar-apd-user-tab" wire:key='apd-user' wire:ignore.self>
 
-                                           
 
                                             {{-- Kondisi Gambar APD Anda Start --}}
                                                 {{-- Saat User Belum Pernah Upload Gambar --}}
                                                 @if(is_null($gambar_apd_user_sebelum))
-                                                    <div class="jumbotron jumbotron-fluid text-center">
-                                                        Anda belum melakukan upload gambar apd.
-                                                    </div>
+                                                    
 
                                                     @if ($gambar_apd_user)
                                                     <div class="jumbotron jumbotron-fluid text-center">
@@ -128,19 +190,19 @@
                                                     </div>
                                                     <div>
                                                         <a class="btn btn-secondary btn-sm btn-flat rounded-pill"
-                                                            style="cursor: pointer;" onclick="$('#modal-upload-gambar').modal('show')">
+                                                            style="cursor: pointer;" data-toggle="collapse" href="#previw-gambar" role="button" aria-expanded="false" aria-controls="previw-gambar">
                                                             <i class="fas fa-image fa-lg mr-2"></i>
                                                             Preview Gambar
                                                         </a>
                                                     </div>
+                                                    @else
+                                                        <div class="jumbotron jumbotron-fluid text-center">
+                                                            Anda belum melakukan upload gambar apd.
+                                                        </div>
                                                     @endif
                                                 {{-- Saat terjadi kesalahan saat memuat gambar upload user --}}
                                                 @elseif(is_bool($gambar_apd_user_sebelum))
-                                                    <div class="jumbotron jumbotron-fluid text-center">
-                                                        <div class="text-danger">
-                                                            <small>Terjadi kesalahan saat memuat gambar input sebelumnya.</small>
-                                                        </div>
-                                                    </div>
+                                                    
 
                                                     @if ($gambar_apd_user)
                                                     <div class="jumbotron jumbotron-fluid text-center">
@@ -150,16 +212,22 @@
                                                     </div>
                                                     <div>
                                                         <a class="btn btn-secondary btn-sm btn-flat rounded-pill"
-                                                            style="cursor: pointer;" onclick="$('#modal-upload-gambar').modal('show')">
+                                                            style="cursor: pointer;" data-toggle="collapse" href="#previw-gambar" role="button" aria-expanded="false" aria-controls="previw-gambar">
                                                             <i class="fas fa-image fa-lg mr-2"></i>
                                                             Preview Gambar
                                                         </a>
                                                     </div>
+                                                    @else
+                                                        <div class="jumbotron jumbotron-fluid text-center">
+                                                            <div class="text-danger">
+                                                                <small>Terjadi kesalahan saat memuat gambar input sebelumnya.</small>
+                                                            </div>
+                                                        </div>
                                                     @endif
                                                 
                                                 {{-- Jika user telah upload sebelumnya --}}
                                                 @else
-                                                    <div class="col-12">
+                                                    <div class="col">
                                                         <div class="text-info my-2">
                                                             <small>Berikut merupakan gambar APD anda untuk model
                                                                 <strong><u>{{$nama_apd_user_sebelum}}</u></strong> yang
@@ -183,7 +251,7 @@
 
                                                             <img class="apd-user-preview product-image"
                                                                 src="{{asset($gambar_apd_user_sebelum[0])}}" alt="Gambar Apd Anda">
-                                                            <div class="col-12 apd-user product-image-thumbs">
+                                                            <div class="col apd-user product-image-thumbs">
 
                                                                 @foreach ($gambar_apd_user_sebelum as $key => $gbr)
                                                                     @if($key === array_key_first($gambar_apd_user_sebelum))
@@ -211,7 +279,7 @@
                                                             <div>
                                                                 <a class="btn btn-secondary btn-sm btn-flat rounded-pill"
                                                                     style="cursor: pointer;"
-                                                                    onclick="$('#modal-upload-gambar').modal('show')">
+                                                                    data-toggle="collapse" href="#previw-gambar" role="button" aria-expanded="false" aria-controls="previw-gambar">
                                                                     <i class="fas fa-image fa-lg mr-2"></i>
                                                                     Preview Gambar
                                                                 </a>
@@ -222,6 +290,9 @@
                                                     </div>
                                                 @endif
                                             {{-- Kondisi Gambar APD Anda End --}}
+                                           
+                                                
+                                            
                                         </div>
 
                                     {{-- Status Start --}}
@@ -277,7 +348,7 @@
     
                                     <div class="form-group">
                                         <label>Status Keberadaan APD : </label>
-                                        <select class="form-control" wire:model="status_keberadaan_apd_user">
+                                        <select class="form-control" wire:model="status_keberadaan_apd_user" wire:change='changeDropdownKeberadaan'>
                                             <option value="" disabled>APD Ada/Hilang/Belum Terima ?</option>
                                             @foreach ($opsi_dropdown_keberadaan as $item)
                                                 <option value="{{$item['value']}}">{{$item['text']}}</option>
@@ -302,7 +373,7 @@
                                     </div>
 
                                     @error('id_apd_user')
-                                        <small class="error text-danger">{{ "TEST" }}</small>
+                                        <small class="error text-danger">{{$message}}</small>
                                     @enderror
 
                                     <p></p>
@@ -383,7 +454,30 @@
 
                         </div>
                     </div>
+
+                    <div class="modal-footer">
+                        @if($status_verifikasi == $enum_verifikasi_apd_terverifikasi)
+                            <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='updateSetelahTerverifikasi' style="cursor: pointer;">
+                                <i class="fas fa-save fa-lg mr-2"></i>
+                                Ajukan Perubahan
+                            </a>
+                        @elseif($status_verifikasi == $enum_verifikasi_apd_verifikasi)
+                            <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='updateSetelahTerverifikasi' style="cursor: pointer;">
+                                <i class="fas fa-save fa-lg mr-2"></i>
+                                Update Data APD
+                            </a>
+                        @else
+                            <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='simpan' style="cursor: pointer;">
+                                <i class="fas fa-save fa-lg mr-2"></i>
+                                Simpan Data APD
+                            </a>
+                        @endif
+                    </div>
+
+                    
+
                 </div>
             </div>
         </div>
-    </div>
+
+</div>

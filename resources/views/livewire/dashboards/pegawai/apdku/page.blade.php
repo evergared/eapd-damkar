@@ -47,7 +47,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="card-body">
+                                    <div class="card-body" wire:ignore.self>
                                         <div class="row">
                                             @foreach ($daftarApd as $item)
                                             <div class="column {{Str::slug($item['status_verifikasi'],'-')}} {{Str::slug($item['status_kerusakan'],'-')}} small-box col-sm-3"

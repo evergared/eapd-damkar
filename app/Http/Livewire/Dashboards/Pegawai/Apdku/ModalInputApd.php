@@ -71,6 +71,12 @@ class ModalInputApd extends Component
     public  $warna_kerusakan = '',
             $warna_keberadaan ='',
             $warna_verifikasi ='secondary';
+
+    // untuk komparasi status verifikasi pada view
+    public 
+        $enum_verifikasi_apd_input,
+        $enum_verifikasi_apd_verifikasi,
+        $enum_verifikasi_apd_terverifikasi;
     
     // utk mempermudah pemanggilan di blade.php
     public 
@@ -78,7 +84,9 @@ class ModalInputApd extends Component
         $upload_path = '';
 
     // timestamp utk membantu troubleshoot, sebagai referensi waktu di log
-    public  $error_time_gambar_template = '';
+    public  
+        $error_time_gambar_template = '',
+        $error_time_simpan_inputan = '';
 
     protected $listeners = [
         'panggilModalInput'
@@ -111,9 +119,13 @@ class ModalInputApd extends Component
 
     public function panggilModalInput($value)
     {
-        error_log("panggil modal input triggered from modal input apd");
         $this->inisiasiModalInput($value["id_jenis"]);
         $this->dispatchBrowserEvent('pangilModalInput');
+    }
+
+    public function panggilModalPreviewGambarUpload()
+    {
+        $this->dispatchBrowserEvent('panggilModalPreview');
     }
 
     public function inisiasiModalInput($id_jenis_apd)
@@ -136,11 +148,10 @@ class ModalInputApd extends Component
         $this->id_apd_user = '';
         $this->size_apd_user = '';
         $this->kondisi_apd_user = '';
-        $this->gambar_apd_user = [];
+        $this->gambar_apd_user = null;
         $this->komentar_apd_user ="";
         $this->status_keberadaan_apd_user = "";
     
-    // data dari tabel input_apd
         $this->terakhir_diisi = '';
         $this->terakhir_diverif = '';
         $this->id_apd_user_sebelum = '';
@@ -151,19 +162,24 @@ class ModalInputApd extends Component
         $this->komentar_apd_user_sebelum ="";
         $this->status_keberadaan_apd_user_sebelum = "";
         $this->komentar_verifikator = "";
-        $this->status_verifikasi = 1;
-        $this->label_verifikasi = "Proses Input";
+        $this->status_verifikasi = VerifikasiApd::input()->value;
+        $this->label_verifikasi = VerifikasiApd::input()->label;
 
-    // cache untuk reset value ke kondisi sebelumnya
         $this->cache_id_apd_user = '';
         $this->cache_size_apd_user = '';
         $this->cache_kondisi_apd_user = '';
         $this->cache_komentar_apd_user = '';
 
-    // untuk warna label bootstrap
         $this->warna_kerusakan = '';
         $this->warna_keberadaan ='';
         $this->warna_verifikasi ='secondary';
+
+        $this->enum_verifikasi_apd_input = VerifikasiApd::input()->value;
+        $this->enum_verifikasi_apd_verifikasi = VerifikasiApd::verifikasi()->value;
+        $this->enum_verifikasi_apd_terverifikasi = VerifikasiApd::terverifikasi()->value;
+
+        $this->error_time_gambar_template = '';
+        $this->error_time_simpan_inputan = '';
 
         // bangun data template apd untuk modal
         $list_apd_terkait = $adc->muatOpsiApd($this->template_id_jenis_apd);
@@ -209,6 +225,11 @@ class ModalInputApd extends Component
             $this->warna_keberadaan = $inputan_sebelumnya['warna_keberadaan'];
         }
         
+    }
+
+    public function inisiasiModalPreviewGambarUpload()
+    {
+
     }
 
     #region Refresh data
@@ -260,6 +281,7 @@ class ModalInputApd extends Component
 
     public function refreshGambarTemplate()
     {
+        $this->error_time_gambar_template = "";
         $this->template_gambar_apd = null;
 
         try {
@@ -267,7 +289,7 @@ class ModalInputApd extends Component
 
         } catch (Throwable $e) {
             $this->error_time_gambar_template = now();
-            $this->template_data_apd = false;
+            $this->template_gambar_apd = false;
             error_log("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_gambar_template."): Kesalahan saat refresh gambar template apd ".$e);
             Log::error("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_gambar_template."): Kesalahan saat refresh gambar template apd ".$e);
         }
@@ -279,17 +301,101 @@ class ModalInputApd extends Component
     {
         $this->size_apd_user = '';
         $this->kondisi_apd_user = '';
-        $this->gambar_apd_user = [];
+        $this->gambar_apd_user = null;
         $this->komentar_apd_user ="";
 
         $this->refreshDropdownKondisiApd();
         $this->refreshDropdownSizeApd();
         $this->refreshGambarTemplate();
     }
+
+    public function changeDropdownKeberadaan()
+    {
+        $this->id_apd_user = '';
+        $this->size_apd_user = '';
+        $this->kondisi_apd_user = '';
+        $this->gambar_apd_user = null;
+    }
     #endregion
 
     #region Button Function
+    public function simpan()
+    {
+        $this->error_time_simpan_inputan = "";
+        $this->validasiInputan();
+        
+        try{
 
+            
+
+        }
+        catch(Throwable $e)
+        {
+            $this->error_time_simpan_inputan = now();
+            error_log("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat menyimpan inputan ".$e);
+            Log::error("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat menyimpan inputan ".$e);
+            session()->flash('alert-danger','Gagal menyimpan data inputan APD ('.$this->error_time_simpan_inputan.')');
+        }
+    }
+
+    public function update()
+    {
+
+    }
+
+    public function updateTerverifikasi()
+    {
+
+    }
+    #endregion
+
+    #region Validasi
+    public function validasiInputan()
+    {
+        if($this->status_keberadaan_apd_user == "ada")
+        {
+            $this->validate(
+                [
+                    'id_apd_user' => 'required'
+                ],
+                [
+                    'id_apd_user.required' => 'Harap pilih model APD'
+                ]
+            );
+
+            if (!is_null($this->opsi_dropdown_size_apd)) {
+                $this->validate(
+                    [
+                        'size_apd_user' => 'required'
+                    ],
+                    [
+                        'size_apd_user.required' => 'Harap pilih ukuran APD'
+                    ]
+                );
+            }
+
+            if (!is_null($this->opsi_dropdown_kondisi_apd)) {
+                $this->validate(
+                    [
+                        'kondisi_apd_user' => 'required'
+                    ],
+                    [
+                        'kondisi_apd_user.required' => 'Harap pilih jenis kondisi APD'
+                    ]
+                );
+            }
+
+            
+            $this->validate(
+                [
+                    'gambar_apd_user' => 'required'
+                ],
+                [
+                    'gambar_apd_user.required' => 'Harap upload gambar APD'
+                ]
+            );
+        }
+    }
     #endregion
 
 }
