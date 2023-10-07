@@ -90,8 +90,9 @@
 
     <script>
 
-        window.addEventListener('modalInputApd', event=> {
-            modal('modal-input-apd',event.detail.id_jenis,'inisiasiModalInput')
+        window.addEventListener('pangilModalInput', event=> {
+            $('#modal-input-apd').modal('show')
+            // modal('modal-input-apd',event.detail.id_jenis,'inisiasiModalInput')
         })
 
         window.addEventListener('pilihFilterSemua', ()=> {

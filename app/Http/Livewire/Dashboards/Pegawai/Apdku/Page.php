@@ -35,6 +35,6 @@ class Page extends Component
 
     public function panggilModal($id_jenis)
     {
-        $this->emit('inisiasiModalInput', ['id_jenis' => $id_jenis]);
+        $this->emit('panggilModalInput', ['id_jenis' => $id_jenis]);
     }
 }

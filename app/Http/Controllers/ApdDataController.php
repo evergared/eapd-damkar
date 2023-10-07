@@ -732,8 +732,8 @@ class ApdDataController extends Controller
 
                 $nama_apd = $model->nama_apd;
                 $merk_apd = $model->merk_apd;
-                $size_apd = $model->size->opsi;
-                $kondisi_apd = $model->kondisi->opsi;
+                $size_apd = (is_null($model->size)) ? null : $model->size->opsi;
+                $kondisi_apd = (is_null($model->kondisi)) ? null : $model->kondisi->opsi;
                 $gambar_apd = $model->image;
 
 
@@ -741,7 +741,7 @@ class ApdDataController extends Controller
                 // gambar apd harus berupa array untuk mempermudah pengecekan
                 // saat admin tidak memberikan stock gambar apd
                 if (is_null($gambar_apd)) {
-                    $gambar_apd = [];
+                    $gambar_apd = null;
                 }
                 // saat admin memberikan banyak stock gambar apd 
                 else if (str_contains($gambar_apd, '||')) {
@@ -749,8 +749,8 @@ class ApdDataController extends Controller
                 }
                 // saat admin memberikan satu stock gambar apd
                 else {
-                    $gambar = $gambar_apd;
-                    $gambar_apd = [$gambar];
+                    // $gambar = $gambar_apd;
+                    // $gambar_apd = [$gambar];
                 }
 
                 // masukan ke array kosong

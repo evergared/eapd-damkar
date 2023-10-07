@@ -32,14 +32,13 @@
 
                                             {{-- Jika gambar template gagal dimuat --}}
                                             @if ($error_time_gambar_template != '')
-                                            <div class="text-danger">
-                                                <small> Error saat memuat gambar model apd : <strong>{{$error_time_gambar_template}}</strong></small>
-                                            </div>
+                                                <div class="text-danger">
+                                                    <small> Error saat memuat gambar model apd : <strong>{{$error_time_gambar_template}}</strong></small>
+                                                </div>
                                             @endif
 
                                             {{-- Kondisi Gambar Template Start --}}
 
-                                            @if ($template_gambar_apd)
 
                                                 <div wire:loading wire:target='selectModelApdDirubah'>
                                                     <div class="spinner-border text-info" role="status">
@@ -48,170 +47,179 @@
                                                 </div>
 
                                                 <div class="col-12">
-                                                    {{-- Saat Gambar Template Lebih Dari 1 --}}
-                                                    @if(count($template_gambar_apd) > 1 && !empty($opsi_dropdown_list_apd) && $id_apd_user != '' )
+                                                @if($status_keberadaan_apd_user == "ada")
+                                                    @if ($id_apd_user != "")
+                                                        @if(is_array($template_gambar_apd))
+                                                            {{-- Script untuk preview gambar apd Start--}}
+                                                            <script>
+                                                                $(document).ready(function() {
+                                                            $('.apd-template.product-image-thumb').on('click', function () {
+                                                                var $image_element = $(this).find('img')
+                                                                $('.apd-template-preview.product-image').prop('src', $image_element.attr('src'))
+                                                                $('.apd-template.product-image-thumb.active').removeClass('active')
+                                                                $(this).addClass('active')
+                                                                })
+                                                            })
+                                                            </script>
+                                                            {{-- Script untuk preview gambar apd End--}}
 
-                                                    {{-- Script untuk preview gambar apd Start--}}
-                                                    <script>
-                                                        $(document).ready(function() {
-                                                    $('.apd-template.product-image-thumb').on('click', function () {
-                                                        var $image_element = $(this).find('img')
-                                                        $('.apd-template-preview.product-image').prop('src', $image_element.attr('src'))
-                                                        $('.apd-template.product-image-thumb.active').removeClass('active')
-                                                        $(this).addClass('active')
-                                                        })
-                                                    })
-                                                    </script>
-                                                    {{-- Script untuk preview gambar apd End--}}
-
-                                                    <img class="apd-template-preview product-image" id="apd_template"
-                                                        src="{{asset($placeholder_path.'/'.$template_gambar_apd[0])}}" alt="Gambar Apd Anda">
-                                                    <div class="col-12 product-image-thumbs">
-                                                        @foreach ($template_gambar_apd as $key => $gbr)
-                                                            @if($key === array_key_first($template_gambar_apd))
-                                                            <div class="apd-template product-image-thumb active"><img
-                                                                    src="{{asset($placeholder_path.'/'.$gbr)}}" alt="Product Image">
+                                                            <img class="apd-template-preview product-image" id="apd_template"
+                                                                src="{{asset($placeholder_path.'/'.$template_gambar_apd[0])}}" alt="Gambar Apd Anda">
+                                                            <div class="col-12 product-image-thumbs">
+                                                                @foreach ($template_gambar_apd as $key => $gbr)
+                                                                    @if($key === array_key_first($template_gambar_apd))
+                                                                        <div class="apd-template product-image-thumb active"><img
+                                                                                src="{{asset($placeholder_path.'/'.$gbr)}}" alt="Product Image">
+                                                                        </div>
+                                                                    @else
+                                                                        <div class="apd-template  product-image-thumb"><img
+                                                                                src="{{asset($placeholder_path.'/'.$gbr)}}" alt="Product Image">
+                                                                        </div>
+                                                                    @endif
+                                                                @endforeach
                                                             </div>
-                                                            @else
-                                                            <div class="apd-template  product-image-thumb"><img
-                                                                    src="{{asset($placeholder_path.'/'.$gbr)}}" alt="Product Image">
+                                                        @elseif(is_string($template_gambar_apd))
+                                                            <img class="product-image" src="{{$placeholder_path.'/'.$template_gambar_apd}}"
+                                                            alt="Gambar APD">
+                                                        @elseif(is_null($template_gambar_apd))
+                                                            <div class="jumbotron jumbotron-fluid text-center">
+                                                                Tidak disediakan gambar untuk APD ini.
                                                             </div>
-                                                            @endif
-                                                        @endforeach
-                                                    </div>
-
-                                                    {{-- Saat Gambar Template Ada 1 --}}
-                                                    @elseif( is_string($template_gambar_apd) && !empty($opsi_dropdown_list_apd) && $id_apd_user != '')
-                                                    <img class="product-image" src="{{$placeholder_path.'/'.$template_gambar_apd[0]}}"
-                                                        alt="Gambar APD">
-
-                                                    {{-- Saat Tidak Diberikan Gambar Template --}}
-                                                    @elseif((empty($template_gambar_apd)) && !empty($opsi_dropdown_list_apd) && $id_apd_user != '' )
-                                                    <div class="jumbotron jumbotron-fluid text-center">
-                                                        Tidak disediakan gambar untuk APD ini.
-                                                    </div>
-                                                    
-                                                    {{-- Saat user belum memilih apd dari dropdown --}}
-                                                    @elseif(!empty($opsi_dropdown_list_apd) && $id_apd_user == '')
-                                                    <div class="jumbotron jumbotron-fluid text-center">
-                                                        Silahkan pilih apd di dropdown model.
-                                                    </div>
-
-                                                    {{-- jika terjadi kesalahan saat mengambil gambar template apd --}}
-                                                    @elseif( is_bool($template_gambar_apd) && !empty($opsi_dropdown_list_apd) && $id_apd_user != '')
-                                                    <div class="jumbotron jumbotron-fluid text-center">
-                                                        Terjadi kesalahan saat mengambil gambar model apd dari database.
-                                                    </div>
-
+                                                        @else
+                                                            <div class="jumbotron jumbotron-fluid text-center">
+                                                                Terjadi kesalahan saat mengambil gambar model apd dari database.
+                                                            </div>
+                                                        @endif
+                                                    @else
+                                                            <div class="jumbotron jumbotron-fluid text-center">
+                                                                Silahkan pilih apd di dropdown model.
+                                                            </div>
                                                     @endif
+                                                @else
+                                                    <div class="jumbotron jumbotron-fluid text-center">
+                                                        
+                                                    </div>
+                                                @endif
+
+                                                
+                                                    
                                                 </div>
 
-                                            @endif
                                             {{-- Kondisi Gambar Template End --}}
                                         </div>
 
                                         <div class="tab-pane fade" id="gambar-apd-user-content" role="tabpanel"
                                             aria-labelledby="gambar-apd-user-tab" wire:key='apd-user' wire:ignore.self>
 
-                                            {{-- Jika gambar user gagal dimuat --}}
-                                            @if (session()->has('gambar_apd_user_error'))
-                                            <div class="text-danger">
-                                                <small>{{session('gambar_apd_user_error')}}</small>
-                                            </div>
-                                            @endif
+                                           
 
                                             {{-- Kondisi Gambar APD Anda Start --}}
-                                                {{-- Saat User Sudah Pernah Upload Gambar --}}
-                                                @if(!is_null($gambar_apd_user_sebelum) && !is_bool($gambar_apd_user_sebelum))
-
-                                                <div class="col-12">
-                                                    <div class="text-info my-2">
-                                                        <small>Berikut merupakan gambar APD anda untuk model
-                                                            <strong><u>{{$nama_apd_user_sebelum}}</u></strong> yang
-                                                            telah anda
-                                                            upload.</small>
+                                                {{-- Saat User Belum Pernah Upload Gambar --}}
+                                                @if(is_null($gambar_apd_user_sebelum))
+                                                    <div class="jumbotron jumbotron-fluid text-center">
+                                                        Anda belum melakukan upload gambar apd.
                                                     </div>
-                                                    {{-- Pernah Upload Lebih Dari 1 --}}
-                                                    @if (count($gambar_apd_user_sebelum)>1)
 
-                                                        {{-- Script untuk preview gambar apd Start--}}
-                                                        <script>
-                                                            $(document).ready(function() {
-                                                        $('.apd-user.product-image-thumb').on('click', function () {
-                                                            var $image_element = $(this).find('img')
-                                                            $('.apd-user-preview.product-image').prop('src', $image_element.attr('src'))
-                                                            $('.apd-user.product-image-thumb.active').removeClass('active')
-                                                            $(this).addClass('active')
-                                                            })
-                                                        })
-                                                        </script>
-                                                        {{-- Script untuk preview gambar apd End--}}
-
-                                                        <img class="apd-user-preview product-image"
-                                                            src="{{asset($gambar_apd_user_sebelum[0])}}" alt="Gambar Apd Anda">
-                                                        <div class="col-12 apd-user product-image-thumbs">
-
-                                                            @foreach ($gambar_apd_user_sebelum as $key => $gbr)
-                                                                @if($key === array_key_first($gambar_apd_user_sebelum))
-                                                                <div class="apd-user product-image-thumb active"><img
-                                                                        src="{{asset($gbr)}}" alt="Product Image">
-                                                                </div>
-                                                                @else
-                                                                <div class="apd-user product-image-thumb"><img
-                                                                        src="{{asset($gbr)}}" alt="Product Image">
-                                                                </div>
-                                                                @endif
-                                                            @endforeach
-                                                        </div>
-
-                                                    {{-- Pernah Upload Gambar 1 --}}
-                                                    @elseif (count($gambar_apd_user_sebelum) == 1)
-                                                        <img class="apd-user product-image" id="apd_user"
-                                                            src="{{$gambar_apd_user_sebelum[0]}}" alt="Gambar Apd Anda">
-
-                                                    @endif
-
-                                                    {{-- Saat user mengupload Gambar APD Baru --}}
                                                     @if ($gambar_apd_user)
-                                                    <div class="mt-2">
-                                                        <div>
-                                                            <small>Perubahan gambar akan tampil setelah data APD
-                                                                disimpan.</small>
-                                                        </div>
-                                                        <div>
-                                                            <a class="btn btn-secondary btn-sm btn-flat rounded-pill"
-                                                                style="cursor: pointer;"
-                                                                onclick="$('#modal-upload-gambar').modal('show')">
-                                                                <i class="fas fa-image fa-lg mr-2"></i>
-                                                                Preview Gambar
-                                                            </a>
-                                                        </div>
+                                                    <div class="jumbotron jumbotron-fluid text-center">
+                                                        Perubahan akan terlihat setelah Data APD diinput, pastikan data sudah benar
+                                                        sebelum
+                                                        klik Simpan.
+                                                    </div>
+                                                    <div>
+                                                        <a class="btn btn-secondary btn-sm btn-flat rounded-pill"
+                                                            style="cursor: pointer;" onclick="$('#modal-upload-gambar').modal('show')">
+                                                            <i class="fas fa-image fa-lg mr-2"></i>
+                                                            Preview Gambar
+                                                        </a>
                                                     </div>
                                                     @endif
+                                                {{-- Saat terjadi kesalahan saat memuat gambar upload user --}}
+                                                @elseif(is_bool($gambar_apd_user_sebelum))
+                                                    <div class="jumbotron jumbotron-fluid text-center">
+                                                        <div class="text-danger">
+                                                            <small>Terjadi kesalahan saat memuat gambar input sebelumnya.</small>
+                                                        </div>
+                                                    </div>
 
-                                                </div>
-
-                                                {{-- Saat User belum Pernah Upload Gambar --}}
+                                                    @if ($gambar_apd_user)
+                                                    <div class="jumbotron jumbotron-fluid text-center">
+                                                        Perubahan akan terlihat setelah Data APD diinput, pastikan data sudah benar
+                                                        sebelum
+                                                        klik Simpan.
+                                                    </div>
+                                                    <div>
+                                                        <a class="btn btn-secondary btn-sm btn-flat rounded-pill"
+                                                            style="cursor: pointer;" onclick="$('#modal-upload-gambar').modal('show')">
+                                                            <i class="fas fa-image fa-lg mr-2"></i>
+                                                            Preview Gambar
+                                                        </a>
+                                                    </div>
+                                                    @endif
+                                                
+                                                {{-- Jika user telah upload sebelumnya --}}
                                                 @else
+                                                    <div class="col-12">
+                                                        <div class="text-info my-2">
+                                                            <small>Berikut merupakan gambar APD anda untuk model
+                                                                <strong><u>{{$nama_apd_user_sebelum}}</u></strong> yang
+                                                                telah anda
+                                                                upload.</small>
+                                                        </div>
 
-                                                @if ($gambar_apd_user)
-                                                <div class="jumbotron jumbotron-fluid text-center">
-                                                    Perubahan akan terlihat setelah Data APD diinput, pastikan data sudah benar
-                                                    sebelum
-                                                    klik Simpan.
-                                                </div>
-                                                <div>
-                                                    <a class="btn btn-secondary btn-sm btn-flat rounded-pill"
-                                                        style="cursor: pointer;" onclick="$('#modal-upload-gambar').modal('show')">
-                                                        <i class="fas fa-image fa-lg mr-2"></i>
-                                                        Preview Gambar
-                                                    </a>
-                                                </div>
-                                                @else
-                                                <div class="jumbotron jumbotron-fluid text-center">
-                                                    Anda belum melakukan upload gambar apd.
-                                                </div>
-                                                @endif
+                                                        @if(is_array($gambar_apd_user_sebelum))
+                                                            {{-- Script untuk preview gambar apd Start--}}
+                                                            <script>
+                                                                $(document).ready(function() {
+                                                            $('.apd-user.product-image-thumb').on('click', function () {
+                                                                var $image_element = $(this).find('img')
+                                                                $('.apd-user-preview.product-image').prop('src', $image_element.attr('src'))
+                                                                $('.apd-user.product-image-thumb.active').removeClass('active')
+                                                                $(this).addClass('active')
+                                                                })
+                                                            })
+                                                            </script>
+                                                            {{-- Script untuk preview gambar apd End--}}
+
+                                                            <img class="apd-user-preview product-image"
+                                                                src="{{asset($gambar_apd_user_sebelum[0])}}" alt="Gambar Apd Anda">
+                                                            <div class="col-12 apd-user product-image-thumbs">
+
+                                                                @foreach ($gambar_apd_user_sebelum as $key => $gbr)
+                                                                    @if($key === array_key_first($gambar_apd_user_sebelum))
+                                                                    <div class="apd-user product-image-thumb active"><img
+                                                                            src="{{asset($gbr)}}" alt="Product Image">
+                                                                    </div>
+                                                                    @else
+                                                                    <div class="apd-user product-image-thumb"><img
+                                                                            src="{{asset($gbr)}}" alt="Product Image">
+                                                                    </div>
+                                                                    @endif
+                                                                @endforeach
+                                                            </div>
+                                                        @elseif(is_string($gambar_apd_user_sebelum))
+                                                            <img class="apd-user product-image" id="apd_user"
+                                                            src="{{$gambar_apd_user_sebelum}}" alt="Gambar Apd Anda">
+                                                        @endif
+
+                                                        @if ($gambar_apd_user)
+                                                        <div class="mt-2">
+                                                            <div>
+                                                                <small>Perubahan gambar akan tampil setelah data APD
+                                                                    disimpan.</small>
+                                                            </div>
+                                                            <div>
+                                                                <a class="btn btn-secondary btn-sm btn-flat rounded-pill"
+                                                                    style="cursor: pointer;"
+                                                                    onclick="$('#modal-upload-gambar').modal('show')">
+                                                                    <i class="fas fa-image fa-lg mr-2"></i>
+                                                                    Preview Gambar
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        @endif
+
+                                                    </div>
                                                 @endif
                                             {{-- Kondisi Gambar APD Anda End --}}
                                         </div>
@@ -247,120 +255,126 @@
                                 <div class="form-group">
     
                                     {{-- Pesan Setelah Input start --}}
-                                        @if (session()->has('success'))
-                                        <div class="alert alert-success alert-dismissable fade show" role="alert">
-                                            {{session('success')}}
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
+                                        @if (session()->has('alert-success'))
+                                            <div class="alert alert-success alert-dismissable fade show" role="alert">
+                                                {{session('alert-success')}}
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
                                         @endif
         
-                                        @if (session()->has('fail'))
-                                        <div class="alert alert-danger alert-dismissable fade show" role="alert">
-                                            {{session('fail')}}
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
+                                        @if (session()->has('alert-danger'))
+                                            <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                                                {{session('alert-danger')}}
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
                                         @endif
                                     {{-- Pesan Setelah Input End --}}
                                 </div>
-    
-                                    {{-- @todo #5 --}}
     
                                     <div class="form-group">
                                         <label>Status Keberadaan APD : </label>
                                         <select class="form-control" wire:model="status_keberadaan_apd_user">
                                             <option value="" disabled>APD Ada/Hilang/Belum Terima ?</option>
-                                            @foreach ($opsi_keberadaan as $item)
+                                            @foreach ($opsi_dropdown_keberadaan as $item)
                                                 <option value="{{$item['value']}}">{{$item['text']}}</option>
                                             @endforeach
                                         </select>
                                     </div>
     
-                                    {{-- <div class="form-group" wire:init='hidrasiListApd'>
+                                    
+                                @if ($status_keberadaan_apd_user == "ada")
+                                    <div class="form-group">
                                         <label>Model</label>
                                         <select class="form-control" wire:model='id_apd_user'
-                                            wire:change='selectModelApdDirubah'>
+                                            wire:change='changeDropdownListApd'>
                                             <option value="" disabled>Pilih model APD</option>
-                                            @if (!is_null($list_apd))
-                                            @foreach ($list_apd as $apd)
-                                            <option wire:key="opsi-apd-{{$apd['nama_apd']}}" value="{{$apd['id_apd']}}">
-                                                {{$apd['nama_apd']}}</option>
-                                            @endforeach
+                                            @if (!is_null($opsi_dropdown_list_apd))
+                                                @foreach ($opsi_dropdown_list_apd as $apd)
+                                                    <option wire:key="opsi-apd-{{$apd['nama_apd']}}" value="{{$apd['id_apd']}}">
+                                                        {{$apd['nama_apd']}}</option>
+                                                @endforeach
                                             @endif
                                         </select>
                                     </div>
-    
+
                                     @error('id_apd_user')
-                                    <small class="error text-danger">{{$message}}</small>
-                                    @enderror --}}
-                                @if ($status_keberadaan_apd_user == "ada")
-                                    
-                                <p></p>
-                                <p></p>
-                                <div class="form-group">
-                                    <label>Ukuran</label>
-                                    <select class="form-control" wire:model.defer='size_apd_user'>
-                                        <option value="" disabled>Pilih ukuran APD</option>
-                                        @if (!is_null($size_apd))
-                                            @foreach ($size_apd as $size)
-                                                <option>{{$size}}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                    @error('size_apd_user')
-                                    <small class="error text-danger">{{$message}}</small>
+                                        <small class="error text-danger">{{ "TEST" }}</small>
                                     @enderror
-                                </div>
-                                <p></p>
-    
-                                <p></p>
-                                <div class="form-group">
-                                    <label>Kondisi</label>
-                                    <select class="form-control" wire:model.defer='kondisi_apd_user'>
-                                        <option value="" disabled>Pilih jenis kondisi APD</option>
-                                        @if (!is_null($kondisi_apd))
-                                        @foreach ($kondisi_apd as $kondisi)
-                                        <option value="{{$kondisi['value']}}">{{$kondisi['text']}}</option>
-                                        @endforeach
-                                        @endif
-                                    </select>
-                                    @error('kondisi_apd_user')
-                                    <small class="error text-danger">{{$message}}</small>
-                                    @enderror
-                                </div>
-                                <p></p>
-    
-                                <div class="form-group">
-                                    <label>Upload Foto</label>
-                                    <input type="file" class="form-control" multiple wire:model='gambar_apd_user' required>
-                                    @error('gambar_apd_user.*')
-                                    <span><small class="text-danger">{{$message}}</small></span>
-                                    @enderror
-                                    @error('gambar_apd_user')
-                                    <span><small class="text-danger">{{$message}}</small></span>
-                                    @enderror
-                                </div>
-                                    
+
+                                    <p></p>
+                                    <p></p>
+                                    @if($id_apd_user != '')
+                                        <div class="form-group">
+                                            <label>Ukuran</label>
+                                            @if (!is_null($opsi_dropdown_size_apd))
+                                                <select class="form-control" wire:model.defer='size_apd_user'>
+                                                    <option value="" disabled>Pilih ukuran APD</option>
+                                                        @foreach ($opsi_dropdown_size_apd as $size)
+                                                            <option>{{$size}}</option>
+                                                        @endforeach
+                                                </select>
+                                            @else
+                                                <input class="form-control" type="text" wire:model.defer='size_apd_user' placeholder="Model ini tidak memiliki pilihan ukuran." disabled>
+                                            @endif
+
+                                            @error('size_apd_user')
+                                                <small class="error text-danger">{{$message}}</small>
+                                            @enderror
+                                        </div>
+                                        <p></p>
+            
+                                        <p></p>
+                                        <div class="form-group">
+                                            <label>Kondisi</label>
+                                            <select class="form-control" wire:model.defer='kondisi_apd_user'>
+                                                <option value="" disabled>Pilih jenis kondisi APD</option>
+                                                @if (!is_null($opsi_dropdown_kondisi_apd))
+                                                    @foreach ($opsi_dropdown_kondisi_apd as $kondisi)
+                                                        <option value="{{$kondisi['value']}}">{{$kondisi['text']}}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                            @error('kondisi_apd_user')
+                                                <small class="error text-danger">{{$message}}</small>
+                                            @enderror
+                                        </div>
+                                        <p></p>
+            
+                                        <div class="form-group">
+                                            <label>Upload Foto</label>
+                                            <input type="file" class="form-control" multiple wire:model='gambar_apd_user' required>
+                                            @error('gambar_apd_user.*')
+                                                <span><small class="text-danger">{{$message}}</small></span>
+                                            @enderror
+                                            @error('gambar_apd_user')
+                                                <span><small class="text-danger">{{$message}}</small></span>
+                                            @enderror
+                                        </div>
+                                    @endif
+                                        
                                 @elseif($status_keberadaan_apd_user == "hilang")
-    
-                                <div class="text-danger">
-                                    <h4>Status APD anda <strong><u>Hilang</u></strong>, pastikan anda menghubungi admin yang bertanggung jawab di tempat anda dan ikuti instruksi selanjutnya.</h4>
-                                </div>
-    
-                                @elseif($status_keberadaan_apd_user == "belum")
-                                    
+        
+                                        <div class="text-danger">
+                                            <h4>Status APD anda <strong><u>Hilang</u></strong>, pastikan anda menghubungi admin yang bertanggung jawab di tempat anda dan ikuti instruksi selanjutnya.</h4>
+                                        </div>
+        
+                                @elseif($status_keberadaan_apd_user == "belum terima")
+                                    <div>
+                                        <h4>(opsional) Tambahkan keterangan dibawah.</h4>
+                                    </div>
                                 @endif
     
                                 @if ($status_keberadaan_apd_user != "")
-                                <div class="form-group">
-                                    <label>Keterangan</label>
-                                    <textarea class="form-control" rows="3"
-                                        placeholder="(opsional) Tulis keterangan kondisi APD"
-                                        wire:model='komentar_apd_user'></textarea>
-                                </div>
+                                    <div class="form-group">
+                                        <label>Keterangan</label>
+                                        <textarea class="form-control" rows="3"
+                                            placeholder="(opsional) Tulis keterangan kondisi APD"
+                                            wire:model='komentar_apd_user'></textarea>
+                                    </div>
                                 @endif
                                 
     

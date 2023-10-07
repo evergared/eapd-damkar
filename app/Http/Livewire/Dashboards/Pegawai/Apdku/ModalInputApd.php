@@ -54,7 +54,7 @@ class ModalInputApd extends Component
             $nama_apd_user_sebelum = '',
             $size_apd_user_sebelum = '',
             $kondisi_apd_user_sebelum = '',
-            $gambar_apd_user_sebelum = [],
+            $gambar_apd_user_sebelum = null,
             $komentar_apd_user_sebelum ="",
             $status_keberadaan_apd_user_sebelum = "",
             $komentar_verifikator = "",
@@ -70,7 +70,7 @@ class ModalInputApd extends Component
     // untuk warna label bootstrap
     public  $warna_kerusakan = '',
             $warna_keberadaan ='',
-            $warna_verifikasi ='';
+            $warna_verifikasi ='secondary';
     
     // utk mempermudah pemanggilan di blade.php
     public 
@@ -111,11 +111,12 @@ class ModalInputApd extends Component
 
     public function panggilModalInput($value)
     {
-        $this->inisiasiModalInput($value);
+        error_log("panggil modal input triggered from modal input apd");
+        $this->inisiasiModalInput($value["id_jenis"]);
         $this->dispatchBrowserEvent('pangilModalInput');
     }
 
-    public function inisiasiModalInput($value)
+    public function inisiasiModalInput($id_jenis_apd)
     {
         $fc = new FileController;
         $pic = new PeriodeInputController;
@@ -123,38 +124,46 @@ class ModalInputApd extends Component
 
         $this->placeholder_path = $fc::$apdPlaceholderBasePath;
 
-        $this->template_id_jenis_apd = $value;
+        $this->template_id_jenis_apd = $id_jenis_apd;
         $this->template_nama_jenis_apd = ApdJenis::where('id_jenis',$this->template_id_jenis_apd)->first()->nama_jenis;
 
         // kosongkan data sebelumnya (jika ada)
         $this->template_nama_apd = "";
-        $this->template_data_apd = [];
-
+        $this->template_data_apd = []; 
+        $this->template_opsi_apd = [];
+        $this->template_gambar_apd = array();
+        
         $this->id_apd_user = '';
-        $this->nama_apd_user_sebelum = '';
         $this->size_apd_user = '';
         $this->kondisi_apd_user = '';
         $this->gambar_apd_user = [];
         $this->komentar_apd_user ="";
         $this->status_keberadaan_apd_user = "";
-
+    
+    // data dari tabel input_apd
+        $this->terakhir_diisi = '';
+        $this->terakhir_diverif = '';
         $this->id_apd_user_sebelum = '';
+        $this->nama_apd_user_sebelum = '';
         $this->size_apd_user_sebelum = '';
         $this->kondisi_apd_user_sebelum = '';
-        $this->gambar_apd_user_sebelum = [];
+        $this->gambar_apd_user_sebelum = null;
         $this->komentar_apd_user_sebelum ="";
         $this->status_keberadaan_apd_user_sebelum = "";
         $this->komentar_verifikator = "";
         $this->status_verifikasi = 1;
         $this->label_verifikasi = "Proses Input";
 
+    // cache untuk reset value ke kondisi sebelumnya
         $this->cache_id_apd_user = '';
         $this->cache_size_apd_user = '';
         $this->cache_kondisi_apd_user = '';
         $this->cache_komentar_apd_user = '';
 
-        $this->opsi_dropdown_size_apd = [];
-        $this->opsi_dropdown_kondisi_apd = [];
+    // untuk warna label bootstrap
+        $this->warna_kerusakan = '';
+        $this->warna_keberadaan ='';
+        $this->warna_verifikasi ='secondary';
 
         // bangun data template apd untuk modal
         $list_apd_terkait = $adc->muatOpsiApd($this->template_id_jenis_apd);
@@ -251,10 +260,11 @@ class ModalInputApd extends Component
 
     public function refreshGambarTemplate()
     {
-        $this->template_gambar_apd = [];
+        $this->template_gambar_apd = null;
 
         try {
             $this->template_gambar_apd = $this->template_data_apd[array_search($this->id_apd_user, $this->template_data_apd,true)]['gambar_apd'];
+
         } catch (Throwable $e) {
             $this->error_time_gambar_template = now();
             $this->template_data_apd = false;
@@ -265,7 +275,17 @@ class ModalInputApd extends Component
     #endregion
 
     #region Wire:change Function
+    public function changeDropdownListApd()
+    {
+        $this->size_apd_user = '';
+        $this->kondisi_apd_user = '';
+        $this->gambar_apd_user = [];
+        $this->komentar_apd_user ="";
 
+        $this->refreshDropdownKondisiApd();
+        $this->refreshDropdownSizeApd();
+        $this->refreshGambarTemplate();
+    }
     #endregion
 
     #region Button Function
