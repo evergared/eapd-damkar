@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Dashboards\Pegawai\Apdku;
 
+use App\Enum\StatusApd;
 use App\Enum\VerifikasiApd;
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\FileController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\PeriodeInputController;
 use App\Models\ApdJenis;
 use App\Models\ApdList;
 use App\Models\InputApd;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -86,6 +88,7 @@ class ModalInputApd extends Component
     // timestamp utk membantu troubleshoot, sebagai referensi waktu di log
     public  
         $error_time_gambar_template = '',
+        $error_time_inisiasi_modal = '',
         $error_time_simpan_inputan = '';
 
     protected $listeners = [
@@ -123,113 +126,123 @@ class ModalInputApd extends Component
         $this->dispatchBrowserEvent('pangilModalInput');
     }
 
-    public function panggilModalPreviewGambarUpload()
-    {
-        $this->dispatchBrowserEvent('panggilModalPreview');
-    }
-
     public function inisiasiModalInput($id_jenis_apd)
     {
-        $fc = new FileController;
-        $pic = new PeriodeInputController;
-        $adc = new ApdDataController;
+        try{
 
-        $this->placeholder_path = $fc::$apdPlaceholderBasePath;
+            $this->error_time_inisiasi_modal = '';
 
-        $this->template_id_jenis_apd = $id_jenis_apd;
-        $this->template_nama_jenis_apd = ApdJenis::where('id_jenis',$this->template_id_jenis_apd)->first()->nama_jenis;
+            $fc = new FileController;
+            $pic = new PeriodeInputController;
+            $adc = new ApdDataController;
 
-        // kosongkan data sebelumnya (jika ada)
-        $this->template_nama_apd = "";
-        $this->template_data_apd = []; 
-        $this->template_opsi_apd = [];
-        $this->template_gambar_apd = array();
+            $this->placeholder_path = $fc::$apdPlaceholderBasePath;
+
+            $this->template_id_jenis_apd = $id_jenis_apd;
+            $this->template_nama_jenis_apd = ApdJenis::where('id_jenis',$this->template_id_jenis_apd)->first()->nama_jenis;
+
+            // kosongkan data sebelumnya (jika ada)
+            $this->template_nama_apd = "";
+            $this->template_data_apd = []; 
+            $this->template_opsi_apd = [];
+            $this->template_gambar_apd = array();
+            
+            $this->id_apd_user = '';
+            $this->size_apd_user = '';
+            $this->kondisi_apd_user = '';
+            $this->gambar_apd_user = null;
+            $this->komentar_apd_user ="";
+            $this->status_keberadaan_apd_user = "";
         
-        $this->id_apd_user = '';
-        $this->size_apd_user = '';
-        $this->kondisi_apd_user = '';
-        $this->gambar_apd_user = null;
-        $this->komentar_apd_user ="";
-        $this->status_keberadaan_apd_user = "";
-    
-        $this->terakhir_diisi = '';
-        $this->terakhir_diverif = '';
-        $this->id_apd_user_sebelum = '';
-        $this->nama_apd_user_sebelum = '';
-        $this->size_apd_user_sebelum = '';
-        $this->kondisi_apd_user_sebelum = '';
-        $this->gambar_apd_user_sebelum = null;
-        $this->komentar_apd_user_sebelum ="";
-        $this->status_keberadaan_apd_user_sebelum = "";
-        $this->komentar_verifikator = "";
-        $this->status_verifikasi = VerifikasiApd::input()->value;
-        $this->label_verifikasi = VerifikasiApd::input()->label;
+            $this->terakhir_diisi = '';
+            $this->terakhir_diverif = '';
+            $this->id_apd_user_sebelum = '';
+            $this->nama_apd_user_sebelum = '';
+            $this->size_apd_user_sebelum = '';
+            $this->kondisi_apd_user_sebelum = '';
+            $this->gambar_apd_user_sebelum = null;
+            $this->komentar_apd_user_sebelum ="";
+            $this->status_keberadaan_apd_user_sebelum = "";
+            $this->komentar_verifikator = "";
+            $this->status_verifikasi = VerifikasiApd::input()->value;
+            $this->label_verifikasi = VerifikasiApd::input()->label;
 
-        $this->cache_id_apd_user = '';
-        $this->cache_size_apd_user = '';
-        $this->cache_kondisi_apd_user = '';
-        $this->cache_komentar_apd_user = '';
+            $this->cache_id_apd_user = '';
+            $this->cache_size_apd_user = '';
+            $this->cache_kondisi_apd_user = '';
+            $this->cache_komentar_apd_user = '';
 
-        $this->warna_kerusakan = '';
-        $this->warna_keberadaan ='';
-        $this->warna_verifikasi ='secondary';
+            $this->warna_kerusakan = '';
+            $this->warna_keberadaan ='';
+            $this->warna_verifikasi ='secondary';
 
-        $this->enum_verifikasi_apd_input = VerifikasiApd::input()->value;
-        $this->enum_verifikasi_apd_verifikasi = VerifikasiApd::verifikasi()->value;
-        $this->enum_verifikasi_apd_terverifikasi = VerifikasiApd::terverifikasi()->value;
+            $this->enum_verifikasi_apd_input = VerifikasiApd::input()->value;
+            $this->enum_verifikasi_apd_verifikasi = VerifikasiApd::verifikasi()->value;
+            $this->enum_verifikasi_apd_terverifikasi = VerifikasiApd::terverifikasi()->value;
 
-        $this->error_time_gambar_template = '';
-        $this->error_time_simpan_inputan = '';
+            $this->error_time_gambar_template = '';
+            $this->error_time_simpan_inputan = '';
 
-        // bangun data template apd untuk modal
-        $list_apd_terkait = $adc->muatOpsiApd($this->template_id_jenis_apd);
+            // bangun data template apd untuk modal
+            $list_apd_terkait = $adc->muatOpsiApd($this->template_id_jenis_apd);
 
-        $this->template_opsi_apd = $list_apd_terkait['opsi_apd'];
-        $this->template_data_apd = $adc->bangunItemModalInputApd($this->template_opsi_apd);
-        $this->refreshDropdownListApd();
-        $this->refreshDropdownKondisiApd();
-        $this->refreshDropdownSizeApd();
+            $this->template_opsi_apd = $list_apd_terkait['opsi_apd'];
+            $this->template_data_apd = $adc->bangunItemModalInputApd($this->template_opsi_apd);
+            $this->refreshDropdownListApd();
+            $this->refreshDropdownKondisiApd();
+            $this->refreshDropdownSizeApd();
 
-        // sesuaikan data dengan inputan sebelumnya (jika ada)
-        $inputan_sebelumnya = $adc->muatSatuInputanPegawai($this->template_id_jenis_apd);
+            // sesuaikan data dengan inputan sebelumnya (jika ada)
+            $inputan_sebelumnya = $adc->muatSatuInputanPegawai($this->template_id_jenis_apd);
 
-        // jika terjadi error saat memuat
-        if(is_bool($inputan_sebelumnya))
-        {
+            // jika terjadi error saat memuat
+            if(is_bool($inputan_sebelumnya))
+            {
+                $this->error_time_inisiasi_modal = now();
+                error_log("Modal Input Apd @ Dashboard Apdku Pegawai (".$this->error_time_inisiasi_modal.") Error : Kesalahan memuat satu inputan pegawai saat inisiasi modal.");
+                Log::error("Modal Input Apd @ Dashboard Apdku Pegawai (".$this->error_time_inisiasi_modal.") Error : Kesalahan memuat satu inputan pegawai saat inisiasi modal.");
+
+            }
+            // jika belum input
+            elseif(is_null($inputan_sebelumnya))
+            {
+
+            }
+            // jika sudah input
+            else
+            {
+
+                $this->terakhir_diisi = $inputan_sebelumnya['data_terakhir_update'];
+                $this->terakhir_diverif = $inputan_sebelumnya['verifikasi_terakhir_update'];
+                $this->id_apd_user = $this->id_apd_user_sebelum = $inputan_sebelumnya['id_apd'];
+                $this->size_apd_user = $this->size_apd_user_sebelum = ($inputan_sebelumnya['size_apd'] == '-')? "" : $inputan_sebelumnya['size_apd'];
+                $this->kondisi_apd_user = $this->kondisi_apd_user_sebelum = StatusApd::tryFrom($inputan_sebelumnya['status_kerusakan'])->value;
+                $this->gambar_apd_user_sebelum = $inputan_sebelumnya['gambar_apd'];
+                $this->komentar_apd_user = $this->komentar_apd_user_sebelum = $inputan_sebelumnya['komentar_pengupload'];
+                $this->status_keberadaan_apd_user = $this->status_keberadaan_apd_user_sebelum = $inputan_sebelumnya['status_keberadaan'];
+                $this->komentar_verifikator = $inputan_sebelumnya['komentar_verifikator'];
+                $this->status_verifikasi = $inputan_sebelumnya['enum_verifikasi'];
+                $this->label_verifikasi = $inputan_sebelumnya['status_verifikasi'];
+                $this->nama_apd_user_sebelum = ($this->id_apd_user_sebelum)? ApdList::where('id_apd', $this->id_apd_user_sebelum)->first()->nama_apd : '';
+
+
+                $this->warna_kerusakan = $inputan_sebelumnya['warna_kerusakan'];
+                $this->warna_verifikasi = $inputan_sebelumnya['warna_verifikasi'];
+                $this->warna_keberadaan = $inputan_sebelumnya['warna_keberadaan'];
+
+                $this->refreshGambarTemplate();
+            }
 
         }
-        // jika belum input
-        elseif(is_null($inputan_sebelumnya))
+        catch(Throwable $e)
         {
-
+            $this->error_time_inisiasi_modal = now();
+                error_log("Modal Input Apd @ Dashboard Apdku Pegawai (".$this->error_time_inisiasi_modal.") Error : Kesalahan saat inisiasi modal ".$e);
+                Log::error("Modal Input Apd @ Dashboard Apdku Pegawai (".$this->error_time_inisiasi_modal.") Error : Kesalahan saat inisiasi modal ".$e);
         }
-        // jika sudah input
-        else
-        {
-            $this->nama_apd_user_sebelum = ApdList::where('id_apd', $this->id_apd_user)->first()->nama_apd;
 
-            $this->terakhir_diisi = $inputan_sebelumnya['data_terakhir_update'];
-            $this->terakhir_diverif = $inputan_sebelumnya['verifikasi_terakhir_update'];
-            $this->id_apd_user_sebelum = $inputan_sebelumnya['id_apd'];
-            $this->size_apd_user_sebelum = $inputan_sebelumnya['size_apd'];
-            $this->kondisi_apd_user_sebelum = $inputan_sebelumnya['status_kerusakan'];
-            $this->gambar_apd_user_sebelum = $inputan_sebelumnya['gambar_apd'];
-            $this->komentar_apd_user_sebelum = $inputan_sebelumnya['komentar_pengupload'];
-            $this->status_keberadaan_apd_user_sebelum = $inputan_sebelumnya['status_keberadaan'];
-            $this->komentar_verifikator = $inputan_sebelumnya['komentar_verifikator'];
-            $this->status_verifikasi = $inputan_sebelumnya['enum_verifikasi'];
-            $this->label_verifikasi = $inputan_sebelumnya['status_verifikasi'];
-
-            $this->warna_kerusakan = $inputan_sebelumnya['warna_kerusakan'];
-            $this->warna_verifikasi = $inputan_sebelumnya['warna_verifikasi'];
-            $this->warna_keberadaan = $inputan_sebelumnya['warna_keberadaan'];
-        }
         
-    }
-
-    public function inisiasiModalPreviewGambarUpload()
-    {
-
+        
     }
 
     #region Refresh data
@@ -326,7 +339,45 @@ class ModalInputApd extends Component
         
         try{
 
-            
+            $pic = new PeriodeInputController;
+
+            $id_pegawai = Auth::user()->data->id_pegawai;
+            $periode = $pic->ambilIdPeriodeInput();
+
+            $kondisi = null;
+            $gambar = null;
+
+            if($this->status_keberadaan_apd_user == 'ada')
+            {
+                
+                $kondisi = StatusApd::tryFrom($this->kondisi_apd_user)->value;
+                $gambar = $this->prosesGambar();
+            }
+            else if($this->status_keberadaan_apd_user == 'hilang')
+            {
+                $kondisi = StatusApd::hilang()->value;
+            }
+            else if($this->status_keberadaan_apd_user == 'belum terima')
+            {
+                $kondisi = StatusApd::belumTerima()->value;
+            }
+
+            InputApd::create([
+                'id_pegawai' => $id_pegawai,
+                'id_periode' => $periode,
+                'id_jenis' => $this->template_id_jenis_apd,
+                'id_apd' => ($this->id_apd_user == '')? null : $this->id_apd_user,
+                'size' => ($this->size_apd_user == '')? null : $this->size_apd_user,
+                'kondisi' => $kondisi,
+                'image' => $gambar,
+                'komentar_pengupload'=> $this->komentar_apd_user,
+                'data_diupdate'=>now(),
+                'verifikasi_status' => VerifikasiApd::verifikasi()->value
+            ]);
+
+            $this->inisiasiModalInput($this->template_id_jenis_apd);
+            $this->emit('refreshComponent');
+            session()->flash('alert-success', 'Inputan berhasil disimpan!');
 
         }
         catch(Throwable $e)
@@ -334,24 +385,89 @@ class ModalInputApd extends Component
             $this->error_time_simpan_inputan = now();
             error_log("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat menyimpan inputan ".$e);
             Log::error("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat menyimpan inputan ".$e);
-            session()->flash('alert-danger','Gagal menyimpan data inputan APD ('.$this->error_time_simpan_inputan.')');
+            session()->flash('alert-danger','Gagal menyimpan data inputan APD (ref : '.$this->error_time_simpan_inputan.')');
         }
     }
 
     public function update()
     {
+        $this->error_time_simpan_inputan = '';
+        $this->validasiInputan();
+        try{
 
+            $pic = new PeriodeInputController;
+
+            $id_pegawai = Auth::user()->data->id_pegawai;
+            $periode = $pic->ambilIdPeriodeInput();
+
+            $inputan = InputApd::where('id_pegawai', $id_pegawai)
+                        ->where('id_periode', $periode)
+                        ->where('id_jenis', $this->template_id_jenis_apd)
+                        ->first();
+
+            if(is_null($inputan))
+                throw new Exception('Tidak ditemukan inputan dengan parameter id_pegawai : '.$id_pegawai.", id_periode : ".$periode.", id_jenis : ".$this->template_id_jenis_apd." pada tabel input_apd.");
+
+            $kondisi = null;
+            $gambar = null;
+
+            if($this->status_keberadaan_apd_user == 'ada')
+            {
+                
+                $kondisi = StatusApd::tryFrom($this->kondisi_apd_user)->value;
+                $gambar = $this->prosesGambar();
+            }
+            else if($this->status_keberadaan_apd_user == 'hilang')
+            {
+                $kondisi = StatusApd::hilang()->value;
+            }
+            else if($this->status_keberadaan_apd_user == 'belum terima')
+            {
+                $kondisi = StatusApd::belumTerima()->value;
+            }
+
+            $inputan->id_apd = $this->id_apd_user;
+            $inputan->size = $this->size_apd_user;
+            $inputan->kondisi = $kondisi;
+            $inputan->image = $gambar;
+            $inputan->komentar_pengupload = $this->komentar_apd_user;
+            $inputan->data_diupdate = now();
+            $inputan->verifikasi_status = $this->enum_verifikasi_apd_input;
+
+            $inputan->save();
+            $this->inisiasiModalInput($this->template_id_jenis_apd);
+            $this->emit('refreshComponent');
+            session()->flash('alert-success', 'Inputan berhasil diupdate!');
+
+        }
+        catch(Throwable $e)
+        {
+            $this->error_time_simpan_inputan = now();
+            error_log("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat update inputan ".$e);
+            Log::error("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat update inputan ".$e);
+            session()->flash('alert-danger','Gagal mengupdate data inputan APD (ref : '.$this->error_time_simpan_inputan.')');
+        }
     }
 
     public function updateTerverifikasi()
     {
-
+        
     }
     #endregion
 
-    #region Validasi
+    #region Proses Inputan
     public function validasiInputan()
     {
+
+        $this->validate(
+            [
+                'status_keberadaan_apd_user' => 'required'
+            ],
+            [
+                'status_keberadaan_apd_user.required' => 'Keberadaan APD perlu diisi.'
+            ]
+        );
+
         if($this->status_keberadaan_apd_user == "ada")
         {
             $this->validate(
@@ -394,6 +510,78 @@ class ModalInputApd extends Component
                     'gambar_apd_user.required' => 'Harap upload gambar APD'
                 ]
             );
+        }
+    }
+
+    public function prosesGambar() : string|null
+    {
+        $fc = new FileController;
+        $pic = new PeriodeInputController;
+        $adc = new ApdDataController;
+
+        $id_pegawai = Auth::user()->data->id_pegawai;
+        $periode = $pic->ambilIdPeriodeInput();
+
+        try{
+
+            if($this->gambar_apd_user)
+                {
+                    error_log("start upload gambar");
+                    $list_gbr = [];
+
+                    //upload banyak
+                    if(count($this->gambar_apd_user) > 1)
+                    {
+                        // cek ada berapa gambar yang diupload
+                        // jika melebihi batas, sesuaikan dengan nilai batas
+                        $jumlah_gambar = 0;
+
+                        if(count($this->gambar_apd_user) < $adc::$jumlahBatasUploadGambar)
+                            $jumlah_gambar = count($this->gambar_apd_user);
+                        else
+                            $jumlah_gambar = $adc::$jumlahBatasUploadGambar;
+
+                        // proses gambar terupload ke folder masing-masing
+                        for ($i = 0; $i < $jumlah_gambar; $i++) {
+
+                            $gbr_temp = $fc->prosesNamaFileApdUpload($id_pegawai, $this->id_apd_user, null, $i);
+
+                            $this->gambar_apd_user[$i]->storeAs(
+                                $fc->buatPathFileApdUpload($id_pegawai, $this->template_id_jenis_apd, $periode),
+                                $gbr_temp
+                            );
+
+                            array_push($list_gbr, $gbr_temp);
+                        }
+                    }
+                    // upload 1
+                    else
+                    {
+
+                        $gbr_temp = $fc->prosesNamaFileApdUpload($id_pegawai, $this->id_apd_user, null, 0);
+
+                        $this->gambar_apd_user[0]->storeAs(
+                            $fc->buatPathFileApdUpload($id_pegawai, $this->template_id_jenis_apd, $periode),
+                            $gbr_temp
+                        );
+
+                        array_push($list_gbr, $gbr_temp);
+
+                    }
+
+                    $g = implode("||",$list_gbr);
+                    error_log('gambar terupload : '.$g);
+                    return $g;
+                    
+                }
+
+                return null;
+
+        }
+        catch(Throwable $e)
+        {
+            error_log("Modal Input Apd @ Dashboard Apdku Pegawai Error : Kesalahan saat upload gambar apd ".$e);
+            return null;
         }
     }
     #endregion

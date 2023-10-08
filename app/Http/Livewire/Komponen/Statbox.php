@@ -32,6 +32,7 @@ class Statbox extends Component
 
     protected $listeners = [
         'refreshStatbox' => 'render',
+        'refreshComponent' => '$refresh',
     ];
 
 

@@ -10,7 +10,16 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body overlay-wrapper">
+
+                        <div  wire:loading wire.target='inisiasiModalInput'>
+                            <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Memperbarui Data...</div></div>
+                        </div>
+
+                        @if ($error_time_inisiasi_modal != '')
+                            <div class="overlay text-danger"><i class="fas fa-exclamation-circle mr-2"></i><div class="text-bold pt-2">Kesalahan saat mengambil data sebelumnya. ref : {{$error_time_inisiasi_modal}}</div></div>
+                        @endif
+
                         @if ($gambar_apd_user)
                                     
                         <div class="row mb-2" wire:ignore.self>
@@ -354,6 +363,9 @@
                                                 <option value="{{$item['value']}}">{{$item['text']}}</option>
                                             @endforeach
                                         </select>
+                                        @error('status_keberadaan_apd_user')
+                                            <small class="error text-danger"><strong>{{$message}}</strong></small>
+                                        @enderror
                                     </div>
     
                                     

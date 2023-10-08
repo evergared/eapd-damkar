@@ -18,17 +18,18 @@ return new class extends Migration
                 $t->ulid('id_inputan');
                 $t->string('id_pegawai');
                 $t->unsignedBigInteger('id_periode');
-                $t->string('id_jenis');
-                $t->string('id_apd');
-                $t->string('size');
-                $t->string('kondisi');
-                $t->longText('image');
-                $t->text('komentar_pengupload');
-                $t->string('data_diupdate');
-                $t->text('verifikasi_oleh');
-                $t->text('jabatan_verifikator');
-                $t->text('komentar_verifikator');
-                $t->string('verifikasi_status');
+                $t->string('id_jenis')->nullable();
+                $t->string('id_apd')->nullable();
+                $t->string('size')->nullable();
+                $t->string('kondisi')->nullable();
+                $t->longText('image')->nullable();
+                $t->text('komentar_pengupload')->nullable();
+                $t->string('data_diupdate')->nullable();
+                $t->string('verifikasi_diupdate')->nullable();
+                $t->text('verifikasi_oleh')->nullable();
+                $t->text('jabatan_verifikator')->nullable();
+                $t->text('komentar_verifikator')->nullable();
+                $t->string('verifikasi_status')->nullable();
             });
         }
 

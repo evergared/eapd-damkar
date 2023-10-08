@@ -11,6 +11,10 @@ class Page extends Component
     // berisi apd apa saja yang perlu diinput oleh user
     public $daftarApd = [];
 
+    protected $listeners = [
+        'refreshComponent' => '$refresh'
+    ];
+
     public function render()
     {
         $this->bangunDaftarInputApd();

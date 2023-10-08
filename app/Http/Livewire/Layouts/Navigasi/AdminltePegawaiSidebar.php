@@ -123,15 +123,21 @@ class AdminltePegawaiSidebar extends Component
             
             $inputan_terisi = [];
 
-            if(is_null($inputan_pegawai))
+            if(!is_null($inputan_pegawai))
                 $inputan_terisi = $inputan_pegawai;
 
             // iterasi untuk cek apakah apd yang diminta sudah diinput oleh pegawai
             foreach($template as $t)
             {
                 $id_jenis_target = $t['id_jenis'];
-
-                $index = array_search($id_jenis_target, array_column($inputan_terisi, 'id_jenis'));
+                
+                $index = false;
+                foreach($inputan_terisi as $i => $inputan)
+                {
+                    if(is_bool($index))
+                        if($inputan['id_jenis'] == $id_jenis_target)
+                            $index = $i;
+                }
 
                 if(is_bool($index))
                 {

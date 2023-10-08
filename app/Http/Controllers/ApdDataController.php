@@ -204,7 +204,9 @@ class ApdDataController extends Controller
                                 'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                                 'komentar_pengupload' => $input->komentar_pengupload,
                                 'id_verifikator' => $input->verifikasi_oleh,
-                                'komentar_verifikator' => $input->komentar_verifikator
+                                'komentar_verifikator' => $input->komentar_verifikator,
+                                'data_diupdate' => $input->data_diupdate,
+                                'verifikasi_diupdate' => $input->verifikasi_diupdate
 
 
                             ]);
@@ -280,12 +282,12 @@ class ApdDataController extends Controller
                             'data_terakhir_update' => $input->data_diupdate,
                             'verifikasi_terakhir_update' => Carbon::createFromTimestamp($input->updated_at)->toDateTimeString(),
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
-                            'status_keberadaan' => $input->keberadaan,
+                            'status_keberadaan' => ($input->kondisi != "hilang" && $input->kondisi != "belum terima")? "ada" : $input->kondisi,
                             'warna_keberadaan' => $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->keberadaan),
                             'enum_verifikasi'=>$input->verifikasi_status,
                             'status_verifikasi' => $verifikasi_label,
                             'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
-                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)->label,
+                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode),
                             'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                             'komentar_pengupload' => $input->komentar_pengupload,
                             'id_verifikator' => $input->verifikasi_oleh,
@@ -1203,7 +1205,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function siapkanGambarInputanBesertaPathnya($stringGambar, $nrk, $id_jenis, $id_periode): array|string
+    public function siapkanGambarInputanBesertaPathnya($stringGambar, $nrk, $id_jenis, $id_periode): array|string|null
     {
         try {
             if(!is_null($stringGambar))

@@ -26,18 +26,20 @@ class FileController extends Controller
      * - proses untuk mitigasi server over capacity? menggunakan aws s3 bucket utk menyimpan foto stlh rekap atau lgsg hapus dg cron job / manual?
      */
 
-    
-
+    /**
+     * Extensi yang dipakai untuk gambar yang diupload
+     */
+    public static $extUploadFile = 'jpg';
 
     /**
      * Path dasar penyimpanan gambar apd yang diinput oleh user
      */
-    public static $apdUploadBasePath = 'img/apd/input';
+    public static $apdUploadBasePath = 'storage/img/apd/input';
 
     /**
      * Path dasar penyimpanan gambar apd oleh admin
      */
-    public static $apdItemBasePath = 'img/apd/item';
+    public static $apdItemBasePath = 'storage/img/apd/item';
 
     /**
      * Path dasar penyimpanan placeholder apd untuk keperluan tes.
@@ -69,8 +71,11 @@ class FileController extends Controller
      * 
      * @return String nama file baru untuk di simpan di database
      */
-    public function prosesNamaFileApdUpload($id_pegawai, $id_item = 'item', $tipe_file = 'jpg', $urutan = null)
+    public function prosesNamaFileApdUpload($id_pegawai, $id_item = 'item', $tipe_file = null, $urutan = null)
     {
+        if($tipe_file == null)
+            $tipe_file = self::$extUploadFile;
+
         try {
             if (is_null($urutan))
                 return $id_pegawai . '_' . $id_item . '.' . $tipe_file;
@@ -87,8 +92,11 @@ class FileController extends Controller
      * 
      * @return string nama file baru untuk di simpan di database
      */
-    public function prosesNamaFileApdItem($id_apd = 'gambar_apd', $tipe_file = 'jpg', $urutan = null)
+    public function prosesNamaFileApdItem($id_apd = 'gambar_apd', $tipe_file = null, $urutan = null)
     {
+        if($tipe_file == null)
+            $tipe_file = self::$extUploadFile;
+
         try{
 
             if(is_null($urutan))
@@ -110,8 +118,11 @@ class FileController extends Controller
      * 
      * @return String nama file baru untuk di simpan di database
      */
-    public function prosesNamaFileAvatarUpload($id_pegawai, $tipe_file = 'jpg')
+    public function prosesNamaFileAvatarUpload($id_pegawai, $tipe_file = null)
     {
+        if($tipe_file == null)
+            $tipe_file = self::$extUploadFile;
+
         try {
             return $id_pegawai . '_ava' . '.' . $tipe_file;
         } catch (Throwable $e) {
