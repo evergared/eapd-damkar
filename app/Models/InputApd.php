@@ -49,4 +49,9 @@ class InputApd extends Model
     {
         return $this->belongsTo(ApdList::class, 'id_apd', 'id_apd');
     }
+
+    public function reupload()
+    {
+        return $this->hasOne(InputApdReupload::class, 'id_inputan', 'id_inputan');
+    }
 }

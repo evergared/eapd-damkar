@@ -15,7 +15,7 @@ return new class extends Migration
     {
         if (!Schema::hasTable('input_apd')) {
             Schema::create('input_apd', function (Blueprint $t) {
-                $t->ulid('id_inputan');
+                $t->ulid('id_inputan')->primary();
                 $t->string('id_pegawai');
                 $t->unsignedBigInteger('id_periode');
                 $t->string('id_jenis')->nullable();
