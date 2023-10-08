@@ -10,6 +10,7 @@ use App\Http\Controllers\PeriodeInputController;
 use App\Models\ApdJenis;
 use App\Models\ApdList;
 use App\Models\InputApd;
+use App\Models\InputApdReupload;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -451,7 +452,69 @@ class ModalInputApd extends Component
 
     public function updateTerverifikasi()
     {
-        
+        $this->error_time_simpan_inputan = '';
+        $this->validasiInputan();
+        try{
+
+            $pic = new PeriodeInputController;
+
+            $id_pegawai = Auth::user()->data->id_pegawai;
+            $periode = $pic->ambilIdPeriodeInput();
+
+            $inputan = InputApd::where('id_pegawai', $id_pegawai)
+                        ->where('id_periode', $periode)
+                        ->where('id_jenis', $this->template_id_jenis_apd)
+                        ->first();
+
+            if(is_null($inputan))
+                throw new Exception('Tidak ditemukan inputan dengan parameter id_pegawai : '.$id_pegawai.", id_periode : ".$periode.", id_jenis : ".$this->template_id_jenis_apd." pada tabel input_apd.");
+            
+            $id_inputan = $inputan->id_inputan;
+
+            $inputan = InputApdReupload::where('id_inputan',$id_inputan)->first();
+
+            if(is_null($inputan))
+                $inputan = new InputApdReupload;
+            
+            $kondisi = null;
+            $gambar = null;
+
+            if($this->status_keberadaan_apd_user == 'ada')
+            {
+                
+                $kondisi = StatusApd::tryFrom($this->kondisi_apd_user)->value;
+                $gambar = $this->prosesGambar(true);
+            }
+            else if($this->status_keberadaan_apd_user == 'hilang')
+            {
+                $kondisi = StatusApd::hilang()->value;
+            }
+            else if($this->status_keberadaan_apd_user == 'belum terima')
+            {
+                $kondisi = StatusApd::belumTerima()->value;
+            }
+
+
+            $inputan->id_apd = $this->id_apd_user;
+            $inputan->size = $this->size_apd_user;
+            $inputan->kondisi = $kondisi;
+            $inputan->image = $gambar;
+            $inputan->komentar_pengupload = $this->komentar_apd_user;
+            $inputan->data_diupdate = now();
+
+            $inputan->save();
+            $this->inisiasiModalInput($this->template_id_jenis_apd);
+            $this->emit('refreshComponent');
+            session()->flash('alert-success', 'Inputan berhasil diupdate! Tunggu verifikasi Admin untuk perubahan yang dilakukan.');
+
+        }
+        catch(Throwable $e)
+        {
+            $this->error_time_simpan_inputan = now();
+            error_log("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat update inputan pasca verifikasi diterima ".$e);
+            Log::error("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat update inputan pasca verifikasi diterima ".$e);
+            session()->flash('alert-danger','Gagal mengupdate data inputan APD (ref : '.$this->error_time_simpan_inputan.')');
+        }
     }
     #endregion
 
@@ -513,7 +576,7 @@ class ModalInputApd extends Component
         }
     }
 
-    public function prosesGambar() : string|null
+    public function prosesGambar($reupload = false) : string|null
     {
         $fc = new FileController;
         $pic = new PeriodeInputController;
@@ -547,7 +610,7 @@ class ModalInputApd extends Component
                             $gbr_temp = $fc->prosesNamaFileApdUpload($id_pegawai, $this->id_apd_user, null, $i);
 
                             $this->gambar_apd_user[$i]->storeAs(
-                                $fc->buatPathFileApdUpload($id_pegawai, $this->template_id_jenis_apd, $periode),
+                                $fc->buatPathFileApdUpload($id_pegawai, $this->template_id_jenis_apd, $periode, $reupload),
                                 $gbr_temp
                             );
 
@@ -561,7 +624,7 @@ class ModalInputApd extends Component
                         $gbr_temp = $fc->prosesNamaFileApdUpload($id_pegawai, $this->id_apd_user, null, 0);
 
                         $this->gambar_apd_user[0]->storeAs(
-                            $fc->buatPathFileApdUpload($id_pegawai, $this->template_id_jenis_apd, $periode),
+                            $fc->buatPathFileApdUpload($id_pegawai, $this->template_id_jenis_apd, $periode, $reupload),
                             $gbr_temp
                         );
 

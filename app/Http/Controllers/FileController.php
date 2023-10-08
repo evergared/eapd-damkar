@@ -37,6 +37,11 @@ class FileController extends Controller
     public static $apdUploadBasePath = 'storage/img/apd/input';
 
     /**
+     * Path dasar penyimpanan gambar apd yang diinput ulang oleh user setelah inputan diverifikasi admin
+     */
+    public static $apdReuploadBasePath = 'storage/img/apd/reupload';
+
+    /**
      * Path dasar penyimpanan gambar apd oleh admin
      */
     public static $apdItemBasePath = 'storage/img/apd/item';
@@ -136,13 +141,16 @@ class FileController extends Controller
      * 
      * @return String path untuk menyimpan foto inputan user
      */
-    public function buatPathFileApdUpload($id_pegawai, $id_jenis, $id_periode)
+    public function buatPathFileApdUpload($id_pegawai, $id_jenis, $id_periode, $reupload = false)
     {
         if($id_periode === 1 || $id_periode == null)
         $id_periode = PeriodeInputApd::get()->first()->id_periode;
 
         $periode = Str::slug($id_periode);
         // $periode = Str::slug(PeriodeInputApd::where('id_periode', '=', $id_periode)->first()->nama_periode);
+
+        if($reupload)
+            return self::$apdReuploadBasePath . '/' . $periode . '/' . $id_pegawai . '/' . $id_jenis;
 
         return self::$apdUploadBasePath . '/' . $periode . '/' . $id_pegawai . '/' . $id_jenis;
     }
