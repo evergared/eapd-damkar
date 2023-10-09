@@ -20,10 +20,9 @@
             <section class="content">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                
-                                @if ($daftarApd)
+                        @if($daftarApd)
+                            <div class="col-12">
+                                <div class="card">
                                     <div class="card-header bg-gradient-teal">
 
                                         {{-- Status loading Start --}}
@@ -69,16 +68,15 @@
                                             @endforeach
                                         </div>
                                     </div>
-                                @else
-
-                                    <div class="jumbotron text-center">
-                                        Tidak ada yang dapat ditampilkan.
-                                    </div>
-                                    
-                                @endif
-
+                                </div>
                             </div>
-                        </div>
+                        @else
+                        <section class="content">
+                            <div class="jumbotron text-center">
+                                Tidak ada data APD yang perlu diinput saat ini.
+                            </div>
+                        </section>
+                        @endif
                     </div>
                 </div>
             </section>

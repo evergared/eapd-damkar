@@ -102,7 +102,7 @@
                     </a>
                 </li>
                 @if (auth()->user()->data->jabatan->level_user == 'admin_sektor' || auth()->user()->data->jabatan->level_user == 'admin_sudin' || auth()->user()->data->jabatan->level_user == 'admin_dinas')
-                <li class="nav-item {{ (Route::currentRouteName() =='print-laporan' || Route::currentRouteName() =='progres-sektor' || Route::currentRouteName() =='data-ukuran' || Route::currentRouteName() =='data-distribusi')? 'menu-open' :''}}">
+                <li class="nav-item {{ (Route::currentRouteName() =='print-laporan' || Route::currentRouteName() =='progress-apd' || Route::currentRouteName() =='data-ukuran' || Route::currentRouteName() =='data-distribusi')? 'menu-open' :''}}">
                     <a 
                         class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
@@ -112,8 +112,8 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item {{ (Route::currentRouteName() =='progres-sektor')? 'menu-open' :''}}">
-                          <a href="{{route('progres-sektor')}}" class="nav-link {{ (Route::currentRouteName() =='progres-sektor')? 'active' :''}}">
+                        <li class="nav-item {{ (Route::currentRouteName() =='progress-apd')? 'menu-open' :''}}">
+                          <a href="{{route('progress-apd')}}" class="nav-link {{ (Route::currentRouteName() =='progress-apd')? 'active' :''}}">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Progres Inputan</p>
                           </a>
@@ -168,6 +168,37 @@
                         </p>
                     </a>
                 </li>
+                @endif
+
+                <li class="nav-header border-bottom mb-3"></li>
+
+                @if (auth()->user()->data->isPenanggungJawab())
+                    <li class="nav-item {{ (Route::currentRouteName() =='progress-apd' || Route::currentRouteName() =='progress-ukuran')? 'menu-open' :''}}">
+                        <a 
+                            class="nav-link">
+                            <i class="fas fa-marker nav-icon"></i>
+                            <p>
+                                Progress Anggota
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item {{ (Route::currentRouteName() =='progress-apd')? 'menu-open' :''}}">
+                            <a href="{{route('progress-apd')}}" class="nav-link {{ (Route::currentRouteName() =='progress-apd')? 'active' :''}}">
+                                <i class="fas fa-tshirt nav-icon"></i>
+                                <p>Input APD</p>
+                            </a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item {{ (Route::currentRouteName() =='progress-ukuran')? 'menu-open' :''}}">
+                            <a href="{{route('progress-ukuran')}}" class="nav-link {{ (Route::currentRouteName() =='progress-ukuran')? 'active' :''}}">
+                                <i class="fas fa-ruler nav-icon"></i>
+                                <p>Input Ukuran</p>
+                            </a>
+                            </li>
+                        </ul>
+                    </li>
                 @endif
 
                 <li class="nav-header border-bottom"></li>

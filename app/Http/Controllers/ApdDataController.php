@@ -115,11 +115,11 @@ class ApdDataController extends Controller
 
             }
 
-            $template_pada_periode = InputApdTemplate::where("id_periode",$id_periode)->where("id_jabatan", $id_jabatan)->get()->first()->template;
+            $template_pada_periode = InputApdTemplate::where("id_periode",$id_periode)->where("id_jabatan", $id_jabatan)->get()->first();
             // dd($template_pada_periode);
             
             if(!is_null($template_pada_periode))
-                return $template_pada_periode;
+                return $template_pada_periode->template;
             
             error_log('template input apd tidak ditemukan untuk jabatan '.$id_jabatan);
             return [];

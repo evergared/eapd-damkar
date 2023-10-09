@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profil', \App\Http\Livewire\Dashboards\Pegawai\Profil\Page::class)->name('profil');
     Route::get('/apdku', \App\Http\Livewire\Dashboards\Pegawai\Apdku\Page::class)->name('apdku');
     Route::get('/ukuranku', \App\Http\Livewire\Dashboards\Pegawai\Ukuranku\Page::class)->name('ukuran');
+    Route::get('/progress-anggota/pelaporan-apd', \App\Http\Livewire\Dashboards\Pegawai\Progress\Apd\Page::class)->name('progress-apd');
+    Route::get('/progress-anggota/pelaporan-ukuran', \App\Http\Livewire\Dashboards\Pegawai\Progress\Ukuran\Page::class)->name('progress-ukuran');
     Route::get('/request-item', [\App\Http\Controllers\DashboardController::class, 'tampilRequestItem'])->name('request-item');
     Route::get('/print-laporan', [\App\Http\Controllers\DashboardController::class, 'tampilPrintLaporan'])->name('print-laporan');
     Route::get('/laporan-progress-input', [\App\Http\Controllers\DashboardController::class, 'tampilProgresSektor'])->name('progres-sektor');

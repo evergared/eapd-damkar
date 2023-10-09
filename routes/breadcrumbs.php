@@ -31,7 +31,7 @@ Breadcrumbs::for('category', function (BreadcrumbTrail $trail, $category) {
 // ref : https://packagist.org/packages/diglactic/laravel-breadcrumbs
 
 // eapd
-// Pegawai Biasa
+// Pegawai 
 Breadcrumbs::for('dashboard', function (BreadcrumbTrail $trail) {
     $trail->push('Dashboard', route('dashboard'));
 });
@@ -41,14 +41,19 @@ Breadcrumbs::for('profil', function (BreadcrumbTrail $trail) {
     $trail->push('Profil', route('profil'));
 });
 
-Breadcrumbs::for('request-item', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard');
-    $trail->push('Request Item', route('request-item'));
-});
-
 Breadcrumbs::for('apdku', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('APDku', route('apdku'));
+});
+
+Breadcrumbs::for('progress-apd', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Progress Input APD Anggota', route('progress-apd'));
+});
+
+Breadcrumbs::for('progress-ukuran', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Progress Input Ukuran Anggota', route('progress-ukuran'));
 });
 
 // Admin Sektor
