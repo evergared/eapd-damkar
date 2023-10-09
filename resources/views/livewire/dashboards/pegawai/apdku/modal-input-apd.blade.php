@@ -259,24 +259,24 @@
                                                             {{-- Script untuk preview gambar apd End--}}
 
                                                             <img class="apd-user-preview product-image"
-                                                                src="{{asset($gambar_apd_user_sebelum[0])}}" alt="Gambar Apd Anda">
+                                                                src="{{asset($upload_path . $gambar_apd_user_sebelum[0])}}" alt="Gambar Apd Anda">
                                                             <div class="col apd-user product-image-thumbs">
 
                                                                 @foreach ($gambar_apd_user_sebelum as $key => $gbr)
                                                                     @if($key === array_key_first($gambar_apd_user_sebelum))
                                                                     <div class="apd-user product-image-thumb active"><img
-                                                                            src="{{asset($gbr)}}" alt="Product Image">
+                                                                            src="{{asset($upload_path . $gbr)}}" alt="Product Image">
                                                                     </div>
                                                                     @else
                                                                     <div class="apd-user product-image-thumb"><img
-                                                                            src="{{asset($gbr)}}" alt="Product Image">
+                                                                            src="{{asset($upload_path . $gbr)}}" alt="Product Image">
                                                                     </div>
                                                                     @endif
                                                                 @endforeach
                                                             </div>
                                                         @elseif(is_string($gambar_apd_user_sebelum))
                                                             <img class="apd-user product-image" id="apd_user"
-                                                            src="{{$gambar_apd_user_sebelum}}" alt="Gambar Apd Anda">
+                                                            src="{{asset($upload_path . $gambar_apd_user_sebelum)}}" alt="Gambar Apd Anda">
                                                         @endif
 
                                                         @if ($gambar_apd_user)

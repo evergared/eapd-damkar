@@ -138,6 +138,7 @@ class ModalInputApd extends Component
             $adc = new ApdDataController;
 
             $this->placeholder_path = $fc::$apdPlaceholderBasePath;
+            $this->upload_path = 'storage/';
 
             $this->template_id_jenis_apd = $id_jenis_apd;
             $this->template_nama_jenis_apd = ApdJenis::where('id_jenis',$this->template_id_jenis_apd)->first()->nama_jenis;

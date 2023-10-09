@@ -34,12 +34,12 @@ class FileController extends Controller
     /**
      * Path dasar penyimpanan gambar apd yang diinput oleh user
      */
-    public static $apdUploadBasePath = 'storage/img/apd/input';
+    public static $apdUploadBasePath = 'img/apd/input';
 
     /**
      * Path dasar penyimpanan gambar apd yang diinput ulang oleh user setelah inputan diverifikasi admin
      */
-    public static $apdReuploadBasePath = 'storage/img/apd/reupload';
+    public static $apdReuploadBasePath = 'img/apd/reupload';
 
     /**
      * Path dasar penyimpanan gambar apd oleh admin
