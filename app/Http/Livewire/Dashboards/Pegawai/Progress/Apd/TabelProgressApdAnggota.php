@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Dashboards\Pegawai\Progress\Apd;
 
 use App\Http\Controllers\ApdDataController;
+use App\Http\Controllers\PeriodeInputController;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\InputApd;
@@ -25,7 +26,7 @@ class TabelProgressApdAnggota extends DataTableComponent
         return [
             Column::make("Foto", 'profile_img')
                 ->format(function ($value, $row) {
-                    return view("eapd.livewire.kolom-tambahan-datatable.kolom-foto-tabel-anggota-katon", ['img' => $value, 'id_pegawai' => $row->_id]);
+                    return view("livewire.dashboards.pegawai.progress.apd.kolom-foto-tabel-progress-apd-anggota", ['img' => $value, 'id_pegawai' => $row->id_pegawai]);
                 }),
             Column::make("id_pegawai")
                 ->sortable()
@@ -43,7 +44,7 @@ class TabelProgressApdAnggota extends DataTableComponent
                     return Jabatan::where('id_jabatan','=',$value)->first()->nama_jabatan;
                 })
                 ->searchable( function($query,$search){
-                    $ids = Jabatan::where('nama_jabatan','like','%'.$search.'%')->get()->pluck('id');
+                    $ids = Jabatan::where('nama_jabatan','like','%'.$search.'%')->get()->pluck('id_jabatan');
                     foreach($ids as $id)
                         $query->orWhere('id_jabatan',$id);
                 })
@@ -53,7 +54,7 @@ class TabelProgressApdAnggota extends DataTableComponent
                     return Penempatan::where('id_penempatan','=',$value)->first()->nama_penempatan;
                 })
                 ->searchable(function($query,$search){
-                    $ids = Penempatan::where('nama_penempatan','like','%'.$search.'%')->get()->pluck('id');
+                    $ids = Penempatan::where('nama_penempatan','like','%'.$search.'%')->get()->pluck('id_penempatan');
                     foreach($ids as $id)
                         $query->orWhere('id_penempatan',$id);
                 })
@@ -64,14 +65,13 @@ class TabelProgressApdAnggota extends DataTableComponent
                     $adc = new ApdDataController;
 
                     // ambil id_pegawai dari baris
-                    $id_pegawai = $row->_id;
+                    $id_pegawai = $row->id_pegawai;
 
                     // dapatkan jabatan 
                     $id_jabatan = $row->id_jabatan;
 
                     // set periode input
                     $tw = null; //<-- ini untuk contoh dan test
-                    // $tw = $adc->ambilIdPeriodeInput();  //<--- gunakan ini jika periode input sudah dimasukkan dengan benar di database
 
                     // muat template inputan untuk jabatan tertentu
                     $templateInputan = $adc->muatListInputApdDariTemplate($tw, $id_jabatan);
@@ -86,7 +86,7 @@ class TabelProgressApdAnggota extends DataTableComponent
                     $value = (is_null($inputan))? 0 : count($inputan);
 
 
-                    return view('eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-admin',[
+                    return view('livewire.dashboards.pegawai.progress.apd.kolom-progress-tabel-anggota',[
                         'id_pegawai' => $id_pegawai, 'maks' => $maks, 'value'=>$value, 'caption' => 'Inputan', 'warna' => 'success'
                     ]);
                 }),
@@ -103,7 +103,6 @@ class TabelProgressApdAnggota extends DataTableComponent
 
                     // set periode input
                     $tw = null; //<-- ini untuk contoh dan test
-                    // $tw = $adc->ambilIdPeriodeInput();  //<--- gunakan ini jika periode input sudah dimasukkan dengan benar di database
 
                     // muat template inputan untuk jabatan tertentu
                     $templateInputan = $adc->muatListInputApdDariTemplate($tw, $id_jabatan);
@@ -117,7 +116,7 @@ class TabelProgressApdAnggota extends DataTableComponent
                     // hitung berapa item inputan
                     $value = (is_null($inputan))? 0 : count($inputan);
 
-                    return view('eapd.livewire.kolom-tambahan-datatable.kolom-progress-tabel-anggota-admin',[
+                    return view('livewire.dashboards.pegawai.progress.apd.kolom-progress-tabel-anggota',[
                         'id_pegawai' => $id_pegawai, 'maks' => $maks, 'value'=>$value, 'caption' => 'Validasi', 'warna' => 'info'
                     ]);
                 }),
@@ -128,8 +127,8 @@ class TabelProgressApdAnggota extends DataTableComponent
 
                     $tw = $adc->ambilIdPeriodeInput();
 
-                    return view('eapd.livewire.kolom-tambahan-datatable.kolom-show-detail-tabel-anggota-admin',[
-                        'id_pegawai' => $row->id, 'periode' => $tw
+                    return view('livewire.dashboards.pegawai.progress.apd.kolom-show-detail-tabel-anggota',[
+                        'id_pegawai' => $row->id_pegawai, 'periode' => $tw
                     ]);
                 })
         ];

@@ -170,9 +170,11 @@
                 </li>
                 @endif
 
-                <li class="nav-header border-bottom mb-3"></li>
 
                 @if (auth()->user()->data->isPenanggungJawab())
+
+                <li class="nav-header border-bottom mb-3"></li>
+
                     <li class="nav-item {{ (Route::currentRouteName() =='progress-apd' || Route::currentRouteName() =='progress-ukuran')? 'menu-open' :''}}">
                         <a 
                             class="nav-link">

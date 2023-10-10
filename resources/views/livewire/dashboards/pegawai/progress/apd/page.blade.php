@@ -54,6 +54,9 @@
         </div>
     </section>
 
+    <livewire:dashboards.pegawai.progress.apd.modal-kolom-profil-tabel-anggota>
+    <livewire:dashboards.pegawai.progress.apd.modal-detail-progress-apd>
     
+
 
 </div>

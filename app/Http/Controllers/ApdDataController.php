@@ -20,6 +20,7 @@ use App\Models\Provinsi;
 use App\Models\Wilayah;
 use Carbon\Carbon;
 use Error;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -144,12 +145,10 @@ class ApdDataController extends Controller
     {
         try {
 
-            // jika parameter id_pegawai kosong, ambil nrk dan jabatan user
             if ($id_pegawai == "") {
                 $id_pegawai = Auth::user()->id_pegawai;
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
-            // jika paramter id_pegawai diisi, cukup ambil jabatan user
             else {
                 $id_jabatan = Pegawai::where('id_pegawai', '=', $id_pegawai)->first()->id_jabatan;
             }
@@ -157,92 +156,22 @@ class ApdDataController extends Controller
             if($id_periode == null)
             $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
 
-            // array kosong untuk return
             $list = [];
 
-            // ambil template dari database
             $template = $this->muatListInputApdDariTemplate($id_periode, $id_jabatan);
 
 
-            // pengulangan untuk mengisi $list berdasarkan template yang telah diambil
             foreach ($template as $item) {
-                // apa tipe apdnya
                 $id_jenis = $item['id_jenis'];
 
-                // cek apakah user telah menginput apd tersebut
-                if ($input = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first()) {
-                    // user telah menginput
+                $inputan = $this->muatSatuInputanPegawai($id_jenis, $id_periode,$id_pegawai,$target_verifikasi);
 
-                    // panggil untuk mambantu mengubah warna status
-                    $sdc = new StatusDisplayController;
+                if(is_null($inputan))
+                    continue;
 
-                    // apakah ada status verifikasi yang dicari?
-                    if ($target_verifikasi != 0) {
-                        // ada status verifikasi tertentu yang dicari
-
-                        // apakah inputan user memiliki verifikasi yang sesuai
-                        if (verif::tryFrom($input->verifikasi_status)->value == $target_verifikasi) {
-                            // inputan user memiliki verifikasi yang dicari
-
-                            $verifikasi_status = "";
-                            $verifikasi_label = "";
-
-                            $this->ekstrakStatusVerifikasi(verif::tryFrom($input->verifikasi_status)->value, $verifikasi_label, $verifikasi_status);
-
-                            // masukan ke $list
-                            array_push($list, [
-                                'id_jenis' => $id_jenis,
-                                'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
-                                'id_apd' => $input->id_apd,
-                                'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
-                                'status_keberadaan' => KeberadaanApd::tryFrom($input->keberadaan)->label,
-                                'warna_keberadaan'=> $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->keberadaan),
-                                'enum_verifikasi' => $input->verifikasi_status,
-                                'status_verifikasi' => $verifikasi_label,
-                                'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
-                                'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode),
-                                'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
-                                'komentar_pengupload' => $input->komentar_pengupload,
-                                'id_verifikator' => $input->verifikasi_oleh,
-                                'komentar_verifikator' => $input->komentar_verifikator,
-                                'data_diupdate' => $input->data_diupdate,
-                                'verifikasi_diupdate' => $input->verifikasi_diupdate
-
-
-                            ]);
-                        }
-                    } else {
-                        // tidak ada status verifikasi tertentu yang dicari
-
-                        $verifikasi_status = "";
-                        $verifikasi_label = "";
-
-                        $this->ekstrakStatusVerifikasi(verif::tryFrom($input->verifikasi_status)->value, $verifikasi_label, $verifikasi_status);
-
-                        // masukan ke $list
-                        array_push($list, [
-                            'id_jenis' => $id_jenis,
-                            'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
-                            'id_apd' => $input->id_apd,
-                            'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
-                            'status_keberadaan' => KeberadaanApd::tryFrom($input->keberadaan)->label,
-                            'warna_keberadaan'=> $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->keberadaan),
-                            'enum_verifikasi' => $input->verifikasi_status,
-                            'status_verifikasi' => $verifikasi_label,
-                            'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
-                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)->label,
-                            'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
-                            'komentar_pengupload' => $input->komentar_pengupload,
-                            'id_verifikator' => $input->verifikasi_oleh,
-                            'komentar_verifikator' => $input->komentar_verifikator
-
-
-                        ]);
-                    }
-                }
+                array_push($list, $inputan);
             }
 
-            // berikan daftar yang telah diisi dari pengulangan
             return $list;
         } catch (Throwable $e) {
             error_log('Gagal memuat status verifikasi dari list input apd ' . $e);
@@ -250,7 +179,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function muatSatuInputanPegawai($id_jenis, $id_periode = null, $id_pegawai = ""): array|bool|null
+    public function muatSatuInputanPegawai($id_jenis, $id_periode = null, $id_pegawai = "", $target_verifikasi = 0): array|bool|null
     {
         try{
             // jika parameter id pegawai kosong
@@ -262,8 +191,20 @@ class ApdDataController extends Controller
             if($id_periode == null)
                 $id_periode = $this->ambilIdPeriodeInput();
 
+            if($target_verifikasi != 0)
+                $input = InputApd::where('id_pegawai', '=', $id_pegawai)
+                        ->where('id_jenis', '=', $id_jenis)
+                        ->where('id_periode', '=', $id_periode)
+                        ->where('verifikasi_status',$target_verifikasi)
+                        ->first();
+            else
+                $input = InputApd::where('id_pegawai', '=', $id_pegawai)
+                        ->where('id_jenis', '=', $id_jenis)
+                        ->where('id_periode', '=', $id_periode)
+                        ->first();
 
-            if ($input = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first())
+
+            if (!is_null($input))
             {
                 $verifikasi_status = "";
                 $verifikasi_label = "";
@@ -280,10 +221,10 @@ class ApdDataController extends Controller
                             'id_apd' => $input->id_apd,
                             'size_apd' => ($input->size)?$input->size:"-",
                             'data_terakhir_update' => $input->data_diupdate,
-                            'verifikasi_terakhir_update' => Carbon::createFromTimestamp($input->updated_at)->toDateTimeString(),
+                            'verifikasi_terakhir_update' => (is_null($input->verifikasi_diupdate))? '-' : $input->verifikasi_diupdate,
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
-                            'status_keberadaan' => ($input->kondisi != "hilang" && $input->kondisi != "belum terima")? "ada" : $input->kondisi,
-                            'warna_keberadaan' => $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->keberadaan),
+                            'status_keberadaan' => ($input->kondisi != "hilang" && $input->kondisi != "belum terima")? "Ada" : $input->kondisi,
+                            'warna_keberadaan' => $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->kondisi),
                             'enum_verifikasi'=>$input->verifikasi_status,
                             'status_verifikasi' => $verifikasi_label,
                             'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
@@ -291,8 +232,8 @@ class ApdDataController extends Controller
                             'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                             'komentar_pengupload' => $input->komentar_pengupload,
                             'id_verifikator' => $input->verifikasi_oleh,
-                            'nama_verifikator'=> (is_null($verifikator))? "" : $verifikator->nama,
-                            'jabatan_verifikator'=> (is_null($verifikator))? "" : Jabatan::find($verifikator->id_jabatan)->nama_jabatan,
+                            'nama_verifikator'=> (is_null($verifikator))? "-" : $verifikator->nama,
+                            'jabatan_verifikator'=> (is_null($verifikator))? "-" : Jabatan::find($verifikator->id_jabatan)->nama_jabatan,
                             'komentar_verifikator' => $input->komentar_verifikator
                         ];
             }
@@ -1393,6 +1334,8 @@ class ApdDataController extends Controller
     public function ekstrakStatusVerifikasi(int|verif $status, string &$label, int|string &$value)
     {
         try {
+            if(is_null($status))
+                throw new Exception('Status Kosong');
             $tes = verif::tryFrom($status);
 
             $label = $tes->label;
@@ -1400,7 +1343,7 @@ class ApdDataController extends Controller
         } catch (Throwable $e) {
             error_log('gagal ambil status verifikasi ' . $e);
             $value = 1;
-            $label = verif::tryFrom($status)->label;
+            $label = verif::tryFrom($value)->label;
         }
     }
 }
