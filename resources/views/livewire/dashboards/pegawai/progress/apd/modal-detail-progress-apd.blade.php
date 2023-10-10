@@ -218,7 +218,7 @@
                                             
                                             {{-- Start jika hanya ada satu gambar --}}
                                             @elseif(is_string($data_detail_inputan['gambar_apd']) && $data_detail_inputan['gambar_apd'] != "")
-                                                <img src="{{asset($data_detail_inputan['gambar_apd'])}}" class="img-thumbnail" alt="APD">
+                                                <img src="{{asset($path_gambar . $data_detail_inputan['gambar_apd'])}}" class="img-thumbnail" alt="APD">
                                             {{-- End jika hanya ada satu gambar --}}
           
                                             {{-- Start antisipasi gambar tidak null tetapi tidak ada gambar --}}
@@ -266,16 +266,16 @@
                                                 {{-- Script untuk preview gambar apd End--}}
           
                                                 <img class="apd-template-preview product-image"
-                                                src="{{asset($path_gambar . $gambar_apd_template[0])}}" alt="Gambar Apd Anda">
+                                                src="{{asset($gambar_apd_template[0])}}" alt="Gambar Apd Anda">
                                                 <div class="col-12 apd-template product-image-thumbs">
                                                     @foreach ($gambar_apd_template as $key => $gbr)
                                                         @if($key === array_key_first($gambar_apd_template))
                                                         <div class="apd-template product-image-thumb active"><img
-                                                                src="{{asset($path_gambar . $gbr)}}" alt="APD">
+                                                                src="{{asset($gbr)}}" alt="APD">
                                                         </div>
                                                         @else
                                                         <div class="apd-template product-image-thumb"><img
-                                                                src="{{asset($path_gambar . $gbr)}}" alt="APD">
+                                                                src="{{asset($gbr)}}" alt="APD">
                                                         </div>
                                                         @endif
                                                     @endforeach
@@ -284,7 +284,7 @@
                                             
                                             {{-- Start jika hanya ada satu gambar --}}
                                             @elseif(is_string($gambar_apd_template) && $gambar_apd_template != "")
-                                                <img src="{{asset($path_gambar . $gambar_apd_template)}}" class="img-thumbnail" alt="APD">
+                                                <img src="{{asset($gambar_apd_template)}}" class="img-thumbnail" alt="APD">
                                             {{-- End jika hanya ada satu gambar --}}
           
                                             {{-- Start antisipasi gambar tidak null tetapi tidak ada gambar --}}

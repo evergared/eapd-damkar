@@ -1125,14 +1125,14 @@ class ApdDataController extends Controller
                 if (is_array($gbr)) {
                     $gambar = [];
                     foreach ($gbr as $g) {
-                        array_push($gambar, 'storage/' . $fc->buatPathFileApdItem($id_jenis, $id_apd) . '/' . $g);
+                        array_push($gambar, $fc->buatPathFileApdItem($id_jenis, $id_apd) . '/' . $g);
                     }
                     return $gambar;
                 } else {
                     if ($gbr == "")
                         return "";
                     else
-                        return 'storage/' . $fc->buatPathFileApdItem($id_jenis, $id_apd) . '/' . $gbr;
+                        return  $fc->buatPathFileApdItem($id_jenis, $id_apd) . '/' . $gbr;
                 }
             }
             else
