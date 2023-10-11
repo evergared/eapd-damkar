@@ -69,19 +69,19 @@
                                     <div class="align-middle">
                                         <ul class="list-inline w-50 d-none d-sm-block text-center">
                                         @foreach ($item['gambar_apd'] as $index_gbr => $gbr)
-                                            <a class="apd-foto" wire:click="satuFoto({{$index}},{{$index_gbr}})" style="cursor: pointer;">
+                                            <a class="apd-foto" wire:click="lihatPreview([{{$index}},{{$index_gbr}}])" style="cursor: pointer;">
                                                 <img alt="APD" class="table-avatar w-25 h-25" src="{{asset($path_gambar . $gbr)}}">
                                             </a>
                                         @endforeach
                                         </ul>
                                     </div>
-                                    <a class="btn btn-primary d-block d-sm-none" wire:click="semuaFoto({{$index}})"><i class="fas fa-image"></i></a>
+                                    <a class="btn btn-primary d-block d-sm-none" wire:click="lihatSemuaFoto({{$index}})"><i class="fas fa-image"></i></a>
                                     @elseif(is_string($item['gambar_apd']) && $item['gambar_apd'] != "")
                                     {{-- Saat ada gambar dan berisi hanya satu --}}
-                                    <a class="apd-foto d-none d-sm-block" wire:click="satuFoto({{$index}},-1)" style="cursor: pointer;">
+                                    <a class="apd-foto d-none d-sm-block" wire:click="lihatPreview([{{$index}},-1])" style="cursor: pointer;">
                                         <img alt="APD" class="table-avatar w-25 h-25 d-none d-sm-block" src="{{asset($path_gambar . $item['gambar_apd'])}}">
                                     </a>
-                                    <a class="btn btn-primary d-block d-sm-none" wire:click="semuaFoto({{$index}})" style="cursor: pointer;"><i class="fas fa-image"></i></a>
+                                    <a class="btn btn-primary d-block d-sm-none" wire:click="lihatSemuaFoto({{$index}})" style="cursor: pointer;"><i class="fas fa-image"></i></a>
                                     @elseif(!$item['gambar_apd'])
                                     {{-- Saat tidak ada gambar --}}
                                     Tidak ada gambar yang diupload.
@@ -90,7 +90,10 @@
                                 </td>
                                 <td class="text-center text-wrap my-auto align-middle">
                                     <div class="row my-n2">
-                                        <strong class="d-none d-sm-block">Waktu Isi : </strong><span class="mx-1 badge badge-info text-center text-wrap my-auto align-middle">{{$item['data_terakhir_update']}}</span>
+                                        <strong class="d-none d-sm-block">Waktu Isi : </strong>
+                                    </div>
+                                    <div class="row my-n2">
+                                      {{$item['data_terakhir_update']}}
                                     </div>
                                     <div class="row my-n2">
                                         <strong class="d-none d-sm-block">Kondisi : </strong><span class="mx-1 badge badge-{{$item['warna_kerusakan']}} text-center text-wrap my-auto align-middle">{{$item['status_kerusakan']}}</span>
@@ -100,12 +103,15 @@
                                         <strong class="d-block d-sm-none">Komentar : </strong>
                                     </div>
                                     <div class="row my-n2">
-                                        <p class="mx-1 my-auto align-middle">{{$item['komentar_pengupload']}}</p>
+                                        <p class="mx-1 my-auto align-middle">{{($item['komentar_pengupload'])? $item['komentar_pengupload'] : " - "}}</p>
                                     </div>
                                 </td>
                                 <td class="text-center text-wrap my-auto align-middle">
                                     <div class="row my-n2">
-                                        <strong class="d-none d-sm-block">Waktu Verif : </strong><span class="mx-1 badge badge-info text-center text-wrap my-auto align-middle">{{$item['verifikasi_terakhir_update']}}</span>
+                                        <strong class="d-none d-sm-block">Waktu Verif : </strong>
+                                    </div>
+                                    <div class="row my-n2">
+                                      {{$item['verifikasi_terakhir_update']}}
                                     </div>
                                     <div class="row my-n2">
                                         <strong class="d-none d-sm-block">Status : </strong><span class="mx-1 badge badge-{{$item['warna_verifikasi']}} text-center text-wrap my-auto align-middle">{{$item['status_verifikasi']}}</span>
@@ -115,7 +121,7 @@
                                         <strong class="d-block d-sm-none">Komentar :</strong>
                                     </div>
                                     <div class="row my-n2">
-                                        <p class="mx-1 my-auto align-middle">{{$item['komentar_verifikator']}}</p>
+                                        <p class="mx-1 my-auto align-middle">{{($item['komentar_verifikator'])?$item['komentar_verifikator'] : " - "}}</p>
                                     </div>
                                 </td>
                                 <td class="text-center text-wrap my-auto align-middle">
@@ -457,7 +463,61 @@
                         </div>
                       </div>
                 </div>
-              
+                <div class="collapse" id="detail-gambar">
+                  <div class="card">
+                    <div class="card-header">
+                      <div class="card-title">
+                          <h4 class="d-none d-sm-block">Preview Gambar</h4>
+                      </div>
+                      <div class="card-tools">
+                          <a href="javascript:" onclick="previewKeList()">
+                              <i class="fas fa-arrow-circle-left"></i>
+                          </a>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      @if ($gambar_terpilih)
+                            @if(is_string($gambar_terpilih))
+                              <img class="product-image" src="{{asset($path_gambar . $gambar_terpilih)}}" alt="Gambar APD">
+                            @elseif(is_array($gambar_terpilih))
+                              {{-- Script untuk preview gambar terpilih Start--}}
+                                <script>
+                                  $(document).ready(function() {
+                              $('.gambar-multi.product-image-thumb').on('click', function () {
+                                  var $image_element = $(this).find('img')
+                                  $('.gambar-multi-preview.product-image').prop('src', $image_element.attr('src'))
+                                  $('.gambar-multi.product-image-thumb.active').removeClass('active')
+                                  $(this).addClass('active')
+                                  })
+                              })
+                              </script>
+                              {{-- Script untuk preview gambar terpilih End--}}
+
+                              <img class="gambar-multi-preview product-image"
+                              src="{{asset($path_gambar . $gambar_terpilih[0])}}" alt="Gambar Apd">
+                              <div class="col-12 gambar-multi product-image-thumbs">
+                                  @foreach ($gambar_terpilih as $key => $gbr)
+                                      @if($key === array_key_first($gambar_terpilih))
+                                      <div class="gambar-multi product-image-thumb active"><img
+                                              src="{{asset($path_gambar . $gbr)}}" alt="APD">
+                                      </div>
+                                      @else
+                                      <div class="gambar-multi product-image-thumb"><img
+                                              src="{{asset($path_gambar . $gbr)}}" alt="APD">
+                                      </div>
+                                      @endif
+                                  @endforeach
+                              </div>
+                            @endif
+                      @else
+                        <div class="jumbotron text-center">
+                          Tidak ada yang dapat ditampilkan.
+                        </div>
+                      @endif
+                    </div>
+                  </div>
+                  
+                </div>
             </div>
           {{-- End bagian untuk tabel --}}
 
@@ -953,9 +1013,20 @@
             $('#detail-inputan').show(500)
         })
 
+        window.addEventListener('list-ke-preview', event=>{
+            $('#list-inputan').hide(500)
+            $('#detail-gambar').show(500)
+        })
+
         function detailKeList()
         {
             $('#detail-inputan').hide(500)
+            $('#list-inputan').show(500)
+        }
+
+        function previewKeList()
+        {
+            $('#detail-gambar').hide(500)
             $('#list-inputan').show(500)
         }
 

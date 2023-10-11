@@ -45,7 +45,7 @@ class Penempatan extends Model
         return $this->hasMany(Pegawai::class, 'id_penempatan', 'id_penempatan');
     }
 
-    public function admin_list()
+    public function adminList()
     {
         return $this->hasMany(AdminList::class, 'id_penempatan', 'id_penempatan');
     }

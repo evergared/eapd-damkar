@@ -90,4 +90,41 @@ class ModalDetailProgressApd extends Component
         }
         $this->dispatchBrowserEvent('list-ke-detail');
     }
+
+    public function lihatPreview($value)
+    {
+        $this->gambar_terpilih = null;
+        error_log('start preview');
+        $index_inputan = $value[0];
+        $index_gambar = $value[1];
+        error_log($index_inputan);
+        error_log($index_gambar);
+
+        if(array_key_exists($index_inputan ,$this->list_inputan_pegawai))
+        {
+            error_log('array key exists');
+            $gambar = $this->list_inputan_pegawai[$index_inputan]['gambar_apd'];
+
+            if($index_gambar > -1)
+                $this->gambar_terpilih = $gambar[$index_gambar];
+            else
+                $this->gambar_terpilih = $gambar;
+        }
+
+        $this->dispatchBrowserEvent('list-ke-preview');
+
+    }
+
+    public function lihatSemuaFoto($value)
+    {
+        $this->gambar_terpilih = null;
+        if(array_key_exists($value, $this->list_inputan_pegawai))
+        {
+            $gambar = $this->list_inputan_pegawai[$value]['gambar_apd'];
+            $this->gambar_terpilih = $gambar;
+        }
+
+        $this->dispatchBrowserEvent('list-ke-preview');
+
+    }
 }
