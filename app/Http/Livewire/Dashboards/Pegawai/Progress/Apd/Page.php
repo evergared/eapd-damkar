@@ -22,6 +22,8 @@ class Page extends Component
     public
         $error_time = null;
 
+    public $periode = null;
+
     public function render()
     {
         $this->kalkulasiCapaian();
@@ -33,18 +35,18 @@ class Page extends Component
         try{
 
             $this->error_time = null;
+            $this->periode = null;
 
             $this->value_inputan_semua_anggota = 0;
             $this->max_inputan_semua_anggota = 0;
             $this->value_tervalidasi_semua_anggota = 0;
 
             $list_pegawai = [];
-            
 
             $adc = new ApdDataController;
             $pic = new PeriodeInputController;
             $user = Auth::user()->data;
-            $periode = $pic->ambilIdPeriodeInput();
+            $this->periode = $pic->ambilIdPeriodeInput();
 
             // query semua pegawai terkait
             $pegawai = Pegawai::query()->where('aktif',true);
@@ -93,21 +95,23 @@ class Page extends Component
             foreach($list_pegawai as $pegawai)
             {
                 // apa saja yang harus diinput
-                $this->max_inputan_semua_anggota += count($adc->muatListInputApdDariTemplate($periode, $pegawai['id_jabatan']));
+                $this->max_inputan_semua_anggota += count($adc->muatListInputApdDariTemplate($this->periode, $pegawai['id_jabatan']));
                 
                 // terinput tapi belum di verifikasi
-                $this->value_inputan_semua_anggota += count($adc->muatInputanPegawai($periode, $pegawai['id_pegawai'], 2));
+                $this->value_inputan_semua_anggota += count($adc->muatInputanPegawai($this->periode, $pegawai['id_pegawai'], 2));
 
                 // terinput dan telah di verifikasi
-                $this->value_tervalidasi_semua_anggota += count($adc->muatInputanPegawai($periode, $pegawai['id_pegawai'], 3));
+                $this->value_tervalidasi_semua_anggota += count($adc->muatInputanPegawai($this->periode, $pegawai['id_pegawai'], 3));
             }
 
         }
         catch(Throwable $e)
         {
             $this->error_time = now();
-            $pegawai = [];
-            $list_pegawai = null;
+            $this->value_inputan_semua_anggota = 0;
+            $this->max_inputan_semua_anggota = 0;
+            $this->value_tervalidasi_semua_anggota = 0;
+            $this->periode = null;
             Log::error('Page @ Dashboard Progress Apd Anggota Pegawai error ref ('.$this->error_time.')'.$e);
         }
         

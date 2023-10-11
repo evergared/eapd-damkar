@@ -19,11 +19,6 @@
             <div class="modal-body">
             {{-- Start bagian untuk alert --}}
               <div>
-                
-                
-                
-
-
                   {{-- Alert untuk gagal --}}
                   @if (session()->has('alert-danger'))
                     <div class="alert alert-danger alert-dismissable fade show" role="alert">
@@ -989,6 +984,7 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
+    </div>
 
       
 

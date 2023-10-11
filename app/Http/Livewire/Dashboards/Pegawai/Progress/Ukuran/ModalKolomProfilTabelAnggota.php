@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Dashboards\Pegawai\Progress\Apd;
+namespace App\Http\Livewire\Dashboards\Pegawai\Progress\Ukuran;
 
 use App\Models\Pegawai;
 use Exception;
@@ -29,7 +29,7 @@ class ModalKolomProfilTabelAnggota extends Component
 
     public function render()
     {
-        return view('livewire.dashboards.pegawai.progress.apd.modal-kolom-profil-tabel-anggota');
+        return view('livewire.dashboards.pegawai.progress.ukuran.modal-kolom-profil-tabel-anggota');
     }
 
     public function panggilModal($value)
@@ -79,8 +79,8 @@ class ModalKolomProfilTabelAnggota extends Component
             $this->email = "-";
             $this->grup = "-";
             $this->error_time = now();
-            error_log('Modal kolom profil - Tabel Anggota Pegawai @ Dashboards Progress Apd Pegawai error '.$this->error_time.' : Kesalahan saat memuat data profil '.$e);
-            Log::error('Modal kolom profil - Tabel Anggota Pegawai @ Dashboards Progress Apd Pegawai error '.$this->error_time.' : Kesalahan saat memuat data profil '.$e);
+            error_log('Modal kolom profil - Tabel Anggota Pegawai @ Dashboards Progress Ukuran Pegawai error '.$this->error_time.' : Kesalahan saat memuat data profil '.$e);
+            Log::error('Modal kolom profil - Tabel Anggota Pegawai @ Dashboards Progress Ukuran Pegawai error '.$this->error_time.' : Kesalahan saat memuat data profil '.$e);
             session()->flash('alert-danger', 'Terjadi kesalahan saat memuat data profil pegawai. ref ('.$this->error_time.')');
         }
         
