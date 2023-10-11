@@ -34,7 +34,7 @@ class DashboardController extends Controller
         // else if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
         //     return view("eapd.dashboard.admin-dinas.main-dinas");
         // else
-            return view('dashboards.pegawai.home');
+        return view('dashboards.pegawai.home');
     }
 
     public function tampilProfil(Request $r)
@@ -143,8 +143,7 @@ class DashboardController extends Controller
             ]);
         } else if (Auth::user()->data->jabatan->level_user == 'admin_sudin') {
             return view("eapd.dashboard.admin-sudin.progres-sektor");
-        }
-        else if (Auth::user()->data->jabatan->level_user == 'admin_dinas') {
+        } else if (Auth::user()->data->jabatan->level_user == 'admin_dinas') {
             return view("eapd.dashboard.admin-dinas.progres-dinas");
         } else
             return view("eapd.dashboard.halaman-pegawai.main-pegawai");
@@ -164,11 +163,7 @@ class DashboardController extends Controller
 
     public function tampilPeriodeSetting(Request $r)
     {
-        if (Auth::user()->data->jabatan->level_user == 'admin_dinas')
-            return view("eapd.dashboard.admin-dinas.periode-setting");
-
-        else
-            return view('eapd.dashboard.halaman-pegawai.main-pegawai');
+        return view("eapd.dashboard.admin-dinas.periode-setting");
     }
 
     public function tampilPengaturanBarang(Request $r)
