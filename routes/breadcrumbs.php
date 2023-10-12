@@ -56,36 +56,13 @@ Breadcrumbs::for('progress-ukuran', function (BreadcrumbTrail $trail) {
     $trail->push('Progress Input Ukuran Anggota', route('progress-ukuran'));
 });
 
-// Admin Sektor
-Breadcrumbs::for('print-laporan', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('data-apd', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
-    $trail->push('Print Laporan', route('print-laporan'));
+    $trail->push('Data Input APD Anggota', route('data-apd'));
 });
-Breadcrumbs::for('kepegawaian', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard');
-    $trail->push('Kepegawaian', route('kepegawaian'));
-});
-Breadcrumbs::for('progres-sektor', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard');
-    $trail->push('Progres Sektor', route('progres-sektor'));
-});
-Breadcrumbs::for('progres-sudin', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard');
-    $trail->push('Progres Sudin', route('progres-sektor'));
-});
-Breadcrumbs::for('progres-dinas', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard');
-    $trail->push('Progres Dinas', route('progres-sektor'));
-});
-Breadcrumbs::for('ukuran', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard');
-    $trail->push('Daftar Ukuran APD', route('ukuran'));
-});
+
 Breadcrumbs::for('data-ukuran', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
-    $trail->push('Data Ukuran APD', route('data-ukuran'));
+    $trail->push('Data Input Ukuran Anggota', route('data-ukuran'));
 });
-Breadcrumbs::for('data-distribusi', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard');
-    $trail->push('Data Distribusi', route('data-distribusi'));
-});
+

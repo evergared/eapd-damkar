@@ -201,6 +201,33 @@
                             </li>
                         </ul>
                     </li>
+
+                    <li class="nav-item {{ (Route::currentRouteName() =='data-apd' || Route::currentRouteName() =='data-ukuran')? 'menu-open' :''}}">
+                        <a 
+                            class="nav-link">
+                            <i class="fas fa-server nav-icon"></i>
+                            <p>
+                                Data Inputan
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item {{ (Route::currentRouteName() =='data-apd')? 'menu-open' :''}}">
+                            <a href="{{route('data-apd')}}" class="nav-link {{ (Route::currentRouteName() =='data-apd')? 'active' :''}}">
+                                <i class="fas fa-hard-hat nav-icon"></i>
+                                <p>APD Terinput</p>
+                            </a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item {{ (Route::currentRouteName() =='data-ukuran')? 'menu-open' :''}}">
+                            <a href="{{route('data-ukuran')}}" class="nav-link {{ (Route::currentRouteName() =='data-ukuran')? 'active' :''}}">
+                                <i class="fas fa-ruler-combined nav-icon"></i>
+                                <p>Ukuran Terinput</p>
+                            </a>
+                            </li>
+                        </ul>
+                    </li>
                 @endif
 
                 <li class="nav-header border-bottom"></li>
