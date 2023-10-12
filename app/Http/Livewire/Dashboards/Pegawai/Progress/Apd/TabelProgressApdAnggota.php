@@ -10,15 +10,49 @@ use App\Models\InputApd;
 use App\Models\Jabatan;
 use App\Models\Pegawai;
 use App\Models\Penempatan;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class TabelProgressApdAnggota extends DataTableComponent
 {
-    protected $model = Pegawai::class;
 
     public function configure(): void
     {
         $this->setPrimaryKey('id_pegawai');
+    }
+
+    public function builder(): Builder
+    {
+        $pegawai =  Pegawai::query()->where('aktif',true);
+
+        $user = Auth::user()->data;
+
+        if($user->isPengendali())
+            {
+                // dirinya dan semua anggota regunya
+
+                $pegawai = $pegawai->where('penanggung_jawab',$user->id_pegawai)->orWhere('id_pegawai', $user->id_pegawai);
+            }
+            else if($user->isKasie())
+            {
+                // dirinya dan semua anggota sektornya, termasuk satgas
+                $sektor = $user->id_penempatan; // ganti jika perlu
+
+                $pegawai = $pegawai->where('id_penempatan','like',$sektor.'%');
+            }
+            else if($user->isKasudin())
+            {
+                // dirinya dan semua anggota sudinnya, termasuk para staff dan bengkel
+                $sudin = $user->id_penempatan; // ganti jika perlu
+                $pegawai = $pegawai->where('id_penempatan','like',$sudin.'%');
+            }
+            else if($user->isKadis())
+            {
+                // dirinya dan semua anggota pemadam di 5 wilayah termasuk staff dsb.
+                $pegawai = $pegawai;
+            }
+            
+            return $pegawai;
     }
 
     public function columns(): array

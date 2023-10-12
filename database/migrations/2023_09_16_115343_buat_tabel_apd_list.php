@@ -22,6 +22,8 @@ return new class extends Migration
                 $t->foreignId('id_size')->nullable();
                 $t->foreignId('id_kondisi')->nullable();
                 $t->text('image')->nullable();
+                $t->string('id_referensi')->nullable()->comment('nomer seri dari citata/asset/atau badan lainnya yg memberikan nomer seri');
+                $t->string('sumber_id_referensi')->nullable();
             });
         }
         if(Schema::hasTable('apd_jenis'))

@@ -42,8 +42,32 @@ class PeriodeInputController extends Controller
                 if(is_null($periode))
                     return null;
 
-                return $periode->id_periode;
             }
+            else
+                $periode = PeriodeInputApd::where('tgl_awal','<=',$tanggal)->where('tgl_akhir','>=',$tanggal)->get()->first();
+        
+        return $periode->id_periode;
+        // where tanggal awal < $tanggal < tanggal akhir -> value('id')
+    }
+
+    public function ambilIdPeriodeUkuran($tanggal = null, $test = null)
+    {
+        if($tanggal == null)
+            {
+                if($test)
+                    $periode = PeriodeInputApd::get()->first()->id_periode;
+                else
+                    // ambil periode pertama yang aktif
+                    $periode = PeriodeInputApd::where("kumpul_ukuran",true)->get()->first();
+
+                if(is_null($periode))
+                    return null;
+
+            }
+            else
+                $periode = PeriodeInputApd::where('tgl_awal','<=',$tanggal)->where('tgl_akhir','>=',$tanggal)->get()->first();
+        
+        return $periode->id_periode;
         // where tanggal awal < $tanggal < tanggal akhir -> value('id')
     }
 

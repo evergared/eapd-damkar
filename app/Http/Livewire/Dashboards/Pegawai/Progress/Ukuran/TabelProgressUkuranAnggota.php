@@ -4,21 +4,59 @@ namespace App\Http\Livewire\Dashboards\Pegawai\Progress\Ukuran;
 
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\PeriodeInputController;
+use App\Models\ApdList;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\InputApd;
 use App\Models\Jabatan;
 use App\Models\Pegawai;
 use App\Models\Penempatan;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use App\Models\UkuranPegawai;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class TabelProgressUkuranAnggota extends DataTableComponent
 {
-    protected $model = Pegawai::class;
 
     public function configure(): void
     {
         $this->setPrimaryKey('id_pegawai');
+    }
+
+    public function builder(): Builder
+    {
+        $pegawai =  Pegawai::query()
+                    ->join('input_apd_template','pegawai.id_jabatan','=','input_apd_template.id_jabatan')
+                    ->where('aktif',true);
+
+        $user = Auth::user()->data;
+
+        if($user->isPengendali())
+            {
+                // dirinya dan semua anggota regunya
+
+                $pegawai = $pegawai->where('penanggung_jawab',$user->id_pegawai)->orWhere('id_pegawai', $user->id_pegawai);
+            }
+            else if($user->isKasie())
+            {
+                // dirinya dan semua anggota sektornya, termasuk satgas
+                $sektor = $user->id_penempatan; // ganti jika perlu
+
+                $pegawai = $pegawai->where('id_penempatan','like',$sektor.'%');
+            }
+            else if($user->isKasudin())
+            {
+                // dirinya dan semua anggota sudinnya, termasuk para staff dan bengkel
+                $sudin = $user->id_penempatan; // ganti jika perlu
+                $pegawai = $pegawai->where('id_penempatan','like',$sudin.'%');
+            }
+            else if($user->isKadis())
+            {
+                // dirinya dan semua anggota pemadam di 5 wilayah termasuk staff dsb.
+                $pegawai = $pegawai;
+            }
+            
+            return $pegawai;
     }
 
     public function columns(): array
@@ -26,7 +64,7 @@ class TabelProgressUkuranAnggota extends DataTableComponent
         return [
             Column::make("Foto", 'profile_img')
                 ->format(function ($value, $row) {
-                    return view("livewire.dashboards.pegawai.progress.apd.kolom-foto-tabel-progress-apd-anggota", ['img' => $value, 'id_pegawai' => $row->id_pegawai]);
+                    return view("livewire.dashboards.pegawai.progress.ukuran.kolom-foto-tabel-progress-ukuran-anggota", ['img' => $value, 'id_pegawai' => $row->id_pegawai]);
                 }),
             Column::make("id_pegawai")
                 ->sortable()
@@ -61,74 +99,61 @@ class TabelProgressUkuranAnggota extends DataTableComponent
                 ->sortable(),
             Column::make("Inputan")
                 ->label(function($row){
-                    // panggil ApdDataController
-                    $adc = new ApdDataController;
-
-                    // ambil id_pegawai dari baris
-                    $id_pegawai = $row->id_pegawai;
-
-                    // dapatkan jabatan 
-                    $id_jabatan = $row->id_jabatan;
-
-                    // set periode input
-                    $tw = null; //<-- ini untuk contoh dan test
-
-                    // muat template inputan untuk jabatan tertentu
-                    $templateInputan = $adc->muatListInputApdDariTemplate($tw, $id_jabatan);
-
-                    // muat apa saja yang telah diinput oleh si pegawai
-                    $inputan = $adc->muatInputanPegawai($tw, $id_pegawai);
+                    
 
                     // hitung jumlah maksimal inputan
-                    $maks = (is_null($templateInputan))? 0 : count($templateInputan);
+                    $maks = 0;
 
                     // hitung berapa item inputan
-                    $value = (is_null($inputan))? 0 : count($inputan);
+                    $value = 0;
 
-
-                    return view('livewire.dashboards.pegawai.progress.apd.kolom-progress-tabel-anggota',[
-                        'id_pegawai' => $id_pegawai, 'maks' => $maks, 'value'=>$value, 'caption' => 'Inputan', 'warna' => 'success'
-                    ]);
-                }),
-                Column::make("Validasi")
-                ->label(function($row){
-                    // panggil ApdDataController
                     $adc = new ApdDataController;
+                    $pic = new PeriodeInputController;
 
-                    // ambil id_pegawai dari baris
-                    $id_pegawai = $row->id_pegawai;
+                    // ambil ukuran dari database
+                    $list_ukuran = UkuranPegawai::where('id_pegawai',$row->id_pegawai)->first();
+                    $periode = $pic->ambilIdPeriodeUkuran();
+                    if(is_null($list_ukuran))
+                        $ukuran_pegawai = [];
+                    else
+                        $ukuran_pegawai = $list_ukuran->list_ukuran;
 
-                    // dapatkan jabatan 
-                    $id_jabatan = $row->id_jabatan;
+                    $template = $adc->muatListInputApdDariTemplate($periode, $row->id_jabatan);
 
-                    // set periode input
-                    $tw = null; //<-- ini untuk contoh dan test
+                    foreach($template as $t)
+                    {
+                        // inisiasi
+                        $id_jenis = $t['id_jenis'];
 
-                    // muat template inputan untuk jabatan tertentu
-                    $templateInputan = $adc->muatListInputApdDariTemplate($tw, $id_jabatan);
+                        $target_apd = $t['opsi_apd'][0];
 
-                    // muat apa saja yang telah diinput oleh si pegawai
-                    $inputan = $adc->muatInputanPegawai($tw, $id_pegawai,3);
+                        $target_size = ApdList::where('id_apd',$target_apd)->get()->first()->size;
+                        // jika apd tersebut tidak memiliki ukuran, skip
+                        if(is_null($target_size))
+                            continue;
+                        
+                        $maks++;
 
-                    // hitung jumlah maksimal inputan
-                    $maks = (is_null($templateInputan))? 0 : count($templateInputan);
+                        $index = array_search($id_jenis, array_column($ukuran_pegawai, "id_jenis"));
 
-                    // hitung berapa item inputan
-                    $value = (is_null($inputan))? 0 : count($inputan);
+                        if(is_bool($index) && $index==false)
+                        {
+                            continue;
+                        }
+                        
+                        $value++;
+                        
+                    }
 
-                    return view('livewire.dashboards.pegawai.progress.apd.kolom-progress-tabel-anggota',[
-                        'id_pegawai' => $id_pegawai, 'maks' => $maks, 'value'=>$value, 'caption' => 'Validasi', 'warna' => 'info'
+                    return view('livewire.dashboards.pegawai.progress.ukuran.kolom-progress-tabel-anggota',[
+                        'id_pegawai' => $row->id_pegawai, 'maks' => $maks, 'value'=>$value, 'caption' => 'Inputan', 'warna' => 'success'
                     ]);
                 }),
                 Column::make("")
                 ->label(function($row){
 
-                    $adc = new ApdDataController;
-
-                    $tw = $adc->ambilIdPeriodeInput();
-
-                    return view('livewire.dashboards.pegawai.progress.apd.kolom-show-detail-tabel-anggota',[
-                        'id_pegawai' => $row->id_pegawai, 'periode' => $tw
+                    return view('livewire.dashboards.pegawai.progress.ukuran.kolom-show-detail-tabel-anggota',[
+                        'id_pegawai' => $row->id_pegawai
                     ]);
                 })
         ];
