@@ -12,7 +12,7 @@ class TabelDataApd extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
+        $this->setPrimaryKey('id_pegawai');
     }
 
     public function columns(): array

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Dashboards\Pegawai\Progress\Apd;
+namespace App\Http\Livewire\Dashboards\Pegawai\Data\Apd;
 
 use App\Http\Controllers\ApdDataController;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -11,7 +11,7 @@ use App\Models\Penempatan;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
-class TabelProgressApdAnggota extends DataTableComponent
+class TabelListAnggota extends DataTableComponent
 {
 
     public function configure(): void
@@ -21,6 +21,7 @@ class TabelProgressApdAnggota extends DataTableComponent
 
     public function builder(): Builder
     {
+        
         $pegawai =  Pegawai::query()->where('aktif',true);
 
         $user = Auth::user()->data;
@@ -58,7 +59,7 @@ class TabelProgressApdAnggota extends DataTableComponent
         return [
             Column::make("Foto", 'profile_img')
                 ->format(function ($value, $row) {
-                    return view("livewire.dashboards.pegawai.progress.apd.kolom-foto-tabel-progress-apd-anggota", ['img' => $value, 'id_pegawai' => $row->id_pegawai]);
+                    return view("livewire.dashboards.pegawai.data.apd.kolom-foto-tabel-data-apd-anggota", ['img' => $value, 'id_pegawai' => $row->id_pegawai]);
                 }),
             Column::make("id_pegawai")
                 ->sortable()
@@ -91,7 +92,7 @@ class TabelProgressApdAnggota extends DataTableComponent
                         $query->orWhere('id_penempatan',$id);
                 })
                 ->sortable(),
-            Column::make("Inputan")
+            Column::make("Terinput")
                 ->label(function($row){
                     // panggil ApdDataController
                     $adc = new ApdDataController;
@@ -118,38 +119,8 @@ class TabelProgressApdAnggota extends DataTableComponent
                     $value = (is_null($inputan))? 0 : count($inputan);
 
 
-                    return view('livewire.dashboards.pegawai.progress.apd.kolom-progress-tabel-anggota',[
-                        'id_pegawai' => $id_pegawai, 'maks' => $maks, 'value'=>$value, 'caption' => 'Inputan', 'warna' => 'success'
-                    ]);
-                }),
-                Column::make("Validasi")
-                ->label(function($row){
-                    // panggil ApdDataController
-                    $adc = new ApdDataController;
-
-                    // ambil id_pegawai dari baris
-                    $id_pegawai = $row->id_pegawai;
-
-                    // dapatkan jabatan 
-                    $id_jabatan = $row->id_jabatan;
-
-                    // set periode input
-                    $tw = null; //<-- ini untuk contoh dan test
-
-                    // muat template inputan untuk jabatan tertentu
-                    $templateInputan = $adc->muatListInputApdDariTemplate($tw, $id_jabatan);
-
-                    // muat apa saja yang telah diinput oleh si pegawai
-                    $inputan = $adc->muatInputanPegawai($tw, $id_pegawai,3);
-
-                    // hitung jumlah maksimal inputan
-                    $maks = (is_null($templateInputan))? 0 : count($templateInputan);
-
-                    // hitung berapa item inputan
-                    $value = (is_null($inputan))? 0 : count($inputan);
-
-                    return view('livewire.dashboards.pegawai.progress.apd.kolom-progress-tabel-anggota',[
-                        'id_pegawai' => $id_pegawai, 'maks' => $maks, 'value'=>$value, 'caption' => 'Validasi', 'warna' => 'info'
+                    return view('livewire.dashboards.pegawai.data.apd.kolom-data-tabel-anggota',[
+                        'id_pegawai' => $id_pegawai, 'maks' => $maks, 'value'=>$value,
                     ]);
                 }),
                 Column::make("")
@@ -159,7 +130,7 @@ class TabelProgressApdAnggota extends DataTableComponent
 
                     $tw = $adc->ambilIdPeriodeInput();
 
-                    return view('livewire.dashboards.pegawai.progress.apd.kolom-show-detail-tabel-anggota',[
+                    return view('livewire.dashboards.pegawai.data.apd.kolom-show-detail-tabel-anggota',[
                         'id_pegawai' => $row->id_pegawai, 'periode' => $tw
                     ]);
                 })

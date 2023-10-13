@@ -46,6 +46,11 @@ Breadcrumbs::for('apdku', function (BreadcrumbTrail $trail) {
     $trail->push('APDku', route('apdku'));
 });
 
+Breadcrumbs::for('ukuran', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('UKURANku', route('ukuran'));
+});
+
 Breadcrumbs::for('progress-apd', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('Progress Input APD Anggota', route('progress-apd'));
