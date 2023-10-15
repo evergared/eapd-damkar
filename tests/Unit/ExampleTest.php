@@ -22,11 +22,11 @@ class ExampleTest extends TestCase
      */
     public function test_that_true_is_true()
     {
-            $id_pegawai = Pegawai::where('nrk','0001')->first()->id_pegawai;
-            $inputan_pegawai = InputApd::where('id_periode','1')
-                                ->where('id_pegawai',$id_pegawai)
-                                ->get()->toArray();
-            print_r($inputan_pegawai);
+            $periode = PeriodeInputApd::where('tgl_awal','like','%2023%')
+            ->orWhere('tgl_akhir','like','%2023%')
+            ->get()->toArray();
+
+            print_r($periode);
             $this->assertTrue(true);
 
     }
