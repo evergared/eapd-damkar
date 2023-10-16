@@ -29,8 +29,14 @@
         </div>
 
         <livewire:layouts.navigasi.adminlte-pegawai-topnav>
+        @auth("admin")
+        <livewire:layouts.navigasi.adminlte-admin-sidebar>
+        @endauth
 
+        @auth("web")
         <livewire:layouts.navigasi.adminlte-pegawai-sidebar>
+        @endauth
+        
 
         <div class="content-wrapper">
             {{ $slot }}
@@ -47,8 +53,13 @@
     @vite('resources/js/adminlte-dashboard.js')
     @vite('public/admin-lte/adminlte.min.js')
     @vite('public/admin-lte/demo.js')
+
+  
+    @vite('public/admin-lte/ekko-lightbox.mis.js')
+
     {{-- @vite('public/admin-lte/filter.js') --}}
     <script src="{{asset('admin-lte/filter.js')}}"></script>
+
     @include('helper.script-modal')
     @livewireScripts
 </body>

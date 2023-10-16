@@ -21,9 +21,9 @@ class TabelListPeriode extends DataTableComponent
     #region rappasoft function
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
+        $this->setPrimaryKey('id_periode');
         $this->setRefreshVisible();
-        $this->setAdditionalSelects(['nama_periode','tgl_awal','tgl_akhir','aktif']);
+        $this->setAdditionalSelects(['nama_periode', 'tgl_awal', 'tgl_akhir', 'aktif']);
     }
 
     public function columns(): array
@@ -31,10 +31,10 @@ class TabelListPeriode extends DataTableComponent
         $this->index = $this->page > 1 ? ($this->page - 1) * $this->perPage : 0;
 
         return [
-            Column::make("No")
-                ->format(fn()=>++$this->index)
-                ->sortable(),
-            Column::make("ID", "_id")
+            // Column::make("No", "")
+            //     ->format(fn () => ++$this->index)
+            //     ->sortable(),
+            Column::make("ID", "id_periode")
                 ->deselected()
                 ->sortable(),
             Column::make("Nama periode", "nama_periode")
@@ -43,11 +43,11 @@ class TabelListPeriode extends DataTableComponent
                 ->sortable(),
             Column::make("Tgl akhir", "tgl_akhir")
                 ->sortable(),
-            BooleanColumn::make('Aktif?',"aktif")
+            BooleanColumn::make('Aktif?', "aktif")
                 ->sortable(),
             Column::make('Tindakan')
-                ->label(function($row){
-                    return view('eapd.livewire.kolom-tambahan-datatable.kolom-tindakan-tabel-list-periode',['id'=>$row->id,'aktif'=>$row->aktif]);
+                ->label(function ($row) {
+                    return view('eapd.livewire.kolom-tambahan-datatable.kolom-tindakan-tabel-list-periode', ['id' => $row->id_periode, 'aktif' => $row->aktif]);
                 })
         ];
     }
@@ -57,5 +57,4 @@ class TabelListPeriode extends DataTableComponent
     {
         $this->emitSelf("refreshDatatable");
     }
-
 }

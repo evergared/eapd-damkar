@@ -19,6 +19,7 @@ export default defineConfig({
                 'public/admin-lte/adminlte.min.js',
                 'public/admin-lte/demo.js',
                 'public/admin-lte/filter.js',
+                'public/admin-lte/ekko-lightbox.mis.js',
             ],
             refresh: true,
         }),

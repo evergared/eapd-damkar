@@ -20,7 +20,7 @@ Route::get('/', function () {
 
     if (Auth::guard('web')->check())
         return redirect()->route('dashboard');
-    
+
     if (Auth::guard('admin')->check())
         return redirect()->to('/superuser/home');
 
@@ -39,7 +39,8 @@ Route::middleware('auth')->group(function () {
     })->name('multi');
 
     // Halaman Dashboard
-    Route::get('/dashboard', \App\Http\Livewire\Dashboards\Pegawai\Home\Page::class )->name('dashboard');
+    Route::get('/dashboard', \App\Http\Livewire\Dashboards\Pegawai\Home\Page::class)->name('dashboard');
+
     Route::get('/profil', \App\Http\Livewire\Dashboards\Pegawai\Profil\Page::class)->name('profil');
     Route::get('/apdku', \App\Http\Livewire\Dashboards\Pegawai\Apdku\Page::class)->name('apdku');
     Route::get('/ukuranku', \App\Http\Livewire\Dashboards\Pegawai\Ukuranku\Page::class)->name('ukuran');
@@ -55,29 +56,25 @@ Route::middleware('auth')->group(function () {
     Route::get('/data-distribusi', [\App\Http\Controllers\DashboardController::class, 'tampilDataDistribusi'])->name('data-distribusi');
     Route::get('/periode-setting', [\App\Http\Controllers\DashboardController::class, 'tampilPeriodeSetting'])->name('periode-setting');
     Route::get('/pengaturan-barang', [\App\Http\Controllers\DashboardController::class, 'tampilPengaturanBarang'])->name('pengaturan-barang');
-
-
 });
 
-Route::middleware('auth:admin')->group(function(){
+Route::middleware('auth:admin')->group(function () {
 
-    Route::get('/superuser',function(){
-        if(Auth::guard('admin')->check())
-        {
+    Route::get('/superuser', function () {
+        if (Auth::guard('admin')->check()) {
             return redirect()->to('/superuser/home');
-        }
-        else
-        {
-            return redirect()->to('/')->with('alert-warning','Silahkan login kembali menggunakan akun admin untuk mengakses dashboard admin.');
+        } else {
+            return redirect()->to('/')->with('alert-warning', 'Silahkan login kembali menggunakan akun admin untuk mengakses dashboard admin.');
         }
     });
 
-    Route::get('/superuser/home', function(){
-        return view('tes-auth');
-    });
+    Route::get('/superuser/home', \App\Http\Livewire\Dashboards\Admin\Home\Page::class)->name('dashboardAdmin');
+    Route::get('/superuser/apd', \App\Http\Livewire\Dashboards\Admin\Data\Apd\Page::class)->name('dataApdAdmin');
+    Route::get('/superuser/ukuran', \App\Http\Livewire\Dashboards\Admin\Data\Ukuran\Page::class)->name('dataUkuranAdmin');
+    Route::get('/superuser/item', \App\Http\Livewire\Dashboards\Admin\ItemSetting\Page::class)->name('itemAdmin');
+    Route::get('/superuser/kepegawaian', \App\Http\Livewire\Dashboards\Admin\Kepegawaian\Page::class)->name('kepegawaianAdmin');
+    Route::get('/superuser/periode', \App\Http\Livewire\Dashboards\Admin\PeriodeSetting\Page::class)->name('periodeAdmin');
+    Route::get('/superuser/user', \App\Http\Livewire\Dashboards\Admin\User\Page::class)->name('userAdmin');
 });
 
 Auth::routes();
-
-
-
