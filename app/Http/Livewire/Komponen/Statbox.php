@@ -32,6 +32,7 @@ class Statbox extends Component
 
     protected $listeners = [
         'refreshStatbox' => 'render',
+        'refreshComponent' => '$refresh',
     ];
 
 
@@ -65,7 +66,7 @@ class Statbox extends Component
             } else {
                 $tertolak = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->first()) {
+                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id_pegawai)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->first()) {
                         if (verif::tryFrom($input->verifikasi_status) == verif::tertolak()) {
                             $tertolak++;
 
@@ -104,7 +105,7 @@ class Statbox extends Component
             } else {
                 $rusak = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->where('kondisi', 'like', 'rusak %')->first()) {
+                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id_pegawai)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->where('kondisi', 'like', 'rusak %')->first()) {
                         $rusak++;
                         $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
                         $kondisi = $input->kondisi;
@@ -139,7 +140,7 @@ class Statbox extends Component
             } else {
                 $terisi = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->first()) {
+                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id_pegawai)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->first()) {
                         $terisi++;
 
                         $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
@@ -175,7 +176,7 @@ class Statbox extends Component
             } else {
                 $tervalidasi = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->first()) {
+                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id_pegawai)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->first()) {
                         if (verif::tryFrom($input->verifikasi_status) == verif::terverifikasi()) {
                             $tervalidasi++;
 

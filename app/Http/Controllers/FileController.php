@@ -26,8 +26,10 @@ class FileController extends Controller
      * - proses untuk mitigasi server over capacity? menggunakan aws s3 bucket utk menyimpan foto stlh rekap atau lgsg hapus dg cron job / manual?
      */
 
-    
-
+    /**
+     * Extensi yang dipakai untuk gambar yang diupload
+     */
+    public static $extUploadFile = 'jpg';
 
     /**
      * Path dasar penyimpanan gambar apd yang diinput oleh user
@@ -35,14 +37,19 @@ class FileController extends Controller
     public static $apdUploadBasePath = 'img/apd/input';
 
     /**
+     * Path dasar penyimpanan gambar apd yang diinput ulang oleh user setelah inputan diverifikasi admin
+     */
+    public static $apdReuploadBasePath = 'img/apd/reupload';
+
+    /**
      * Path dasar penyimpanan gambar apd oleh admin
      */
-    public static $apdItemBasePath = 'img/apd/item';
+    public static $apdItemBasePath = 'storage/img/apd/item';
 
     /**
      * Path dasar penyimpanan placeholder apd untuk keperluan tes.
      */
-    public static $apdPlaceholderBasePath = 'img/apd/placeholder';
+    public static $apdPlaceholderBasePath = 'storage/img/apd/placeholder';
 
     /**
      * Path dasar penyimpanan gambar foto profil yang diupload oleh user
@@ -69,8 +76,11 @@ class FileController extends Controller
      * 
      * @return String nama file baru untuk di simpan di database
      */
-    public function prosesNamaFileApdUpload($id_pegawai, $id_item = 'item', $tipe_file = 'jpg', $urutan = null)
+    public function prosesNamaFileApdUpload($id_pegawai, $id_item = 'item', $tipe_file = null, $urutan = null)
     {
+        if($tipe_file == null)
+            $tipe_file = self::$extUploadFile;
+
         try {
             if (is_null($urutan))
                 return $id_pegawai . '_' . $id_item . '.' . $tipe_file;
@@ -87,8 +97,11 @@ class FileController extends Controller
      * 
      * @return string nama file baru untuk di simpan di database
      */
-    public function prosesNamaFileApdItem($id_apd = 'gambar_apd', $tipe_file = 'jpg', $urutan = null)
+    public function prosesNamaFileApdItem($id_apd = 'gambar_apd', $tipe_file = null, $urutan = null)
     {
+        if($tipe_file == null)
+            $tipe_file = self::$extUploadFile;
+
         try{
 
             if(is_null($urutan))
@@ -110,8 +123,11 @@ class FileController extends Controller
      * 
      * @return String nama file baru untuk di simpan di database
      */
-    public function prosesNamaFileAvatarUpload($id_pegawai, $tipe_file = 'jpg')
+    public function prosesNamaFileAvatarUpload($id_pegawai, $tipe_file = null)
     {
+        if($tipe_file == null)
+            $tipe_file = self::$extUploadFile;
+
         try {
             return $id_pegawai . '_ava' . '.' . $tipe_file;
         } catch (Throwable $e) {
@@ -125,13 +141,16 @@ class FileController extends Controller
      * 
      * @return String path untuk menyimpan foto inputan user
      */
-    public function buatPathFileApdUpload($id_pegawai, $id_jenis, $id_periode)
+    public function buatPathFileApdUpload($id_pegawai, $id_jenis, $id_periode, $reupload = false)
     {
         if($id_periode === 1 || $id_periode == null)
         $id_periode = PeriodeInputApd::get()->first()->id_periode;
 
         $periode = Str::slug($id_periode);
         // $periode = Str::slug(PeriodeInputApd::where('id_periode', '=', $id_periode)->first()->nama_periode);
+
+        if($reupload)
+            return self::$apdReuploadBasePath . '/' . $periode . '/' . $id_pegawai . '/' . $id_jenis;
 
         return self::$apdUploadBasePath . '/' . $periode . '/' . $id_pegawai . '/' . $id_jenis;
     }

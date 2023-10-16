@@ -33,7 +33,7 @@ class Pegawai extends Model
         return $this->hasOne(User::class,'id_pegawai','id_pegawai');
     }
 
-    public function ukuran_pegawai()
+    public function ukuran()
     {
         return $this->hasMany(UkuranPegawai::class, 'id_pegawai', 'id_pegawai');
     }
@@ -81,6 +81,51 @@ class Pegawai extends Model
     public function bawahan()
     {
         return $this->hasMany($this, 'penanggung_jawab', 'id_pegawai');
+    }
+
+    public function isPenanggungJawab()
+    {
+        return $this->isPengendali() || $this->isKasie() || $this->isKasudin() || $this->isKadis();
+    }
+
+    public function isPengendali()
+    {
+        $jabatan = [
+            'L002'
+        ];
+
+        return in_array($this->id_jabatan,$jabatan);
+    }
+
+    public function isKasie()
+    {
+        $jabatan = [
+            'K001',
+            'K002',
+            'K003',
+            'K004',
+            'K005',
+        ];
+
+        return in_array($this->id_jabatan,$jabatan);
+    }
+
+    public function isKasudin()
+    {
+        $jabatan = [
+            
+        ];
+
+        return in_array($this->id_jabatan,$jabatan);
+    }
+
+    public function isKadis()
+    {
+        $jabatan = [
+            
+        ];
+
+        return in_array($this->id_jabatan,$jabatan);
     }
 
 }

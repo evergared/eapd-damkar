@@ -101,7 +101,7 @@ class LayoutShowDetailTabelAnggotaAdmin extends Component
             $this->id_pegawai = $data[0];
             $this->periode = $data[1];
 
-            if($this->periode == 1)
+            if($this->periode == null)
             $this->periode = PeriodeInputApd::get()->first()->id_periode;
 
             // ambil nama pegawai

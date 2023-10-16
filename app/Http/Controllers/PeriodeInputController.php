@@ -29,13 +29,45 @@ class PeriodeInputController extends Controller
      * - ubahDataTabelTemplateKeDataset : datatabel template -> dataset
      * - ubahDatasetArrayTemplateKeTemplate : dataset -> template
      */
-    public function ambilIdPeriodeInput($tanggal = null)
+    public function ambilIdPeriodeInput($tanggal = null, $test = null)
     {
         if($tanggal == null)
             {
-                // ambil periode pertama yang aktif
-                return PeriodeInputApd::where("aktif",true)->get()->first()->id_periode;
+                if($test)
+                    $periode = PeriodeInputApd::get()->first()->id_periode;
+                else
+                    // ambil periode pertama yang aktif
+                    $periode = PeriodeInputApd::where("aktif",true)->get()->first();
+
+                if(is_null($periode))
+                    return null;
+
             }
+            else
+                $periode = PeriodeInputApd::where('tgl_awal','<=',$tanggal)->where('tgl_akhir','>=',$tanggal)->get()->first();
+        
+        return $periode->id_periode;
+        // where tanggal awal < $tanggal < tanggal akhir -> value('id')
+    }
+
+    public function ambilIdPeriodeUkuran($tanggal = null, $test = null)
+    {
+        if($tanggal == null)
+            {
+                if($test)
+                    $periode = PeriodeInputApd::get()->first()->id_periode;
+                else
+                    // ambil periode pertama yang aktif
+                    $periode = PeriodeInputApd::where("kumpul_ukuran",true)->get()->first();
+
+                if(is_null($periode))
+                    return null;
+
+            }
+            else
+                $periode = PeriodeInputApd::where('tgl_awal','<=',$tanggal)->where('tgl_akhir','>=',$tanggal)->get()->first();
+        
+        return $periode->id_periode;
         // where tanggal awal < $tanggal < tanggal akhir -> value('id')
     }
 

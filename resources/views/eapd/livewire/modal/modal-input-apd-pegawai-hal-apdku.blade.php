@@ -139,7 +139,7 @@
                                     <div class="col-12">
                                         <div class="text-info my-2">
                                             <small>Berikut merupakan gambar APD anda untuk model
-                                                <strong><u>{{$nama_apd_user}}</u></strong> yang
+                                                <strong><u>{{$nama_apd_user_sebelum}}</u></strong> yang
                                                 telah anda
                                                 upload.</small>
                                         </div>

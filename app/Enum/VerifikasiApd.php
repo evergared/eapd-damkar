@@ -28,7 +28,7 @@ class VerifikasiApd extends Enum
     {
         return [
             'input' => 'Proses Input',
-            'verifikasi' => 'Proses Validasi',
+            'verifikasi' => 'Belum Di Verif',
             'terverifikasi' => 'Telah Di Verif',
             'tertolak' => 'Verifikasi Ditolak',
             'mintaUpdate' => 'Proses Update'

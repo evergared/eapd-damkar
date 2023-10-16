@@ -21,6 +21,8 @@ class ApdList extends Model
         'merk',
         'id_size',
         'id_kondisi',
+        'id_referensi',
+        'sumber_id_referensi',
         'image'
     ];
 

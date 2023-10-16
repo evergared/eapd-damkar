@@ -79,16 +79,25 @@ class StatusDisplayController extends Controller
     {
         $warna = "";
 
-        $status = keberadaan::tryFrom($item);
+        $status = status::tryFrom($item);
 
         switch($status){
-            case keberadaan::ada() :
+            case status::baik() :
                 $warna = "info";
                 break;
-            case keberadaan::belumTerima() :
+            case status::rusakRingan() :
+                $warna = "info";
+                break;
+            case status::rusakSedang() :
+                $warna = "info";
+                break;
+            case status::rusakBerat():
+                $warna = "info";
+                break;
+            case status::belumTerima() :
                 $warna = "orange";
                 break;
-            case keberadaan::hilang() :
+            case status::hilang() :
                 $warna = "danger";
                 break;
             default :

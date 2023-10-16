@@ -34,15 +34,6 @@
                     <!-- /.card-header -->
                     <div class="card-body">
                         <div class="row">
-
-
-
-
-
-                            {{--
-                            onclick="modal('modal-input-apd-pegawai-hal-apdku',{{$item['id_jenis']}},'modalInputApdPegawai')"
-                            --}}
-
                             @foreach ($daftarApd as $item)
                             <div class="column {{Str::slug($item['status_verifikasi'],'-')}} {{Str::slug($item['status_kerusakan'],'-')}} small-box col-sm-3"
                                 wire:click="panggilModal('{{$item['id_jenis']}}')" wire:ignore.self>
@@ -61,9 +52,6 @@
                                 </div>
                             </div>
                             @endforeach
-
-
-
                         </div>
                     </div>
                     <!-- /.card-body -->

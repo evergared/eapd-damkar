@@ -6,6 +6,7 @@ use App\Http\Controllers\ApdDataController;
 use App\Models\ApdJenis;
 use App\Models\ApdList;
 use App\Models\Pegawai;
+use App\Models\PeriodeInputApd;
 use App\Models\UkuranPegawai;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -21,12 +22,18 @@ class Page extends Component
     // ukuran yang telah diisi oleh pegawai
     public $ukuranPegawai = [];
 
+    // untuk menampung data yang akan ditampilkan di tab-ukuran-tampil
+    public $listUkuran = [];
+
     // ukuran yang harus diisi oleh pegawai
     public $listKebutuhanUkuran = [];
 
     // untuk menampung value saat user mulai mengisi
     public $ukuranTerisi = [];
     public $cache_ukuranTerisi = [];
+
+    // untuk notif di navigasi nav tabs
+    public $notif_belum_isi = 0;
 
     protected $listeners = ['inisiasiFormUkuran'=>'inisiasi'];
 
@@ -45,14 +52,40 @@ class Page extends Component
         $this->siapkanTemplate();
         $this->ambilDataUser();
         $this->sesuaikanDataDenganTemplate();
+        $this->siapkanListDataUkuran();
     }
 
+    #region Tampil Ukuran
+    public function siapkanListDataUkuran()
+    {
+        try{
+
+            foreach($this->ukuranPegawai as $i => $item)
+            {
+                $this->listUkuran[$i] = [
+                    "index" => $i +1,
+                    "nama" => ApdJenis::find($item["id_jenis"])->nama_jenis,
+                    "ukuran" => $item["value"]
+                ];
+            }
+
+        }
+        catch(Throwable $e)
+        {
+            error_log('Dashboard Ukuranku Pegawai Error : Kesalahan saat menyiapkan data untuk tabbed pane tampil ukuran '.$e);
+        }
+    }
+    #endregion
+
+    #region Form Ukuran
     public function ambilDataUser()
     {
         try
         {
+            $id = Auth::user()->data->id_pegawai;
+
             // ambil inputan terdahulu
-            if(!is_null($inputan = Pegawai::find(Auth::user()->id_pegawai)->ukuran))
+            if(!is_null($inputan = UkuranPegawai::where('id_pegawai',$id)->get()->first()))
             {
                 $this->tanggal = $inputan['terakhir_diisi'];
                 
@@ -62,7 +95,6 @@ class Page extends Component
             {
                 error_log('hit field ukuran tidak ada');
             }
-                error_log('pengetesan selesai');
         }
         catch(Throwable $e)
         {
@@ -75,8 +107,14 @@ class Page extends Component
     {
         try{
 
+            $this->notif_belum_isi = 0;
+
+            // ambil periode pertama yang sedang mengumpulkan ukuran apd
+            $periode = PeriodeInputApd::where('kumpul_ukuran',true)->first()->id_periode;
+
+            // lakukan iterasi jika template yang didapat tidak null
             $adc = new ApdDataController;
-            if(!is_null($template = $adc->muatListInputApdDariTemplate(1, Auth::user()->data->id_jabatan)))
+            if(!is_null($template = $adc->muatListInputApdDariTemplate($periode, Auth::user()->data->id_jabatan)))
             {
                 $i = 0;
                 foreach($template as  $t)
@@ -86,8 +124,6 @@ class Page extends Component
                     $id_jenis = $t['id_jenis'];
 
                     $target_apd = $t['opsi_apd'][0];
-
-                    error_log('index '.$i);
 
                     $target_size = ApdList::where('id_apd',$target_apd)->get()->first()->size;
 
@@ -104,11 +140,7 @@ class Page extends Component
                     $this->ukuranTerisi[$i] = '';
                     $this->cache_ukuranTerisi[$i] = '';
                     $i++;
-                }
-
-                foreach(array_keys($this->listKebutuhanUkuran) as $tes)
-                {
-                    error_log('print index : '.$tes);
+                    $this->notif_belum_isi++;
                 }
             }
 
@@ -121,17 +153,32 @@ class Page extends Component
 
     public function sesuaikanDataDenganTemplate()
     {
-        try{
 
+        try{
+            error_log('sesuaikan dengan template, count ukuran pegawai : '.count($this->ukuranPegawai));
             foreach($this->ukuranPegawai as $ukuran)
             {
+                error_log('Triger pengulangan');
                 $index = array_search($ukuran['id_jenis'], array_column($this->listKebutuhanUkuran, "id_jenis"));
-
-                if($index)
+                error_log('ukuran yang dicari : '.$ukuran['id_jenis']);
+                error_log("index yang di dapat : ".$index);
+                error_log('isi sebenarnya dari array list kebutuhan : '.$this->listKebutuhanUkuran[$index]['id_jenis']);
+                if(!is_bool($index))
                 {
-                    $this->ukuranTerisi[$index] = $ukuran['ukuran'];
-                    $this->cache_ukuranTerisi[$index] = $ukuran['ukuran'];
+                    $this->ukuranTerisi[$index] = $ukuran['value'];
+                    $this->cache_ukuranTerisi[$index] = $ukuran['value'];
+                    
+                    if($this->notif_belum_isi > 0)
+                        $this->notif_belum_isi--;
                 }
+                
+            }
+
+            error_log("notif belum isi : ".$this->notif_belum_isi);
+
+            foreach($this->ukuranTerisi as $i => $item)
+            {
+                error_log("index ".$i." : ".$item);
             }
 
         }
@@ -145,9 +192,12 @@ class Page extends Component
     {
         error_log('simpan kepanggil');
         try{
+            // siapkan data
+            $id_pegawai = Auth::user()->data->id_pegawai;
+            $terakhir_diisi = Carbon::now('Asia/Jakarta')->toDateTimeString();
+            $ukuran = UkuranPegawai::where("id_pegawai" , $id_pegawai)->first();
+            
             // iterasi jika isian terisi, maka masukan ke database
-            $ukuran = UkuranPegawai::find(Auth::user()->id_pegawai);
-
             foreach($this->listKebutuhanUkuran as $i => $data)
             {
                 // cek apakah inputan kosong
@@ -156,7 +206,7 @@ class Page extends Component
                     // cek apakah user pernah mengisi jenis tsb
                     $index = array_search($data['id_jenis'], array_column($this->ukuranPegawai, 'id_jenis'));
 
-                    if($index)
+                    if(!is_bool($index))
                     {
                         // ubah value yang sudah terisi
                         $this->ukuranPegawai[$index]['value'] = $this->ukuranTerisi[$i];
@@ -174,11 +224,24 @@ class Page extends Component
                 }
             }
 
-            $ukuran->terakhir_diisi = Carbon::now('Asia/Jakarta')->toDateTimeString();
-            $ukuran->list_ukuran = $this->ukuranPegawai;
-            $ukuran->save();
+            if(is_null($ukuran))
+            {
+                UkuranPegawai::create([
+                    "id_pegawai" => $id_pegawai,
+                    "terakhir_diisi" => $terakhir_diisi,
+                    "list_ukuran" => $this->ukuranPegawai
+                ]);
+            }
+            else
+            {
+                $ukuran->update([
+                    "terakhir_diisi" => $terakhir_diisi,
+                    "list_ukuran" => $this->ukuranPegawai
+                ]);
+            }
             session()->flash('form-success', 'Data ukuran berhasil diubah.');
             $this->inisiasi();
+            $this->emit('refreshComponent');
         }
         catch(Throwable $e)
         {
@@ -189,6 +252,7 @@ class Page extends Component
 
     public function resetForm()
     {
-        $this->cache_ukuranTerisi = $this->ukuranTerisi;
+        $this->ukuranTerisi = $this->cache_ukuranTerisi;
     }
+    #endregion
 }

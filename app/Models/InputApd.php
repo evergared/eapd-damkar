@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,12 +12,15 @@ class InputApd extends Model
 
     protected   $table = 'input_apd',
                 $primaryKey = 'id_inputan';
+
+    protected $keyType = 'string';
     
     public $timestamps = false;
 
     protected $fillable = [
         'id_inputan',
         'id_pegawai',
+        'id_periode',
         'id_jenis',
         'id_apd',
         'size',
@@ -44,5 +48,10 @@ class InputApd extends Model
     public function apd()
     {
         return $this->belongsTo(ApdList::class, 'id_apd', 'id_apd');
+    }
+
+    public function reupload()
+    {
+        return $this->hasOne(InputApdReupload::class, 'id_inputan', 'id_inputan');
     }
 }

@@ -20,6 +20,7 @@ use App\Models\Provinsi;
 use App\Models\Wilayah;
 use Carbon\Carbon;
 use Error;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -76,7 +77,7 @@ class ApdDataController extends Controller
     #endregion
 
 
-    public function muatOpsiApd(string $id_jenis, $id_periode = 1, $id_jabatan = "")
+    public function muatOpsiApd(string $id_jenis, $id_periode = null, $id_jabatan = "")
     {
         try{
 
@@ -96,7 +97,7 @@ class ApdDataController extends Controller
      * @param int $id_periode id_periode untuk template yang dicari, dalam bentuk id id_periode
      * @param string $id_jabatan jabatan untuk template yang dicari, dalam bentuk id jabatan
      */
-    public function muatListInputApdDariTemplate($id_periode = 1, $id_jabatan = "")
+    public function muatListInputApdDariTemplate($id_periode = null, $id_jabatan = "")
     {
         try {
 
@@ -106,14 +107,20 @@ class ApdDataController extends Controller
             }
 
             // jika parameter periode tidak diisi, maka ambil periode paling atas
-            if($id_periode == 1)
-            $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
+            if($id_periode == null)
+            {
+                $periode = PeriodeInputApd::where('aktif',true)->get()->first();
+                if(is_null($periode))
+                    return [];
+                $id_periode = $periode->id_periode;
 
-            $template_pada_periode = InputApdTemplate::where("id_periode",$id_periode)->where("id_jabatan", $id_jabatan)->get()->first()->template;
+            }
+
+            $template_pada_periode = InputApdTemplate::where("id_periode",$id_periode)->where("id_jabatan", $id_jabatan)->get()->first();
             // dd($template_pada_periode);
             
             if(!is_null($template_pada_periode))
-                return $template_pada_periode;
+                return $template_pada_periode->template;
             
             error_log('template input apd tidak ditemukan untuk jabatan '.$id_jabatan);
             return [];
@@ -134,107 +141,37 @@ class ApdDataController extends Controller
      * @param int $target_verifikasi jika ada status verifikasi yang dicari, masukan value dari enum /App/Enum/VerifikasiApd.php atau integer 1~5
      * @return array list apa saja yang telah diinput oleh pegawai, di dapat dari tabel input_apd
      */
-    public function muatInputanPegawai($id_periode = 1, $id_pegawai = "", $target_verifikasi = 0): array
+    public function muatInputanPegawai($id_periode = null, $id_pegawai = "", $target_verifikasi = 0): array
     {
         try {
 
-            // jika parameter id_pegawai kosong, ambil nrk dan jabatan user
             if ($id_pegawai == "") {
                 $id_pegawai = Auth::user()->id_pegawai;
                 $id_jabatan = Auth::user()->data->id_jabatan;
             }
-            // jika paramter id_pegawai diisi, cukup ambil jabatan user
             else {
                 $id_jabatan = Pegawai::where('id_pegawai', '=', $id_pegawai)->first()->id_jabatan;
             }
 
-            if($id_periode == 1)
+            if($id_periode == null)
             $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
 
-            // array kosong untuk return
             $list = [];
 
-            // ambil template dari database
             $template = $this->muatListInputApdDariTemplate($id_periode, $id_jabatan);
 
 
-            // pengulangan untuk mengisi $list berdasarkan template yang telah diambil
             foreach ($template as $item) {
-                // apa tipe apdnya
                 $id_jenis = $item['id_jenis'];
 
-                // cek apakah user telah menginput apd tersebut
-                if ($input = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first()) {
-                    // user telah menginput
+                $inputan = $this->muatSatuInputanPegawai($id_jenis, $id_periode,$id_pegawai,$target_verifikasi);
 
-                    // panggil untuk mambantu mengubah warna status
-                    $sdc = new StatusDisplayController;
+                if(is_null($inputan))
+                    continue;
 
-                    // apakah ada status verifikasi yang dicari?
-                    if ($target_verifikasi != 0) {
-                        // ada status verifikasi tertentu yang dicari
-
-                        // apakah inputan user memiliki verifikasi yang sesuai
-                        if (verif::tryFrom($input->verifikasi_status)->value == $target_verifikasi) {
-                            // inputan user memiliki verifikasi yang dicari
-
-                            $verifikasi_status = "";
-                            $verifikasi_label = "";
-
-                            $this->ekstrakStatusVerifikasi(verif::tryFrom($input->verifikasi_status)->value, $verifikasi_label, $verifikasi_status);
-
-                            // masukan ke $list
-                            array_push($list, [
-                                'id_jenis' => $id_jenis,
-                                'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
-                                'id_apd' => $input->id_apd,
-                                'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
-                                'status_keberadaan' => KeberadaanApd::tryFrom($input->keberadaan)->label,
-                                'warna_keberadaan'=> $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->keberadaan),
-                                'enum_verifikasi' => $input->verifikasi_status,
-                                'status_verifikasi' => $verifikasi_label,
-                                'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
-                                'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode),
-                                'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
-                                'komentar_pengupload' => $input->komentar_pengupload,
-                                'id_verifikator' => $input->verifikasi_oleh,
-                                'komentar_verifikator' => $input->komentar_verifikator
-
-
-                            ]);
-                        }
-                    } else {
-                        // tidak ada status verifikasi tertentu yang dicari
-
-                        $verifikasi_status = "";
-                        $verifikasi_label = "";
-
-                        $this->ekstrakStatusVerifikasi(verif::tryFrom($input->verifikasi_status)->value, $verifikasi_label, $verifikasi_status);
-
-                        // masukan ke $list
-                        array_push($list, [
-                            'id_jenis' => $id_jenis,
-                            'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
-                            'id_apd' => $input->id_apd,
-                            'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
-                            'status_keberadaan' => KeberadaanApd::tryFrom($input->keberadaan)->label,
-                            'warna_keberadaan'=> $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->keberadaan),
-                            'enum_verifikasi' => $input->verifikasi_status,
-                            'status_verifikasi' => $verifikasi_label,
-                            'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
-                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)->label,
-                            'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
-                            'komentar_pengupload' => $input->komentar_pengupload,
-                            'id_verifikator' => $input->verifikasi_oleh,
-                            'komentar_verifikator' => $input->komentar_verifikator
-
-
-                        ]);
-                    }
-                }
+                array_push($list, $inputan);
             }
 
-            // berikan daftar yang telah diisi dari pengulangan
             return $list;
         } catch (Throwable $e) {
             error_log('Gagal memuat status verifikasi dari list input apd ' . $e);
@@ -242,33 +179,33 @@ class ApdDataController extends Controller
         }
     }
 
-    public function muatSatuInputanPegawai($id_jenis, $id_periode = 1, $id_pegawai = ""): array
+    public function muatSatuInputanPegawai($id_jenis, $id_periode = null, $id_pegawai = "", $target_verifikasi = 0): array|bool|null
     {
         try{
-            error_log('start muat satu inputan pegawai');
-            // jika parameter nrk kosong, ambil nrk dan jabatan user
+            // jika parameter id pegawai kosong
             if ($id_pegawai == "") {
                 $id_pegawai = Auth::user()->id_pegawai;
-                // $id_jabatan = Auth::user()->data->id_jabatan;
             }
-            // jika paramter nrk diisi, cukup ambil jabatan user
-            else {
-                // $id_jabatan = Pegawai::where('_id', '=', $id_pegawai)->first()->id_jabatan;
-            }
+            
 
-            error_log('hit pegawai id check pass '.$id_pegawai);
+            if($id_periode == null)
+                $id_periode = $this->ambilIdPeriodeInput();
 
-            if($id_periode == 1)
-            $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
-            error_log('hit id_periode id check pass '.$id_periode);
+            if($target_verifikasi != 0)
+                $input = InputApd::where('id_pegawai', '=', $id_pegawai)
+                        ->where('id_jenis', '=', $id_jenis)
+                        ->where('id_periode', '=', $id_periode)
+                        ->where('verifikasi_status',$target_verifikasi)
+                        ->first();
+            else
+                $input = InputApd::where('id_pegawai', '=', $id_pegawai)
+                        ->where('id_jenis', '=', $id_jenis)
+                        ->where('id_periode', '=', $id_periode)
+                        ->first();
 
-            error_log('id_jenis : '.$id_jenis);
 
-            // cek apakah user telah menginput apd tersebut
-            if ($input = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first())
+            if (!is_null($input))
             {
-            error_log('hit input pass');
-
                 $verifikasi_status = "";
                 $verifikasi_label = "";
 
@@ -284,34 +221,36 @@ class ApdDataController extends Controller
                             'id_apd' => $input->id_apd,
                             'size_apd' => ($input->size)?$input->size:"-",
                             'data_terakhir_update' => $input->data_diupdate,
-                            'verifikasi_terakhir_update' => Carbon::createFromTimestamp($input->updated_at)->toDateTimeString(),
+                            'verifikasi_terakhir_update' => (is_null($input->verifikasi_diupdate))? '-' : $input->verifikasi_diupdate,
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
-                            'status_keberadaan' => $input->keberadaan,
-                            'warna_keberadaan' => $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->keberadaan),
+                            'status_keberadaan' => ($input->kondisi != "hilang" && $input->kondisi != "belum terima")? "Ada" : $input->kondisi,
+                            'warna_keberadaan' => $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->kondisi),
                             'enum_verifikasi'=>$input->verifikasi_status,
                             'status_verifikasi' => $verifikasi_label,
                             'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
-                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)->label,
+                            'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode),
                             'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
                             'komentar_pengupload' => $input->komentar_pengupload,
                             'id_verifikator' => $input->verifikasi_oleh,
-                            'nama_verifikator'=> (is_null($verifikator))? "" : $verifikator->nama,
-                            'jabatan_verifikator'=> (is_null($verifikator))? "" : Jabatan::find($verifikator->id_jabatan)->nama_jabatan,
+                            'nama_verifikator'=> (is_null($verifikator))? "-" : $verifikator->nama,
+                            'jabatan_verifikator'=> (is_null($verifikator))? "-" : Jabatan::find($verifikator->id_jabatan)->nama_jabatan,
                             'komentar_verifikator' => $input->komentar_verifikator
                         ];
             }
 
+            return null;
 
         }
         catch(Throwable $e)
         {
-            error_log('gagal muat satu inputan pegawai : '.$e);
+            error_log('Apd Data Controller Error : Kesalahan saat memuat satu inputan pegawai '.$e);
+            return false;
         }
     }
 
     #region Method hitung capaian inputan
 
-    public function hitungCapaianInputPegawai($id_pegawai, int|array &$maks, int|array &$capaian, $id_periode = 1, $target_verifikasi = 0)
+    public function hitungCapaianInputPegawai($id_pegawai, int|array &$maks, int|array &$capaian, $id_periode = null, $target_verifikasi = 0)
     {
         $pegawai = Pegawai::find($id_pegawai);
         $yang_harus_diinput = 0;
@@ -397,11 +336,11 @@ class ApdDataController extends Controller
         }
     }
 
-    public function hitungCapaianInputSektor($sektor, int|array &$maks, int|array &$capaian,$id_periode = 1, $target_verifikasi = 0)
+    public function hitungCapaianInputSektor($sektor, int|array &$maks, int|array &$capaian,$id_periode = null, $target_verifikasi = 0)
     {
         try{
 
-            if($id_periode == 1)
+            if($id_periode == null)
                 $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
 
             // ambil daftar seluruh pegawai di sektor (termasuk staff dan kasie sektor)
@@ -435,7 +374,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function hitungCapaianInputSudin($sudin, int|array &$maks, int|array &$capaian,$id_periode = 1, $target_verifikasi = 0)
+    public function hitungCapaianInputSudin($sudin, int|array &$maks, int|array &$capaian,$id_periode = null, $target_verifikasi = 0)
     {
         try{
 
@@ -468,7 +407,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function hitungCapaianInputSubbag($subbag, int|array &$maks, int|array &$capaian, $id_periode = 1, $target_verifikasi = 0)
+    public function hitungCapaianInputSubbag($subbag, int|array &$maks, int|array &$capaian, $id_periode = null, $target_verifikasi = 0)
     {
 
         try{
@@ -656,7 +595,7 @@ class ApdDataController extends Controller
      * @param string $id_jabatan jabatan yang dicari, dalam bentuk id jabatan
      * @return array|string apa saja yang akan ditampilkan untuk thumbnail
      */
-    public function bangunListInputApdDariTemplate($id_periode = 1, $id_jabatan = "")
+    public function bangunListInputApdDariTemplate($id_periode = null, $id_jabatan = "")
     {
         try {
 
@@ -666,9 +605,12 @@ class ApdDataController extends Controller
             }
 
             // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
-            if($id_periode == 1)
+            if($id_periode == null)
             {
-                $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
+                $periode = PeriodeInputApd::where('aktif',true)->get()->first();
+                if(is_null($periode))
+                    return [];
+                $id_periode = $periode->id_periode;
             }
 
             error_log("id_periode : ".$id_periode);
@@ -733,8 +675,8 @@ class ApdDataController extends Controller
 
                 $nama_apd = $model->nama_apd;
                 $merk_apd = $model->merk_apd;
-                $size_apd = $model->size->opsi;
-                $kondisi_apd = $model->kondisi->opsi;
+                $size_apd = (is_null($model->size)) ? null : $model->size->opsi;
+                $kondisi_apd = (is_null($model->kondisi)) ? null : $model->kondisi->opsi;
                 $gambar_apd = $model->image;
 
 
@@ -742,7 +684,7 @@ class ApdDataController extends Controller
                 // gambar apd harus berupa array untuk mempermudah pengecekan
                 // saat admin tidak memberikan stock gambar apd
                 if (is_null($gambar_apd)) {
-                    $gambar_apd = [];
+                    $gambar_apd = null;
                 }
                 // saat admin memberikan banyak stock gambar apd 
                 else if (str_contains($gambar_apd, '||')) {
@@ -750,8 +692,8 @@ class ApdDataController extends Controller
                 }
                 // saat admin memberikan satu stock gambar apd
                 else {
-                    $gambar = $gambar_apd;
-                    $gambar_apd = [$gambar];
+                    // $gambar = $gambar_apd;
+                    // $gambar_apd = [$gambar];
                 }
 
                 // masukan ke array kosong
@@ -1183,14 +1125,14 @@ class ApdDataController extends Controller
                 if (is_array($gbr)) {
                     $gambar = [];
                     foreach ($gbr as $g) {
-                        array_push($gambar, 'storage/' . $fc->buatPathFileApdItem($id_jenis, $id_apd) . '/' . $g);
+                        array_push($gambar, $fc->buatPathFileApdItem($id_jenis, $id_apd) . '/' . $g);
                     }
                     return $gambar;
                 } else {
                     if ($gbr == "")
                         return "";
                     else
-                        return 'storage/' . $fc->buatPathFileApdItem($id_jenis, $id_apd) . '/' . $gbr;
+                        return  $fc->buatPathFileApdItem($id_jenis, $id_apd) . '/' . $gbr;
                 }
             }
             else
@@ -1204,7 +1146,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function siapkanGambarInputanBesertaPathnya($stringGambar, $nrk, $id_jenis, $id_periode): array|string
+    public function siapkanGambarInputanBesertaPathnya($stringGambar, $nrk, $id_jenis, $id_periode): array|string|null
     {
         try {
             if(!is_null($stringGambar))
@@ -1221,24 +1163,24 @@ class ApdDataController extends Controller
                 if (is_array($gbr)) {
                     $gambar = [];
                     foreach ($gbr as $g) {
-                        array_push($gambar, 'storage/' . $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $g);
+                        array_push($gambar, $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $g);
                     }
                     return $gambar;
                 } else {
                     if ($gbr == "")
-                        return "";
+                        return null;
                     else
-                        return 'storage/' . $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $gbr;
+                        return $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $gbr;
                 }
             }
             else
             {
-                return "";
+                return null;
             }
             
         } catch (Throwable $e) {
             error_log('Gagal menyiapkan gambar inputan user ' . $e);
-            return "";
+            return false;
         }
     }
 
@@ -1246,12 +1188,31 @@ class ApdDataController extends Controller
      * @todo Fungsi untuk ambil id id_periode
      * @body Buat fungsi untuk ambil id id_periode di db untuk data id_periode saat insert data input apd
      */
-    public function ambilIdPeriodeInput($tanggal = null)
+    public function ambilIdPeriodeInput($tanggal = null, $test = false)
     {
         if($tanggal == null)
             {
-                return PeriodeInputApd::get()->first()->id_periode;
+                if($test)
+                {
+                    error_log('test true');
+                    return PeriodeInputApd::get()->first()->id_periode;  
+                }
+
+
+                $periode =  PeriodeInputApd::where('aktif',true)->first();
+
+                if(is_null($periode))
+                    return null;
+                
+                return $periode->id_periode;
             }
+        
+        $periode = PeriodeInputApd::where('tgl_awal','<=',$tanggal)->where('tgl_akhir','>=',$tanggal)->get()->first();
+
+        if(is_null($periode))
+            return null;
+        
+        return $periode->id_periode;
         // where tanggal awal < $tanggal < tanggal akhir -> value('id')
     }
 
@@ -1313,7 +1274,7 @@ class ApdDataController extends Controller
                 $gbr = "apd_no-image.png";
 
             // return path agar dapat dengan mudah ditampilkan di .blade.php
-            return 'storage/' . $path . '/' . $gbr;
+            return  $path . '/' . $gbr;
         } catch (Throwable $e) {
 
             // jika exception, berikan no image
@@ -1321,7 +1282,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function ambilStatusVerifikasi($id_jenis, $id_pegawai = "", $id_periode = 1)
+    public function ambilStatusVerifikasi($id_jenis, $id_pegawai = "", $id_periode = null)
     {
         try {
 
@@ -1329,7 +1290,7 @@ class ApdDataController extends Controller
                 $id_pegawai = Auth::user()->id_pegawai;
 
             // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
-            if($id_periode == 1)
+            if($id_periode == null)
             {
                 $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
             }
@@ -1342,7 +1303,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function ambilStatusKerusakan($id_jenis, $id_pegawai = "", $id_periode = 1)
+    public function ambilStatusKerusakan($id_jenis, $id_pegawai = "", $id_periode = null)
     {
         try {
 
@@ -1350,7 +1311,7 @@ class ApdDataController extends Controller
                 $id_pegawai = Auth::user()->id_pegawai;
 
             // jika parameter id_periode tidak diisi, maka ambil id id_periode pertama dari database
-            if($id_periode == 1)
+            if($id_periode == null)
             {
                 $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
             }
@@ -1373,6 +1334,8 @@ class ApdDataController extends Controller
     public function ekstrakStatusVerifikasi(int|verif $status, string &$label, int|string &$value)
     {
         try {
+            if(is_null($status))
+                throw new Exception('Status Kosong');
             $tes = verif::tryFrom($status);
 
             $label = $tes->label;
@@ -1380,7 +1343,7 @@ class ApdDataController extends Controller
         } catch (Throwable $e) {
             error_log('gagal ambil status verifikasi ' . $e);
             $value = 1;
-            $label = verif::tryFrom($status)->label;
+            $label = verif::tryFrom($value)->label;
         }
     }
 }

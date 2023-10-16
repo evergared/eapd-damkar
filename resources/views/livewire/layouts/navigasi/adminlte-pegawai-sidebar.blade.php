@@ -1,3 +1,6 @@
+<div>
+
+
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -68,6 +71,12 @@
                         <i class="nav-icon fas fa-tshirt"></i>
                         <p>
                             APDku
+                            @if ($notif_apdku_belum_isi > 0)
+                                <span class="badge badge-warning right">{{$notif_apdku_belum_isi}}</span>
+                            @endif
+                            @if ($notif_apdku_ditolak)
+                                <span class="badge badge-danger right">{{$notif_apdku_ditolak}}</span>
+                            @endif
                         </p>
                     </a>
                 </li>
@@ -77,6 +86,9 @@
                         <i class="nav-icon fas fa-suitcase"></i>
                         <p>
                             UKURANku
+                            @if ($notif_ukuranku_belum_isi > 0)
+                                <span class="badge badge-warning right">{{$notif_ukuranku_belum_isi}}</span>
+                            @endif
                         </p>
                     </a>
                 </li>
@@ -90,7 +102,7 @@
                     </a>
                 </li>
                 @if (auth()->user()->data->jabatan->level_user == 'admin_sektor' || auth()->user()->data->jabatan->level_user == 'admin_sudin' || auth()->user()->data->jabatan->level_user == 'admin_dinas')
-                <li class="nav-item {{ (Route::currentRouteName() =='print-laporan' || Route::currentRouteName() =='progres-sektor' || Route::currentRouteName() =='data-ukuran' || Route::currentRouteName() =='data-distribusi')? 'menu-open' :''}}">
+                <li class="nav-item {{ (Route::currentRouteName() =='print-laporan' || Route::currentRouteName() =='progress-apd' || Route::currentRouteName() =='data-ukuran' || Route::currentRouteName() =='data-distribusi')? 'menu-open' :''}}">
                     <a 
                         class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
@@ -100,8 +112,8 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item {{ (Route::currentRouteName() =='progres-sektor')? 'menu-open' :''}}">
-                          <a href="{{route('progres-sektor')}}" class="nav-link {{ (Route::currentRouteName() =='progres-sektor')? 'active' :''}}">
+                        <li class="nav-item {{ (Route::currentRouteName() =='progress-apd')? 'menu-open' :''}}">
+                          <a href="{{route('progress-apd')}}" class="nav-link {{ (Route::currentRouteName() =='progress-apd')? 'active' :''}}">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Progres Inputan</p>
                           </a>
@@ -158,6 +170,66 @@
                 </li>
                 @endif
 
+
+                @if (auth()->user()->data->isPenanggungJawab())
+
+                <li class="nav-header border-bottom mb-3"></li>
+
+                    <li class="nav-item {{ (Route::currentRouteName() =='progress-apd' || Route::currentRouteName() =='progress-ukuran')? 'menu-open' :''}}">
+                        <a 
+                            class="nav-link">
+                            <i class="fas fa-marker nav-icon"></i>
+                            <p>
+                                Progress Anggota
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item {{ (Route::currentRouteName() =='progress-apd')? 'menu-open' :''}}">
+                            <a href="{{route('progress-apd')}}" class="nav-link {{ (Route::currentRouteName() =='progress-apd')? 'active' :''}}">
+                                <i class="fas fa-tshirt nav-icon"></i>
+                                <p>Input APD</p>
+                            </a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item {{ (Route::currentRouteName() =='progress-ukuran')? 'menu-open' :''}}">
+                            <a href="{{route('progress-ukuran')}}" class="nav-link {{ (Route::currentRouteName() =='progress-ukuran')? 'active' :''}}">
+                                <i class="fas fa-ruler nav-icon"></i>
+                                <p>Input Ukuran</p>
+                            </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item {{ (Route::currentRouteName() =='data-apd' || Route::currentRouteName() =='data-ukuran')? 'menu-open' :''}}">
+                        <a 
+                            class="nav-link">
+                            <i class="fas fa-server nav-icon"></i>
+                            <p>
+                                Data Inputan
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item {{ (Route::currentRouteName() =='data-apd')? 'menu-open' :''}}">
+                            <a href="{{route('data-apd')}}" class="nav-link {{ (Route::currentRouteName() =='data-apd')? 'active' :''}}">
+                                <i class="fas fa-hard-hat nav-icon"></i>
+                                <p>APD Terinput</p>
+                            </a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item {{ (Route::currentRouteName() =='data-ukuran')? 'menu-open' :''}}">
+                            <a href="{{route('data-ukuran')}}" class="nav-link {{ (Route::currentRouteName() =='data-ukuran')? 'active' :''}}">
+                                <i class="fas fa-ruler-combined nav-icon"></i>
+                                <p>Ukuran Terinput</p>
+                            </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
+
                 <li class="nav-header border-bottom"></li>
                 
                 <li class="nav-item">
@@ -179,3 +251,4 @@
 
     <!-- /.sidebar -->
 </aside>
+</div>

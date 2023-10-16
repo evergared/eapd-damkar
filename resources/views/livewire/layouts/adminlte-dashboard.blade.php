@@ -53,8 +53,13 @@
     @vite('resources/js/adminlte-dashboard.js')
     @vite('public/admin-lte/adminlte.min.js')
     @vite('public/admin-lte/demo.js')
-    @vite('public/admin-lte/filter.js')
+
+  
     @vite('public/admin-lte/ekko-lightbox.mis.js')
+
+    {{-- @vite('public/admin-lte/filter.js') --}}
+    <script src="{{asset('admin-lte/filter.js')}}"></script>
+
     @include('helper.script-modal')
     @livewireScripts
 </body>

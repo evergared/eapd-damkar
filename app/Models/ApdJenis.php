@@ -19,7 +19,7 @@ class ApdJenis extends Model
         'nama_jenis'
     ];
 
-    public function input_apd()
+    public function inputApd()
     {
         return $this->hasMany(InputApd::class, 'id_jenis', 'id_jenis');
     }

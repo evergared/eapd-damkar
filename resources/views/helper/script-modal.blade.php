@@ -31,18 +31,20 @@ agar modal tidak hilang sendiri dan layar dapat diklik setelah modal dipanggil.
 //   setTimeout(() => $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack'));
 // });
 
-    function modal(modalId,data = null, eventName = modalId)
-    {
-        // javascript tidak memiliki associative array,
-        // jadi pastikan menggunakan array biasa 
-        // jika akan passing parameter ke component
-        // dan pastikan juga untuk mengingat urutan ke berapa masing-masing data
+    // function modal(modalId,data = null, eventName = modalId)
+    // {
+    //     // javascript tidak memiliki associative array,
+    //     // jadi pastikan menggunakan array biasa 
+    //     // jika akan passing parameter ke component
+    //     // dan pastikan juga untuk mengingat urutan ke berapa masing-masing data
 
-        Livewire.emit(eventName,data)
-        $('#'+modalId).modal('show')
-    }
+    //     Livewire.emit(eventName,data)
+    //     $('#'+modalId).modal('show')
+    // }
 
-
+    window.addEventListener('panggilModal', event=> {
+            $('#'+event.detail.id).modal('show')
+        })
 
 
 </script>
