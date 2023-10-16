@@ -25,6 +25,7 @@ class InputApd extends Model
         'id_apd',
         'size',
         'kondisi',
+        'no_seri',
         'image',
         'komentar_pengupload',
         'data_diupdate',

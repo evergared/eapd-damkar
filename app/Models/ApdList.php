@@ -21,6 +21,8 @@ class ApdList extends Model
         'merk',
         'id_size',
         'id_kondisi',
+        'input_no_seri',
+        'strict_no_seri',
         'id_referensi',
         'sumber_id_referensi',
         'image'
@@ -44,5 +46,10 @@ class ApdList extends Model
     public function input_apd()
     {
         return $this->hasMany(InputApd::class, 'id_apd', 'id_apd');
+    }
+
+    public function no_seri()
+    {
+        return $this->hasOne(ApdNoSeri::class, 'id_apd','id_apd');
     }
 }
