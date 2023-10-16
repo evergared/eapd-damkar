@@ -20,6 +20,7 @@ return new class extends Migration
                 $table->foreignUlid('id_pegawai')->nullable();
                 $table->foreignUlid('id_pegawai_plt')->nullable();
                 $table->string('id_penempatan')->nullable();
+                $table->string('tipe')->nullable();
                 $table->string('password');
                 $table->rememberToken()->nullable();
             });

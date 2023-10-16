@@ -1,5 +1,5 @@
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-light-info elevation-4">
+<aside class="main-sidebar sidebar-dark-info elevation-4">
     <!-- Brand Logo -->
     <a href="{{route('admin-dashboard')}}" class="brand-link">
         <img src="{{asset('damkar/logo_damkar_dki.png')}}" alt="Damkar" class="brand-image"

@@ -7,6 +7,7 @@ use App\Models\InputApd;
 use App\Models\InputApdTemplate;
 use App\Models\Pegawai;
 use App\Models\Jabatan;
+use App\Models\Penempatan;
 use App\Models\PeriodeInputApd;
 use App\Models\UkuranPegawai;
 use Carbon\Carbon;
@@ -22,11 +23,10 @@ class ExampleTest extends TestCase
      */
     public function test_that_true_is_true()
     {
-            $periode = PeriodeInputApd::where('tgl_awal','like','%2023%')
-            ->orWhere('tgl_akhir','like','%2023%')
-            ->get()->toArray();
+        $fetch_penempatan = Penempatan::query();
 
-            print_r($periode);
+
+            print_r($fetch_penempatan);
             $this->assertTrue(true);
 
     }

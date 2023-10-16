@@ -24,6 +24,7 @@ class Admin extends Authenticatable
         'id_pegawai',
         'id_pegawai_plt',
         'id_penempatan',
+        'tipe',
         'password'
     ];
 
