@@ -71,3 +71,75 @@ Breadcrumbs::for('data-ukuran', function (BreadcrumbTrail $trail) {
     $trail->push('Data Input Ukuran Anggota', route('data-ukuran'));
 });
 
+
+// admin
+
+Breadcrumbs::for('admin-dashboard', function (BreadcrumbTrail $trail) {
+    $trail->push('Dashboard Admin', route('admin-dashboard'));
+});
+
+Breadcrumbs::for('admin-progress-apd', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin-dashboard');
+    $trail->push('Inputan APD Pegawai Periode Ini', route('admin-progress-apd'));
+});
+
+Breadcrumbs::for('admin-progress-ukuran', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin-dashboard');
+    $trail->push('Inputan Ukuran Pegawai Periode Ini', route('admin-progress-ukuran'));
+});
+
+Breadcrumbs::for('admin-data-apd-inputan', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin-dashboard');
+    $trail->push('Data Inputan APD Pegawai', route('admin-data-apd-inputan'));
+});
+
+Breadcrumbs::for('admin-data-apd-no_seri', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin-dashboard');
+    $trail->push('Data Nomer Seri APD', route('admin-data-apd-no_seri'));
+});
+
+Breadcrumbs::for('admin-data-apd-pensiunan', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin-dashboard');
+    $trail->push('Data Inputan APD Pegawai Pensiunan', route('admin-data-apd-pensiunan'));
+});
+
+Breadcrumbs::for('admin-data-apd-rekap', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin-dashboard');
+    $trail->push('Rekap Data Inputan APD Pegawai', route('admin-data-apd-rekap'));
+});
+
+Breadcrumbs::for('admin-data-ukuran-inputan', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin-dashboard');
+    $trail->push('Data Ukuran Pegawai', route('admin-data-ukuran-inputan'));
+});
+
+Breadcrumbs::for('admin-data-ukuran-rekap', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin-dashboard');
+    $trail->push('Rekap Data Ukuran Pegawai', route('admin-data-ukuran-rekap'));
+});
+
+Breadcrumbs::for('admin-pengaturan-apd-barang', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin-dashboard');
+    $trail->push('Atur Barang APD', route('admin-pengaturan-apd-barang'));
+});
+
+Breadcrumbs::for('admin-pengaturan-jenis-barang', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin-dashboard');
+    $trail->push('Atur Jenis APD', route('admin-pengaturan-jenis-barang'));
+});
+
+Breadcrumbs::for('admin-pengaturan-kepegawaian', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin-dashboard');
+    $trail->push('Kepegawaian Web EAPD', route('admin-pengaturan-kepegawaian'));
+});
+
+Breadcrumbs::for('admin-pengaturan-periode', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin-dashboard');
+    $trail->push('Atur Periode Input APD', route('admin-pengaturan-periode'));
+});
+
+Breadcrumbs::for('admin-pengaturan-user', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin-dashboard');
+    $trail->push('Atur Akun User', route('admin-pengaturan-user'));
+});
+

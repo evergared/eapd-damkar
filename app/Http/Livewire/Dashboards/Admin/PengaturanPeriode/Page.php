@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Dashboards\Admin\PeriodeSetting;
+namespace App\Http\Livewire\Dashboards\Admin\PengaturanPeriode;
 
 use App\Http\Controllers\PeriodeInputController;
 use App\Models\ApdJenis;
@@ -16,7 +16,7 @@ class Page extends Component
 {
     public function render()
     {
-        return view('livewire.dashboards.admin.periode-setting.page')->layout("livewire.layouts.adminlte-dashboard", ["page_title" => "Halaman Kepegawaian Admin"]);
+        return view('livewire.dashboards.admin.pengaturan-periode.page')->layout("livewire.layouts.adminlte-dashboard", ["page_title" => "Pengaturan Periode Input APD"]);
     }
     // variabel untuk card form periode
     public

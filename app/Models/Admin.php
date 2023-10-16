@@ -31,4 +31,14 @@ class Admin extends Authenticatable
         'password',
         'remember_token'
     ];
+
+    public function data()
+    {
+        return $this->belongsTo(Pegawai::class, 'id_pegawai', 'id_pegawai');
+    }
+
+    public function plt()
+    {
+        return $this->belongsTo(Pegawai::class, 'id_pegawai_plt', 'id_pegawai');
+    }
 }
