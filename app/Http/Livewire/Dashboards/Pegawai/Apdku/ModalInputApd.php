@@ -35,8 +35,8 @@ class ModalInputApd extends Component
     public 
         $opsi_dropdown_keberadaan = [
             ['value'=> 'Ada', 'text' => 'Sudah Terima dan Ada'],
-            ['value'=> 'hilang', 'text' => 'Sudah Terima Tapi Hilang'],
-            ['value'=> 'belum terima', 'text' => 'APD Belum Diterima'],
+            ['value'=> 'Hilang', 'text' => 'Sudah Terima Tapi Hilang'],
+            ['value'=> 'Belum Terima', 'text' => 'APD Belum Diterima'],
         ],
         $opsi_dropdown_size_apd = [],
         $opsi_dropdown_list_apd = [],
@@ -351,7 +351,7 @@ class ModalInputApd extends Component
             $kondisi = null;
             $gambar = null;
 
-            if($this->status_keberadaan_apd_user == 'ada')
+            if($this->status_keberadaan_apd_user == 'Ada')
             {
                 
                 $kondisi = StatusApd::tryFrom($this->kondisi_apd_user)->value;

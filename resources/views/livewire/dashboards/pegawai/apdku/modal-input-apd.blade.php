@@ -12,7 +12,7 @@
                     </div>
                     <div class="modal-body overlay-wrapper">
 
-                        <div  wire:loading wire.target='inisiasiModalInput'>
+                        <div  wire:loading wire:target='inisiasiModalInput'>
                             <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Memperbarui Data...</div></div>
                         </div>
 
@@ -439,13 +439,13 @@
                                         </div>
                                     @endif
                                         
-                                @elseif($status_keberadaan_apd_user == "hilang")
+                                @elseif($status_keberadaan_apd_user == "Hilang")
         
                                         <div class="text-danger">
                                             <h4>Status APD anda <strong><u>Hilang</u></strong>, pastikan anda menghubungi admin yang bertanggung jawab di tempat anda dan ikuti instruksi selanjutnya.</h4>
                                         </div>
         
-                                @elseif($status_keberadaan_apd_user == "belum terima")
+                                @elseif($status_keberadaan_apd_user == "Belum Terima")
                                     <div>
                                         <h4>(opsional) Tambahkan keterangan dibawah.</h4>
                                     </div>
