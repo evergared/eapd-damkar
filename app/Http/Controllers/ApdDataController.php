@@ -11,6 +11,7 @@ use App\Models\InputApdTemplate;
 use App\Models\Jabatan;
 use App\Enum\VerifikasiApd as verif;
 use App\Enum\StatusApd as status;
+use App\Models\Admin;
 use App\Models\ApdJenis;
 use App\Models\InputApd;
 use App\Models\Pegawai;
@@ -216,6 +217,7 @@ class ApdDataController extends Controller
                 $verifikator = Pegawai::find($input->verifikasi_oleh);
 
                 return [
+                            'id_inputan' => $input->id_inputan,
                             'id_jenis' => $id_jenis,
                             'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
                             'id_apd' => $input->id_apd,
@@ -1346,4 +1348,62 @@ class ApdDataController extends Controller
             $label = verif::tryFrom($value)->label;
         }
     }
+
+    #region Dagelan Admin
+
+    /**
+     * Admin verif Inputan. Sukarela atau terpaksa.
+     * @param string $id_inputan id inputan
+     * @param int $target_verifikasi liat enum VerifikasiApd bang
+     * @param string $komentar biasa, sedang, atau pedas tergantung kreatifitas admin dalam merangkai kata
+     * @param string $id_admin si admin
+     */
+    public function adminVerifikasiInputan($id_inputan, $target_verifikasi = 3, $komentar = '', $id_admin = null):bool
+    {
+        try{
+
+            if(is_null($id_admin))
+                $admin = Auth::user();
+            else
+                $admin = Admin::find($id_admin);
+            
+            if(is_null($admin))
+                throw new Exception("Admin tidak dapat ditemukan");
+            
+            $inputan = InputApd::find($id_inputan);
+
+            if(is_null($inputan))
+                throw new Exception('Tidak ditemukan inputan dengan id '.$id_inputan);
+
+            $time = now();
+
+            $verifikator = '';
+            $jabatan = '';
+
+            if(!is_null($admin->id_pegawai) || !is_null($admin->id_pegawai_plt))
+            {
+                $verifikator = (!is_null($admin->id_pegawai_plt))? $admin->plt->nama : $admin->data->nama;
+                $jabatan = (!is_null($admin->id_pegawai_plt))? $admin->plt->jabatan->nama_jabatan : $admin->data->jabatan->nama_jabatan;
+            }
+            
+            $inputan->verifikasi_status = verif::tryFrom($target_verifikasi)->value;
+            $inputan->komentar_verifikator = $komentar;
+            $inputan->verifikasi_oleh = $verifikator;
+            $inputan->jabatan_verifikator = $jabatan;
+            $inputan->verifikasi_diupdate = $time;
+
+            $inputan->save();
+
+            return true;
+
+        }
+        catch(Throwable $e)
+        {
+            $time = now();
+            error_log('Apd Data Controller error ('.$time.') : kesalahan saat admin verifikasi inputan '.$e);
+            Log::error('Apd Data Controller error ('.$time.') : kesalahan saat admin verifikasi inputan '.$e);
+            return false;
+        }
+    }
+    #endregion
 }

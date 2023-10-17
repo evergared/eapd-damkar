@@ -48,6 +48,13 @@
                                           </div>
                                     </div>
                                 </div>
+                                {{-- loading dropdown start --}}
+                                <div class="row" wire:loading wire:target='changeDropdownWilayah, changeDropdownPenempatan'>
+                                    <div class="spinner-grow text-info" role="status">
+                                        <span class="sr-only">Memuat...</span>
+                                    </div><span class="mx-2 text-info">Memuat data......</span>
+                                </div>
+                                {{-- loading dropdown end --}}
                                 @if ($model_dropdown_penempatan)
                                     <div class="row">
                                         <h4>Rangkuman Inputan</h4>
@@ -210,14 +217,16 @@
                                                 </ul>
                                             </div>
                                             <!-- /.card-header -->
-                                            <div class="card-body table-responsive">
+                                            <div class="card-body">
                                                 @if ($model_dropdown_penempatan)
                                                     <div class="tab-content">
                                                         <div class="tab-pane active" id="by-anggota">
                                                             @if ($detail_by_personil_nama_pegawai)
                                                                 <i><small class="text-muted">Pegawai terakhir yang dilihat : <strong>{{$detail_by_personil_nama_pegawai}}</strong></small></i>
                                                             @endif
-                                                        <livewire:dashboards.admin.periode-berjalan.apd.tabel-terinput-by-personil>
+                                                            <div class="col-lg-12">
+                                                                <livewire:dashboards.admin.periode-berjalan.apd.tabel-terinput-by-personil>
+                                                            </div>
                                                         </div>
                                                         <div class="tab-pane" id="by-inputan">
                                                             <livewire:dashboards.admin.periode-berjalan.apd.tabel-terinput-by-inputan>

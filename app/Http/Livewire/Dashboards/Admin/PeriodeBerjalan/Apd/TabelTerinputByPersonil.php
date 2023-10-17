@@ -36,7 +36,7 @@ class TabelTerinputByPersonil extends DataTableComponent
         ]);
 
         $this->setTableAttributes([
-            'class' => "table-responsive table-head-fixed",
+            'class' => "table-head-fixed",
         ]);
 
         $this->setTdAttributes(function(){
