@@ -121,7 +121,7 @@
                                                 </div>
 
                                                 <div class="col-12">
-                                                @if($status_keberadaan_apd_user == "ada")
+                                                @if($status_keberadaan_apd_user == "Ada")
                                                     @if ($id_apd_user != "")
                                                         @if(is_array($template_gambar_apd))
                                                             {{-- Script untuk preview gambar apd Start--}}
@@ -357,7 +357,7 @@
     
                                     <div class="form-group">
                                         <label>Status Keberadaan APD : </label>
-                                        <select class="form-control" wire:model="status_keberadaan_apd_user" wire:change='changeDropdownKeberadaan'>
+                                        <select class="form-control" wire:model.defer="status_keberadaan_apd_user" wire:change='changeDropdownKeberadaan'>
                                             <option value="" disabled>APD Ada/Hilang/Belum Terima ?</option>
                                             @foreach ($opsi_dropdown_keberadaan as $item)
                                                 <option value="{{$item['value']}}">{{$item['text']}}</option>
@@ -369,7 +369,7 @@
                                     </div>
     
                                     
-                                @if ($status_keberadaan_apd_user == "ada")
+                                @if ($status_keberadaan_apd_user == "Ada")
                                     <div class="form-group">
                                         <label>Model</label>
                                         <select class="form-control" wire:model='id_apd_user'

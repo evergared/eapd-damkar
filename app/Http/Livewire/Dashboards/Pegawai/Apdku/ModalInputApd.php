@@ -34,7 +34,7 @@ class ModalInputApd extends Component
     // untuk dropdown keberadaan apd
     public 
         $opsi_dropdown_keberadaan = [
-            ['value'=> 'ada', 'text' => 'Sudah Terima dan Ada'],
+            ['value'=> 'Ada', 'text' => 'Sudah Terima dan Ada'],
             ['value'=> 'hilang', 'text' => 'Sudah Terima Tapi Hilang'],
             ['value'=> 'belum terima', 'text' => 'APD Belum Diterima'],
         ],
@@ -214,6 +214,7 @@ class ModalInputApd extends Component
             else
             {
 
+                $this->status_keberadaan_apd_user = $this->status_keberadaan_apd_user_sebelum = $inputan_sebelumnya['status_keberadaan'];
                 $this->terakhir_diisi = $inputan_sebelumnya['data_terakhir_update'];
                 $this->terakhir_diverif = $inputan_sebelumnya['verifikasi_terakhir_update'];
                 $this->id_apd_user = $this->id_apd_user_sebelum = $inputan_sebelumnya['id_apd'];
@@ -221,7 +222,6 @@ class ModalInputApd extends Component
                 $this->kondisi_apd_user = $this->kondisi_apd_user_sebelum = StatusApd::tryFrom($inputan_sebelumnya['status_kerusakan'])->value;
                 $this->gambar_apd_user_sebelum = $inputan_sebelumnya['gambar_apd'];
                 $this->komentar_apd_user = $this->komentar_apd_user_sebelum = $inputan_sebelumnya['komentar_pengupload'];
-                $this->status_keberadaan_apd_user = $this->status_keberadaan_apd_user_sebelum = $inputan_sebelumnya['status_keberadaan'];
                 $this->komentar_verifikator = $inputan_sebelumnya['komentar_verifikator'];
                 $this->status_verifikasi = $inputan_sebelumnya['enum_verifikasi'];
                 $this->label_verifikasi = $inputan_sebelumnya['status_verifikasi'];
@@ -232,7 +232,9 @@ class ModalInputApd extends Component
                 $this->warna_verifikasi = $inputan_sebelumnya['warna_verifikasi'];
                 $this->warna_keberadaan = $inputan_sebelumnya['warna_keberadaan'];
 
+                $this->refreshDropdownListApd();
                 $this->refreshGambarTemplate();
+                
             }
 
         }
