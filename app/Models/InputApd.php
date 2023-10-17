@@ -33,7 +33,7 @@ class InputApd extends Model
         'jabatan_verifikator',
         'verifikasi_status',
         'komentar_verifikator',
-        'terakhir_verifikasi'
+        'verifikasi_diupdate'
     ];
 
     public function pegawai()

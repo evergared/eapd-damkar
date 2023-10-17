@@ -50,12 +50,7 @@ class TabelTerinputByInputan extends DataTableComponent
                 ->sortable(),
             Column::make("Komentar verifikator", "komentar_verifikator")
                 ->sortable(),
-            Column::make("Terakhir verifikasi", "terakhir_verifikasi")
-                ->sortable(),
-            Column::make("Created at", "created_at")
-                ->sortable(),
-            Column::make("Updated at", "updated_at")
-                ->sortable(),
+            
         ];
     }
 }

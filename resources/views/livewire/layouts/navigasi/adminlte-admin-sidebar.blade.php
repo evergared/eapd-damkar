@@ -23,7 +23,7 @@
         </div>
 
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="info">
+            <div class="info text-light">
                         
                 @if (auth()->user()->id_pegawai_plt)
                     <strong>PLT : </strong><br>
