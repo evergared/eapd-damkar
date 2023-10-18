@@ -11,6 +11,7 @@ use App\Models\InputApdTemplate;
 use App\Models\Jabatan;
 use App\Enum\VerifikasiApd as verif;
 use App\Enum\StatusApd as status;
+use App\Enum\StatusApd;
 use App\Models\Admin;
 use App\Models\ApdJenis;
 use App\Models\InputApd;
@@ -221,6 +222,7 @@ class ApdDataController extends Controller
                             'id_jenis' => $id_jenis,
                             'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
                             'id_apd' => $input->id_apd,
+                            'no_seri' => $input->no_seri,
                             'size_apd' => ($input->size)?$input->size:"-",
                             'data_terakhir_update' => $input->data_diupdate,
                             'verifikasi_terakhir_update' => (is_null($input->verifikasi_diupdate))? '-' : $input->verifikasi_diupdate,
@@ -275,7 +277,7 @@ class ApdDataController extends Controller
             }
 
             // muat apa saja yang telah diinput oleh si pegawai
-            $inputan = $this->muatInputanPegawai($id_periode,$pegawai->id,$target_verifikasi);
+            $inputan = $this->muatInputanPegawai($id_periode,$pegawai->id_pegawai,$target_verifikasi);
 
             // apakah pegawai pernah menginput
             if(is_array($inputan) && count($inputan) !== 0)
@@ -590,6 +592,61 @@ class ApdDataController extends Controller
 
     }
 #endregion
+
+    #region Method hitung barang
+    public function hitungInputanBerdasarkanStatus($id_pegawai = null, $id_periode = null, $target_status = 'ada')
+    {
+        try{
+
+            if(is_null($id_pegawai))
+                $pegawai = Auth::user();
+            else
+                $pegawai = Pegawai::find($id_pegawai);
+            
+            if(is_null($pegawai))
+                throw new Exception('Pegawai tidak dapat ditemukan');
+            
+
+            if(is_null($id_periode))
+            {
+                $pic = new PeriodeInputController;
+                $id_periode = $pic->ambilIdPeriodeInput();
+            }
+
+            $inputan =  InputApd::query()
+                            ->where('id_pegawai',$id_pegawai)
+                            ->where('id_periode',$id_periode);
+
+            if($target_status == 'ada')
+            {
+                $inputan = $inputan->where(function($query)
+                {
+                    return $query->where('kondisi','!=',status::belumTerima()->value)
+                                ->where('kondisi','!=',status::hilang()->value);
+                });
+            }
+            else
+            {
+                $status = status::tryFrom($target_status);
+
+                if(is_null($status))
+                    throw new Exception('Status tidak di ketahui');
+
+                
+                $inputan = $inputan->where('kondisi',$status->value);
+            }
+            
+            return $inputan->get()->count();
+
+
+        }
+        catch(Throwable $e)
+        {
+            error_log('error hitung inputan berdasarkan status '.$e);
+            return 0;
+        }
+    }
+    #endregion
 
     /**
      * Bangun list yang akan digunakan untuk thumbnail di halaman apdku.

@@ -85,38 +85,38 @@
                                 </td>
                                 <td class="text-center text-wrap my-auto align-middle">
                                     <div class="row my-n2">
-                                        <strong class="d-none d-sm-block">Waktu Isi : </strong>
+                                        <small class="d-none d-sm-block"><strong>Waktu Isi : </strong></small>
                                     </div>
                                     <div class="row my-n2">
-                                      {{$item['data_terakhir_update']}}
+                                    {{$item['data_terakhir_update']}}
                                     </div>
                                     <div class="row my-n2">
-                                        <strong class="d-none d-sm-block">Kondisi : </strong><span class="mx-1 badge badge-{{$item['warna_kerusakan']}} text-center text-wrap my-auto align-middle">{{$item['status_kerusakan']}}</span>
+                                        <small class="d-none d-sm-block"><strong>Kondisi : </strong></small><span class="mx-1 badge badge-{{$item['warna_kerusakan']}} text-center text-wrap my-auto align-middle">{{$item['status_kerusakan']}}</span>
                                     </div>
                                     <div class="row my-n2">
-                                        <strong class="d-none d-sm-block">Komentar Pengupload : </strong>
-                                        <strong class="d-block d-sm-none">Komentar : </strong>
+                                        <small class="d-none d-sm-block"><strong>Komentar Pengupload : </strong></small>
+                                        <small class="d-block d-sm-none"><strong>Komentar : </strong></small>
                                     </div>
                                     <div class="row my-n2">
-                                        <p class="mx-1 my-auto align-middle">{{($item['komentar_pengupload'])? $item['komentar_pengupload'] : " - "}}</p>
+                                        <p class="mx-1 my-auto align-middle"><small>{{($item['komentar_pengupload'])? $item['komentar_pengupload'] : " - "}}</small></p>
                                     </div>
                                 </td>
                                 <td class="text-center text-wrap my-auto align-middle">
                                     <div class="row my-n2">
-                                        <strong class="d-none d-sm-block">Waktu Verif : </strong>
+                                        <small class="d-none d-sm-block"><strong>Waktu Verif : </strong></small>
                                     </div>
                                     <div class="row my-n2">
-                                      {{$item['verifikasi_terakhir_update']}}
+                                    {{$item['verifikasi_terakhir_update']}}
                                     </div>
                                     <div class="row my-n2">
-                                        <strong class="d-none d-sm-block">Status : </strong><span class="mx-1 badge badge-{{$item['warna_verifikasi']}} text-center text-wrap my-auto align-middle">{{$item['status_verifikasi']}}</span>
+                                        <small class="d-none d-sm-block"><strong>Status : </strong></small><span class="mx-1 badge badge-{{$item['warna_verifikasi']}} text-center text-wrap my-auto align-middle">{{$item['status_verifikasi']}}</span>
                                     </div>
                                     <div class="row my-n2">
-                                        <strong class="d-none d-sm-block">Komentar Verifikator : </strong>
-                                        <strong class="d-block d-sm-none">Komentar :</strong>
+                                        <small class="d-none d-sm-block"><strong>Komentar Verifikator : </strong></small>
+                                        <small class="d-block d-sm-none"><strong>Komentar :</strong></small>
                                     </div>
                                     <div class="row my-n2">
-                                        <p class="mx-1 my-auto align-middle">{{($item['komentar_verifikator'])?$item['komentar_verifikator'] : " - "}}</p>
+                                        <p class="mx-1 my-auto align-middle"><small>{{($item['komentar_verifikator'])?$item['komentar_verifikator'] : " - "}}</small></p>
                                     </div>
                                 </td>
                                 <td class="text-center text-wrap my-auto align-middle">

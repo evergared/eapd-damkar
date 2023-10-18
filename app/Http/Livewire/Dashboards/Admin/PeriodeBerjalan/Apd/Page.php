@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\Dashboards\Admin\PeriodeBerjalan\Apd;
 
 use App\Http\Controllers\ApdDataController;
+use App\Models\ApdList;
+use App\Models\InputApd;
 use App\Models\Pegawai;
 use App\Models\Penempatan;
 use App\Models\Wilayah;
@@ -16,7 +18,11 @@ class Page extends Component
 {
     public
         $opsi_dropdown_wilayah = [],
-        $opsi_dropdown_penempatan = [];
+        $opsi_dropdown_penempatan = [],
+        $opsi_dropdown_verifikasi = [
+            ['value' => '3', 'text'=> 'Verifikasi'],
+            ['value' => '4', 'text'=> 'Tolak'],
+        ];
     
     public
         $model_dropdown_wilayah = '',
@@ -50,7 +56,20 @@ class Page extends Component
         $detail_by_personil_id_pegawai = '',
         $detail_by_personil_nama_pegawai = '',
         $detail_by_personil_penempatan_pegawai = '',
-        $detail_by_personil_data_inputan = [];
+        $detail_by_personil_data_inputan = [],
+        $detail_by_personil_entry_detail = null,
+        $detail_by_personil_entry_nama_apd = '';
+    
+    public
+        $gambar_apd_template = null,
+        $gambar_terpilih = null;
+
+    public
+        $path_gambar = 'storage/';
+    
+    public
+        $admin_action_verifikasi = "",
+        $admin_action_komentar = "";
 
     protected $listeners =[
         'detailByPersonil'
@@ -59,6 +78,9 @@ class Page extends Component
 #region Livewire lifecycle
     public function render()
     {
+        $this->hitungCapaian();
+        $this->hitungRangkumanKeberadaan();
+        $this->hitungRangkumanKerusakan();
         return view('livewire.dashboards.admin.periode-berjalan.apd.page')->layout("livewire.layouts.adminlte-dashboard", ["page_title" => "Inputan APD Saat ini"]);
     }
 
@@ -150,7 +172,24 @@ public function hitungCapaian()
             if($this->model_dropdown_penempatan == "")
                 return;
             
-            
+            $list_pegawai = Pegawai::where('id_penempatan','like',$this->model_dropdown_penempatan.'%')->get()->all();
+
+            $adc = new ApdDataController;
+
+            foreach($list_pegawai as $pegawai)
+            {
+                $maks = 0;
+                $terinput = 0;
+                $terverif = 0;
+                $adc->hitungCapaianInputPegawai($pegawai->id_pegawai,$maks,$terinput,null);
+                $adc->hitungCapaianInputPegawai($pegawai->id_pegawai,$maks,$terverif,null,3);
+
+                $this->value_max_capaian += $maks;
+                $this->value_terinput_capaian += $terinput;
+                $this->value_terverif_capaian += $terverif;
+            }
+
+            error_log('value max '.$this->value_max_capaian);
 
         }
         catch(Throwable $e)
@@ -176,7 +215,16 @@ public function hitungRangkumanKeberadaan()
             if($this->model_dropdown_penempatan == "")
                 return;
             
-            
+                $list_pegawai = Pegawai::where('id_penempatan','like',$this->model_dropdown_penempatan.'%')->get()->all();
+
+                $adc = new ApdDataController;
+
+                foreach($list_pegawai as $pegawai)
+                {
+                    $this->value_keberadaan_ada += $adc->hitungInputanBerdasarkanStatus($pegawai->id_pegawai);
+                    $this->value_keberadaan_belum += $adc->hitungInputanBerdasarkanStatus($pegawai->id_pegawai,null,'belumTerima');
+                    $this->value_keberadaan_hilang += $adc->hitungInputanBerdasarkanStatus($pegawai->id_pegawai,null,'hilang');
+                }
 
         }
         catch(Throwable $e)
@@ -203,7 +251,17 @@ public function hitungRangkumanKerusakan()
             if($this->model_dropdown_penempatan == "")
                 return;
             
-            
+                $list_pegawai = Pegawai::where('id_penempatan','like',$this->model_dropdown_penempatan.'%')->get()->all();
+
+                $adc = new ApdDataController;
+
+                foreach($list_pegawai as $pegawai)
+                {
+                    $this->value_kerusakan_baik += $adc->hitungInputanBerdasarkanStatus($pegawai->id_pegawai,null,'baik');
+                    $this->value_kerusakan_ringan += $adc->hitungInputanBerdasarkanStatus($pegawai->id_pegawai,null,'rusakRingan');
+                    $this->value_kerusakan_sedang += $adc->hitungInputanBerdasarkanStatus($pegawai->id_pegawai,null,'rusakSedang');
+                    $this->value_kerusakan_berat += $adc->hitungInputanBerdasarkanStatus($pegawai->id_pegawai,null,'rusakBerat');
+                }
 
         }
         catch(Throwable $e)
@@ -254,6 +312,8 @@ public function hitungRangkumanKerusakan()
         error_log('dropdown changed');
         $this->emit('tabelGantiPenempatan',$this->model_dropdown_penempatan);
         $this->hitungCapaian();
+        $this->hitungRangkumanKeberadaan();
+        $this->hitungRangkumanKerusakan();
     }
 #endregion
 
@@ -270,6 +330,7 @@ public function hitungRangkumanKerusakan()
             $adc = new ApdDataController;
             $this->detail_by_personil_data_inputan = $adc->muatInputanPegawai(null, $this->detail_by_personil_id_pegawai);
 
+            $this->dispatchBrowserEvent('kendali-ke-detail');
         }
         catch(Throwable $e)
         {
@@ -283,8 +344,92 @@ public function hitungRangkumanKerusakan()
             Log::error('Page @ Dashboard Progress APD Admin ref ('.$this->error_time_detail_by_personil.') : Kesalahan saat melihat detail by personil '.$e);
             $this->dispatchBrowserEvent('jsAlert',['pesan' => 'Kesalahan saat melihat detail : '.$this->error_time_detail_by_personil]);
         }
-        error_log('panggil detail by personil : '.$target_pegawai);
-        $this->dispatchBrowserEvent('kendali-ke-detail');
+    }
+#endregion
+
+#region detail by personil
+    public function detailByPersonilLihatDetail($value)
+    {
+        try{
+            $this->error_time_alert = null;
+            $this->admin_action_komentar = '';
+            $this->admin_action_verifikasi = '';
+            $this->detail_by_personil_entry_detail = null;
+            if(array_key_exists($value,$this->detail_by_personil_data_inputan))
+            {
+                $this->detail_by_personil_entry_detail = $this->detail_by_personil_data_inputan[$value];
+                $this->detail_by_personil_entry_nama_apd = $this->detail_by_personil_entry_detail['nama_jenis'];
+
+                $apd = ApdList::where('id_apd', $this->detail_by_personil_entry_detail['id_apd'])->first();
+                if(!is_null($apd))
+                {
+                    $adc = new ApdDataController;
+                    $this->gambar_apd_template = $adc->siapkanGambarTemplateBesertaPathnya($apd->image, $this->detail_by_personil_entry_detail['id_jenis'], $this->detail_by_personil_entry_detail['id_apd']);
+                }
+            }
+
+            $this->dispatchBrowserEvent('list-inputan-ke-detail-inputan');
+        }
+        catch(Throwable $e)
+        {
+            $this->detail_by_personil_entry_detail = null;
+            $this->gambar_apd_template = null;
+            $this->detail_by_personil_entry_nama_apd = null;
+            $this->error_time_alert = now();
+
+            error_log('Page @ Dashboard Progress APD Admin ref ('.$this->error_time_alert.') : Kesalahan saat melihat detail by personil '.$e);
+            Log::error('Page @ Dashboard Progress APD Admin ref ('.$this->error_time_alert.') : Kesalahan saat melihat detail by personil '.$e);
+            $this->dispatchBrowserEvent('jsAlert',['pesan' => 'Kesalahan saat melihat detail : '.$this->error_time_alert]);
+        }
+    }
+
+    public function detailByPersonilModalSimpan()
+    {
+
+        $this->validate([
+            'admin_action_verifikasi' => 'required'
+        ],
+        [
+            'admin_action_verifikasi.required' => 'Ubah verifikasi terlebih dahulu.'
+        ]);
+
+        try{
+            $this->error_time_alert = null;
+
+            $id_target_inputan = $this->detail_by_personil_entry_detail['id_inputan'];
+
+            $adc = new ApdDataController;
+
+            if(!$adc->adminVerifikasiInputan($id_target_inputan,$this->admin_action_verifikasi, $this->admin_action_komentar))
+                throw new Exception("Tidak ditemukan inputan dengan id ".$id_target_inputan);
+
+            $this->detail_by_personil_data_inputan = $adc->muatInputanPegawai(null, $this->detail_by_personil_id_pegawai);
+            $index = array_search($id_target_inputan, array_column($this->detail_by_personil_data_inputan,'id_inputan'));
+
+            if(is_bool($index) && $index == false)
+            {
+                $this->emit('jsAlert', 'Kembali ke tabel inputan untuk me-refresh data.');
+                return;
+            }
+
+            $this->detail_by_personil_entry_detail = $this->detail_by_personil_data_inputan[$index];
+            $this->admin_action_komentar = '';
+            $this->admin_action_verifikasi = '';
+            session()->flash('alert-success-detailByPersonil', 'Berhasil menyimpan data verifikasi inputan.');
+
+        }
+        catch(Throwable $e)
+        {
+            $this->error_time_alert = now();
+            error_log('Page @ Dashboard Progress APD Admin ref ('.$this->error_time_alert.') : Kesalahan saat menyimpan verifikasi '.$e);
+            Log::error('Page @ Dashboard Progress APD Admin ref ('.$this->error_time_alert.') : Kesalahan saat menyimpan verifikasi '.$e);
+            session()->flash('alert-danger-detailByPersonil', 'Kesalahan saat menyimpan. ref : '.$this->error_time_alert);
+        }
+    }
+
+    public function detailByPersonilBulkSimpan()
+    {
+
     }
 #endregion
 

@@ -2,6 +2,8 @@
 
 namespace Tests\Unit;
 
+use App\Enum\StatusApd;
+use App\Enum\VerifikasiApd;
 use App\Models\ApdList;
 use App\Models\InputApd;
 use App\Models\InputApdTemplate;
@@ -23,7 +25,7 @@ class ExampleTest extends TestCase
      */
     public function test_that_true_is_true()
     {
-        $fetch_penempatan = Penempatan::query();
+        $fetch_penempatan = StatusApd::tryFrom('baik')->label;
 
 
             print_r($fetch_penempatan);

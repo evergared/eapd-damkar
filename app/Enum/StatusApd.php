@@ -17,8 +17,8 @@ class StatusApd extends Enum
     protected static function values(): array
     {
         return [
-            'belumTerima' => 'belum terima',
-            'hilang' => 'hilang',
+            'belumTerima' => 'Belum Terima',
+            'hilang' => 'Hilang',
             'baik' => 'baik',
             'rusakRingan' => 'rusak ringan',
             'rusakSedang' => 'rusak sedang',
