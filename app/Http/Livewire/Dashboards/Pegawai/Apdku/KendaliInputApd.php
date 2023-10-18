@@ -18,7 +18,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Throwable;
 
-class ModalInputApd extends Component
+class KendaliInputApd extends Component
 {
     use WithFileUploads;
 
@@ -46,6 +46,7 @@ class ModalInputApd extends Component
     public  $id_apd_user = '',
             $size_apd_user = '',
             $kondisi_apd_user = '',
+            $no_seri_apd_user = '',
             $gambar_apd_user = [],
             $komentar_apd_user ="",
             $status_keberadaan_apd_user = "";
@@ -54,13 +55,18 @@ class ModalInputApd extends Component
     public  $terakhir_diisi = '',
             $terakhir_diverif = '',
             $id_apd_user_sebelum = '',
+            $id_inputan_user_sebelum = '',
             $nama_apd_user_sebelum = '',
             $size_apd_user_sebelum = '',
             $kondisi_apd_user_sebelum = '',
+            $no_seri_apd_user_sebelum = '',
             $gambar_apd_user_sebelum = null,
             $komentar_apd_user_sebelum ="",
             $status_keberadaan_apd_user_sebelum = "",
+            $label_kerusakan = "",
             $komentar_verifikator = "",
+            $jabatan_verifikator = "",
+            $nama_verifikator = "",
             $status_verifikasi = 1, // default value jika user belum pernah input
             $label_verifikasi = "Proses Input"; // default value jika user belum pernah input
 
@@ -80,6 +86,11 @@ class ModalInputApd extends Component
         $enum_verifikasi_apd_input,
         $enum_verifikasi_apd_verifikasi,
         $enum_verifikasi_apd_terverifikasi;
+
+    // untuk menampilkan elemen tersembunyi
+    public 
+        $show_ajukan_perubahan = false,
+        $show_data_perubahan_pending = false;
     
     // utk mempermudah pemanggilan di blade.php
     public 
@@ -93,13 +104,13 @@ class ModalInputApd extends Component
         $error_time_simpan_inputan = '';
 
     protected $listeners = [
-        'panggilModalInput'
+        'panggilKendaliInput'
     ];
 
     #region Livewire Lifecycle
     public function render()
     {
-        return view('livewire.dashboards.pegawai.apdku.modal-input-apd');
+        return view('livewire.dashboards.pegawai.apdku.kendali-input-apd');
     }
 
     public function updated($property)
@@ -121,13 +132,13 @@ class ModalInputApd extends Component
     }
     #endregion
 
-    public function panggilModalInput($value)
+    public function panggilKendaliInput($value)
     {
-        $this->inisiasiModalInput($value["id_jenis"]);
-        $this->dispatchBrowserEvent('pangilModalInput');
+        $this->inisiasiKendaliInput($value["id_jenis"]);
+        $this->dispatchBrowserEvent('butuh-input-ke-kendali-input');
     }
 
-    public function inisiasiModalInput($id_jenis_apd)
+    public function inisiasiKendaliInput($id_jenis_apd)
     {
         try{
 
@@ -152,6 +163,7 @@ class ModalInputApd extends Component
             $this->id_apd_user = '';
             $this->size_apd_user = '';
             $this->kondisi_apd_user = '';
+            $this->no_seri_apd_user = '';
             $this->gambar_apd_user = null;
             $this->komentar_apd_user ="";
             $this->status_keberadaan_apd_user = "";
@@ -162,12 +174,17 @@ class ModalInputApd extends Component
             $this->nama_apd_user_sebelum = '';
             $this->size_apd_user_sebelum = '';
             $this->kondisi_apd_user_sebelum = '';
+            $this->no_seri_apd_user_sebelum = '';
             $this->gambar_apd_user_sebelum = null;
             $this->komentar_apd_user_sebelum ="";
             $this->status_keberadaan_apd_user_sebelum = "";
+            $this->id_inputan_user_sebelum = '';
+            $this->label_kerusakan = "";
             $this->komentar_verifikator = "";
             $this->status_verifikasi = VerifikasiApd::input()->value;
             $this->label_verifikasi = VerifikasiApd::input()->label;
+            $this->jabatan_verifikator = "";
+            $this->nama_verifikator = "";
 
             $this->cache_id_apd_user = '';
             $this->cache_size_apd_user = '';
@@ -184,6 +201,7 @@ class ModalInputApd extends Component
 
             $this->error_time_gambar_template = '';
             $this->error_time_simpan_inputan = '';
+            $this->show_data_perubahan_pending = false;
 
             // bangun data template apd untuk modal
             $list_apd_terkait = $adc->muatOpsiApd($this->template_id_jenis_apd);
@@ -201,8 +219,8 @@ class ModalInputApd extends Component
             if(is_bool($inputan_sebelumnya))
             {
                 $this->error_time_inisiasi_modal = now();
-                error_log("Modal Input Apd @ Dashboard Apdku Pegawai (".$this->error_time_inisiasi_modal.") Error : Kesalahan memuat satu inputan pegawai saat inisiasi modal.");
-                Log::error("Modal Input Apd @ Dashboard Apdku Pegawai (".$this->error_time_inisiasi_modal.") Error : Kesalahan memuat satu inputan pegawai saat inisiasi modal.");
+                error_log("Kendali Input Apd @ Dashboard Apdku Pegawai (".$this->error_time_inisiasi_modal.") Error : Kesalahan memuat satu inputan pegawai saat inisiasi modal.");
+                Log::error("Kendali Input Apd @ Dashboard Apdku Pegawai (".$this->error_time_inisiasi_modal.") Error : Kesalahan memuat satu inputan pegawai saat inisiasi modal.");
 
             }
             // jika belum input
@@ -219,6 +237,7 @@ class ModalInputApd extends Component
                 $this->terakhir_diverif = $inputan_sebelumnya['verifikasi_terakhir_update'];
                 $this->id_apd_user = $this->id_apd_user_sebelum = $inputan_sebelumnya['id_apd'];
                 $this->size_apd_user = $this->size_apd_user_sebelum = ($inputan_sebelumnya['size_apd'] == '-')? "" : $inputan_sebelumnya['size_apd'];
+                $this->no_seri_apd_user = $this->no_seri_apd_user_sebelum = $inputan_sebelumnya['no_seri'];
                 $this->kondisi_apd_user = $this->kondisi_apd_user_sebelum = StatusApd::tryFrom($inputan_sebelumnya['status_kerusakan'])->value;
                 $this->gambar_apd_user_sebelum = $inputan_sebelumnya['gambar_apd'];
                 $this->komentar_apd_user = $this->komentar_apd_user_sebelum = $inputan_sebelumnya['komentar_pengupload'];
@@ -226,11 +245,19 @@ class ModalInputApd extends Component
                 $this->status_verifikasi = $inputan_sebelumnya['enum_verifikasi'];
                 $this->label_verifikasi = $inputan_sebelumnya['status_verifikasi'];
                 $this->nama_apd_user_sebelum = ($this->id_apd_user_sebelum)? ApdList::where('id_apd', $this->id_apd_user_sebelum)->first()->nama_apd : '';
+                $this->id_inputan_user_sebelum = $inputan_sebelumnya['id_inputan'];
 
+                $this->jabatan_verifikator = $inputan_sebelumnya['jabatan_verifikator'];
+                $this->nama_verifikator = $inputan_sebelumnya['nama_verifikator'];
 
                 $this->warna_kerusakan = $inputan_sebelumnya['warna_kerusakan'];
                 $this->warna_verifikasi = $inputan_sebelumnya['warna_verifikasi'];
                 $this->warna_keberadaan = $inputan_sebelumnya['warna_keberadaan'];
+                
+                $this->label_kerusakan = StatusApd::tryFrom($this->kondisi_apd_user_sebelum)->label;
+
+                $this->show_data_perubahan_pending = InputApdReupload::where('id_inputan',$this->id_inputan_user_sebelum)->exists();
+
 
                 $this->refreshDropdownListApd();
                 $this->refreshGambarTemplate();
@@ -241,8 +268,8 @@ class ModalInputApd extends Component
         catch(Throwable $e)
         {
             $this->error_time_inisiasi_modal = now();
-                error_log("Modal Input Apd @ Dashboard Apdku Pegawai (".$this->error_time_inisiasi_modal.") Error : Kesalahan saat inisiasi modal ".$e);
-                Log::error("Modal Input Apd @ Dashboard Apdku Pegawai (".$this->error_time_inisiasi_modal.") Error : Kesalahan saat inisiasi modal ".$e);
+                error_log("Kendali Input Apd @ Dashboard Apdku Pegawai (".$this->error_time_inisiasi_modal.") Error : Kesalahan saat inisiasi modal ".$e);
+                Log::error("Kendali Input Apd @ Dashboard Apdku Pegawai (".$this->error_time_inisiasi_modal.") Error : Kesalahan saat inisiasi modal ".$e);
         }
 
         
@@ -262,7 +289,7 @@ class ModalInputApd extends Component
             }
             catch(Throwable $e)
             {
-                error_log("Modal Input Apd @ Dashboard Apdku Pegawai Error : Kesalahan saat iterasi list apd ".$e);
+                error_log("Kendali Input Apd @ Dashboard Apdku Pegawai Error : Kesalahan saat iterasi list apd ".$e);
                 continue;
             }
         }
@@ -277,7 +304,7 @@ class ModalInputApd extends Component
         }
         catch(Throwable $e)
         {
-            error_log("Modal Input Apd @ Dashboard Apdku Pegawai Error : Kesalahan saat refresh option dropdown kondisi apd ".$e);
+            error_log("Kendali Input Apd @ Dashboard Apdku Pegawai Error : Kesalahan saat refresh option dropdown kondisi apd ".$e);
             $this->opsi_dropdown_kondisi_apd = [];
         }
     }
@@ -291,7 +318,7 @@ class ModalInputApd extends Component
         }
         catch(Throwable $e)
         {
-            error_log("Modal Input Apd @ Dashboard Apdku Pegawai Error : Kesalahan saat refresh option dropdown size apd ".$e);
+            error_log("Kendali Input Apd @ Dashboard Apdku Pegawai Error : Kesalahan saat refresh option dropdown size apd ".$e);
             $this->opsi_dropdown_size_apd = [];
         }
     }
@@ -307,8 +334,8 @@ class ModalInputApd extends Component
         } catch (Throwable $e) {
             $this->error_time_gambar_template = now();
             $this->template_gambar_apd = false;
-            error_log("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_gambar_template."): Kesalahan saat refresh gambar template apd ".$e);
-            Log::error("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_gambar_template."): Kesalahan saat refresh gambar template apd ".$e);
+            error_log("Kendali Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_gambar_template."): Kesalahan saat refresh gambar template apd ".$e);
+            Log::error("Kendali Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_gambar_template."): Kesalahan saat refresh gambar template apd ".$e);
         }
     }
     #endregion
@@ -357,11 +384,11 @@ class ModalInputApd extends Component
                 $kondisi = StatusApd::tryFrom($this->kondisi_apd_user)->value;
                 $gambar = $this->prosesGambar();
             }
-            else if($this->status_keberadaan_apd_user == 'hilang')
+            else if($this->status_keberadaan_apd_user == 'Hilang')
             {
                 $kondisi = StatusApd::hilang()->value;
             }
-            else if($this->status_keberadaan_apd_user == 'belum terima')
+            else if($this->status_keberadaan_apd_user == 'Belum Terima')
             {
                 $kondisi = StatusApd::belumTerima()->value;
             }
@@ -379,7 +406,7 @@ class ModalInputApd extends Component
                 'verifikasi_status' => VerifikasiApd::verifikasi()->value
             ]);
 
-            $this->inisiasiModalInput($this->template_id_jenis_apd);
+            $this->inisiasiKendaliInput($this->template_id_jenis_apd);
             $this->emit('refreshComponent');
             session()->flash('alert-success', 'Inputan berhasil disimpan!');
 
@@ -387,8 +414,8 @@ class ModalInputApd extends Component
         catch(Throwable $e)
         {
             $this->error_time_simpan_inputan = now();
-            error_log("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat menyimpan inputan ".$e);
-            Log::error("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat menyimpan inputan ".$e);
+            error_log("Kendali Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat menyimpan inputan ".$e);
+            Log::error("Kendali Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat menyimpan inputan ".$e);
             session()->flash('alert-danger','Gagal menyimpan data inputan APD (ref : '.$this->error_time_simpan_inputan.')');
         }
     }
@@ -439,7 +466,7 @@ class ModalInputApd extends Component
             $inputan->verifikasi_status = $this->enum_verifikasi_apd_input;
 
             $inputan->save();
-            $this->inisiasiModalInput($this->template_id_jenis_apd);
+            $this->inisiasiKendaliInput($this->template_id_jenis_apd);
             $this->emit('refreshComponent');
             session()->flash('alert-success', 'Inputan berhasil diupdate!');
 
@@ -447,8 +474,8 @@ class ModalInputApd extends Component
         catch(Throwable $e)
         {
             $this->error_time_simpan_inputan = now();
-            error_log("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat update inputan ".$e);
-            Log::error("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat update inputan ".$e);
+            error_log("Kendali Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat update inputan ".$e);
+            Log::error("Kendali Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat update inputan ".$e);
             session()->flash('alert-danger','Gagal mengupdate data inputan APD (ref : '.$this->error_time_simpan_inputan.')');
         }
     }
@@ -482,17 +509,17 @@ class ModalInputApd extends Component
             $kondisi = null;
             $gambar = null;
 
-            if($this->status_keberadaan_apd_user == 'ada')
+            if($this->status_keberadaan_apd_user == 'Ada')
             {
                 
                 $kondisi = StatusApd::tryFrom($this->kondisi_apd_user)->value;
                 $gambar = $this->prosesGambar(true);
             }
-            else if($this->status_keberadaan_apd_user == 'hilang')
+            else if($this->status_keberadaan_apd_user == 'Hilang')
             {
                 $kondisi = StatusApd::hilang()->value;
             }
-            else if($this->status_keberadaan_apd_user == 'belum terima')
+            else if($this->status_keberadaan_apd_user == 'Belum Terima')
             {
                 $kondisi = StatusApd::belumTerima()->value;
             }
@@ -506,7 +533,7 @@ class ModalInputApd extends Component
             $inputan->data_diupdate = now();
 
             $inputan->save();
-            $this->inisiasiModalInput($this->template_id_jenis_apd);
+            $this->inisiasiKendaliInput($this->template_id_jenis_apd);
             $this->emit('refreshComponent');
             session()->flash('alert-success', 'Inputan berhasil diupdate! Tunggu verifikasi Admin untuk perubahan yang dilakukan.');
 
@@ -514,8 +541,8 @@ class ModalInputApd extends Component
         catch(Throwable $e)
         {
             $this->error_time_simpan_inputan = now();
-            error_log("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat update inputan pasca verifikasi diterima ".$e);
-            Log::error("Modal Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat update inputan pasca verifikasi diterima ".$e);
+            error_log("Kendali Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat update inputan pasca verifikasi diterima ".$e);
+            Log::error("Kendali Input Apd @ Dashboard Apdku Pegawai Error (".$this->error_time_simpan_inputan."): Kesalahan saat update inputan pasca verifikasi diterima ".$e);
             session()->flash('alert-danger','Gagal mengupdate data inputan APD (ref : '.$this->error_time_simpan_inputan.')');
         }
     }
@@ -646,7 +673,7 @@ class ModalInputApd extends Component
         }
         catch(Throwable $e)
         {
-            error_log("Modal Input Apd @ Dashboard Apdku Pegawai Error : Kesalahan saat upload gambar apd ".$e);
+            error_log("Kendali Input Apd @ Dashboard Apdku Pegawai Error : Kesalahan saat upload gambar apd ".$e);
             return null;
         }
     }

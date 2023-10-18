@@ -227,7 +227,7 @@ class ApdDataController extends Controller
                             'data_terakhir_update' => $input->data_diupdate,
                             'verifikasi_terakhir_update' => (is_null($input->verifikasi_diupdate))? '-' : $input->verifikasi_diupdate,
                             'gambar_apd' => $this->siapkanGambarInputanBesertaPathnya($input->image, $id_pegawai, $id_jenis, $id_periode),
-                            'status_keberadaan' => ($input->kondisi != "hilang" && $input->kondisi != "belum terima")? "Ada" : $input->kondisi,
+                            'status_keberadaan' => ($input->kondisi != "Hilang" && $input->kondisi != "Belum Terima")? "Ada" : $input->kondisi,
                             'warna_keberadaan' => $sdc->ubahKeberadaanApdKeWarnaBootstrap($input->kondisi),
                             'enum_verifikasi'=>$input->verifikasi_status,
                             'status_verifikasi' => $verifikasi_label,
@@ -1205,7 +1205,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function siapkanGambarInputanBesertaPathnya($stringGambar, $nrk, $id_jenis, $id_periode): array|string|null
+    public function siapkanGambarInputanBesertaPathnya($stringGambar, $nrk, $id_jenis, $id_periode, $reupload = false): array|string|null
     {
         try {
             if(!is_null($stringGambar))
@@ -1222,14 +1222,14 @@ class ApdDataController extends Controller
                 if (is_array($gbr)) {
                     $gambar = [];
                     foreach ($gbr as $g) {
-                        array_push($gambar, $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $g);
+                        array_push($gambar, $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode, $reupload) . '/' . $g);
                     }
                     return $gambar;
                 } else {
                     if ($gbr == "")
                         return null;
                     else
-                        return $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode) . '/' . $gbr;
+                        return $fc->buatPathFileApdUpload($nrk, $id_jenis, $id_periode, $reupload) . '/' . $gbr;
                 }
             }
             else
@@ -1375,7 +1375,17 @@ class ApdDataController extends Controller
                 $id_periode = PeriodeInputApd::where('aktif',true)->get()->first()->id_periode;
             }
 
-            return status::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first()->kondisi);
+            $inputan = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first();
+
+            if(is_null($inputan))
+                throw new Exception("data yang dicari tidak ada atau user belum input apd tersebut");
+
+            $status = status::tryFrom($inputan->kondisi);
+
+            if(is_null($status))
+                throw new Exception("status apd yang dicari tidak ada");
+
+            return $status;
         } catch (Throwable $e) {
             // error_log("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);
             // report("Gagal mengambil status kerusakan untuk id jenis  '" . $id_jenis . "' " . $e);
