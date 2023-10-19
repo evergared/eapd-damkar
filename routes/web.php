@@ -44,6 +44,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profil', \App\Http\Livewire\Dashboards\Pegawai\Profil\Page::class)->name('profil');
     Route::get('/apdku', \App\Http\Livewire\Dashboards\Pegawai\Apdku\Page::class)->name('apdku');
     Route::get('/ukuranku', \App\Http\Livewire\Dashboards\Pegawai\Ukuranku\Page::class)->name('ukuran');
+
+    Route::get('/bantuan-barang/ganti-barang', \App\Http\Livewire\Dashboards\Pegawai\BantuanBarang\GantiBarang\Page::class)->name('ganti-barang');
+    Route::get('/bantuan-barang/lapor-hilang', \App\Http\Livewire\Dashboards\Pegawai\BantuanBarang\LaporHilang\Page::class)->name('lapor-hilang');
     
     Route::get('/progress-anggota/pelaporan-apd', \App\Http\Livewire\Dashboards\Pegawai\Progress\Apd\Page::class)->name('progress-apd');
     Route::get('/progress-anggota/pelaporan-ukuran', \App\Http\Livewire\Dashboards\Pegawai\Progress\Ukuran\Page::class)->name('progress-ukuran');

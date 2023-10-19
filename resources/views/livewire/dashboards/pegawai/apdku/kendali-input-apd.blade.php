@@ -20,6 +20,8 @@
 
                 @if ($status_verifikasi == $enum_verifikasi_apd_terverifikasi)
                     <strong class="text-muted">Data anda telah diverifikasi oleh admin. Jika ada perubahan data, ubah data terlebih dahulu dan klik tombol Ajukan Perubahan di bawah.</strong>
+                @elseif($status_verifikasi == $enum_verifikasi_apd_verifikasi)
+                    <strong class="text-muted">Data anda telah masuk dan menunggu verifikasi dari admin. Anda masih dapat mengubah data sebelum inputan anda di verifikasi admin.</strong>
                 @endif
 
                 
@@ -435,11 +437,18 @@
                                                 @endforeach
                                             @endif
                                         </select>
+                                        @error('id_apd_user')
+                                            <small class="error text-danger">{{$message}}</small>
+                                        @enderror
                                     </div>
 
-                                    @error('id_apd_user')
-                                        <small class="error text-danger">{{$message}}</small>
-                                    @enderror
+                                    <div class="form-group">
+                                        <label>No Seri</label>
+                                        <input type="text" class="form-control" placeholder="Masukan no seri apd." wire:model='no_seri_apd_user'>
+                                        @error('no_seri_apd_user')
+                                            <small class="error text-danger">{{$message}}</small>
+                                        @enderror
+                                    </div>
 
                                     <p></p>
                                     <p></p>
@@ -519,12 +528,18 @@
                             </div>
                             {{-- @if ($show_data_perubahan_pending) --}}
                                 <div class="tab-pane fade" id="tab-perubahan-pending" role="tabpanel" wire:ignore.self>
-                                    <strong class="text-info">Dibawah ini adalah ajuan perubahan data APD yang menunggu persetujuan admin.</strong>
+                                    <strong class="text-info">Dibawah ini adalah ajuan perubahan data APD yang menunggu persetujuan admin. Anda masih dapat merubah data dibawah melalui Ubah Data.</strong>
                                     <div class="row">
                                         <h5><strong>Status APD</strong></h5>
                                     </div>
                                     <div class="row">
-                                        <h1><span class="badge badge-large badge-danger">COBA ITU</span></h1>
+                                        <h1><span class="badge badge-large badge-{{$warna_kondisi_apd_user_reupload}}">{{$label_kondisi_apd_user_reupload}}</span></h1>
+                                    </div>
+                                    <div class="row">
+                                        <strong>Tanggal Diajukan : </strong>
+                                    </div>
+                                    <div class="row">
+                                        {{$data_diupdate_reupload}}
                                     </div>
                                     <div class="row">
                                         <h5><strong>Detail APD </strong></h5>
@@ -534,7 +549,7 @@
                                             <strong>Model : </strong>
                                         </div>
                                         <div class="col">
-                                            {{$nama_apd_user_sebelum}}
+                                            {{$nama_apd_user_reupload}}
                                         </div>
                                     </div>
                                     <div class="row">
@@ -542,7 +557,7 @@
                                             <strong>No Seri : </strong>
                                         </div>
                                         <div class="col">
-                                            {{($no_seri_apd_user_sebelum)? $no_seri_apd_user_sebelum : '-'}}
+                                            {{($no_seri_apd_user_reupload)? $no_seri_apd_user_reupload : '-'}}
                                         </div>
                                     </div>
                                     <div class="row">
@@ -550,8 +565,15 @@
                                             <strong>Ukuran : </strong>
                                         </div>
                                         <div class="col">
-                                            {{($size_apd_user_sebelum)? $size_apd_user_sebelum : '-'}}
+                                            {{($size_apd_user_reupload)? $size_apd_user_reupload : '-'}}
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <a class="btn btn-secondary btn-sm btn-flat rounded-pill"
+                                            onclick="$('#modal-upload-gambar').modal('show')" href='javascript:'>
+                                            <i class="fas fa-image fa-lg mr-2"></i>
+                                            Preview Gambar Ajuan Perubahan
+                                        </a>
                                     </div>
                                 </div>
                             {{-- @endif --}}
@@ -567,13 +589,13 @@
             <div class="card-footer">
                 @if($status_verifikasi == $enum_verifikasi_apd_terverifikasi)
                     @if ($show_ajukan_perubahan)
-                        <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='updateSetelahTerverifikasi' style="cursor: pointer;">
+                        <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='updateTerverifikasi' style="cursor: pointer;">
                             <i class="fas fa-save fa-lg mr-2"></i>
                             Ajukan Perubahan
                         </a> 
                     @endif
                 @elseif($status_verifikasi == $enum_verifikasi_apd_verifikasi)
-                    <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='updateSetelahTerverifikasi' style="cursor: pointer;">
+                    <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='update' style="cursor: pointer;">
                         <i class="fas fa-save fa-lg mr-2"></i>
                         Update Data APD
                     </a>
@@ -656,5 +678,17 @@
             </div>
         </div>
         {{-- Modal Preview Gambar End --}}
+
+        @push('stack-body')
+        
+        <script src="{{ asset('admin-lte/ekko-lightbox.min.js')}}">
+            $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+            event.preventDefault();
+            $(this).ekkoLightbox({
+              alwaysShowClose: true
+            });
+          });
+        </script>
+        @endpush
 
 </div>

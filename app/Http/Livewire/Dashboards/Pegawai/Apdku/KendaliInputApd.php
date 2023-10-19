@@ -69,6 +69,19 @@ class KendaliInputApd extends Component
             $nama_verifikator = "",
             $status_verifikasi = 1, // default value jika user belum pernah input
             $label_verifikasi = "Proses Input"; // default value jika user belum pernah input
+    
+    public 
+            $id_apd_user_reupload = '',
+            $nama_apd_user_reupload = '',
+            $size_apd_user_reupload = '',
+            $kondisi_apd_user_reupload = '',
+            $label_kondisi_apd_user_reupload = '',
+            $warna_kondisi_apd_user_reupload = '',
+            $image_apd_user_reupload = null,
+            $no_seri_apd_user_reupload = '',
+            $komentar_apd_user_reupload = '',
+            $data_diupdate_reupload = null;
+
 
     // cache untuk reset value ke kondisi sebelumnya
     public  $cache_id_apd_user = '',
@@ -78,6 +91,7 @@ class KendaliInputApd extends Component
 
     // untuk warna label bootstrap
     public  $warna_kerusakan = '',
+            $warna_kondisi_reupload = '',
             $warna_keberadaan ='',
             $warna_verifikasi ='secondary';
 
@@ -90,7 +104,9 @@ class KendaliInputApd extends Component
     // untuk menampilkan elemen tersembunyi
     public 
         $show_ajukan_perubahan = false,
-        $show_data_perubahan_pending = false;
+        $show_data_perubahan_pending = false,
+        $show_input_no_seri = false,
+        $show_input_no_seri_strict = false;
     
     // utk mempermudah pemanggilan di blade.php
     public 
@@ -195,6 +211,17 @@ class KendaliInputApd extends Component
             $this->warna_keberadaan ='';
             $this->warna_verifikasi ='secondary';
 
+            $this->id_apd_user_reupload = '';
+            $this->nama_apd_user_reupload = '';
+            $this->size_apd_user_reupload = '';
+            $this->kondisi_apd_user_reupload = '';
+            $this->warna_kondisi_apd_user_reupload = '';
+            $this->label_kondisi_apd_user_reupload = '';
+            $this->image_apd_user_reupload = null;
+            $this->no_seri_apd_user_reupload = '';
+            $this->komentar_apd_user_reupload = '';
+            $this->data_diupdate_reupload = null;
+
             $this->enum_verifikasi_apd_input = VerifikasiApd::input()->value;
             $this->enum_verifikasi_apd_verifikasi = VerifikasiApd::verifikasi()->value;
             $this->enum_verifikasi_apd_terverifikasi = VerifikasiApd::terverifikasi()->value;
@@ -257,6 +284,23 @@ class KendaliInputApd extends Component
                 $this->label_kerusakan = StatusApd::tryFrom($this->kondisi_apd_user_sebelum)->label;
 
                 $this->show_data_perubahan_pending = InputApdReupload::where('id_inputan',$this->id_inputan_user_sebelum)->exists();
+
+                $reupload = $adc->muatSatuInputanReupload($this->id_inputan_user_sebelum);
+
+                if(!is_null($reupload))
+                {
+                    $this->id_apd_user_reupload = $reupload['id_apd'];
+                    $this->nama_apd_user_reupload = $reupload['nama_apd'];
+                    $this->size_apd_user_reupload = $reupload['size'];
+                    $this->kondisi_apd_user_reupload = $reupload['kondisi_enum']->value;
+                    $this->label_kondisi_apd_user_reupload = $reupload['kondisi_label'];
+                    $this->warna_kondisi_apd_user_reupload = $reupload['kondisi_warna'];
+                    $this->image_apd_user_reupload = $reupload['image'];
+                    $this->no_seri_apd_user_reupload = $reupload['no_seri'];
+                    $this->komentar_apd_user_reupload = $reupload['komentar_pengupload'];
+                    $this->data_diupdate_reupload = $reupload['data_diupdate'];
+
+                }
 
 
                 $this->refreshDropdownListApd();
@@ -347,6 +391,17 @@ class KendaliInputApd extends Component
         $this->kondisi_apd_user = '';
         $this->gambar_apd_user = null;
         $this->komentar_apd_user ="";
+
+        $this->show_input_no_seri = false;
+        $this->show_input_no_seri_strict = false;
+
+        $apd = ApdList::find($this->id_apd_user);
+        if(!is_null($apd))
+        {
+            $this->show_input_no_seri = $apd->input_no_seri;
+            $this->show_input_no_seri_strict = $apd->strict_no_seri;
+
+        }
 
         $this->refreshDropdownKondisiApd();
         $this->refreshDropdownSizeApd();
@@ -504,7 +559,10 @@ class KendaliInputApd extends Component
             $inputan = InputApdReupload::where('id_inputan',$id_inputan)->first();
 
             if(is_null($inputan))
+            {   
                 $inputan = new InputApdReupload;
+                $inputan->id_inputan = $id_inputan;
+            }
             
             $kondisi = null;
             $gambar = null;
@@ -529,6 +587,7 @@ class KendaliInputApd extends Component
             $inputan->size = $this->size_apd_user;
             $inputan->kondisi = $kondisi;
             $inputan->image = $gambar;
+            $inputan->no_seri = $this->no_seri_apd_user;
             $inputan->komentar_pengupload = $this->komentar_apd_user;
             $inputan->data_diupdate = now();
 
@@ -571,6 +630,18 @@ class KendaliInputApd extends Component
                     'id_apd_user.required' => 'Harap pilih model APD'
                 ]
             );
+
+            if($this->show_input_no_seri)
+            {
+                $this->validate(
+                    [
+                        'no_seri_apd_user' => 'required'
+                    ],
+                    [
+                        'no_seri_apd_user.required' => 'Harap masukan no seri APD'
+                    ]
+                );
+            }
 
             if (!is_null($this->opsi_dropdown_size_apd)) {
                 $this->validate(

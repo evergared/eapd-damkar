@@ -92,14 +92,29 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item  {{ (Route::currentRouteName() =='request-item')? 'menu-open' :''}}">
-                    <a href="{{ route('request-item') }}"
-                        class="nav-link {{ (Route::currentRouteName() =='request-item')? 'active' :''}}">
+                <li class="nav-item {{ (Route::currentRouteName() =='ganti-barang' || Route::currentRouteName() =='lapor-hilang')? 'menu-open' :''}}">
+                    <a 
+                        class="nav-link">
                         <i class="nav-icon fab fa-stack-exchange"></i>
                         <p>
-                            Request Item
+                            Bantuan Barang
+                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item {{ (Route::currentRouteName() =='ganti-barang')? 'menu-open' :''}}">
+                          <a href="{{route('ganti-barang')}}" class="nav-link {{ (Route::currentRouteName() =='ganti-barang')? 'active' :''}}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Permohonan Ganti APD</p>
+                          </a>
+                        </li>
+                        <li class="nav-item {{ (Route::currentRouteName() =='lapor-hilang')? 'menu-open' :''}}">
+                            <a href="{{route('lapor-hilang')}}" class="nav-link {{ (Route::currentRouteName() =='lapor-hilang')? 'active' :''}}">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Lapor Kehilangan APD</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 @if (auth()->user()->data->jabatan->level_user == 'admin_sektor' || auth()->user()->data->jabatan->level_user == 'admin_sudin' || auth()->user()->data->jabatan->level_user == 'admin_dinas')
                 <li class="nav-item {{ (Route::currentRouteName() =='print-laporan' || Route::currentRouteName() =='progress-apd' || Route::currentRouteName() =='data-ukuran' || Route::currentRouteName() =='data-distribusi')? 'menu-open' :''}}">

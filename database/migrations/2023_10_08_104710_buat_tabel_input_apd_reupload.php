@@ -18,6 +18,7 @@ return new class extends Migration
                 $t->string('id_inputan');
                 $t->string('id_apd')->nullable();
                 $t->string('size')->nullable();
+                $t->string('no_seri')->nullable();
                 $t->string('kondisi')->nullable();
                 $t->longText('image')->nullable();
                 $t->text('komentar_pengupload')->nullable();

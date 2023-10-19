@@ -514,7 +514,7 @@
                                                 <div class="card-body">
                                                     <div class="tab-content">
                                                     {{-- Start gambar apd user --}}
-                                                    <div class="tab-pane fade active show" id="gambar-user-tab-content" role="tabpanel" aria-labelledby="gambar-user-tab">
+                                                    <div class="tab-pane fade active show" id="gambar-user-tab-content" role="tabpanel" aria-labelledby="gambar-user-tab" wire:ignore.self>
                                                         {{-- Start jika gambar user ada --}}
                                                         @if (!is_null($detail_by_personil_entry_detail['gambar_apd']))
                                                             {{-- Start jika ada lebih dari satu --}}
@@ -580,7 +580,7 @@
                                                     {{-- End gambar apd user --}}
                         
                                                     {{-- Start gambar apd template --}}
-                                                    <div class="tab-pane fade" id="gambar-apd-tab-content" role="tabpanel" aria-labelledby="gambar-apd-tab">
+                                                    <div class="tab-pane fade" id="gambar-apd-tab-content" role="tabpanel" aria-labelledby="gambar-apd-tab" wire:ignore.self>
                                                         {{-- Start jika gambar template ada --}}
                                                         @if (!is_null($gambar_apd_template))
                                                             {{-- Start jika ada lebih dari satu --}}
@@ -695,7 +695,7 @@
                                                             <strong>Ukuran :</strong>
                                                         </div>
                                                         <div class="text-center align-middle">
-                                                            <span class="badge badge-secondary text-center text-wrap my-auto align-middle">{{$detail_by_personil_entry_detail['size_apd']}}</span>
+                                                            <span class="badge badge-secondary text-center text-wrap my-auto align-middle"><h3>{{$detail_by_personil_entry_detail['size_apd']}}</h3></span>
                                                         </div>
                                                         </div>
                                                         <div>
@@ -785,8 +785,9 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-lg-12 text-center blockquote">
-                                                                 {{($detail_by_personil_entry_detail['komentar_verifikator'])? $detail_by_personil_entry_detail['komentar_verifikator'] : "-"}}   
-                                                            </div>                                                        </div>
+                                                                {{($detail_by_personil_entry_detail['komentar_verifikator'])? $detail_by_personil_entry_detail['komentar_verifikator'] : "-"}}   
+                                                            </div>                                                        
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1032,7 +1033,7 @@
                                         <div class="card-body">
                                         <div class="tab-content">
                                             {{-- Start gambar apd user --}}
-                                            <div class="tab-pane fade active show" id="gambar-user-tab-content" role="tabpanel" aria-labelledby="gambar-user-tab">
+                                            <div class="tab-pane fade active show" id="gambar-user-tab-content" role="tabpanel" aria-labelledby="gambar-user-tab" wire:ignore.self>
                                             {{-- Start jika gambar user ada --}}
                                             @if (!is_null($detail_by_personil_entry_detail['gambar_apd']))
                                                 {{-- Start jika ada lebih dari satu --}}
@@ -1098,7 +1099,7 @@
                                             {{-- End gambar apd user --}}
 
                                             {{-- Start gambar apd template --}}
-                                            <div class="tab-pane fade" id="gambar-apd-tab-content" role="tabpanel" aria-labelledby="gambar-apd-tab">
+                                            <div class="tab-pane fade" id="gambar-apd-tab-content" role="tabpanel" aria-labelledby="gambar-apd-tab" wire:ignore.self>
                                             {{-- Start jika gambar template ada --}}
                                             @if (!is_null($gambar_apd_template))
                                                 {{-- Start jika ada lebih dari satu --}}

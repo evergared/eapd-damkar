@@ -15,6 +15,7 @@ use App\Enum\StatusApd;
 use App\Models\Admin;
 use App\Models\ApdJenis;
 use App\Models\InputApd;
+use App\Models\InputApdReupload;
 use App\Models\Pegawai;
 use App\Models\Penempatan;
 use App\Models\PeriodeInputApd;
@@ -249,6 +250,58 @@ class ApdDataController extends Controller
         {
             error_log('Apd Data Controller Error : Kesalahan saat memuat satu inputan pegawai '.$e);
             return false;
+        }
+    }
+
+    public function muatSatuInputanReupload($id_inputan)
+    {
+        try{
+
+            $reupload = InputApdReupload::where('id_inputan',$id_inputan)->first();
+            
+            if(!is_null($reupload))
+            {
+                $kondisi = status::tryFrom($reupload->kondisi);
+                $kondisi_label = '';
+                $kondisi_warna = '';
+
+                $nama_apd = "";
+                if(!is_null($kondisi))
+                {
+                    $sdc = new StatusDisplayController;
+                    $kondisi_label = $kondisi->label;
+                    $kondisi_warna = $sdc->ubahKondisiApdKeWarnaBootstrap($kondisi);
+                }
+
+                $inputan = InputApd::where('id_inputan',$id_inputan)->first();
+                $apd = ApdList::where('id_apd',$inputan->id_apd)->first();
+                if(!is_null($apd))
+                    $nama_apd = $apd->nama_apd;
+
+                return [
+
+                    "id_inputan" => $reupload->id_inputan,
+                    "id_apd" => $reupload->id_apd,
+                    "nama_apd" => $nama_apd,
+                    "size" => $reupload->size,
+                    'kondisi_enum' => $kondisi,
+                    'kondisi_label' => $kondisi_label,
+                    "kondisi_warna" => $kondisi_warna,
+                    "no_seri" => $reupload->no_seri,
+                    "image" => $this->siapkanGambarInputanBesertaPathnya($reupload->image,$inputan->id_pegawai,$inputan->id_jenis, $inputan->id_periode, true),
+                    "komentar_pengupload" => $reupload->komentar_pengupload,
+                    "data_diupdate" => $reupload->data_diupdate
+                ];
+
+            }
+
+            return null;
+
+        }
+        catch(Throwable $e)
+        {
+            error_log('Apd Data Controller Error : Kesalahan saat memuat inputan reupload pegawai '.$e);
+            return null;
         }
     }
 
