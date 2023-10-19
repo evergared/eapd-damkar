@@ -106,6 +106,7 @@ class KendaliInputApd extends Component
         $show_ajukan_perubahan = false,
         $show_data_perubahan_pending = false,
         $show_input_no_seri = false,
+        $show_gambar_reupload = false,
         $show_input_no_seri_strict = false;
     
     // utk mempermudah pemanggilan di blade.php
@@ -456,6 +457,7 @@ class KendaliInputApd extends Component
                 'size' => ($this->size_apd_user == '')? null : $this->size_apd_user,
                 'kondisi' => $kondisi,
                 'image' => $gambar,
+                'no_seri' => $this->no_seri_apd_user,
                 'komentar_pengupload'=> $this->komentar_apd_user,
                 'data_diupdate'=>now(),
                 'verifikasi_status' => VerifikasiApd::verifikasi()->value
@@ -514,6 +516,7 @@ class KendaliInputApd extends Component
 
             $inputan->id_apd = $this->id_apd_user;
             $inputan->size = $this->size_apd_user;
+            $inputan->no_seri = $this->no_seri_apd_user;
             $inputan->kondisi = $kondisi;
             $inputan->image = $gambar;
             $inputan->komentar_pengupload = $this->komentar_apd_user;

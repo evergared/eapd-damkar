@@ -140,7 +140,7 @@
                                             </div>
                                             <div>
                                                 <a class="btn btn-secondary btn-sm btn-flat rounded-pill"
-                                                onclick="$('#modal-upload-gambar').modal('show')" href='javascript:'>
+                                                onclick="$('#modal-upload-gambar').modal('show')" href='javascript:'  wire:click='$set("show_gambar_reupload", false)'>
                                                     <i class="fas fa-image fa-lg mr-2"></i>
                                                     Preview Gambar
                                                 </a>
@@ -162,7 +162,7 @@
                                             </div>
                                             <div>
                                                 <a class="btn btn-secondary btn-sm btn-flat rounded-pill"
-                                                    onclick="$('#modal-upload-gambar').modal('show')" href='javascript:'>
+                                                    onclick="$('#modal-upload-gambar').modal('show')" href='javascript:' wire:click='$set("show_gambar_reupload", false)'>
                                                     <i class="fas fa-image fa-lg mr-2"></i>
                                                     Preview Gambar
                                                 </a>
@@ -228,7 +228,7 @@
                                                     </div>
                                                     <div>
                                                         <a class="btn btn-secondary btn-sm btn-flat rounded-pill"
-                                                            onclick="$('#modal-upload-gambar').modal('show')" href='javascript:'>
+                                                            onclick="$('#modal-upload-gambar').modal('show')" href='javascript:' wire:click='$set("show_gambar_reupload", false)'>
                                                             <i class="fas fa-image fa-lg mr-2"></i>
                                                             Preview Gambar
                                                         </a>
@@ -267,13 +267,13 @@
                                         Ubah Data
                                     </a>
                                 </li>
-                                {{-- @if ($show_data_perubahan_pending) --}}
+                                @if ($show_data_perubahan_pending)
                                     <li class="nav-item">
                                         <a class="nav-link" href="#tab-perubahan-pending" data-toggle='pill' role="tab" aria-controls="tab-perubahan-pending" wire:ignore.self>
                                             Perubahan Pending
                                         </a>
                                     </li>
-                                {{-- @endif --}}
+                                @endif
                             </ul>
                             {{-- nav tabs Form Input end --}}
                         <div class="tab-content">
@@ -526,7 +526,7 @@
                                 {{-- bagian input Form Input end --}}
                         @if ($status_verifikasi == $enum_verifikasi_apd_terverifikasi)
                             </div>
-                            {{-- @if ($show_data_perubahan_pending) --}}
+                            @if ($show_data_perubahan_pending)
                                 <div class="tab-pane fade" id="tab-perubahan-pending" role="tabpanel" wire:ignore.self>
                                     <strong class="text-info">Dibawah ini adalah ajuan perubahan data APD yang menunggu persetujuan admin. Anda masih dapat merubah data dibawah melalui Ubah Data.</strong>
                                     <div class="row">
@@ -569,14 +569,12 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <a class="btn btn-secondary btn-sm btn-flat rounded-pill"
-                                            onclick="$('#modal-upload-gambar').modal('show')" href='javascript:'>
-                                            <i class="fas fa-image fa-lg mr-2"></i>
-                                            Preview Gambar Ajuan Perubahan
-                                        </a>
+                                        @if (!is_null($image_apd_user_reupload))
+                                            <a class="btn btn-secondary btn-sm btn-flat rounded-pill" href="javascript:" wire:click='$set("show_gambar_reupload", true)' onclick="$('#modal-upload-gambar').modal('show')">Preview Gambar Ajuan Perubahan</a>
+                                        @endif
                                     </div>
                                 </div>
-                            {{-- @endif --}}
+                            @endif
                         </div>
                         @endif
                             
@@ -607,6 +605,7 @@
                 @endif
             </div>
 
+
             {{-- Modal Preview Gambar Start --}}
         <div class="modal fade" id="modal-upload-gambar" wire:ignore.self>
             <div class="modal-dialog modal-md">
@@ -620,74 +619,135 @@
                     </div>
                     <div class="modal-body">
 
+                        @if ($show_gambar_reupload)
+                            @if (!is_null($image_apd_user_reupload))
+                            <div class="col-12">
+                                <span class="text-warning">Gambar berikut merupakan preview gambar yang anda upload,
+                                    pastikan anda menyimpan perubahan.</span>
 
-                        {{-- Saat User Upload gambar --}}
-                        @if ($gambar_apd_user && !($errors->has('gambar_apd_user.*')))
-                        <div class="col-12">
-                            <span class="text-warning">Gambar berikut merupakan preview gambar yang anda upload,
-                                pastikan anda menyimpan perubahan.</span>
-
-                            {{-- Script untuk preview gambar apd Start--}}
-                            <script>
-                                $(document).ready(function() {
-                                        $('.upload-preview.product-image-thumb').on('click', function () {
-                                            var $image_element = $(this).find('img')
-                                            $('.upload-preview.product-image').prop('src', $image_element.attr('src'))
-                                            $('.upload-preview.product-image-thumb.active').removeClass('active')
-                                            $(this).addClass('active')
+                                {{-- Script untuk preview gambar apd Start--}}
+                                <script>
+                                    $(document).ready(function() {
+                                            $('.upload-preview.product-image-thumb').on('click', function () {
+                                                var $image_element = $(this).find('img')
+                                                $('.upload-preview.product-image').prop('src', $image_element.attr('src'))
+                                                $('.upload-preview.product-image-thumb.active').removeClass('active')
+                                                $(this).addClass('active')
+                                                })
                                             })
-                                        })
-                            </script>
-                            {{-- Script untuk preview gambar apd End--}}
+                                </script>
+                                {{-- Script untuk preview gambar apd End--}}
 
 
-                            {{-- Upload Gambar lebih dari 1 --}}
-                            @if (count($gambar_apd_user)>1)
-                            <img class="upload-preview product-image" src="{{ $gambar_apd_user[0]->temporaryUrl() }}"
-                                alt="Gambar Apd Anda">
-                            <div class="col-12 upload-preview product-image-thumbs">
+                                {{-- Upload Gambar lebih dari 1 --}}
+                                @if (is_array($image_apd_user_reupload))
+                                <img class="upload-preview product-image" src="{{ $upload_path . $image_apd_user_reupload[0] }}"
+                                    alt="Gambar Apd Anda">
+                                <div class="col-12 upload-preview product-image-thumbs">
 
-                                @foreach ($gambar_apd_user as $key => $gbr)
-                                @if($key === array_key_first($gambar_apd_user))
-                                <div class="upload-preview product-image-thumb active">
-                                    <img src="{{$gbr->temporaryUrl()}}" alt="List Gambar Apd">
+                                    @foreach ($image_apd_user_reupload as $key => $gbr)
+                                    @if($key === array_key_first($image_apd_user_reupload))
+                                    <div class="upload-preview product-image-thumb active">
+                                        <img src="{{$upload_path.$gbr}}" alt="List Gambar Apd">
+                                    </div>
+                                    @else
+                                    <div class="upload-preview product-image-thumb">
+                                        <img src="{{$upload_path.$gbr}}" alt="List Gambar Apd">
+                                    </div>
+
+                                    @endif
+                                    @endforeach
                                 </div>
-                                @else
-                                <div class="upload-preview product-image-thumb">
-                                    <img src="{{$gbr->temporaryUrl()}}" alt="List Gambar Apd">
-                                </div>
+
+                                {{-- Upload Gambar 1 --}}
+                                @elseif (is_string($image_apd_user_reupload))
+                                <img class="upload-preview product-image" src="{{$upload_path . $image_apd_user_reupload}}"
+                                    alt="Gambar Apd Anda">
 
                                 @endif
-                                @endforeach
+                                @else
+                                <div class="jumbotron jumbotron-fluid text-center">
+                                    Anda belum upload gambar, preview gambar anda akan muncul disini.
+                                </div>
                             </div>
-
-                            {{-- Upload Gambar 1 --}}
-                            @elseif (count($gambar_apd_user) == 1)
-                            <img class="upload-preview product-image" src="{{$gambar_apd_user[0]->temporaryUrl()}}"
-                                alt="Gambar Apd Anda">
-
                             @endif
-                            @else
-                            <div class="jumbotron jumbotron-fluid text-center">
-                                Anda belum upload gambar, preview gambar anda akan muncul disini.
+                        @else
+                             {{-- Saat User Upload gambar --}}
+                            @if ($gambar_apd_user && !($errors->has('gambar_apd_user.*')))
+                            <div class="col-12">
+                                <span class="text-warning">Gambar berikut merupakan preview gambar yang anda upload,
+                                    pastikan anda menyimpan perubahan.</span>
+
+                                {{-- Script untuk preview gambar apd Start--}}
+                                <script>
+                                    $(document).ready(function() {
+                                            $('.upload-preview.product-image-thumb').on('click', function () {
+                                                var $image_element = $(this).find('img')
+                                                $('.upload-preview.product-image').prop('src', $image_element.attr('src'))
+                                                $('.upload-preview.product-image-thumb.active').removeClass('active')
+                                                $(this).addClass('active')
+                                                })
+                                            })
+                                </script>
+                                {{-- Script untuk preview gambar apd End--}}
+
+
+                                {{-- Upload Gambar lebih dari 1 --}}
+                                @if (count($gambar_apd_user)>1)
+                                <img class="upload-preview product-image" src="{{ $gambar_apd_user[0]->temporaryUrl() }}"
+                                    alt="Gambar Apd Anda">
+                                <div class="col-12 upload-preview product-image-thumbs">
+
+                                    @foreach ($gambar_apd_user as $key => $gbr)
+                                    @if($key === array_key_first($gambar_apd_user))
+                                    <div class="upload-preview product-image-thumb active">
+                                        <img src="{{$gbr->temporaryUrl()}}" alt="List Gambar Apd">
+                                    </div>
+                                    @else
+                                    <div class="upload-preview product-image-thumb">
+                                        <img src="{{$gbr->temporaryUrl()}}" alt="List Gambar Apd">
+                                    </div>
+
+                                    @endif
+                                    @endforeach
+                                </div>
+
+                                {{-- Upload Gambar 1 --}}
+                                @elseif (count($gambar_apd_user) == 1)
+                                <img class="upload-preview product-image" src="{{$gambar_apd_user[0]->temporaryUrl()}}"
+                                    alt="Gambar Apd Anda">
+
+                                @endif
+                                @else
+                                <div class="jumbotron jumbotron-fluid text-center">
+                                    Anda belum upload gambar, preview gambar anda akan muncul disini.
+                                </div>
                             </div>
-                        </div>
+                            @endif
                         @endif
+
+                       
                     </div>
                 </div>
             </div>
         </div>
         {{-- Modal Preview Gambar End --}}
 
+       
+
         @push('stack-body')
-        
-        <script src="{{ asset('admin-lte/ekko-lightbox.min.js')}}">
-            $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+
+        <script>
+$(document).on('click', '[data-toggle="lightbox"]', function(event) {
             event.preventDefault();
             $(this).ekkoLightbox({
               alwaysShowClose: true
             });
           });
+        </script>
+        
+        <script src="{{ asset('admin-lte/ekko-lightbox.min.js')}}">
+            
         </script>
         @endpush
 
