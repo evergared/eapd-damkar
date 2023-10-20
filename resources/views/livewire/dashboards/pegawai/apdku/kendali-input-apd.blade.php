@@ -622,8 +622,7 @@
                         @if ($show_gambar_reupload)
                             @if (!is_null($image_apd_user_reupload))
                             <div class="col-12">
-                                <span class="text-warning">Gambar berikut merupakan preview gambar yang anda upload,
-                                    pastikan anda menyimpan perubahan.</span>
+                                <span class="text-warning">Gambar berikut merupakan preview gambar yang anda upload.</span>
 
                                 {{-- Script untuk preview gambar apd Start--}}
                                 <script>
@@ -738,7 +737,7 @@
         @push('stack-body')
 
         <script>
-$(document).on('click', '[data-toggle="lightbox"]', function(event) {
+            $(document).on('click', '[data-toggle="lightbox"]', function(event) {
             event.preventDefault();
             $(this).ekkoLightbox({
               alwaysShowClose: true
