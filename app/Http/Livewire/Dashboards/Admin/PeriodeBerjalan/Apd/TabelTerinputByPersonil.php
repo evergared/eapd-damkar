@@ -45,6 +45,9 @@ class TabelTerinputByPersonil extends DataTableComponent
             ];
         });
 
+        $this->setQueryStringDisabled();
+        $this->setColumnSelectStatus(false);
+
     }
 
     public function builder(): Builder

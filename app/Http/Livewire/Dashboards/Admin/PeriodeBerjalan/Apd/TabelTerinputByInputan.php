@@ -2,31 +2,111 @@
 
 namespace App\Http\Livewire\Dashboards\Admin\PeriodeBerjalan\Apd;
 
+use App\Enum\StatusApd;
+use App\Enum\VerifikasiApd;
 use App\Http\Controllers\ApdDataController;
+use App\Http\Controllers\PeriodeInputController;
+use App\Http\Controllers\StatusDisplayController;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\InputApd;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
+use Throwable;
 
 class TabelTerinputByInputan extends DataTableComponent
 {
 
+    public string $tableName = "Tabel_Terinput_By_Inputan";
+    public array $TabelTerinputByInputan = [];
+
     public array $bulkActions = [
-        'test' => 'Test Bulk Action'
+        'panggilModalUbah' => 'Ubah Verifikasi'
     ];
+
+    public $columnSearch = [
+        'size' => [],
+        'jabatan' => [],
+        'penempatan' => [],
+        'no_seri' => []
+    ];
+
+    protected $listeners = [
+        "tabelGantiPenempatan" => "gantiPenempatan"
+    ];
+
+    public $penempatan_terpilih = "";
+
+    public $opsi_dropdown_verifikasi = [
+        ['value' => '3', 'text'=> 'Verifikasi'],
+        ['value' => '4', 'text'=> 'Tolak'],
+    ];
+
+    public 
+            $model_verifikasi = '',
+            $model_komentar = '';
+
+    public $jumlah_data = 0;
 
     #region rappasoft methods
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
+        $this->setPrimaryKey('id_inputan');
+        $this->setBulkActionsEnabled();
+        $this->setBulkActionsStatus(true);
+        // $this->setRefreshVisible();
+        $this->setRefreshTime(4000);
         
+        $this->setConfigurableAreas([
+            'before-tools' => ['livewire.komponen.table-loading',['detik' => 4]],
+            'toolbar-right-start' => ['livewire.komponen.table-minireminder',['pesan'=>['Gunakan "kolom" jika data terlalu kecil.','Gunakan "Aksi" untuk tindakan massal.']]]
+        ]);
+
+        $this->setTableAttributes([
+            'class' => "table-head-fixed text-nowrap",
+        ]);
+
+        $this->setTdAttributes(function(){
+            return [
+                'class' => 'align-middle'
+            ];
+        });
     }
 
     public function builder(): Builder
     {
-        $query = InputApd::query()
-                    ->join('pegawai','input_apd.id_pegawai','=','pegawai.id_pegawai')
-                    ->join('periode_input_apd', 'input_apd.id_periode','=','periode_input_apd.id_periode');
+
+        $query = InputApd::where('id_inputan','ambil data kosong untuk dummy lalala');
+
+        if($this->penempatan_terpilih != '')
+        {
+            $pic = new PeriodeInputController;
+
+            $periode = $pic->ambilIdPeriodeInput();
+
+            $query = InputApd::query()
+                        ->join('pegawai','input_apd.id_pegawai','=','pegawai.id_pegawai')
+                        ->join('jabatan','pegawai.id_jabatan','=','jabatan.id_jabatan')
+                        ->join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
+                        ->join('periode_input_apd', 'input_apd.id_periode','=','periode_input_apd.id_periode')
+                        ->where('pegawai.aktif',true)
+                        ->where('pegawai.id_penempatan','like',$this->penempatan_terpilih.'%')
+                        ->where('input_apd.id_periode',$periode)
+                        ->when($this->columnSearch['size'] ?? null, function($query, $size){
+                            return $query->where('size', 'like', '%'.$size.'%');
+                        })
+                        ->when($this->columnSearch['jabatan'] ?? null, function($query, $jabatan){
+                            return $query->where('jabatan.nama_jabatan', 'like', '%'.$jabatan.'%');
+                        })
+                        ->when($this->columnSearch['penempatan'] ?? null, function($query, $penempatan){
+                            return $query->where('penempatan.nama_penempatan', 'like', '%'.$penempatan.'%');
+                        })
+                        ->when($this->columnSearch['no_seri'] ?? null, function($query, $no_seri){
+                            return $query->where('no_seri', 'like', '%'.$no_seri.'%');
+                        });
+            // $this->setAdditionalSelects(['jabatan.nama_jabatan','penempatan.nama_penempatan']);
+        }
         
         return $query;
                     
@@ -53,15 +133,41 @@ class TabelTerinputByInputan extends DataTableComponent
             Column::make('Nama Pegawai', 'pegawai.nama')
                 ->sortable()
                 ->searchable(),
+            Column::make('Jabatan', 'pegawai.jabatan.nama_jabatan')
+                ->sortable()
+                ->secondaryHeader(function(){
+                    return view('livewire.komponen.table-searchheader',['field'=>'jabatan']);
+                }),
+            Column::make('Penempatan', 'pegawai.penempatan.nama_penempatan')
+                ->sortable()
+                ->secondaryHeader(function(){
+                    return view('livewire.komponen.table-searchheader',['field'=>'penempatan']);
+                }),
             Column::make("Size", "size")
                 ->sortable()
-                ->searchable(),
+                ->secondaryHeader(function(){
+                    return view('livewire.komponen.table-searchheader',['field'=>'size']);
+                }),
             Column::make("Kondisi", "kondisi")
+                ->format(function($value){
+                    $sdc = new StatusDisplayController;
+
+                    $enum = StatusApd::tryFrom($value);
+                    if(is_null($enum))
+                        $text = "-";
+                    else
+                        $text = $enum->label;
+
+                    $warna = $sdc->ubahKondisiApdKeWarnaBootstrap($enum);
+                    return view('livewire.dashboards.admin.periode-berjalan.apd.kolom-badge-tabel-by-inputan',['warna'=>$warna, 'text'=>$text]);
+                })
                 ->sortable()
-                ->searchable(),
+                ->secondaryHeaderFilter('kondisi'),
             Column::make("No seri", "no_seri")
                 ->sortable()
-                ->searchable(),
+                ->secondaryHeader(function(){
+                    return view('livewire.komponen.table-searchheader',['field'=>'no_seri']);
+                }),
             Column::make("Image", "image")
                 ->format(function($value, $row){
                     $adc = new ApdDataController;
@@ -81,8 +187,20 @@ class TabelTerinputByInputan extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make("Verifikasi status", "verifikasi_status")
-                ->sortable()
-                ->searchable(),
+            ->format(function($value){
+                $sdc = new StatusDisplayController;
+
+                $enum = VerifikasiApd::tryFrom($value);
+                if(is_null($enum))
+                    $text = "-";
+                else
+                    $text = $enum->label;
+
+                $warna = $sdc->ubahVerifikasiApdKeWarnaBootstrap($enum->value);
+                return view('livewire.dashboards.admin.periode-berjalan.apd.kolom-badge-tabel-by-inputan',['warna'=>$warna, 'text'=>$text]);
+            })
+                ->secondaryHeaderFilter('verifikasi_status')
+                ->sortable(),
             Column::make("Komentar verifikator", "komentar_verifikator")
                 ->sortable()
                 ->searchable(),
@@ -90,20 +208,120 @@ class TabelTerinputByInputan extends DataTableComponent
         ];
     }
 
-    public function bulkActions(): array
+    public function customView(): string
     {
-        return [
-            'test' => 'Mencoba Bulk Actions'
-        ];
+        return 'livewire.dashboards.admin.periode-berjalan.apd.modal-ubah-verifikasi';
     }
     
+    public function filters(): array
+    {
+        $opsi_verifikasi = ['' => "Semua"];
+
+        $semua_verifikasi = VerifikasiApd::toValues();
+
+        foreach($semua_verifikasi as $verifikasi)
+        {
+            $label = VerifikasiApd::tryFrom($verifikasi)->label;
+            $opsi_verifikasi[$verifikasi] = $label;
+        }
+
+        $opsi_kondisi = ['' => "Semua"];
+
+        $semua_kondisi = StatusApd::toValues();
+
+        foreach($semua_kondisi as $kondisi)
+        {
+            $label = StatusApd::tryFrom($kondisi)->label;
+            $opsi_kondisi[$kondisi] = $label;
+        }
+
+        return [
+            SelectFilter::make('Verifikasi', 'verifikasi_status')
+                ->setFilterPillTitle('Verifikasi')
+                ->options($opsi_verifikasi)
+                ->filter(function(Builder $builder, string $value) {
+                    if($value != '')
+                    {
+                        $builder->where('verifikasi_status',$value);
+                    }
+                }),
+                SelectFilter::make('Kondisi', 'kondisi')
+                ->setFilterPillTitle('Kondisi')
+                ->options($opsi_kondisi)
+                ->filter(function(Builder $builder, string $value) {
+                    if($value != '')
+                    {
+                        $builder->where('kondisi',$value);
+                    }
+                }),
+        ];
+    }
+
+    #endregion
+
+    #region Listener function
+    public function gantiPenempatan($value)
+    {
+        $this->penempatan_terpilih = $value;
+        $this->emitSelf('refreshDatatable');
+    }
     #endregion
 
     #region bulk actions
-    public function test()
+    public function panggilModalUbah()
     {
-        error_log('bulk actions');
-        return;
+        $this->model_verifikasi = "";
+        $this->model_komentar = "";
+        
+        $this->jumlah_data = $this->getSelectedCount();
+
+        if($this->jumlah_data < 1)
+        {
+            $this->dispatchBrowserEvent('jsAlert',['pesan' => 'Harap pilih minimal 1 (satu) inputan melalui checkbox di kolom paling kiri.']);
+            return;
+        }
+
+
+        $this->dispatchBrowserEvent('byInputanPanggilModalUbah');
+    }
+    #endregion
+
+    #region modal function
+    public function simpanPerubahanVerifikasi()
+    {
+        $this->validate([
+            'model_verifikasi' => 'required'
+        ],
+        [
+            'model_verifikasi.required' => 'Ubah verifikasi terlebih dahulu.'
+        ]);
+
+        $berhasil = 0;
+        $gagal = 0;
+
+        foreach($this->getSelected() as $selected)
+        {
+                
+            $adc = new ApdDataController;
+
+            $status = $adc->adminVerifikasiInputan($selected,$this->model_verifikasi,$this->model_komentar);
+
+            if($status)
+                $berhasil++;
+            else
+                $gagal++;
+
+        }
+
+        if($berhasil > 0 && $gagal == 0)
+            session()->flash('alert-success-modalUbah', 'Berhasil mengubah verifikasi dari semua data.');
+        elseif($berhasil > 0 && $gagal > 0)
+            session()->flash('alert-warning-modalUbah', ["berhasil" => $berhasil, "gagal"=>$gagal]);
+        elseif($berhasil == 0 && $gagal > 0)
+            session()->flash('alert-danger-modalUbah', 'Terjadi Kesalahan saat mengubah verifikasi dari semua data.');
+        else
+            session()->flash('alert-secondary-modalUbah', "Tidak ada perubahan dari tindakan yang dilakukan");
+
     }
     #endregion
 }
