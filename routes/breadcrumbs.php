@@ -88,6 +88,11 @@ Breadcrumbs::for('admin-progress-ukuran', function (BreadcrumbTrail $trail) {
     $trail->push('Inputan Ukuran Pegawai Periode Ini', route('admin-progress-ukuran'));
 });
 
+Breadcrumbs::for('admin-ubah-data-terverifikasi', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin-dashboard');
+    $trail->push('Ubah Data Terverifikasi', route('admin-ubah-data-terverifikasi'));
+});
+
 Breadcrumbs::for('admin-data-apd-inputan', function (BreadcrumbTrail $trail) {
     $trail->parent('admin-dashboard');
     $trail->push('Data Inputan APD Pegawai', route('admin-data-apd-inputan'));

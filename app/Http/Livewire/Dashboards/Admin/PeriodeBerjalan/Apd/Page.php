@@ -72,8 +72,14 @@ class Page extends Component
         $admin_action_komentar = "";
 
     protected $listeners =[
-        'detailByPersonil'
+        'detailByPersonil',
+        // ketika komponen lain refresh secara global
+        'refreshComponent' => '$refresh',
+
+        // ketika komponen lain hanya meminta sidebar yang di refresh
+        // 'refreshPage' => '$refresh'
     ];
+
 
 #region Livewire lifecycle
     public function render()
@@ -427,10 +433,6 @@ public function hitungRangkumanKerusakan()
         }
     }
 
-    public function detailByPersonilBulkSimpan()
-    {
-
-    }
 #endregion
 
 }

@@ -57,15 +57,6 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item {{ (Route::currentRouteName() == 'admin-aduan-barang')? 'menu-open' :''}}">
-                    <a href="{{route('admin-aduan-barang')}}"
-                        class="nav-link {{ (Route::currentRouteName() == 'admin-aduan-barang')? 'active' :''}}">
-                        <i class="nav-icon fab fa-stack-exchange"></i>
-                        <p>
-                            Aduan Barang
-                        </p>
-                    </a>
-                </li>
                 <li class="nav-item {{ (Route::currentRouteName() =='admin-progress-apd' || Route::currentRouteName() =='admin-progress-ukuran')? 'menu-open' :''}}">
                     <a href=""
                         class="nav-link {{ (Route::currentRouteName() =='admin-progress-apd' || Route::currentRouteName() =='admin-progress-ukuran')? 'active' :''}}">
@@ -90,7 +81,27 @@
                         </li>
                     </ul>
                 </li>
-                
+                <li class="nav-item {{ (Route::currentRouteName() == 'admin-ubah-data-terverifikasi')? 'menu-open' :''}}">
+                    <a href="{{route('admin-ubah-data-terverifikasi')}}"
+                        class="nav-link {{ (Route::currentRouteName() == 'admin-ubah-data-terverifikasi')? 'active' :''}}">
+                        <i class="nav-icon fas fa-clipboard-check"></i>
+                        <p>
+                            Permintaan Ubah Data
+                            @if ($notif_permintaan_ubah_data > 0)
+                                <span class="badge badge-danger right">{{$notif_permintaan_ubah_data}}</span>
+                            @endif
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item {{ (Route::currentRouteName() == 'admin-aduan-barang')? 'menu-open' :''}}">
+                    <a href="{{route('admin-aduan-barang')}}"
+                        class="nav-link {{ (Route::currentRouteName() == 'admin-aduan-barang')? 'active' :''}}">
+                        <i class="nav-icon fab fa-stack-exchange"></i>
+                        <p>
+                            Aduan Barang
+                        </p>
+                    </a>
+                </li>
                 <li class="nav-item {{ (Route::currentRouteName() =='admin-data-apd-inputan' || Route::currentRouteName() =='admin-data-apd-no_seri' || Route::currentRouteName() =='admin-data-apd-pensiunan' || Route::currentRouteName() =='admin-data-apd-rekap')? 'menu-open' :''}}">
                     <a href=""
                         class="nav-link {{ (Route::currentRouteName() =='admin-data-apd-inputan' || Route::currentRouteName() =='admin-data-apd-no_seri' || Route::currentRouteName() =='admin-data-apd-pensiunan' || Route::currentRouteName() =='admin-data-apd-rekap')? 'active' :''}}">

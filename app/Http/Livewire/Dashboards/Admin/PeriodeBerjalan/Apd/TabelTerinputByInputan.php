@@ -322,6 +322,8 @@ class TabelTerinputByInputan extends DataTableComponent
         else
             session()->flash('alert-secondary-modalUbah', "Tidak ada perubahan dari tindakan yang dilakukan");
 
+        $this->emit('refreshPage');
+
     }
     #endregion
 }

@@ -15,6 +15,7 @@ return new class extends Migration
     {
         if (!Schema::hasTable('input_apd_reupload')) {
             Schema::create('input_apd_reupload', function (Blueprint $t) {
+                $t->string('id_reupload')->primary();
                 $t->string('id_inputan');
                 $t->string('id_apd')->nullable();
                 $t->string('size')->nullable();
@@ -23,6 +24,8 @@ return new class extends Migration
                 $t->longText('image')->nullable();
                 $t->text('komentar_pengupload')->nullable();
                 $t->string('data_diupdate')->nullable();
+                $t->boolean('terima')->default(false);
+                $t->boolean('selesai')->default(false);
             });
         }
 

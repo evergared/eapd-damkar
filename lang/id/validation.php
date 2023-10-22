@@ -137,7 +137,7 @@ return [
     'string' => 'The :attribute must be a string.',
     'timezone' => 'The :attribute must be a valid timezone.',
     'unique' => 'The :attribute has already been taken.',
-    'uploaded' => 'The :attribute failed to upload.',
+    'uploaded' => ':attribute gagal untuk diupload. Cobalah kurangi ukuran file atau ganti ke extensi file yang sesuai. Jika sudah, coba preview gambar pada "Gambar APD Anda"',
     'url' => 'The :attribute must be a valid URL.',
     'uuid' => 'The :attribute must be a valid UUID.',
 

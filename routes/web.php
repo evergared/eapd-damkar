@@ -75,6 +75,8 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/superuser/progress-inputan/apd', \App\Http\Livewire\Dashboards\Admin\PeriodeBerjalan\Apd\Page::class)->name('admin-progress-apd');
     Route::get('/superuser/progress-inputan/ukuran', \App\Http\Livewire\Dashboards\Admin\PeriodeBerjalan\Ukuran\Page::class)->name('admin-progress-ukuran');
 
+    Route::get('/superuser/ubah-data-terverifikasi', \App\Http\Livewire\Dashboards\Admin\PermintaanUbahData\Page::class)->name('admin-ubah-data-terverifikasi');
+
     Route::get('/superuser/data-apd/inputan-anggota', \App\Http\Livewire\Dashboards\Admin\DataApd\Inputan\Page::class)->name('admin-data-apd-inputan');
     Route::get('/superuser/data-apd/list-no_seri', \App\Http\Livewire\Dashboards\Admin\DataApd\NoSeri\Page::class)->name('admin-data-apd-no_seri');
     Route::get('/superuser/data-apd/pensiunan', \App\Http\Livewire\Dashboards\Admin\DataApd\Pensiunan\Page::class)->name('admin-data-apd-pensiunan');

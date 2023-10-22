@@ -11,7 +11,7 @@ class InputApdReupload extends Model
     use HasUlids;
 
     protected   $table = 'input_apd_reupload',
-                $primaryKey = 'id_inputan';
+                $primaryKey = 'id_reupload';
 
     protected $keyType = 'string';
     
@@ -25,6 +25,8 @@ class InputApdReupload extends Model
         'image',
         'komentar_pengupload',
         'data_diupdate',
+        'terima',
+        'selesai',
     ];
 
     public function inputan()

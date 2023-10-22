@@ -217,12 +217,14 @@ class ApdDataController extends Controller
                 // panggil untuk mambantu mengubah warna status
                 $sdc = new StatusDisplayController;
                 $verifikator = Pegawai::find($input->verifikasi_oleh);
+                $nama_apd = (is_null(ApdList::where('id_apd',$input->id_apd)->first()))? '-' : ApdList::where('id_apd',$input->id_apd)->first()->nama_apd;
 
                 return [
                             'id_inputan' => $input->id_inputan,
                             'id_jenis' => $id_jenis,
                             'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
                             'id_apd' => $input->id_apd,
+                            'nama_apd' => $nama_apd,
                             'no_seri' => $input->no_seri,
                             'size_apd' => ($input->size)?$input->size:"-",
                             'data_terakhir_update' => $input->data_diupdate,

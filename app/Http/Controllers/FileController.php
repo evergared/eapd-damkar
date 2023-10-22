@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InputApd;
+use App\Models\InputApdReupload;
 use App\Models\PeriodeInputApd;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -175,6 +178,51 @@ class FileController extends Controller
         catch(Throwable $e)
         {
             error_log("File Controller : Gagal menghapus directory apd item");
+        }
+    }
+
+    public function gantiGambarInputanDariReupload($id_inputan)
+    {
+        try{
+
+            $original = InputApd::find($id_inputan)->first();
+            if(is_null($original))
+                throw new Exception('Tidak ditemukan entry input_apd dengan id '.$id_inputan);
+            
+            $reupload = InputApdReupload::where('id_inputan',$id_inputan)->first();
+            if(is_null($reupload))
+                throw new Exception('Tidak ditemukan entry input_apd_reupload dengan id '.$id_inputan);
+
+            if(!is_null($reupload->image))
+            {
+                $list_gambar = explode('||',$reupload->image);
+
+                if(is_array($list_gambar))
+                {
+                    foreach($list_gambar as $gbr)
+                    {
+                        Storage::move(
+                            $this->buatPathFileApdUpload($original->id_pegawai,$original->id_jenis,$original->id_periode,true). '/'. $gbr,
+                            $this->buatPathFileApdUpload($original->id_pegawai,$original->id_jenis,$original->id_periode). '/'. $gbr);
+                    }
+                }
+                else
+                {
+                    Storage::move(
+                            $this->buatPathFileApdUpload($original->id_pegawai,$original->id_jenis,$original->id_periode,true). '/'. $list_gambar,
+                            $this->buatPathFileApdUpload($original->id_pegawai,$original->id_jenis,$original->id_periode). '/'. $list_gambar);
+                }
+            }
+
+            return true;
+
+        }
+        catch(Throwable $e)
+        {
+            $time = now();
+            error_log('File Controller Error : Kesalahan saat mengganti gambar inputan ref ('.$time.') '.$e);
+            Log::error('File Controller Error : Kesalahan saat mengganti gambar inputan ref ('.$time.') '.$e);
+            return false;
         }
     }
 }

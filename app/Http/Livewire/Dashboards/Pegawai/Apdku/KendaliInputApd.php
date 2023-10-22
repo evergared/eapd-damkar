@@ -284,7 +284,7 @@ class KendaliInputApd extends Component
                 
                 $this->label_kerusakan = StatusApd::tryFrom($this->kondisi_apd_user_sebelum)->label;
 
-                $this->show_data_perubahan_pending = InputApdReupload::where('id_inputan',$this->id_inputan_user_sebelum)->exists();
+                $this->show_data_perubahan_pending = InputApdReupload::where('id_inputan',$this->id_inputan_user_sebelum)->where('selesai',false)->exists();
 
                 $reupload = $adc->muatSatuInputanReupload($this->id_inputan_user_sebelum);
 
