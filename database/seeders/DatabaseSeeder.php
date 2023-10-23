@@ -30,11 +30,11 @@ class DatabaseSeeder extends Seeder
         // $this->call(TesMultiUploadSeeder::class);
         // $this->call(DummyDatabaseSeeder::class);
         $this->call(TesPeriodeSeeder::class);
-        $this->call(TesPenempatanSeeder::class);
-        $this->call(TesJabatanSeeder::class);
-        $this->call(TesPegawaiSeeder::class);
+        $this->call(PenempatanSeeder::class);
+        $this->call(JabatanSeeder::class);
+        $this->call(PegawaiSeeder::class);
         $this->call(TesUserSeeder::class);
-        $this->call(TesAdminSeeder::class);
+        $this->call(AkunAdminSeeder::class);
         $this->call(TesJenisApdSeeder::class);
         $this->call(TesBarangApdSeeder::class);
         $this->call(TesTemplateApdSeeder::class);
