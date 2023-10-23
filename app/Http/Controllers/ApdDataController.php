@@ -125,7 +125,7 @@ class ApdDataController extends Controller
             if(!is_null($template_pada_periode))
                 return $template_pada_periode->template;
             
-            error_log('template input apd tidak ditemukan untuk jabatan '.$id_jabatan);
+            // error_log('template input apd tidak ditemukan untuk jabatan '.$id_jabatan);
             return [];
 
         } catch (Throwable $e) {

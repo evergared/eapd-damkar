@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Enum\KeberadaanApd;
 use App\Enum\StatusApd;
 use App\Enum\VerifikasiApd;
+use App\Models\Admin;
 use App\Models\ApdJenis;
 use App\Models\ApdList;
 use App\Models\InputApd;
 use App\Models\Pegawai;
 use App\Models\Penempatan;
 use App\Models\PeriodeInputApd;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
@@ -258,6 +260,49 @@ class ApdRekapController extends Controller
         catch(Throwable $e)
         {
             error_log("gagal membangun data detail rekap tingkat sektor ".$e);
+        }
+    }
+
+    public function bangunDataTableRekapAdmin($id_admin = null, $id_periode = null)
+    {
+        try
+        {
+            if(is_null($id_admin))
+                $admin = Auth::user();
+            else
+                $admin = Admin::find($id_admin)->first();
+            
+            if(is_null($admin))
+                throw new Exception('admin tidak ditemukan');
+
+            if(is_null($id_periode))
+            {
+                $pic = new PeriodeInputController;
+                $id_periode = $pic->ambilIdPeriodeInput();
+            }
+
+            // query semua pegawai yang menjadi tanggung jawab admin
+            $list_pegawai = Pegawai::query();
+
+            if(true)
+            {
+                $list_pegawai = $list_pegawai->where('id_penempatan','like',$admin->id_penempatan.'%');
+            }
+            else
+            {
+                $list_pegawai = [];
+            }
+
+            // ambil semua inputan pegawai pada periode yang dicari
+            foreach($list_pegawai as $pegawai)
+            {
+                
+            }
+            
+        }
+        catch(Throwable $e)
+        {
+            error_log('gagal membuat datatable rekap admin '.$e);
         }
     }
 }

@@ -3,10 +3,12 @@
 namespace App\Http\Livewire\Dashboards\Admin\PeriodeBerjalan\Apd;
 
 use App\Http\Controllers\ApdDataController;
+use App\Http\Controllers\PeriodeInputController;
 use App\Models\ApdList;
 use App\Models\InputApd;
 use App\Models\Pegawai;
 use App\Models\Penempatan;
+use App\Models\PeriodeInputApd;
 use App\Models\Wilayah;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -51,12 +53,17 @@ class KendaliProgress extends Component
     public
         $pegawai_terakhir = '';
 
+    public
+        $id_periode_berjalan = null,
+        $nama_periode_berjalan = null;
+
     protected $listeners =[
             'detailByPersonil',
             // ketika komponen lain refresh secara global
             'refreshComponent' => '$refresh',
 
-            'hitungCapaian'
+            'hitungCapaian',
+            'sharePeriodeBerjalan' => 'terimaPeriodeBerjalan'
     
             // ketika komponen lain hanya meminta sidebar yang di refresh
             // 'refreshPage' => '$refresh'
@@ -133,6 +140,11 @@ class KendaliProgress extends Component
                         "value" => $f->id_penempatan, "text" => $f->nama_penempatan
                     ]);
                 }
+
+            $pic = new PeriodeInputController;
+
+            $this->id_periode_berjalan = $pic->ambilIdPeriodeInput();
+            $this->nama_periode_berjalan = PeriodeInputApd::find($this->id_periode_berjalan)->nama_periode;
 
         }
         catch(Throwable $e)
@@ -297,7 +309,6 @@ class KendaliProgress extends Component
 
     public function changeDropdownPenempatan()
     {
-        error_log('dropdown changed');
         $this->emit('tabelGantiPenempatan',$this->model_dropdown_penempatan);
         $this->hitungCapaian();
         $this->hitungRangkumanKeberadaan();
@@ -306,7 +317,7 @@ class KendaliProgress extends Component
 #endregion
 
 
-    #region tindakan tabel
+#region tindakan tabel
     public function detailByPersonil($target_pegawai)
     {
         $this->error_time_detail_by_personil = null;
@@ -341,4 +352,6 @@ class KendaliProgress extends Component
         }
     }
 #endregion
+
+
 }

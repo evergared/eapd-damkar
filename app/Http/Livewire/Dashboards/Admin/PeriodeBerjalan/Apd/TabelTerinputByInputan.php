@@ -10,6 +10,7 @@ use App\Http\Controllers\StatusDisplayController;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\InputApd;
+use App\Models\PeriodeInputApd;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
@@ -33,8 +34,14 @@ class TabelTerinputByInputan extends DataTableComponent
     ];
 
     protected $listeners = [
-        "tabelGantiPenempatan" => "gantiPenempatan"
+        "tabelGantiPenempatan" => "gantiPenempatan",
+        'sharePeriodeBerjalan' => 'terimaPeriodeBerjalan'
     ];
+
+    public
+        $id_periode_berjalan = null,
+        $nama_periode_berjalan = null;
+    
 
     public $penempatan_terpilih = "";
 
@@ -81,9 +88,7 @@ class TabelTerinputByInputan extends DataTableComponent
 
         if($this->penempatan_terpilih != '')
         {
-            $pic = new PeriodeInputController;
-
-            $periode = $pic->ambilIdPeriodeInput();
+            
 
             $query = InputApd::query()
                         ->join('pegawai','input_apd.id_pegawai','=','pegawai.id_pegawai')
@@ -92,7 +97,7 @@ class TabelTerinputByInputan extends DataTableComponent
                         ->join('periode_input_apd', 'input_apd.id_periode','=','periode_input_apd.id_periode')
                         ->where('pegawai.aktif',true)
                         ->where('pegawai.id_penempatan','like',$this->penempatan_terpilih.'%')
-                        ->where('input_apd.id_periode',$periode)
+                        ->where('input_apd.id_periode',$this->id_periode_berjalan)
                         ->when($this->columnSearch['size'] ?? null, function($query, $size){
                             return $query->where('size', 'like', '%'.$size.'%');
                         })
@@ -326,4 +331,11 @@ class TabelTerinputByInputan extends DataTableComponent
 
     }
     #endregion
+
+    public function mount()
+    {
+        $pic = new PeriodeInputController;
+
+        $this->id_periode_berjalan = $pic->ambilIdPeriodeInput();
+    }
 }

@@ -2,13 +2,27 @@
 
 namespace App\Http\Livewire\Dashboards\Admin\PeriodeBerjalan\Apd;
 
+use App\Http\Controllers\PeriodeInputController;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\InputApd;
+use App\Models\PeriodeInputApd;
 
-class TabelDetailInputanByPegawai extends DataTableComponent
+class TabelDetailRekap extends DataTableComponent
 {
+
+    public string $tableName = "Tabel_Detail_Rekap";
+    public array $TabelDetailRekap = [];
+
     protected $model = InputApd::class;
+
+    public
+        $id_periode_berjalan = null,
+        $nama_periode_berjalan = null;
+
+    protected $listeners = [
+        'sharePeriodeBerjalan' => 'terimaPeriodeBerjalan'
+    ];
 
     public function configure(): void
     {
@@ -50,12 +64,19 @@ class TabelDetailInputanByPegawai extends DataTableComponent
                 ->sortable(),
             Column::make("Komentar verifikator", "komentar_verifikator")
                 ->sortable(),
-            Column::make("Terakhir verifikasi", "terakhir_verifikasi")
+            Column::make("Verifikasi diupdate", "verifikasi_diupdate")
                 ->sortable(),
             Column::make("Created at", "created_at")
                 ->sortable(),
             Column::make("Updated at", "updated_at")
                 ->sortable(),
         ];
+    }
+
+    public function mount()
+    {
+        $pic = new PeriodeInputController;
+
+        $this->id_periode_berjalan = $pic->ambilIdPeriodeInput();
     }
 }

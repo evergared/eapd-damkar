@@ -9,6 +9,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Pegawai;
 use App\Models\Penempatan;
+use App\Models\PeriodeInputApd;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,8 +22,14 @@ class TabelTerinputByPersonil extends DataTableComponent
         $penempatan_terpilih = "";
     
     protected $listeners = [
-        "tabelGantiPenempatan" => "gantiPenempatan"
+        "tabelGantiPenempatan" => "gantiPenempatan",
+        'sharePeriodeBerjalan' => 'terimaPeriodeBerjalan'
     ];
+
+    public
+        $id_periode_berjalan = null,
+        $nama_periode_berjalan = null;
+
 
     #region Rappasoft function
     public function configure(): void
@@ -57,16 +64,14 @@ class TabelTerinputByPersonil extends DataTableComponent
         
         if($this->penempatan_terpilih != '')
         {
-            $pic = new PeriodeInputController;
-
-            $periode = $pic->ambilIdPeriodeInput();
+            
 
             $pegawai =  Pegawai::query()
                         ->distinct()
                         ->join('input_apd','input_apd.id_pegawai','=','pegawai.id_pegawai')
                         ->where('pegawai.aktif',true)
                         ->where('pegawai.id_penempatan','like',$this->penempatan_terpilih.'%')
-                        ->where('input_apd.id_periode',$periode);
+                        ->where('input_apd.id_periode',$this->id_periode_berjalan);
                         
         }
         
@@ -193,5 +198,12 @@ class TabelTerinputByPersonil extends DataTableComponent
     {
         $this->penempatan_terpilih = $value;
         $this->emitSelf('refreshDatatable');
+    }
+
+    public function mount()
+    {
+        $pic = new PeriodeInputController;
+
+        $this->id_periode_berjalan = $pic->ambilIdPeriodeInput();
     }
 }

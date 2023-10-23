@@ -3,10 +3,12 @@
 namespace App\Http\Livewire\Dashboards\Admin\PeriodeBerjalan\Apd;
 
 use App\Http\Controllers\ApdDataController;
+use App\Http\Controllers\PeriodeInputController;
 use App\Models\ApdList;
 use App\Models\InputApd;
 use App\Models\Pegawai;
 use App\Models\Penempatan;
+use App\Models\PeriodeInputApd;
 use App\Models\Wilayah;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -49,6 +51,10 @@ class DetailProgress extends Component
         $error_time_keberadaan = null,
         $error_time_detail_by_personil = null,
         $error_time_kerusakan = null;
+    
+    public
+        $id_periode_berjalan = null,
+        $nama_periode_berjalan = null;
 
     
         protected $listeners =[
@@ -61,6 +67,16 @@ class DetailProgress extends Component
     {
         return view('livewire.dashboards.admin.periode-berjalan.apd.detail-progress');
     }
+
+    public function mount()
+    {
+
+        $pic = new PeriodeInputController;
+
+        $this->id_periode_berjalan = $pic->ambilIdPeriodeInput();
+        $this->nama_periode_berjalan = PeriodeInputApd::find($this->id_periode_berjalan)->nama_periode;
+        
+    }
     #endregion
 
     public function terimaPaket($paket)
@@ -71,6 +87,8 @@ class DetailProgress extends Component
 
             $this->detail_by_personil_data_inputan = $paket['data_inputan'];
     }
+
+
 
 #region detail by personil
     public function detailByPersonilLihatDetail($value)
