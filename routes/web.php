@@ -24,7 +24,8 @@ Route::get('/', function () {
     if (Auth::guard('admin')->check())
         return redirect()->to('/superuser/home');
 
-    return view('eapd/halaman-depan');
+    return view('halaman-depan');
+    // return view('eapd/halaman-depan');
     // return view('tes/welcome');
 });
 
