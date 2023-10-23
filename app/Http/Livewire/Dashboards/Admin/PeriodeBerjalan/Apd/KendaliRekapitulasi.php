@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Dashboards\Admin\PeriodeBerjalan\Apd;
 
 use App\Http\Controllers\ApdDataController;
+use App\Http\Controllers\ApdRekapController;
 use App\Http\Controllers\PeriodeInputController;
 use App\Models\ApdList;
 use App\Models\InputApd;
@@ -30,11 +31,14 @@ class KendaliRekapitulasi extends Component
     public
         $error_time_page = null,
         $error_time_alert = null,
+        $error_time_detail = null,
         $error_time_tabel = null;
 
     public
         $id_periode_berjalan = null,
         $nama_periode_berjalan = null;
+    
+    public $data_rekap = null;
 
     protected $listeners = [
         'sharePeriodeBerjalan' => 'terimaPeriodeBerjalan'
@@ -121,8 +125,8 @@ class KendaliRekapitulasi extends Component
             $this->error_time_page = now();
             $this->opsi_dropdown_wilayah = [];
             $this->opsi_dropdown_penempatan = [];
-            error_log('Page @ Dashboard Progress APD Admin ref ('.$this->error_time_page.') : Kesalahan saat inisiasi '.$e);
-            Log::error('Page @ Dashboard Progress APD Admin ref ('.$this->error_time_page.') : Kesalahan saat inisiasi '.$e);
+            error_log('Kendali Rekapitulasi @ Dashboard Progress APD Admin ref ('.$this->error_time_page.') : Kesalahan saat inisiasi '.$e);
+            Log::error('Kendali Rekapitulasi @ Dashboard Progress APD Admin ref ('.$this->error_time_page.') : Kesalahan saat inisiasi '.$e);
         }
     }
 
@@ -150,22 +154,22 @@ class KendaliRekapitulasi extends Component
             $this->opsi_dropdown_penempatan = [];
             $this->model_dropdown_wilayah = '';
             $this->model_dropdown_penempatan = '';
-            error_log('Page @ Dashboard Progress APD Admin ref ('.$this->error_time_alert.') : Kesalahan saat wire change dropdown wilayah '.$e);
-            Log::error('Page @ Dashboard Progress APD Admin ref ('.$this->error_time_alert.') : Kesalahan saat wire change dropdown wilayah '.$e);
+            error_log('Kendali Rekapitulasi @ Dashboard Progress APD Admin ref ('.$this->error_time_alert.') : Kesalahan saat wire change dropdown wilayah '.$e);
+            Log::error('Kendali Rekapitulasi @ Dashboard Progress APD Admin ref ('.$this->error_time_alert.') : Kesalahan saat wire change dropdown wilayah '.$e);
             $this->dispatchBrowserEvent('jsAlert',['pesan' => 'Kesalahan saat memproses wilayah ref : '.$this->error_time_alert]);
         }
     }
 
     public function changeDropdownPenempatan()
     {
-        $this->emit('tabelGantiPenempatan',$this->model_dropdown_penempatan);
+        $this->rekapData();
         
     }
 #endregion
 
     public function detailJumlah($param)
     {
-        $this->error_time_tabel = null;
+        $this->error_time_detail = null;
         try{
             
             $jenis = $param[0];
@@ -182,11 +186,36 @@ class KendaliRekapitulasi extends Component
         }
         catch(Throwable $e)
         {
+            $this->error_time_detail = now();
+            
+            error_log('Kendali Rekapitulasi @ Dashboard Progress APD Admin ref ('.$this->error_time_detail.') : Kesalahan saat melihat detail rekapitulasi '.$e);
+            Log::error('Kendali Rekapitulasi @ Dashboard Progress APD Admin ref ('.$this->error_time_detail.') : Kesalahan saat melihat detail rekapitulasi '.$e);
+            $this->dispatchBrowserEvent('jsAlert',['pesan' => 'Kesalahan saat melihat detail. ref : '.$this->error_time_detail]);
+        }
+    }
+
+    public function rekapData()
+    {
+        $this->error_time_tabel = now();
+
+        try{
+
+            $arc = new ApdRekapController;
+            $data = $arc->bangunDataTableRekapPenempatan($this->model_dropdown_penempatan, $this->id_periode_berjalan);
+
+            if(is_bool($data) && $data == false)
+                throw new Exception('Data gagal di rekap oleh Apd Rekap Controller');
+
+            $this->data_rekap = $data; 
+
+        }
+        catch(Throwable $e)
+        {
             $this->error_time_tabel = now();
             
-            error_log('Page @ Dashboard Progress APD Admin ref ('.$this->error_time_tabel.') : Kesalahan saat melihat detail by personil '.$e);
-            Log::error('Page @ Dashboard Progress APD Admin ref ('.$this->error_time_tabel.') : Kesalahan saat melihat detail by personil '.$e);
-            $this->dispatchBrowserEvent('jsAlert',['pesan' => 'Kesalahan saat melihat detail : '.$this->error_time_tabel]);
+            error_log('Kendali Rekapitulasi @ Dashboard Progress APD Admin ref ('.$this->error_time_tabel.') : Kesalahan saat menghitung rekapitulasi data '.$e);
+            Log::error('Kendali Rekapitulasi @ Dashboard Progress APD Admin ref ('.$this->error_time_tabel.') : Kesalahan saat menghitung rekapitulasi data '.$e);
+            $this->dispatchBrowserEvent('jsAlert',['pesan' => 'Kesalahan saat mengolah data rekap. ref : '.$this->error_time_tabel]);
         }
     }
 

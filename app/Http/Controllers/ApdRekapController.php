@@ -283,7 +283,7 @@ class ApdRekapController extends Controller
 
             // query semua pegawai yang menjadi tanggung jawab admin
             $list_pegawai = Pegawai::query();
-
+            // admin
             if(true)
             {
                 $list_pegawai = $list_pegawai->where('id_penempatan','like',$admin->id_penempatan.'%');
@@ -293,16 +293,117 @@ class ApdRekapController extends Controller
                 $list_pegawai = [];
             }
 
-            // ambil semua inputan pegawai pada periode yang dicari
-            foreach($list_pegawai as $pegawai)
-            {
-                
-            }
+            $data_rekap = [];
+
+            // ambil semua inputan dari db
+            $semua_inputan = InputApd::where('id_periode',$id_periode)->get();
+
+            // filter data tsb berdasarkan list pegawai
+            $inputan_anggota = $semua_inputan->filter(function($value,$key) use($list_pegawai){
+                return $list_pegawai->where('id_pegawai',$value['id_pegawai'])->get()->exists();
+            });
+
+            // dapatkan list jenis apd apa saja yang telah diinput
+            $list_jenis_apd = $inputan_anggota->unique('id_jenis');
             
+            // pengulangan untuk ambil rangkuman data berdasarkan list jenis apd yang telah diambil
+            foreach($list_jenis_apd as $apd)
+            {
+                $nama_jenis_apd = ApdJenis::where('id_jenis','=',$apd->id_jenis)->first()->nama_jenis;
+
+                $baik = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::baik()->value)->count();
+                $rusak_ringan = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakRingan()->value)->count();
+                $rusak_sedang = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakSedang()->value)->count();
+                $rusak_berat = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakBerat()->value)->count();
+                $belum_terima = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('keberadaan','=',KeberadaanApd::belumTerima()->value)->count();
+                $hilang = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('keberadaan','=',KeberadaanApd::hilang()->value)->count();
+                $ada = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('keberadaan','=',KeberadaanApd::ada()->value)->count();
+                $total = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->count();
+
+                array_push($data_rekap,[
+                    "id_jenis" => $apd->id_jenis,
+                    "jenis_apd" => $nama_jenis_apd,
+                    "baik" => $baik,
+                    "rusak_ringan" => $rusak_ringan,
+                    "rusak_sedang" => $rusak_sedang,
+                    "rusak_berat" => $rusak_berat,
+                    "belum_terima" => $belum_terima,
+                    "hilang" => $hilang,
+                    "ada" => $ada,
+                    "total" => $total,
+                ]);
+            }
+
+            return $data_rekap;
         }
         catch(Throwable $e)
         {
             error_log('gagal membuat datatable rekap admin '.$e);
+            return false;
+        }
+    }
+
+    public function bangunDataTabelRekapPenempatan($id_penempatan, $id_periode = null)
+    {
+        try
+        {
+
+            if(is_null($id_periode))
+            {
+                $pic = new PeriodeInputController;
+                $id_periode = $pic->ambilIdPeriodeInput();
+            }
+
+            // query semua pegawai
+            $list_pegawai = Pegawai::where('id_penempatan','like',$id_penempatan.'%');
+            
+            $data_rekap = [];
+
+            // ambil semua inputan dari db
+            $semua_inputan = InputApd::where('id_periode',$id_periode)->get();
+
+            // filter data tsb berdasarkan list pegawai
+            $inputan_anggota = $semua_inputan->filter(function($value,$key) use($list_pegawai){
+                return $list_pegawai->where('id_pegawai',$value['id_pegawai'])->get()->exists();
+            });
+
+            // dapatkan list jenis apd apa saja yang telah diinput
+            $list_jenis_apd = $inputan_anggota->unique('id_jenis');
+            
+            // pengulangan untuk ambil rangkuman data berdasarkan list jenis apd yang telah diambil
+            foreach($list_jenis_apd as $apd)
+            {
+                $nama_jenis_apd = ApdJenis::where('id_jenis','=',$apd->id_jenis)->first()->nama_jenis;
+
+                $baik = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::baik()->value)->count();
+                $rusak_ringan = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakRingan()->value)->count();
+                $rusak_sedang = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakSedang()->value)->count();
+                $rusak_berat = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakBerat()->value)->count();
+                $belum_terima = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('keberadaan','=',KeberadaanApd::belumTerima()->value)->count();
+                $hilang = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('keberadaan','=',KeberadaanApd::hilang()->value)->count();
+                $ada = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('keberadaan','=',KeberadaanApd::ada()->value)->count();
+                $total = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->count();
+
+                array_push($data_rekap,[
+                    "id_jenis" => $apd->id_jenis,
+                    "jenis_apd" => $nama_jenis_apd,
+                    "baik" => $baik,
+                    "rusak_ringan" => $rusak_ringan,
+                    "rusak_sedang" => $rusak_sedang,
+                    "rusak_berat" => $rusak_berat,
+                    "belum_terima" => $belum_terima,
+                    "hilang" => $hilang,
+                    "ada" => $ada,
+                    "total" => $total,
+                ]);
+            }
+
+            return $data_rekap;
+        }
+        catch(Throwable $e)
+        {
+            error_log('gagal membuat datatable rekap admin '.$e);
+            return false;
         }
     }
 }
