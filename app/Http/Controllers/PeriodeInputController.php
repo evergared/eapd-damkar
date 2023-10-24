@@ -29,12 +29,12 @@ class PeriodeInputController extends Controller
      * - ubahDataTabelTemplateKeDataset : datatabel template -> dataset
      * - ubahDatasetArrayTemplateKeTemplate : dataset -> template
      */
-    public function ambilIdPeriodeInput($tanggal = null, $test = null)
+    public function ambilIdPeriodeInput($tanggal = null, $rekap = null)
     {
         if($tanggal == null)
             {
-                if($test)
-                    $periode = PeriodeInputApd::get()->first()->id_periode;
+                if($rekap)
+                    $periode = PeriodeInputApd::where("kumpul_rekap",true)->get()->first()->id_periode;
                 else
                     // ambil periode pertama yang aktif
                     $periode = PeriodeInputApd::where("aktif",true)->get()->first();
@@ -50,12 +50,12 @@ class PeriodeInputController extends Controller
         // where tanggal awal < $tanggal < tanggal akhir -> value('id')
     }
 
-    public function ambilIdPeriodeUkuran($tanggal = null, $test = null)
+    public function ambilIdPeriodeUkuran($tanggal = null, $rekap = null)
     {
         if($tanggal == null)
             {
-                if($test)
-                    $periode = PeriodeInputApd::get()->first()->id_periode;
+                if($rekap)
+                    $periode = PeriodeInputApd::where("kumpul_rekap",true)->get()->first()->id_periode;
                 else
                     // ambil periode pertama yang aktif
                     $periode = PeriodeInputApd::where("kumpul_ukuran",true)->get()->first();

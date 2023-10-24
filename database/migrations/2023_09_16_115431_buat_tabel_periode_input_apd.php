@@ -20,6 +20,7 @@ return new class extends Migration
                 $t->date('tgl_awal')->nullable();
                 $t->date('tgl_akhir')->nullable();
                 $t->boolean('aktif')->default(false);
+                $t->boolean('kumpul_rekap')->default(false);
                 $t->boolean('kumpul_ukuran')->default(false);
                 $t->text('pesan_berjalan')->nullable();
                 $t->text('keterangan')->nullable();

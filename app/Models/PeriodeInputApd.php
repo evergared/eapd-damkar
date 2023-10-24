@@ -18,6 +18,7 @@ class PeriodeInputApd extends Model
         'tgl_awal',
         'tgl_akhir',
         'aktif',
+        'kumpul_rekap',
         'kumpul_ukuran',
         'pesan_berjalan',
         'keterangan'

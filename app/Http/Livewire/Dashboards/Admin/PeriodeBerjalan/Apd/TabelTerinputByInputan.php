@@ -336,6 +336,6 @@ class TabelTerinputByInputan extends DataTableComponent
     {
         $pic = new PeriodeInputController;
 
-        $this->id_periode_berjalan = $pic->ambilIdPeriodeInput();
+        $this->id_periode_berjalan = $pic->ambilIdPeriodeInput(null,true);
     }
 }

@@ -18,7 +18,7 @@ class Page extends Component
     public function sharePeriode()
     {
         $pic = new PeriodeInputController;
-        $periode = $pic->ambilIdPeriodeInput();
+        $periode = $pic->ambilIdPeriodeInput(null,true);
         $nama = PeriodeInputApd::find($periode)->first()->nama_periode;
         $share = [
             'id' => $periode,

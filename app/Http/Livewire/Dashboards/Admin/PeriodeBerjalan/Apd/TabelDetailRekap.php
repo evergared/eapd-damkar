@@ -207,7 +207,7 @@ class TabelDetailRekap extends DataTableComponent
     {
         $pic = new PeriodeInputController;
 
-        $this->id_periode_berjalan = $pic->ambilIdPeriodeInput();
+        $this->id_periode_berjalan = $pic->ambilIdPeriodeInput(null,true);
     }
 
     public function inisiasiDetail($param)

@@ -73,7 +73,7 @@ class DetailProgress extends Component
 
         $pic = new PeriodeInputController;
 
-        $this->id_periode_berjalan = $pic->ambilIdPeriodeInput();
+        $this->id_periode_berjalan = $pic->ambilIdPeriodeInput(null,true);
         $this->nama_periode_berjalan = PeriodeInputApd::find($this->id_periode_berjalan)->nama_periode;
         
     }
