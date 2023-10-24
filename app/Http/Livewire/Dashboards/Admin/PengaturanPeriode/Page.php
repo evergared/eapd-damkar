@@ -175,6 +175,36 @@ class Page extends Component
         }
     }
 
+    public function TabelListPeriodeAktifkanKumpulUkuran($value)
+    {
+        try {
+
+            PeriodeInputApd::where("kumpul_ukuran", true)->update(['kumpul_ukuran' => false]);
+
+            $periode = PeriodeInputApd::find($value);
+            $periode->kumpul_ukuran = true;
+            $periode->save();
+            $this->emit("RefreshTabelListPeriode");
+        } catch (Throwable $e) {
+            error_log("Tabel List Periode : Gagal dalam mengaktifkan periode " . $e);
+        }
+    }
+
+    public function TabelListPeriodeAktifkanKumpulRekap($value)
+    {
+        try {
+
+            PeriodeInputApd::where("kumpul_rekap", true)->update(['kumpul_rekap' => false]);
+
+            $periode = PeriodeInputApd::find($value);
+            $periode->kumpul_rekap = true;
+            $periode->save();
+            $this->emit("RefreshTabelListPeriode");
+        } catch (Throwable $e) {
+            error_log("Tabel List Periode : Gagal dalam mengaktifkan periode " . $e);
+        }
+    }
+
     public function TabelListPeriodeNonAktifkan($value)
     {
         try {
