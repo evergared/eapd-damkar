@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'failed' => 'Data yang dimasukan tidak sesuai dengan database.',
+    'failed' => 'NRK/NPJLP yang dimasukan salah / tidak ditemukan di database.',
     'password' => 'Password yang dimasukan salah.',
     'throttle' => 'Terlalu banyak percobaan login. Mohon coba dalam :seconds detik lagi.',
 

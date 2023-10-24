@@ -18,6 +18,9 @@
                      <label for="nrk" class="login__label">NRK/NPJLP</label>
                   </div>
                </div>
+               @error('nrk')
+                  <small><i>{{$message}}</i></small>
+               @enderror
 
                <div class="login__box">
                   <i class="ri-lock-2-line login__icon"></i>
@@ -30,6 +33,10 @@
                   </div>
                </div>
             </div>
+
+            @error('password')
+                  <small><i>{{$message}}</i></small>
+            @enderror
 
             <div class="login__check">
                <div class="login__check-group">
