@@ -360,7 +360,7 @@ class ApdRekapController extends Controller
             $data_rekap = [];
 
             // ambil semua inputan dari db
-            $semua_inputan = InputApd::where('id_periode',$id_periode)->get();
+            $semua_inputan = InputApd::where('id_periode',$id_periode)->where('verifikasi_status','3')->get();
 
             // filter data tsb berdasarkan list pegawai
             $inputan_anggota = $semua_inputan->filter(function($value,$key) use($list_pegawai){

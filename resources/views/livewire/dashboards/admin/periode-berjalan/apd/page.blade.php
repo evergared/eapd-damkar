@@ -66,6 +66,12 @@
                 $("#kendali").hide(500)
                 $("#detail-progress").collapse('show')
             })
+
+                window.addEventListener('list-inputan-ke-detail-inputan', event=>{
+                    console.log('test');
+                        $("#list-inputan").hide(500)
+                        $("#detail-inputan").collapse('show')
+                })
       
         function detailProgressKeKendali(){
           $("#kendali").show(500)
@@ -77,7 +83,7 @@
                 $("#detail-rekapitulasi").collapse('show')
             })
         
-        function listInputanKeDetailInputan()
+        function detailInputanKeListInputan()
         {
             $("#list-inputan").show(500)
                 $("#detail-inputan").collapse('hide')

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Dashboards\Admin\PeriodeBerjalan\Apd;
 
 use App\Http\Controllers\PeriodeInputController;
+use App\Models\ApdJenis;
 use App\Models\PeriodeInputApd;
 use Livewire\Component;
 use Throwable;
@@ -44,6 +45,10 @@ class DetailRekapitulasi extends Component
     {
         $this->id_jenis_detail = $paket['id_jenis'];
         $this->enum_kondisi_detail = $paket['enum_kondisi'];
+        $jenis = ApdJenis::find($this->id_jenis_detail);
+        $this->nama_jenis_detail = '';
+        if(!is_null($jenis))
+            $this->nama_jenis_detail = $jenis->nama_jenis;
         $this->emit('tabelGantiDetailRekap',[$this->id_jenis_detail, $this->enum_kondisi_detail, $paket['penempatan']]);
     }
     

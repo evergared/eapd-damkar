@@ -121,7 +121,7 @@
                                             </div>
                                         </td>
                                         <td class="text-center text-wrap my-auto align-middle">
-                                            <button type="button" class="btn btn-secondary" wire:click='detailByPersonilLihatDetail("{{$index}}")'>Detail</button>
+                                            <button type="button" class="btn btn-secondary" wire:click='detailByPersonilLihatDetail("{{$index}}")' onclick="listInputanKeDetailInputan()">Detail</button>
                                         </td>
                                         </tr>
                                     @endforeach
@@ -143,7 +143,7 @@
                                         <h5 class="d-block d-sm-none">Detail Inputan {{$detail_by_personil_entry_nama_apd}}</h5>
                                     </div>
                                     <div class="card-tools">
-                                        <a href="javascript:" onclick="listInputanKeDetailInputan()">
+                                        <a href="javascript:" onclick="detailInputanKeListInputan()">
                                             <i class="fas fa-arrow-circle-left"></i>
                                         </a>
                                     </div>
@@ -1004,4 +1004,5 @@
                     </div> --}}
                 </div>
         </div>
+
 </div>

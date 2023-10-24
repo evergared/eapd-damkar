@@ -12,6 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\InputApd;
 use App\Models\PeriodeInputApd;
 use Illuminate\Database\Eloquent\Builder;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class TabelDetailRekap extends DataTableComponent
 {
@@ -19,7 +20,6 @@ class TabelDetailRekap extends DataTableComponent
     public string $tableName = "Tabel_Detail_Rekap";
     public array $TabelDetailRekap = [];
 
-    protected $model = InputApd::class;
 
     public
         $id_periode_berjalan = null,
@@ -35,10 +35,42 @@ class TabelDetailRekap extends DataTableComponent
         'tabelGantiDetailRekap' => 'inisiasiDetail'
     ];
 
+    public array $bulkActions = [
+        'panggilModalUbah' => 'Ubah Verifikasi'
+    ];
+
+    public $opsi_dropdown_verifikasi = [
+        ['value' => '3', 'text'=> 'Verifikasi'],
+        ['value' => '4', 'text'=> 'Tolak'],
+    ];
+
+    public 
+            $model_verifikasi = '',
+            $model_komentar = '';
+
+    public $jumlah_data = 0;
+
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
+        $this->setPrimaryKey('id_inputan');
+        $this->setBulkActionsEnabled();
+        $this->setBulkActionsStatus(true);
         $this->setRefreshVisible();
+        
+        $this->setConfigurableAreas([
+            'before-tools' => 'livewire.komponen.table-loading',
+            'toolbar-right-start' => ['livewire.komponen.table-minireminder',['pesan'=>['Gunakan "kolom" jika data terlalu kecil.','Gunakan "Aksi" untuk tindakan massal.']]]
+        ]);
+
+        $this->setTableAttributes([
+            'class' => "table-head-fixed text-nowrap",
+        ]);
+
+        $this->setTdAttributes(function(){
+            return [
+                'class' => 'align-middle'
+            ];
+        });
     }
 
     public function builder(): Builder
@@ -56,7 +88,20 @@ class TabelDetailRekap extends DataTableComponent
             ->where('pegawai.id_penempatan','like',$this->penempatan_detail.'%')
             ->where('input_apd.id_jenis',$this->jenis_detail)
             ->where('input_apd.kondisi',$this->kondisi_detail)
-            ->where('input_apd.id_periode',$this->id_periode_berjalan);
+            ->where('input_apd.verifikasi_status','3')
+            ->where('input_apd.id_periode',$this->id_periode_berjalan)
+            ->when($this->columnSearch['size'] ?? null, function($query, $size){
+                return $query->where('size', 'like', '%'.$size.'%');
+            })
+            ->when($this->columnSearch['jabatan'] ?? null, function($query, $jabatan){
+                return $query->where('jabatan.nama_jabatan', 'like', '%'.$jabatan.'%');
+            })
+            ->when($this->columnSearch['penempatan'] ?? null, function($query, $penempatan){
+                return $query->where('penempatan.nama_penempatan', 'like', '%'.$penempatan.'%');
+            })
+            ->when($this->columnSearch['no_seri'] ?? null, function($query, $no_seri){
+                return $query->where('no_seri', 'like', '%'.$no_seri.'%');
+            });
 
         }
 
@@ -172,4 +217,113 @@ class TabelDetailRekap extends DataTableComponent
         $this->penempatan_detail = $param[2];
         $this->emitSelf('refreshDatatable');
     }
+
+    public function customView(): string
+    {
+        return 'livewire.dashboards.admin.periode-berjalan.apd.modal-ubah-verifikasi';
+    }
+    
+    public function filters(): array
+    {
+        $opsi_verifikasi = ['' => "Semua"];
+
+        $semua_verifikasi = VerifikasiApd::toValues();
+
+        foreach($semua_verifikasi as $verifikasi)
+        {
+            $label = VerifikasiApd::tryFrom($verifikasi)->label;
+            $opsi_verifikasi[$verifikasi] = $label;
+        }
+
+        $opsi_kondisi = ['' => "Semua"];
+
+        $semua_kondisi = StatusApd::toValues();
+
+        foreach($semua_kondisi as $kondisi)
+        {
+            $label = StatusApd::tryFrom($kondisi)->label;
+            $opsi_kondisi[$kondisi] = $label;
+        }
+
+        return [
+            SelectFilter::make('Verifikasi', 'verifikasi_status')
+                ->setFilterPillTitle('Verifikasi')
+                ->options($opsi_verifikasi)
+                ->filter(function(Builder $builder, string $value) {
+                    if($value != '')
+                    {
+                        $builder->where('verifikasi_status',$value);
+                    }
+                }),
+                SelectFilter::make('Kondisi', 'kondisi')
+                ->setFilterPillTitle('Kondisi')
+                ->options($opsi_kondisi)
+                ->filter(function(Builder $builder, string $value) {
+                    if($value != '')
+                    {
+                        $builder->where('kondisi',$value);
+                    }
+                }),
+        ];
+    }
+
+    #region bulk actions
+    public function panggilModalUbah()
+    {
+        $this->model_verifikasi = "";
+        $this->model_komentar = "";
+        
+        $this->jumlah_data = $this->getSelectedCount();
+
+        if($this->jumlah_data < 1)
+        {
+            $this->dispatchBrowserEvent('jsAlert',['pesan' => 'Harap pilih minimal 1 (satu) inputan melalui checkbox di kolom paling kiri.']);
+            return;
+        }
+
+
+        $this->dispatchBrowserEvent('byInputanPanggilModalUbah');
+    }
+    #endregion
+
+    #region modal function
+    public function simpanPerubahanVerifikasi()
+    {
+        $this->validate([
+            'model_verifikasi' => 'required'
+        ],
+        [
+            'model_verifikasi.required' => 'Ubah verifikasi terlebih dahulu.'
+        ]);
+
+        $berhasil = 0;
+        $gagal = 0;
+
+        foreach($this->getSelected() as $selected)
+        {
+                
+            $adc = new ApdDataController;
+
+            $status = $adc->adminVerifikasiInputan($selected,$this->model_verifikasi,$this->model_komentar);
+
+            if($status)
+                $berhasil++;
+            else
+                $gagal++;
+
+        }
+
+        if($berhasil > 0 && $gagal == 0)
+            session()->flash('alert-success-modalUbah', 'Berhasil mengubah verifikasi dari semua data.');
+        elseif($berhasil > 0 && $gagal > 0)
+            session()->flash('alert-warning-modalUbah', ["berhasil" => $berhasil, "gagal"=>$gagal]);
+        elseif($berhasil == 0 && $gagal > 0)
+            session()->flash('alert-danger-modalUbah', 'Terjadi Kesalahan saat mengubah verifikasi dari semua data.');
+        else
+            session()->flash('alert-secondary-modalUbah', "Tidak ada perubahan dari tindakan yang dilakukan");
+
+        // $this->emit('hitungCapaian');
+
+    }
+    #endregion
 }

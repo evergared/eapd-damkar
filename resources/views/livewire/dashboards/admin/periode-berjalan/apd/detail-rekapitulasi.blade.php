@@ -4,7 +4,7 @@
         <div class="row flex">
             <div class="col-sm-6">
             <h5>Jenis :</h5>
-            <h5>Fire Jacket</h5>
+            <h5>{{$nama_jenis_detail}}</h5>
             </div>
             <div class="col-sm-6 text-right">
             <button class="btn-primary btn-sm" onclick="backToRekapitulasi()">
