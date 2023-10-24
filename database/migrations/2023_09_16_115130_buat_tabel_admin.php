@@ -26,18 +26,10 @@ return new class extends Migration
             });
         }
 
-        if(Schema::hasTable('pegawai'))
-        {
-            Schema::table('admin', function(Blueprint $t){
+        if (Schema::hasTable('pegawai')) {
+            Schema::table('admin', function (Blueprint $t) {
                 $t->foreign('id_pegawai')->references('id_pegawai')->on('pegawai')->nullOnDelete();
                 $t->foreign('id_pegawai_plt')->references('id_pegawai')->on('pegawai')->nullOnDelete();
-            });
-        }
-
-        if(Schema::hasTable('penempatan'))
-        {
-            Schema::table('admin', function(Blueprint $t){
-                $t->foreign('id_penempatan')->references('id_penempatan')->on('penempatan')->nullOnDelete();
             });
         }
     }
@@ -49,17 +41,17 @@ return new class extends Migration
      */
     public function down()
     {
-        if(Schema::hasTable('penempatan')){
-            Schema::table('admin',function (Blueprint $t){
+        if (Schema::hasTable('penempatan')) {
+            Schema::table('admin', function (Blueprint $t) {
                 $t->dropForeign('admin_id_penempatan_foreign');
             });
         }
-        if(Schema::hasTable('pegawai')){
-            Schema::table('admin',function (Blueprint $t){
+        if (Schema::hasTable('pegawai')) {
+            Schema::table('admin', function (Blueprint $t) {
                 $t->dropForeign('admin_id_pegawai_foreign');
                 $t->dropForeign('admin_id_pegawai_plt_foreign');
             });
-        }   
+        }
         Schema::dropIfExists('admin');
     }
 };

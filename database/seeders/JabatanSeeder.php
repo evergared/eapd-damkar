@@ -6,7 +6,7 @@ use App\Models\Jabatan;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class TesJabatanSeeder extends Seeder
+class JabatanSeeder extends Seeder
 {
     /**
      * Run the database seeds.

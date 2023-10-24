@@ -10,7 +10,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 
-class TesPegawaiSeeder extends Seeder
+class PegawaiSeeder extends Seeder
 {
     /**
      * Run the database seeds.

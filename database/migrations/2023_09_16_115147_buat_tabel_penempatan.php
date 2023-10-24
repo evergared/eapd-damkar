@@ -25,25 +25,27 @@ return new class extends Migration
                 $t->text('keterangan')->nullable();
             });
 
-            Schema::table('penempatan', function(Blueprint $t){
+            Schema::table('penempatan', function (Blueprint $t) {
                 $t->foreign('id_parent_penempatan')->references('id_penempatan')->on('penempatan')->nullOnDelete();
             });
         }
 
-        if(Schema::hasTable('pegawai'))
-        {
-            Schema::table('pegawai', function(Blueprint $t){
+        if (Schema::hasTable('pegawai')) {
+            Schema::table('pegawai', function (Blueprint $t) {
                 $t->foreign('id_penempatan')->references('id_penempatan')->on('penempatan')->nullOnDelete();
             });
         }
 
-        if(Schema::hasTable('admin_list'))
-        {
-            Schema::table('admin_list', function(Blueprint $t){
+        if (Schema::hasTable('admin_list')) {
+            Schema::table('admin_list', function (Blueprint $t) {
                 $t->foreign('id_penempatan')->references('id_penempatan')->on('penempatan')->nullOnDelete();
             });
         }
-
+        if (Schema::hasTable('admin')) {
+            Schema::table('admin', function (Blueprint $t) {
+                $t->foreign('id_penempatan')->references('id_penempatan')->on('penempatan')->nullOnDelete();
+            });
+        }
     }
 
     /**
@@ -53,10 +55,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('pegawai', function(Blueprint $t){
+        Schema::table('pegawai', function (Blueprint $t) {
             $t->dropForeign('pegawai_id_penempatan_foreign');
         });
-        Schema::table('penempatan', function(Blueprint $t){
+        Schema::table('penempatan', function (Blueprint $t) {
             $t->dropForeign('penempatan_id_parent_penempatan_foreign');
         });
         Schema::dropIfExists('penempatan');
