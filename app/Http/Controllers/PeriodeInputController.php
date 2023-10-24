@@ -31,126 +31,108 @@ class PeriodeInputController extends Controller
      */
     public function ambilIdPeriodeInput($tanggal = null, $rekap = null)
     {
-        if($tanggal == null)
-            {
-                if($rekap)
-                    $periode = PeriodeInputApd::where("kumpul_rekap",true)->get()->first()->id_periode;
-                else
-                    // ambil periode pertama yang aktif
-                    $periode = PeriodeInputApd::where("aktif",true)->get()->first();
-
-                if(is_null($periode))
-                    return null;
-
-            }
+        if ($tanggal == null) {
+            if ($rekap)
+                $periode = PeriodeInputApd::where("kumpul_rekap", true)->get()->first();
             else
-                $periode = PeriodeInputApd::where('tgl_awal','<=',$tanggal)->where('tgl_akhir','>=',$tanggal)->get()->first();
-        
+                // ambil periode pertama yang aktif
+                $periode = PeriodeInputApd::where("aktif", true)->get()->first();
+
+            if (is_null($periode))
+                return null;
+        } else
+            $periode = PeriodeInputApd::where('tgl_awal', '<=', $tanggal)->where('tgl_akhir', '>=', $tanggal)->get()->first();
+
         return $periode->id_periode;
         // where tanggal awal < $tanggal < tanggal akhir -> value('id')
     }
 
     public function ambilIdPeriodeUkuran($tanggal = null, $rekap = null)
     {
-        if($tanggal == null)
-            {
-                if($rekap)
-                    $periode = PeriodeInputApd::where("kumpul_rekap",true)->get()->first()->id_periode;
-                else
-                    // ambil periode pertama yang aktif
-                    $periode = PeriodeInputApd::where("kumpul_ukuran",true)->get()->first();
-
-                if(is_null($periode))
-                    return null;
-
-            }
+        if ($tanggal == null) {
+            if ($rekap)
+                $periode = PeriodeInputApd::where("kumpul_rekap", true)->get()->first();
             else
-                $periode = PeriodeInputApd::where('tgl_awal','<=',$tanggal)->where('tgl_akhir','>=',$tanggal)->get()->first();
-        
+                // ambil periode pertama yang aktif
+                $periode = PeriodeInputApd::where("kumpul_ukuran", true)->get()->first();
+
+            if (is_null($periode))
+                return null;
+        } else
+            $periode = PeriodeInputApd::where('tgl_awal', '<=', $tanggal)->where('tgl_akhir', '>=', $tanggal)->get()->first();
+
         return $periode->id_periode;
         // where tanggal awal < $tanggal < tanggal akhir -> value('id')
     }
 
-        /**
+    /**
      * Memuat template input dari database ke bentuk array yang dapat ditampilkan pada tabel biasa (tabel html)
      * @param string|int $id_periode id dari periode input apd, akan digunakan untuk mengambil data template dari database
      */
     public function muatTemplateSebagaiTabelDatasetArray($id_periode)
     {
-        try{
+        try {
 
-            $data_template = InputApdTemplate::where("id_periode",$id_periode)->get()->first()->template;
+            $data_template = InputApdTemplate::where("id_periode", $id_periode)->get()->first()->template;
 
             $dataset = [];
 
-        // contoh : 
-        //     [0] => Array
-        // (
-        //     [id_jabatan] => L001
-        //     [id_jenis] => H002
-        //     [id_apd] => H-fir-0001
-        // )
+            // contoh : 
+            //     [0] => Array
+            // (
+            //     [id_jabatan] => L001
+            //     [id_jenis] => H002
+            //     [id_apd] => H-fir-0001
+            // )
 
-            foreach($data_template as $jabatan => $template)
-            {
-                
-                foreach($template as $apd)
-                {
+            foreach ($data_template as $jabatan => $template) {
+
+                foreach ($template as $apd) {
                     $id_jenis = $apd["id_jenis"];
-                    foreach($apd["opsi_apd"] as $opsi)
-                    {
-                        array_push($dataset,["id_jabatan" => $jabatan, "id_jenis" => $id_jenis, "id_apd" => $opsi]);
+                    foreach ($apd["opsi_apd"] as $opsi) {
+                        array_push($dataset, ["id_jabatan" => $jabatan, "id_jenis" => $id_jenis, "id_apd" => $opsi]);
                     }
                 }
-
             }
 
             return $dataset;
-
-        }
-        catch(Throwable $e)
-        {
-            error_log("Gagal dalam memuat template sebagai dataset array ".$e);
+        } catch (Throwable $e) {
+            error_log("Gagal dalam memuat template sebagai dataset array " . $e);
             return [];
         }
     }
 
     public function bangunDataTabelTemplateDariDataset(array $dataset)
     {
-        try{
+        try {
 
             $table_data = [];
-            foreach($dataset as $index => $data)
-            {
+            foreach ($dataset as $index => $data) {
                 $jabatan = Jabatan::find($data['id_jabatan'])->nama_jabatan;
                 $jenis_apd = ApdJenis::find($data['id_jenis'])->nama_jenis;
                 $opsi_apd = ApdList::find($data['id_apd'])->nama_apd;
 
-                array_push($table_data,[
+                array_push($table_data, [
                     "index" => $index + 1,
-                    "jabatan" => "[".$data["id_jabatan"]."] ".$jabatan,
-                    "jenis_apd" => "[".$data["id_jenis"]."] ".$jenis_apd,
-                    "opsi_apd" => "[".$data["id_apd"]."] ".$opsi_apd,
+                    "jabatan" => "[" . $data["id_jabatan"] . "] " . $jabatan,
+                    "jenis_apd" => "[" . $data["id_jenis"] . "] " . $jenis_apd,
+                    "opsi_apd" => "[" . $data["id_apd"] . "] " . $opsi_apd,
                 ]);
             }
 
             return $table_data;
-
-        }
-        catch(Throwable $e)
-        {
-            error_log("Gagal membangun data tabel template dari dataset ".$e);
+        } catch (Throwable $e) {
+            error_log("Gagal membangun data tabel template dari dataset " . $e);
             return [];
         }
     }
 
     public function ubahDataTabelTemplateKeDataset(array $table_data)
     {
-        try{
+        try {
 
             $dataset = [];
-            foreach($table_data as $data)
-            {
+            foreach ($table_data as $data) {
                 $id_jabatan = Str::between($data["jabatan"], '[', '] ');
                 $id_jenis = Str::between($data["jenis_apd"], '[', '] ');
                 $id_apd = Str::between($data["opsi_apd"], '[', '] ');
@@ -163,63 +145,55 @@ class PeriodeInputController extends Controller
             }
 
             return $dataset;
-
-        }
-        catch(Throwable $e)
-        {
-            error_log("Gagal mengubah data table template kembali menjadi dataset ".$e);
+        } catch (Throwable $e) {
+            error_log("Gagal mengubah data table template kembali menjadi dataset " . $e);
             return [];
         }
     }
 
     public function ubahDatasetArrayTemplateKeTemplate(array $dataset)
     {
-        try{
+        try {
 
             $template = [];
 
             // list semua jabatan yang ada di dataset
             $list_jabatan = [];
-            foreach($dataset as $data)
-            {
+            foreach ($dataset as $data) {
                 $id_jabatan = $data["id_jabatan"];
 
-                if(!in_array($id_jabatan,$list_jabatan))
+                if (!in_array($id_jabatan, $list_jabatan))
                     array_push($list_jabatan, $id_jabatan);
             }
 
-            foreach($list_jabatan as $jabatan)
-            {
+            foreach ($list_jabatan as $jabatan) {
                 // list semua jenis apd yang ada di dataset jika jabatannya sesuai
                 $list_jenis = [];
-                foreach($dataset as $data)
-                {
-                    if($data["id_jabatan"] != $jabatan)
+                foreach ($dataset as $data) {
+                    if ($data["id_jabatan"] != $jabatan)
                         continue;
-                    
-                    if(!in_array($data['id_jenis'],$list_jenis))
+
+                    if (!in_array($data['id_jenis'], $list_jenis))
                         array_push($list_jenis, $data['id_jenis']);
                 }
 
                 // buat data template untuk jabatan
                 $data_template = [];
-                foreach($list_jenis as $jenis)
-                {
+                foreach ($list_jenis as $jenis) {
                     // list semua apd yang memiliki jabatan dan jenis yang sesuai
                     $list_apd = [];
-                    foreach($dataset as $data)
-                    {
-                        if($data["id_jabatan"] != $jabatan)
+                    foreach ($dataset as $data) {
+                        if ($data["id_jabatan"] != $jabatan)
                             continue;
 
-                        if($data["id_jenis"] != $jenis)
+                        if ($data["id_jenis"] != $jenis)
                             continue;
-                        
-                        if(!in_array($data['id_apd'],$list_jenis))
+
+                        if (!in_array($data['id_apd'], $list_jenis))
                             array_push($list_apd, $data['id_apd']);
                     }
 
-                    array_push($data_template,[
+                    array_push($data_template, [
                         "id_jenis" => $jenis,
                         "opsi_apd" => $list_apd
                     ]);
@@ -229,11 +203,8 @@ class PeriodeInputController extends Controller
             }
 
             return $template;
-
-        }
-        catch(Throwable $e)
-        {
-            error_log("Gagal dalam mengubah dataset ke template ".$e);
+        } catch (Throwable $e) {
+            error_log("Gagal dalam mengubah dataset ke template " . $e);
             return [];
         }
     }
@@ -245,14 +216,8 @@ class PeriodeInputController extends Controller
      */
     public function sesuaikanTemplatePascaHapusJenisApd(string $id_jenis)
     {
-        try{
-
-            
-
-        }
-        catch(Throwable $e)
-        {
-
+        try {
+        } catch (Throwable $e) {
         }
     }
     #endregion
