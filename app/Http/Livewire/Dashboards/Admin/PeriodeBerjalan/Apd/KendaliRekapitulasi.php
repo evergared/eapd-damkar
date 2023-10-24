@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Dashboards\Admin\PeriodeBerjalan\Apd;
 
+use App\Enum\StatusApd;
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\ApdRekapController;
 use App\Http\Controllers\PeriodeInputController;
@@ -173,12 +174,15 @@ class KendaliRekapitulasi extends Component
         try{
             
             $jenis = $param[0];
-            $kondisi = $param[1];
+            $kondisi = StatusApd::tryFrom($param[1]);
 
+            if(is_null($kondisi))
+                throw new Exception('kondisi '.$param[1].' tidak dapat ditemukan.');
 
             $paket = [
                 'id_jenis' => $jenis,
-                'enum_kondisi' => $kondisi
+                'enum_kondisi' => $kondisi,
+                'penempatan'=>$this->model_dropdown_penempatan
             ];
 
             $this->emit('paketUntukDetailRekap', $paket);
@@ -197,11 +201,12 @@ class KendaliRekapitulasi extends Component
     public function rekapData()
     {
         $this->error_time_tabel = now();
+        $this->data_rekap = null;
 
         try{
 
             $arc = new ApdRekapController;
-            $data = $arc->bangunDataTableRekapPenempatan($this->model_dropdown_penempatan, $this->id_periode_berjalan);
+            $data = $arc->bangunDataTabelRekapPenempatan($this->model_dropdown_penempatan, $this->id_periode_berjalan);
 
             if(is_bool($data) && $data == false)
                 throw new Exception('Data gagal di rekap oleh Apd Rekap Controller');
@@ -212,7 +217,7 @@ class KendaliRekapitulasi extends Component
         catch(Throwable $e)
         {
             $this->error_time_tabel = now();
-            
+            $this->data_rekap = null;
             error_log('Kendali Rekapitulasi @ Dashboard Progress APD Admin ref ('.$this->error_time_tabel.') : Kesalahan saat menghitung rekapitulasi data '.$e);
             Log::error('Kendali Rekapitulasi @ Dashboard Progress APD Admin ref ('.$this->error_time_tabel.') : Kesalahan saat menghitung rekapitulasi data '.$e);
             $this->dispatchBrowserEvent('jsAlert',['pesan' => 'Kesalahan saat mengolah data rekap. ref : '.$this->error_time_tabel]);

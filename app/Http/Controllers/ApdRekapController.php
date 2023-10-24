@@ -364,8 +364,10 @@ class ApdRekapController extends Controller
 
             // filter data tsb berdasarkan list pegawai
             $inputan_anggota = $semua_inputan->filter(function($value,$key) use($list_pegawai){
-                return $list_pegawai->where('id_pegawai',$value['id_pegawai'])->get()->exists();
+                return $list_pegawai->where('id_pegawai',$value['id_pegawai'])->exists();
             });
+
+            // return dd($inputan_anggota);
 
             // dapatkan list jenis apd apa saja yang telah diinput
             $list_jenis_apd = $inputan_anggota->unique('id_jenis');
@@ -379,9 +381,9 @@ class ApdRekapController extends Controller
                 $rusak_ringan = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakRingan()->value)->count();
                 $rusak_sedang = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakSedang()->value)->count();
                 $rusak_berat = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',StatusApd::rusakBerat()->value)->count();
-                $belum_terima = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('keberadaan','=',KeberadaanApd::belumTerima()->value)->count();
-                $hilang = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('keberadaan','=',KeberadaanApd::hilang()->value)->count();
-                $ada = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('keberadaan','=',KeberadaanApd::ada()->value)->count();
+                $belum_terima = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',KeberadaanApd::belumTerima()->value)->count();
+                $hilang = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','=',KeberadaanApd::hilang()->value)->count();
+                $ada = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->where('kondisi','!=',KeberadaanApd::hilang()->value)->where('kondisi','!=',KeberadaanApd::belumTerima()->value)->count();
                 $total = $inputan_anggota->where('id_jenis','=',$apd->id_jenis)->count();
 
                 array_push($data_rekap,[

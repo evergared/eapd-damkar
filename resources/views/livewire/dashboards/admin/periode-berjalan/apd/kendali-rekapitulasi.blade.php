@@ -42,73 +42,78 @@
         </div>
         {{-- loading dropdown end --}}
         @if ($model_dropdown_penempatan != '')
-            {{-- tombol export --}}
-            <div class="row my-2">
-                <button class="btn btn-sm btn-default mx-1">Export ke PDF</button>
-                <button class="btn btn-sm btn-default mx-1">Export ke XLS</button>
-            </div>
-            {{-- tabel rekap --}}
-            <div class="row">
-                <div class="table-responsive p-0" style="height: 1000px;">
-                    <table class="table text-nowrap">
-                        <thead class="text-center table-bordered" style="background-color: gray ;">
-                            <tr >
-                                <th rowspan="2" style="vertical-align:middle; background-color: gray ;">#</th>
-                                <th style="width:20%; vertical-align:middle; background-color: gray ;" rowspan="2" >Jenis APD</th>
-                                <th style="width:50%; background-color: gray ;" class="text-center" colspan="4">Kondisi</th>
-                                <th style="width:20%; background-color: gray ;" colspan="3">Keberadaan</th>
-                                <th style="width:10%; vertical-align:middle; background-color: gray ;" rowspan="2">SubTotal</th>
-                                <th style="width:10%; vertical-align:middle; background-color: gray ;" rowspan="2">Distribusi</th>
-                            </tr>
-                            <tr class="table-head-fixed">
-                                <th>Baik</th>
-                                <th>Rusak Ringan</th>
-                                <th>Rusak Sedang</th>
-                                <th>Rusak Berat</th>
-                                <th>Belum Terima</th>
-                                <th>Hilang</th>
-                                <th>Diterima</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                                <tr>
-                                <td class="text-center text-wrap my-auto align-middle">1</td>
-                                <td class="text-center text-wrap my-auto align-middle">Fire Jacket
-                                </td>
-                                <td class="text-center align-middle">
-                                    <a onclick="detailRekapitulasi()" href="#rekap-tabel">8</a>
-                                </td>
-                                <td class="text-center align-middle">
-                                    <a onclick="#" href="#rekap-tabel">5</a>
-                                </td>
-                                <td class="text-center align-middle">
-                                    <a onclick="#" href="#rekap-tabel">6</a>
-                                </td>
-                                <td class="text-center align-middle">
-                                    <a onclick="#" href="#rekap-tabel">4</a>
-                                </td>
-                                <td class="text-center align-middle">
-                                    <a onclick="#" href="#rekap-tabel">2</a>
-                                </td>
-                                <td class="text-center align-middle">
-                                    <a onclick="#" href="#rekap-tabel">5</a>
-                                </td>
-                                <td class="text-center align-middle">
-                                    <a onclick="#" href="#rekap-tabel">6</a>
-                                </td>
-                                <td class="text-center align-middle">
-                                    <a onclick="#" href="#rekap-tabel">2</a>
-                                </td>
-                                <td class="text-center align-middle">
-                                    <a onclick="#" href="#rekap-tabel">2</a>
-                                </td>
-                            </tr>
-                            
-            
-                        </tbody>
-                    </table>
+            @if (!is_null($data_rekap) && is_array($data_rekap))
+                {{-- tombol export --}}
+                <div class="row my-2">
+                    <button class="btn btn-sm btn-default mx-1">Export ke PDF</button>
+                    <button class="btn btn-sm btn-default mx-1">Export ke XLS</button>
                 </div>
-            </div>
+                {{-- tabel rekap --}}
+                <div class="row">
+                    <div class="table-responsive p-0" style="height: 1000px;">
+                        <table class="table text-nowrap">
+                            <thead class="text-center table-bordered" style="background-color: gray ;">
+                                <tr >
+                                    <th rowspan="2" style="vertical-align:middle; background-color: gray ;">#</th>
+                                    <th style="width:20%; vertical-align:middle; background-color: gray ;" rowspan="2" >Jenis APD</th>
+                                    <th style="width:50%; background-color: gray ;" class="text-center" colspan="4">Kondisi</th>
+                                    <th style="width:20%; background-color: gray ;" colspan="3">Keberadaan</th>
+                                    <th style="width:10%; vertical-align:middle; background-color: gray ;" rowspan="2">SubTotal</th>
+                                </tr>
+                                <tr class="table-head-fixed">
+                                    <th>Baik</th>
+                                    <th>Rusak Ringan</th>
+                                    <th>Rusak Sedang</th>
+                                    <th>Rusak Berat</th>
+                                    <th>Belum Terima</th>
+                                    <th>Hilang</th>
+                                    <th>Diterima</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    @foreach ($data_rekap as $index => $item)
+                                        <tr>
+                                            <td class="text-center text-wrap my-auto align-middle">{{$index + 1}}</td>
+                                            <td class="text-center text-wrap my-auto align-middle">{{$item['jenis_apd']}}</td>
+                                            <td class="text-center align-middle">
+                                                <a onclick="detailRekapitulasi()" href="javascript:" wire:click="detailJumlah(['{{$item['id_jenis']}}','baik'])">{{$item['baik']}}</a>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <a onclick="#" href="javascript:" wire:click="detailJumlah(['{{$item['id_jenis']}}','rusak ringan'])">{{$item['rusak_ringan']}}</a>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <a onclick="#" href="javascript:" wire:click="detailJumlah(['{{$item['id_jenis']}}','rusak sedang'])">{{$item['rusak_sedang']}}</a>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <a onclick="#" href="javascript:" wire:click="detailJumlah(['{{$item['id_jenis']}}','rusak berat'])">{{$item['rusak_berat']}}</a>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <a onclick="#" href="javascript:" wire:click="detailJumlah(['{{$item['id_jenis']}}','belum terima'])">{{$item['belum_terima']}}</a>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <a onclick="#" href="javascript:" wire:click="detailJumlah(['{{$item['id_jenis']}}','hilang'])">{{$item['hilang']}}</a>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <a onclick="#" href="javascript:" wire:click="detailJumlah(['{{$item['id_jenis']}}','ada'])">{{$item['ada']}}</a>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <a onclick="#" href="javascript:" wire:click="detailJumlah(['{{$item['id_jenis']}}','total'])">{{$item['total']}}</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                
+                                
+                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @else
+                <div class="jumbotron text-center">
+                    Belum ada data masuk
+                </div>
+            @endif
+            
         @else
             <div class="jumbotron text-center">
                 Harap pilih penempatan terlebih dahulu.
