@@ -1,3 +1,5 @@
 <div>
-    {{-- Because she competes with no one, no one can compete with her. --}}
+    <section class="content">
+        <livewire:dashboards.admin.pengaturan-barang.jenis-barang.tabel-jenis-barang>
+    </section>
 </div>
