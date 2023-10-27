@@ -6,6 +6,8 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\ApdJenis;
 use App\Models\ApdList;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class TabelJenisBarang extends DataTableComponent
 {
@@ -34,8 +36,28 @@ class TabelJenisBarang extends DataTableComponent
                 }),
             Column::make('Tindakan')
                 ->format(function($row){
-                    return;
+                    $item = ApdList::where('id_jenis',$row->id_jenis)->get()->count();
+
+                    return view('dashboards.admin.pengaturan-barang.jenis-barang.kolom-tindakan',["flag" => $item > 0, "id" => $row->id_jenis]);
                 })
         ];
+    }
+
+    public function hapusJenis($id)
+    {
+        try{
+
+            $jenis = ApdJenis::find($id);
+            $jenis->delete();
+            session()->flash('alert-success','Jenis APD berhasil dihapus.');
+
+        }
+        catch(Throwable $e)
+        {
+            $time = now();
+            error_log('Pengaturan Jenis barang @ dashboard admin error : kesalahan saat mencoba menghapus barang dengan id '.$id.' ref : '.$time.' '.$e);
+            Log::error('Pengaturan Jenis barang @ dashboard admin error : kesalahan saat mencoba menghapus barang dengan id '.$id.' ref : '.$time.' '.$e);
+            session()->flash('alert-danger',"Terjadi kesalahan saat menghapus jenis barang! ref : ".$time);
+        }
     }
 }
