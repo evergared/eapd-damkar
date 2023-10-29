@@ -1,7 +1,6 @@
 /livewire-tmp
 /img/apd/input
 /img/apd/reupload
-/img/apd/item/*/*/*/*/*/*
 /img/avatar/user
 /img/tes
 !.gitignore
