@@ -18,6 +18,7 @@ return new class extends Migration
                 $t->id('id_kondisi')->autoIncrement();
                 $t->string('nama_kondisi');
                 $t->longText('opsi')->comment('json untuk opsi dropdown');
+                $t->softDeletes();
             });
         }
         if(Schema::hasTable('apd_list'))

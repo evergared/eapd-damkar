@@ -17,6 +17,7 @@ return new class extends Migration
             Schema::create('apd_jenis', function (Blueprint $t) {
                 $t->string('id_jenis')->primary();
                 $t->string('nama_jenis');
+                $t->softDeletes();
             });
         }
     }

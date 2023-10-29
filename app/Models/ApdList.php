@@ -4,14 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ApdList extends Model
 {
+    use SoftDeletes;
+
     protected   $table = 'apd_list',
                 $primaryKey = 'id_apd';
     
     public $timestamps = false;
 
+    protected $dates = ['deleted_at'];
     protected $keyType = 'string';
     
     protected $fillable = [
@@ -25,7 +29,8 @@ class ApdList extends Model
         'strict_no_seri',
         'id_referensi',
         'sumber_id_referensi',
-        'image'
+        'image',
+        'deleted_at'
     ];
 
     public function jenis()

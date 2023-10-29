@@ -26,6 +26,7 @@ return new class extends Migration
                 $t->boolean('strict_no_seri')->default(false);
                 $t->string('id_referensi')->nullable()->comment('nomer seri dari citata/asset/atau badan lainnya yg memberikan nomer seri');
                 $t->string('sumber_id_referensi')->nullable();
+                $t->softDeletes();
             });
         }
         if(Schema::hasTable('apd_jenis'))

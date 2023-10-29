@@ -17,6 +17,7 @@ class TabelJenisBarang extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id_jenis');
+        $this->setRefreshVisible();
     }
 
     public function builder(): Builder

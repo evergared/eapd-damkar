@@ -29,19 +29,6 @@ class FormJenisBarang extends Component
         return view('livewire.dashboards.admin.pengaturan-barang.jenis-barang.form-jenis-barang');
     }
 
-    public function updated($inputan)
-    {
-        if(!$this->editing)
-            $this->validateOnly($inputan,
-            [
-                'model_id_jenis' => ['required','exists:apd_jenis,id_jenis']
-            ],
-            [
-                'model_id_jenis.required' => "Id Jenis perlu diisi untuk referensi di database.",
-                'model_id_jenis.exists' => "Id jenis :data sudah ada di database! Harap masukan id jenis baru."
-            ]);
-    }
-
     public function editJenis($id)
     {
         $this->error_form = null;
@@ -72,6 +59,17 @@ class FormJenisBarang extends Component
 
     public function simpan()
     {
+        $this->validate([
+            'model_id_jenis' => ['required','unique:apd_jenis,id_jenis'],
+            'model_nama_jenis' => 'required'
+        ],
+        [
+            'model_id_jenis.required' => "Id Jenis perlu diisi untuk referensi di database.",
+            'model_id_jenis.unique' => "Id jenis ini sudah ada di database! Harap masukan id jenis baru.",
+            'model_nama_jenis.required' => 'Nama Jenis APD perlu diisi.'
+
+        ]);
+
         try{
 
             if($this->editing)

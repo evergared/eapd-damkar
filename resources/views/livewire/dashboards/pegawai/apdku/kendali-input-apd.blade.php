@@ -441,14 +441,15 @@
                                             <small class="error text-danger">{{$message}}</small>
                                         @enderror
                                     </div>
-
-                                    <div class="form-group">
-                                        <label>No Seri</label>
-                                        <input type="text" class="form-control" placeholder="Masukan no seri apd." wire:model='no_seri_apd_user'>
-                                        @error('no_seri_apd_user')
-                                            <small class="error text-danger">{{$message}}</small>
-                                        @enderror
-                                    </div>
+                                    @if ($show_input_no_seri)
+                                        <div class="form-group">
+                                            <label>No Seri</label>
+                                            <input type="text" class="form-control" placeholder="Masukan no seri apd." wire:model='no_seri_apd_user'>
+                                            @error('no_seri_apd_user')
+                                                <small class="error text-danger">{{$message}}</small>
+                                            @enderror
+                                        </div>
+                                    @endif
 
                                     <p></p>
                                     <p></p>

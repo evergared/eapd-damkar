@@ -43,7 +43,7 @@ class TabelListPeriode extends DataTableComponent
                 ->sortable(),
             Column::make("Tgl akhir", "tgl_akhir")
                 ->sortable(),
-            BooleanColumn::make('Aktif?', "aktif")
+            BooleanColumn::make('Masa Input Data APD?', "aktif")
                 ->sortable(),
             BooleanColumn::make('Masa Kumpul Data Ukuran?', "kumpul_ukuran")
                 ->sortable(),

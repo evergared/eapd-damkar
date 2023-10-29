@@ -4,14 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pegawai extends Model
 {
     use HasUlids;
+    use SoftDeletes;
 
     protected   $table = 'pegawai',
                 $primaryKey = 'id_pegawai';
     
+    protected $dates = ['deleted_at'];
     protected $keyType = 'string';
     
     protected $fillable = [

@@ -4,14 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Penempatan extends Model
 {
+    use SoftDeletes;
+
     protected   $table = 'penempatan',
                 $primaryKey = 'id_penempatan';
     
     public $timestamps = false;
 
+    protected $dates = ['deleted_at'];
     protected $keyType = 'string';
 
     protected $fillable = [

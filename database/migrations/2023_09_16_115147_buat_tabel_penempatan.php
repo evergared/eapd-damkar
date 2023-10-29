@@ -23,6 +23,7 @@ return new class extends Migration
                 $t->string('id_kelurahan')->nullable();
                 $t->string('tipe')->nullable();
                 $t->text('keterangan')->nullable();
+                $t->softDeletes();
             });
 
             Schema::table('penempatan', function (Blueprint $t) {

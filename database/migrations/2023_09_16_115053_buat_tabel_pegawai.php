@@ -29,6 +29,7 @@ return new class extends Migration
                 $t->string('grup')->nullable();
                 $t->string('penanggung_jawab')->nullable()->comment('siapa atasannya');
                 $t->boolean('aktif')->default(true);
+                $t->softDeletes();
                 $t->timestamps();
             });
             

@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ApdKondisi extends Model
 {
+    use SoftDeletes;
+
     protected   $table = 'apd_kondisi',
                 $primaryKey = 'id_kondisi';
     
@@ -15,7 +18,9 @@ class ApdKondisi extends Model
     protected $fillable = [
         'id_kondisi',
         'nama_kondisi',
-        'opsi'
+        'opsi',
+        'deleted_at'
+
     ];
 
     public function opsi(): Attribute

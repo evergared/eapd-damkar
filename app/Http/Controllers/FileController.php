@@ -47,7 +47,7 @@ class FileController extends Controller
     /**
      * Path dasar penyimpanan gambar apd oleh admin
      */
-    public static $apdItemBasePath = 'storage/img/apd/item';
+    public static $apdItemBasePath = 'img/apd/item';
 
     /**
      * Path dasar penyimpanan placeholder apd untuk keperluan tes.

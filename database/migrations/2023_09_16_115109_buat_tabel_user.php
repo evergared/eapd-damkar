@@ -18,6 +18,7 @@ return new class extends Migration
                 $table->foreignUlid('id_pegawai')->primary();
                 $table->string('password');
                 $table->rememberToken()->nullable();
+                $table->softDeletes();
             });
         }
 

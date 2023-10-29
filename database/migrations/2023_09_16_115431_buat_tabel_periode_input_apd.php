@@ -24,6 +24,7 @@ return new class extends Migration
                 $t->boolean('kumpul_ukuran')->default(false);
                 $t->text('pesan_berjalan')->nullable();
                 $t->text('keterangan')->nullable();
+                $t->softDeletes();
             });
         }
     }

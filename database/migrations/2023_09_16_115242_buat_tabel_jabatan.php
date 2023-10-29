@@ -18,6 +18,7 @@ return new class extends Migration
                 $t->string('id_jabatan')->primary();
                 $t->string('nama_jabatan');
                 $t->text('keterangan')->nullable();
+                $t->softDeletes();
             });
         }
 

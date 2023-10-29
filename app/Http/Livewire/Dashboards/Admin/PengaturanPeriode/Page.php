@@ -90,7 +90,11 @@ class Page extends Component
         // card list periode
         'TabelListPeriodeClone',
         'TabelListPeriodeTesPesanBerjalan',
+        'TabelListPeriodeAktifkanKumpulRekap',
+        'TabelListPeriodeAktifkanKumpulUkuran',
         'TabelListPeriodeAktifkan',
+        'TabelListPeriodeNonAktifkanKumpulRekap',
+        'TabelListPeriodeNonAktifkanKumpulUkuran',
         'TabelListPeriodeNonAktifkan',
         'TabelListPeriodeDetil',
         'TabelListPeriodeHapus',
@@ -211,6 +215,32 @@ class Page extends Component
 
             $periode = PeriodeInputApd::find($value);
             $periode->aktif = false;
+            $periode->save();
+            $this->emit("RefreshTabelListPeriode");
+        } catch (Throwable $e) {
+            error_log("Tabel List Periode : Gagal dalam mengnonaktifkan periode " . $e);
+        }
+    }
+
+    public function TabelListPeriodeNonAktifkanKumpulUkuran($value)
+    {
+        try {
+
+            $periode = PeriodeInputApd::find($value);
+            $periode->kumpul_ukuran = false;
+            $periode->save();
+            $this->emit("RefreshTabelListPeriode");
+        } catch (Throwable $e) {
+            error_log("Tabel List Periode : Gagal dalam mengnonaktifkan periode " . $e);
+        }
+    }
+
+    public function TabelListPeriodeNonAktifkanKumpulRekap($value)
+    {
+        try {
+
+            $periode = PeriodeInputApd::find($value);
+            $periode->kumpul_rekap = false;
             $periode->save();
             $this->emit("RefreshTabelListPeriode");
         } catch (Throwable $e) {

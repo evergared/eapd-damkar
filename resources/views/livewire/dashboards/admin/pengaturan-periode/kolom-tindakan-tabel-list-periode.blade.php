@@ -1,9 +1,9 @@
 <div class="btn-group" role="group" aria-label="tindakan">
     <button type="button" class="btn btn-primary mx-1" onclick="confirm('Gandakan periode ini?') || event.stopImmediatePropagation()" wire:click="$emit('TabelListPeriodeClone','{{$id}}')">Clone</button>
     @if ($aktif)
-        <button type="button" class="btn btn-warning mx-1" onclick="confirm('Non-aktifkan periode?') || event.stopImmediatePropagation()" wire:click="$emit('TabelListPeriodeNonAktifkan','{{$id}}')">Non-Aktifkan</button>
+        <button type="button" class="btn btn-warning mx-1" onclick="confirm('Tutup masa input periode?') || event.stopImmediatePropagation()" wire:click="$emit('TabelListPeriodeNonAktifkan','{{$id}}')">Tutup Masa Input</button>
     @else
-        <button type="button" class="btn btn-primary mx-1" onclick="confirm('Aktifkan periode ini?') || event.stopImmediatePropagation()" wire:click="$emit('TabelListPeriodeAktifkan','{{$id}}')">Aktifkan</button>
+        <button type="button" class="btn btn-primary mx-1" onclick="confirm('Buka masa input periode ini?') || event.stopImmediatePropagation()" wire:click="$emit('TabelListPeriodeAktifkan','{{$id}}')">Buka Masa Input</button>
     @endif
 
     @if ($kumpul_ukuran)
