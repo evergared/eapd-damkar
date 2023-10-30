@@ -44,9 +44,9 @@ class TabelJenisApdTemplateMulti extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make(" id", "id_jabatan")
+            Column::make("ID Jenis", "id_jenis")
                 ->sortable()
-                ->searchable(fn(Builder $query, string $kata_pencarian)=> $query->orWhere('id_jabatan','like','%'.$kata_pencarian.'%')),
+                ->searchable(fn(Builder $query, string $kata_pencarian)=> $query->orWhere('id_jenis','like','%'.$kata_pencarian.'%')),
             Column::make("Nama Jenis Apd", "nama_jenis")
                 ->sortable()
                 ->searchable(fn(Builder $query, string $kata_pencarian)=> $query->orWhere('nama_Jenis','like','%'.$kata_pencarian.'%')),

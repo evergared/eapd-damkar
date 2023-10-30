@@ -56,7 +56,7 @@ class TabelJabatanTemplateSingle extends DataTableComponent
                 ->attributes(function($row){
                     return [
                     'class' => 'btn btn-primary',
-                    'onclick' => "Livewire.emit('TabelJabatanTemplateSinglePilih','".$row->id."')",
+                    'onclick' => "Livewire.emit('TabelJabatanTemplateSinglePilih','".$row->id_jabatan."')",
                     'data-toggle' => "modal",
                     'data-target' => "#modal-ubah-single-template-inputan-apd"
                     ];

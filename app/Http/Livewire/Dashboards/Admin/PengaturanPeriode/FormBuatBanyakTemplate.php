@@ -6,6 +6,12 @@ use Livewire\Component;
 
 class FormBuatBanyakTemplate extends Component
 {
+
+    public
+        $list_jabatan = [],
+        $list_jenis_apd = [],
+        $list_apd = [];
+
     public function render()
     {
         return view('livewire.dashboards.admin.pengaturan-periode.form-buat-banyak-template');
@@ -13,9 +19,9 @@ class FormBuatBanyakTemplate extends Component
 
     public function CardTabelInputanApdTambahBanyak()
     {
-        $this->card_multi_template_inputan_apd_listApd = [];
-        $this->card_multi_template_inputan_apd_listJabatan = [];
-        $this->card_multi_template_inputan_apd_listJenisApd = [];
+        $this->list_apd = [];
+        $this->list_jabatan = [];
+        $this->list_jenis_apd = [];
         $this->dispatchBrowserEvent("card_template_multi_inputan_apd_tampil");
     }
 }

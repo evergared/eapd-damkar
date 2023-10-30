@@ -63,7 +63,7 @@ class TabelApdTemplateSingle extends DataTableComponent
                 ->attributes(function($row){
                     return [
                     'class' => 'btn btn-primary',
-                    'onclick' => "Livewire.emit('TabelApdTemplateSinglePilih','".$row->id."')",
+                    'onclick' => "Livewire.emit('TabelApdTemplateSinglePilih','".$row->id_apd."')",
                     'data-toggle' => "modal",
                     'data-target' => "#modal-ubah-single-template-inputan-apd"
                     ];
