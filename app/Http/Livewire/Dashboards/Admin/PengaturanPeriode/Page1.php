@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 use Throwable;
 use Livewire\Component;
 
-class Page extends Component
+class Page1 extends Component
 {
     public function render()
     {
@@ -23,10 +23,10 @@ class Page extends Component
 
 
     // variabel untuk card multi template inputan apd
-    
+
 
     // variabel untuk modal ubah single template inputan apd
-    
+
 
     // variabel untuk modal ubah multi template inputan apd
     public
@@ -67,14 +67,14 @@ class Page extends Component
     #endregion
 
     #region card list periode
-    
+
     #endregion
 
     #region card form periode
-    
+
     #endregion
 
-    
+
     public function CardTabelInputanApdSimpan()
     {
         try {
@@ -110,7 +110,7 @@ class Page extends Component
         $this->tabel_template_data = $this->tabel_template_data_cache = $this->tabel_template_data_original = [];
     }
 
-    
+
 
 
     #region modal ubah multi template inputan apd

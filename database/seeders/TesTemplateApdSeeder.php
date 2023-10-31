@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\InputApdTemplate;
+use App\Models\Jabatan;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -30,12 +31,14 @@ class TesTemplateApdSeeder extends Seeder
             ['id_jenis' => 'A004', 'opsi_apd' => ['A-uni-0000']]
         ];
 
-        InputApdTemplate::create([
-            "id_jabatan" => 'VK001',
-            "id_periode" => '1',
-            "id_template" => 'test',
-            "nama" => "test template input anggota 2023",
-            "template" => $template_anggota
-        ]);
+        $jabatan = Jabatan::all();
+
+        foreach ($jabatan as $j)
+            InputApdTemplate::create([
+                "id_jabatan" => $j->id_jabatan,
+                "id_periode" => '1',
+                "nama" => "test template input anggota 2023",
+                "template" => $template_anggota
+            ]);
     }
 }

@@ -3,14 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class InputApdTemplate extends Model
 {
+
+    use HasUlids;
     protected   $table = 'input_apd_template',
-                $primaryKey = 'id_template';
-    
+        $primaryKey = 'id_template';
+
     public $timestamps = false;
 
     protected $fillable = [
