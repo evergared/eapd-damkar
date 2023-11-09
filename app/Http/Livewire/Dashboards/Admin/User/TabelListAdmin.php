@@ -32,10 +32,7 @@ class TabelListAdmin extends DataTableComponent
                 ->sortable(),
             Column::make("Tipe", "tipe")
                 ->sortable(),
-            Column::make("Created at", "created_at")
-                ->sortable(),
-            Column::make("Updated at", "updated_at")
-                ->sortable(),
+           
         ];
     }
 }
