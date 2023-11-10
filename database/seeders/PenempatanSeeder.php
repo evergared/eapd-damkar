@@ -19,11 +19,11 @@ class PenempatanSeeder extends Seeder
 
         $data_wilayah = [
             ['id_wilayah' => '0', 'nama_wilayah' => 'Kantor Dinas', 'keterangan' => null],
-            ['id_wilayah' => '1', 'nama_wilayah' => 'Jakarta Pusat', 'keterangan' => null],
-            ['id_wilayah' => '2', 'nama_wilayah' => 'Jakarta Utara', 'keterangan' => null],
-            ['id_wilayah' => '3', 'nama_wilayah' => 'Jakarta Barat', 'keterangan' => null],
-            ['id_wilayah' => '4', 'nama_wilayah' => 'Jakarta Selatan', 'keterangan' => null],
-            ['id_wilayah' => '5', 'nama_wilayah' => 'Jakarta Timur', 'keterangan' => null],
+            ['id_wilayah' => '1', 'nama_wilayah' => 'Jakarta Pusat', 'nama_print' => 'Kota Adm. Jakarta Pusat', 'keterangan' => null],
+            ['id_wilayah' => '2', 'nama_wilayah' => 'Jakarta Utara', 'nama_print' => 'Kota Adm. Jakarta Utara', 'keterangan' => null],
+            ['id_wilayah' => '3', 'nama_wilayah' => 'Jakarta Barat', 'nama_print' => 'Kota Adm. Jakarta Barat', 'keterangan' => null],
+            ['id_wilayah' => '4', 'nama_wilayah' => 'Jakarta Selatan', 'nama_print' => 'Kota Adm. Jakarta Selatan', 'keterangan' => null],
+            ['id_wilayah' => '5', 'nama_wilayah' => 'Jakarta Timur', 'nama_print' => 'Kota Adm. Jakarta Timur', 'keterangan' => null],
             ['id_wilayah' => '7', 'nama_wilayah' => 'Pusdiklatkar', 'keterangan' => null],
             ['id_wilayah' => '8', 'nama_wilayah' => 'Laboraturium', 'keterangan' => null],
         ];

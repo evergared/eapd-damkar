@@ -16,13 +16,13 @@ class TesAdminSeeder extends Seeder
      */
     public function run()
     {
-        Admin::create([
-            'id' => 'admineapd',
-            'nama_akun' => 'Super Admin EAPD',
-            'tipe' => 'Admin Dinas',
-            'password' => Hash::make('damkar123')
-        ]);
+        // Admin::create([
+        //     'id' => 'admineapd',
+        //     'nama_akun' => 'Super Admin EAPD',
+        //     'tipe' => 'Admin Dinas',
+        //     'password' => Hash::make('damkar123')
+        // ]);
 
-        
+
     }
 }

@@ -45,7 +45,7 @@
             @if (!is_null($data_rekap) && is_array($data_rekap))
                 {{-- tombol export --}}
                 <div class="row my-2">
-                    <button class="btn btn-sm btn-default mx-1">Export ke PDF</button>
+                    <button class="btn btn-sm btn-default mx-1" wire:click="printPdf">Export ke PDF</button>
                     <button class="btn btn-sm btn-default mx-1">Export ke XLS</button>
                 </div>
                 {{-- tabel rekap --}}

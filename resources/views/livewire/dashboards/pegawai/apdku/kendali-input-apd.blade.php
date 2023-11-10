@@ -79,22 +79,22 @@
                                                     {{-- Script untuk preview gambar apd End--}}
 
                                                     <img class="apd-template-preview product-image" id="apd_template"
-                                                        src="{{asset($placeholder_path.'/'.$template_gambar_apd[0])}}" alt="Gambar Apd Anda">
+                                                        src="{{asset($template_path . $template_gambar_apd[0])}}" alt="Gambar Apd Anda">
                                                     <div class="col-12 product-image-thumbs">
                                                         @foreach ($template_gambar_apd as $key => $gbr)
                                                             @if($key === array_key_first($template_gambar_apd))
                                                                 <div class="apd-template product-image-thumb active"><img
-                                                                        src="{{asset($placeholder_path.'/'.$gbr)}}" alt="Product Image">
+                                                                        src="{{asset($template_path . $gbr)}}" alt="Product Image">
                                                                 </div>
                                                             @else
                                                                 <div class="apd-template  product-image-thumb"><img
-                                                                        src="{{asset($placeholder_path.'/'.$gbr)}}" alt="Product Image">
+                                                                        src="{{asset($template_path . $gbr)}}" alt="Product Image">
                                                                 </div>
                                                             @endif
                                                         @endforeach
                                                     </div>
                                                 @elseif(is_string($template_gambar_apd))
-                                                    <img class="product-image" src="{{$placeholder_path.'/'.$template_gambar_apd}}"
+                                                    <img class="product-image" src="{{asset($template_path . $template_gambar_apd)}}"
                                                     alt="Gambar APD">
                                                 @elseif(is_null($template_gambar_apd))
                                                     <div class="jumbotron jumbotron-fluid text-center">

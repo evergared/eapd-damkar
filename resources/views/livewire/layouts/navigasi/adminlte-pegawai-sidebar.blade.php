@@ -38,7 +38,7 @@
                     ''))
                     }}
                 </a>
-                <a class="d-block">{{ auth()->user()->data->penempatan->id_penempatan}}
+                <a class="d-block justify-self-auto">{{ auth()->user()->data->penempatan->id_penempatan}}
                     {{auth()->user()->data->penempatan->nama_penempatan }}</a>
                 <a class="d-block">{{auth()->user()->data->penempatan->wilayah->nama_wilayah }}</a>
             </div>

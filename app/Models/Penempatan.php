@@ -11,8 +11,8 @@ class Penempatan extends Model
     use SoftDeletes;
 
     protected   $table = 'penempatan',
-                $primaryKey = 'id_penempatan';
-    
+        $primaryKey = 'id_penempatan';
+
     public $timestamps = false;
 
     protected $dates = ['deleted_at'];
@@ -22,13 +22,14 @@ class Penempatan extends Model
         'id_penempatan',
         'id_parent_penempatan',
         'nama_penempatan',
+        'nama_print',
         'id_kelurahan',
         'id_kecamatan',
         'id_wilayah',
         'tipe',
         'keterangan'
     ];
-
+    protected $tabletest = 'penempatan';
     public function kelurahan()
     {
         return $this->belongsTo(Kelurahan::class, 'id_kelurahan', 'id_kelurahan');

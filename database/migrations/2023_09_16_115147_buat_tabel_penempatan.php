@@ -18,6 +18,7 @@ return new class extends Migration
                 $t->string('id_penempatan')->primary();
                 $t->string('id_parent_penempatan')->nullable();
                 $t->string('nama_penempatan')->nullable();
+                $t->text('nama_print')->nullable()->default('');
                 $t->string('id_wilayah')->nullable();
                 $t->string('id_kecamatan')->nullable();
                 $t->string('id_kelurahan')->nullable();

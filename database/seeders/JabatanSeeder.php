@@ -16,7 +16,7 @@ class JabatanSeeder extends Seeder
     public function run()
     {
         $data_jabatan = [
-            ['id_jabatan' => 'pjlp', 'nama_jabatan' => 'PJLP Damkar'],
+            ['id_jabatan' => 'PJLPK', 'nama_jabatan' => 'Petugas Penanganan Penanggulangan Kebakaran Tipe A'],
             ['nama_jabatan' => 'Analis Kebakaran', 'id_jabatan' => 'AKB01', 'keterangan' => null],
             ['nama_jabatan' => 'Analis Kebakaran(Ketua Subkelompok Pengendalian Operasi)', 'id_jabatan' => 'AKJS001', 'keterangan' => null],
             ['nama_jabatan' => 'Analis Kebakaran Ahli Madya', 'id_jabatan' => 'AKAM001', 'keterangan' => null],
@@ -45,15 +45,15 @@ class JabatanSeeder extends Seeder
             ['nama_jabatan' => 'Bendahara', 'id_jabatan' => 'BD001', 'keterangan' => null],
             ['nama_jabatan' => 'Bendahara Pembantu', 'id_jabatan' => 'BD002', 'keterangan' => null],
             ['nama_jabatan' => 'Kepala Bidang Kerjasama Dan Informasi', 'id_jabatan' => 'KB001', 'keterangan' => null],
-            ['nama_jabatan' => 'Kepala Dinas', 'id_jabatan' => 'KD01', 'keterangan' => null],
+            ['nama_jabatan' => 'Kepala Dinas Penanggulangan Kebakaran Dan Penyelamatan', 'id_jabatan' => 'KD01', 'keterangan' => null],
             ['nama_jabatan' => 'Kepala Laboratorium Kebakaran Dan Penyelamatan', 'id_jabatan' => 'KLKP001', 'keterangan' => null],
             ['nama_jabatan' => 'Kepala Pusat Pendidikan Dan Pelatihan  Penanggulangan Kebakaran Dan Penyelamatan', 'id_jabatan' => 'KPPK001', 'keterangan' => null],
             ['nama_jabatan' => 'Kepala Seksi Data Dan Informasi', 'id_jabatan' => 'KS001', 'keterangan' => null],
-            ['nama_jabatan' => 'Kepala Sektor Penanggulangan Kebakaran Dan Penyelamatan Kecamatan Cakung', 'id_jabatan' => 'KSK001', 'keterangan' => null],
+            ['nama_jabatan' => 'Kepala Sektor Penanggulangan Kebakaran Dan Penyelamatan', 'id_jabatan' => 'KSK001', 'keterangan' => null],
             ['nama_jabatan' => 'Kepala Subbagian Keuangan', 'id_jabatan' => 'KSBK001', 'keterangan' => null],
             ['nama_jabatan' => 'Kepala Subbagian Tata Usaha', 'id_jabatan' => 'KSBTU001', 'keterangan' => null],
             ['nama_jabatan' => 'Kepala Subbagian Umum', 'id_jabatan' => 'KSBU001', 'keterangan' => null],
-            ['nama_jabatan' => 'Kepala Suku Dinas Penanggulangan Kebakaran Dan Penyelamatan Kota Adm. Jakarta Barat', 'id_jabatan' => 'KSUD001', 'keterangan' => null],
+            ['nama_jabatan' => 'Kepala Suku Dinas Penanggulangan Kebakaran Dan Penyelamatan', 'id_jabatan' => 'KSUD001', 'keterangan' => null],
             ['nama_jabatan' => 'Ketua Satuan Pelaksana Investigasi Kebakaran', 'id_jabatan' => 'KSPLIK001', 'keterangan' => null],
             ['nama_jabatan' => 'Ketua Satuan Pelaksana Pendidikan Dan Pelatihan', 'id_jabatan' => 'KSPLPP001', 'keterangan' => null],
             ['nama_jabatan' => 'Ketua Satuan Pelaksana Pengembangan Pendidikan Dan Pelatihan', 'id_jabatan' => 'KSPLPDK001', 'keterangan' => null],

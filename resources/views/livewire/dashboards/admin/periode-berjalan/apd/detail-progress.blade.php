@@ -450,14 +450,14 @@
                                                         </button>
                                                     </div>
                                                 @endif
-                                                @if (session()->has('alert-danger-detailByPersonil'))
+                                                {{-- @if (session()->has('alert-danger-detailByPersonil'))
                                                     <div class="alert alert-danger alert-dismissable fade show" role="alert">
                                                         {{session('alert-danger-detailByPersonil')}}
                                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                @endif
+                                                @endif --}}
                                                 <div class="row">
                                                     <h5>Komentar Pengupload : </h5>
                                                 </div>

@@ -118,6 +118,19 @@
       <script src="{{ asset('admin-lte/ekko-lightbox.min.js')}}"></script>
     @endpush
     
-    
+    <div id="toastsContainerTopRight" class="toasts-top-right fixed"></div>
+    <script>
+        
+        window.addEventListener('jsToast', event=>{
+            $(document).Toasts('create', {
+            class: event.detail.class,
+            title: event.detail.title,
+            subtitle: event.detail.subtitle,
+            body: event.detail.body
+            })
+        })
+        
+    </script>
     
 </div>
+

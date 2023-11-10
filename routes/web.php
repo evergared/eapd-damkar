@@ -92,6 +92,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/superuser/pengaturan/kepegawaian', \App\Http\Livewire\Dashboards\Admin\Kepegawaian\Page::class)->name('admin-pengaturan-kepegawaian');
     Route::get('/superuser/pengaturan/periode', \App\Http\Livewire\Dashboards\Admin\PengaturanPeriode\Page::class)->name('admin-pengaturan-periode');
     Route::get('/superuser/pengaturan/akun-user', \App\Http\Livewire\Dashboards\Admin\User\Page::class)->name('admin-pengaturan-user');
+    
 });
 
 Auth::routes();

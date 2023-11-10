@@ -17,13 +17,13 @@ return new class extends Migration
             Schema::create('wilayah', function (Blueprint $t) {
                 $t->string('id_wilayah')->primary();
                 $t->string('nama_wilayah');
+                $t->text('nama_print')->nullable()->default('');
                 $t->text('keterangan')->nullable();
             });
         }
 
-        if(Schema::hasTable('penempatan'))
-        {
-            Schema::table('penempatan', function(Blueprint $t){
+        if (Schema::hasTable('penempatan')) {
+            Schema::table('penempatan', function (Blueprint $t) {
                 $t->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->nullOnDelete();
             });
         }
@@ -36,7 +36,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('penempatan',function (Blueprint $t){
+        Schema::table('penempatan', function (Blueprint $t) {
             $t->dropForeign('penempatan_id_wilayah_foreign');
         });
         Schema::dropIfExists('wilayah');
