@@ -11,13 +11,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                @if ($modal_ubah_multi_inputan_apd_mode == "jabatan")
+                @if ($mode == "jabatan")
                     @livewire('eapd.datatable.tabel-jabatan-template-multi')
                     
-                @elseif ($modal_ubah_multi_inputan_apd_mode == "jenis_apd")
+                @elseif ($mode == "jenis_apd")
                     @livewire('eapd.datatable.tabel-jenis-apd-template-multi')
 
-                @elseif ($modal_ubah_multi_inputan_apd_mode == "opsi_apd")
+                @elseif ($mode == "opsi_apd")
                     @livewire('eapd.datatable.tabel-apd-template-multi')
                 @else
                     <div class="jumbotron text-center">

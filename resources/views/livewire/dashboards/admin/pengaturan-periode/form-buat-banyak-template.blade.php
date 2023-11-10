@@ -78,12 +78,12 @@
             {{-- card untuk jabatan --}}
             <div class="card">
                 <div class="card-header">
-                    Jabatan @if (count($card_multi_template_inputan_apd_listJabatan) > 0) ({{count($card_multi_template_inputan_apd_listJabatan)}}) @endif
+                    Jabatan @if (count($list_jabatan) > 0) ({{count($list_jabatan)}}) @endif
                 </div>
                 <div class="card-body" style="max-height: 300px; overflow-y:auto ">
-                    @if (count($card_multi_template_inputan_apd_listJabatan) > 0)
+                    @if (count($list_jabatan) > 0)
                         <ol>
-                            @foreach ($card_multi_template_inputan_apd_listJabatan as $index => $item)
+                            @foreach ($list_jabatan as $index => $item)
                                 <li>
                                    <a href="#card-multi-template-inputan-apd" wire:click="CardMultiTemplateHapusJabatan({{$index}})">{{$item["nama_jabatan"]}}</a> 
                                 </li>
@@ -102,12 +102,12 @@
             {{-- card untuk jenis apd --}}
             <div class="card">
                 <div class="card-header">
-                    Jenis APD @if (count($card_multi_template_inputan_apd_listJenisApd) > 0) ({{count($card_multi_template_inputan_apd_listJenisApd)}}) @endif
+                    Jenis APD @if (count($list_jenis_apd) > 0) ({{count($list_jenis_apd)}}) @endif
                 </div>
                 <div class="card-body" style="max-height: 300px; overflow-y:auto ">
-                    @if (count($card_multi_template_inputan_apd_listJenisApd) > 0)
+                    @if (count($list_jenis_apd) > 0)
                         <ol>
-                            @foreach ($card_multi_template_inputan_apd_listJenisApd as $index => $item)
+                            @foreach ($list_jenis_apd as $index => $item)
                                 <li>
                                    <a href="#card-multi-template-inputan-apd" wire:click="CardMultiTemplateHapusJenisApd({{$index}})">{{$item["nama_jenis"]}}</a> 
                                 </li>
@@ -126,12 +126,12 @@
             {{-- card untuk Apd --}}
             <div class="card">
                 <div class="card-header">
-                    APD @if (count($card_multi_template_inputan_apd_listApd) > 0) ({{count($card_multi_template_inputan_apd_listApd)}}) @endif
+                    APD @if (count($list_apd) > 0) ({{count($list_apd)}}) @endif
                 </div>
                 <div class="card-body" style="max-height: 300px; overflow-y:auto ">
-                    @if (count($card_multi_template_inputan_apd_listApd) > 0)
+                    @if (count($list_apd) > 0)
                         <ol>
-                            @foreach ($card_multi_template_inputan_apd_listApd as $index => $item)
+                            @foreach ($list_apd as $index => $item)
                                 <li>
                                    <a href="#card-multi-template-inputan-apd" wire:click="CardMultiTemplateHapusApd({{$index}})">{{$item["nama_apd"]}}</a> 
                                 </li>
@@ -144,7 +144,7 @@
                     @endif
                 </div>
                 <div class="card-footer text-center">
-                    <a @if($card_multi_template_inputan_apd_listJenisApd) style="cursor:pointer;" @else style="pointer-events: none;" @endif data-toggle="modal" data-target="#modal-ubah-multi-template-inputan-apd" wire:click="CardMultiTemplateTambahApd"><u>+tambah</u></a>
+                    <a @if($list_jenis_apd) style="cursor:pointer;" @else style="pointer-events: none;" @endif data-toggle="modal" data-target="#modal-ubah-multi-template-inputan-apd" wire:click="CardMultiTemplateTambahApd"><u>+tambah</u></a>
                 </div>
             </div>
         </div>

@@ -2,11 +2,22 @@
 
 namespace App\Http\Livewire\Dashboards\Admin\PengaturanPeriode;
 
+use App\Http\Controllers\PeriodeInputController;
+use App\Models\ApdJenis;
+use App\Models\ApdList;
 use App\Models\Jabatan;
 use Livewire\Component;
+use Throwable;
 
 class ModalUbahBanyakTemplate extends Component
 {
+
+    public $list_jabatan = [],
+        $list_jenis_apd = [],
+        $list_apd = [];
+
+    public $mode = '';
+
     public function render()
     {
         return view('livewire.dashboards.admin.pengaturan-periode.modal-ubah-banyak-template');
@@ -22,7 +33,7 @@ class ModalUbahBanyakTemplate extends Component
                 try {
                     $id_jabatan = $val;
                     $nama_jabatan = Jabatan::find($id_jabatan)->nama_jabatan;
-                    $this->card_multi_template_inputan_apd_listJabatan[$index] = ["id_jabatan" => $id_jabatan, "nama_jabatan" => $nama_jabatan];
+                    $this->list_jabatan[$index] = ["id_jabatan" => $id_jabatan, "nama_jabatan" => $nama_jabatan];
                     $sukses++;
                 } catch (Throwable $e) {
                     $gagal++;
@@ -58,7 +69,7 @@ class ModalUbahBanyakTemplate extends Component
                 try {
                     $id_jenis = $val;
                     $nama_jenis = ApdJenis::find($id_jenis)->nama_jenis;
-                    $this->card_multi_template_inputan_apd_listJenisApd[$index] = ["id_jenis" => $id_jenis, "nama_jenis" => $nama_jenis];
+                    $this->list_jenis_apd[$index] = ["id_jenis" => $id_jenis, "nama_jenis" => $nama_jenis];
                     $sukses++;
                 } catch (Throwable $e) {
                     $gagal++;
@@ -94,7 +105,7 @@ class ModalUbahBanyakTemplate extends Component
                 try {
                     $id_apd = $val;
                     $nama_apd = ApdList::find($id_apd)->nama_apd;
-                    $this->card_multi_template_inputan_apd_listApd[$index] = ["id_apd" => $id_apd, "nama_apd" => $nama_apd];
+                    $this->list_apd[$index] = ["id_apd" => $id_apd, "nama_apd" => $nama_apd];
                     $sukses++;
                 } catch (Throwable $e) {
                     $gagal++;
@@ -122,28 +133,28 @@ class ModalUbahBanyakTemplate extends Component
 
     public function CardMultiTemplateTambahJabatan()
     {
-        $this->modal_ubah_multi_inputan_apd_mode = "jabatan";
-        $this->emit("TabelJabatanTemplateMultiTerima", $this->card_multi_template_inputan_apd_listJabatan);
+        $this->mode = "jabatan";
+        $this->emit("TabelJabatanTemplateMultiTerima", $this->list_jabatan);
     }
 
     public function CardMultiTemplateTambahJenisApd()
     {
-        $this->modal_ubah_multi_inputan_apd_mode = "jenis_apd";
-        $this->emit("TabelJenisApdTemplateMultiTerima", $this->card_multi_template_inputan_apd_listJenisApd);
+        $this->mode = "jenis_apd";
+        $this->emit("TabelJenisApdTemplateMultiTerima", $this->list_jenis_apd);
     }
 
     public function CardMultiTemplateTambahApd()
     {
-        $this->modal_ubah_multi_inputan_apd_mode = "opsi_apd";
-        $this->emit("TabelApdTemplateMultiGantiParameter", $this->card_multi_template_inputan_apd_listJenisApd);
-        //$this->emit("TabelApdTemplateMultiTerima",$this->card_multi_template_inputan_apd_listApd);
+        $this->mode = "opsi_apd";
+        $this->emit("TabelApdTemplateMultiGantiParameter", $this->list_jenis_apd);
+        //$this->emit("TabelApdTemplateMultiTerima",$this->list_apd);
     }
 
     public function CardMultiTemplateHapusJabatan($index)
     {
         try {
-            unset($this->card_multi_template_inputan_apd_listJabatan[$index]);
-            array_values($this->card_multi_template_inputan_apd_listJabatan);
+            unset($this->list_jabatan[$index]);
+            array_values($this->list_jabatan);
         } catch (Throwable $e) {
             error_log("Card Multi Template Inputan Apd : Gagal dalam menghapus jabatan dari list " . $e);
         }
@@ -152,8 +163,8 @@ class ModalUbahBanyakTemplate extends Component
     public function CardMultiTemplateHapusJenisApd($index)
     {
         try {
-            unset($this->card_multi_template_inputan_apd_listJenisApd[$index]);
-            array_values($this->card_multi_template_inputan_apd_listJenisApd);
+            unset($this->list_jenis_apd[$index]);
+            array_values($this->list_jenis_apd);
         } catch (Throwable $e) {
             error_log("Card Multi Template Inputan Apd : Gagal dalam menghapus jenis apd dari list " . $e);
         }
@@ -162,8 +173,8 @@ class ModalUbahBanyakTemplate extends Component
     public function CardMultiTemplateHapusApd($index)
     {
         try {
-            unset($this->card_multi_template_inputan_apd_listApd[$index]);
-            array_values($this->card_multi_template_inputan_apd_listApd);
+            unset($this->list_apd[$index]);
+            array_values($this->list_apd);
         } catch (Throwable $e) {
             error_log("Card Multi Template Inputan Apd : Gagal dalam menghapus opsi apd dari list " . $e);
         }
@@ -171,35 +182,35 @@ class ModalUbahBanyakTemplate extends Component
 
     public function CardMultiTemplateSimpan()
     {
-        if (count($this->card_multi_template_inputan_apd_listApd) > 0 && count($this->card_multi_template_inputan_apd_listJenisApd) > 0 && count($this->card_multi_template_inputan_apd_listJabatan) > 0) {
+        if (count($this->list_apd) > 0 && count($this->list_jenis_apd) > 0 && count($this->list_jabatan) > 0) {
             try {
-                $pic = new PeriodeInputController;
-                $data = [];
-                $jumlah_data_tabel = count($this->tabel_template_data_original);
-                $jumlah_data_sekarang = 0;
+                // $pic = new PeriodeInputController;
+                // $data = [];
+                // $jumlah_data_tabel = count($this->tabel_template_data_original);
+                // $jumlah_data_sekarang = 0;
 
-                foreach ($this->card_multi_template_inputan_apd_listJabatan as $jabatan) {
-                    foreach ($this->card_multi_template_inputan_apd_listJenisApd as $jenis) {
-                        foreach ($this->card_multi_template_inputan_apd_listApd as $apd) {
-                            array_push($data, ["id_jabatan" => $jabatan["id_jabatan"], "id_jenis" => $jenis["id_jenis"], "id_apd" => $apd["id_apd"]]);
-                        }
-                    }
-                }
+                // foreach ($this->list_jabatan as $jabatan) {
+                //     foreach ($this->list_jenis_apd as $jenis) {
+                //         foreach ($this->list_apd as $apd) {
+                //             array_push($data, ["id_jabatan" => $jabatan["id_jabatan"], "id_jenis" => $jenis["id_jenis"], "id_apd" => $apd["id_apd"]]);
+                //         }
+                //     }
+                // }
 
-                $processed_data = $pic->bangunDataTabelTemplateDariDataset($data);
-                if (count($this->tabel_template_data_original) > 0)
-                    $jumlah_data_tabel += 1;
-                $jumlah_data_sekarang = 0;
-                foreach ($processed_data as $p) {
-                    $this->tabel_template_data_original[$jumlah_data_tabel + $jumlah_data_sekarang] = [
-                        "index" => $jumlah_data_tabel + $jumlah_data_sekarang + 1,
-                        "jabatan" => $p["jabatan"],
-                        "jenis_apd" => $p["jenis_apd"],
-                        "opsi_apd" => $p["opsi_apd"]
-                    ];
-                    $jumlah_data_sekarang++;
-                }
-                $this->RefreshTabelTemplate();
+                // $processed_data = $pic->bangunDataTabelTemplateDariDataset($data);
+                // if (count($this->tabel_template_data_original) > 0)
+                //     $jumlah_data_tabel += 1;
+                // $jumlah_data_sekarang = 0;
+                // foreach ($processed_data as $p) {
+                //     $this->tabel_template_data_original[$jumlah_data_tabel + $jumlah_data_sekarang] = [
+                //         "index" => $jumlah_data_tabel + $jumlah_data_sekarang + 1,
+                //         "jabatan" => $p["jabatan"],
+                //         "jenis_apd" => $p["jenis_apd"],
+                //         "opsi_apd" => $p["opsi_apd"]
+                //     ];
+                //     $jumlah_data_sekarang++;
+                // }
+                // $this->RefreshTabelTemplate();
                 session()->flash("card_template_multi_success", "Berhasil menambahkan data!");
             } catch (Throwable $e) {
                 session()->flash("card_template_multi_danger", "Gagal menambahkan data!");
