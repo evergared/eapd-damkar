@@ -177,6 +177,20 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-k6/Bkb8Fxf/c1Tkyl39yJwcOZ1P4cRrJu77p83zJjN2Z55prbFHxPs9vN7q3l3+tSMGPDdoH51AEU8Vgo1cgAA==" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg==" crossorigin="anonymous" />
 
+        <div id="toastsContainerTopRight" class="toasts-top-right fixed"></div>
+        <script>
+            
+            window.addEventListener('jsToast', event=>{
+                $(document).Toasts('create', {
+                class: event.detail.class,
+                title: event.detail.title,
+                subtitle: event.detail.subtitle,
+                body: event.detail.body
+                })
+            })
+            
+        </script>
+        
         <script>
             function keTabelInputanApd()
             {
@@ -216,7 +230,7 @@
 
 
             window.addEventListener("card_detail_periode_tampil", event=> {
-                $("#kendali-periode").collapse('show')
+                $("#form-periode").collapse('show')
             })
 
             window.addEventListener("card_tabel_inputan_tampil", event=> {
@@ -229,6 +243,22 @@
 
             window.addEventListener("card_multi_template_inputan_apd_tampil", event=> {
                 keMultiTemplate()
+            })
+
+            window.addEventListener("tampilFormPeriode",event=>{
+                $("#form-periode").collapse('show')
+            })
+
+            window.addEventListener("hideFormPeriode",event=>{
+                $("#form-periode").collapse('hide')
+            })
+
+            window.addEventListener("tampilTabelTemplate",event=>{
+                $("#tabel-template").collapse('show')
+            })
+
+            window.addEventListener("hideTabelTemplate",event=>{
+                $("#tabel-template").collapse('hide')
             })
         </script>
     @endpush

@@ -21,12 +21,16 @@ class FormPeriode extends Component
         $formTglAkhir = "",
         $formPesanBerjalan = "",
         $formAktif = false,
+        $formKumpulUkuran = false,        
+        $formKumpulRekap = false,
         $formIdPeriode_cache = "",
         $formNamaPeriode_cache = "",
         $formTglAwal_cache = "",
         $formTglAkhir_cache = "",
         $formPesanBerjalan_cache = "",
-        $formAktif_cache = false;
+        $formAktif_cache = false,        
+        $formKumpulUkuran_cache = false,        
+        $formKumpulRekap_cache = false;
 
     protected
         $listeners = [
@@ -53,6 +57,8 @@ class FormPeriode extends Component
             $this->formTglAkhir = $this->formTglAkhir_cache = $periode->tgl_akhir;
             $this->formPesanBerjalan = $this->formPesanBerjalan_cache = $periode->pesan_berjalan;
             $this->formAktif = $this->formAktif_cache = $periode->aktif;
+            $this->formKumpulRekap = $this->formKumpulRekap_cache = $periode->kumpul_rekap;
+            $this->formKumpulUkuran = $this->formKumpulUkuran_cache = $periode->kumpul_ukuran;
 
             $this->dispatchBrowserEvent("card_detail_periode_tampil");
         } catch (Throwable $e) {
@@ -70,14 +76,21 @@ class FormPeriode extends Component
         $this->formTglAkhir = $this->formTglAkhir_cache = "";
         $this->formPesanBerjalan = $this->formPesanBerjalan_cache = "";
         $this->formAktif = $this->formAktif_cache = false;
+        $this->formKumpulRekap = $this->formKumpulRekap_cache = false;
+        $this->formKumpulUkuran = $this->formKumpulUkuran_cache = false;
 
         $this->dispatchBrowserEvent("card_detail_periode_tampil");
     }
 
     public function CardFormPeriodeAturTemplateInputanApd()
     {
-        $this->InisiasiTabelTemplate();
-        $this->dispatchBrowserEvent("card_tabel_inputan_tampil");
+        if($this->formEditMode)
+            $this->emit('inisiasiTabelTemplate',$this->formIdPeriode);
+        else
+            $this->emit('inisiasiTabelTemplate',null);
+
+        $this->dispatchBrowserEvent('hideFormPeriode');
+        $this->dispatchBrowserEvent('tampilTabelTemplate');
     }
 
     public function CardFormPeriodeSimpan()
@@ -90,19 +103,21 @@ class FormPeriode extends Component
                 $periode = new PeriodeInputApd;
 
             if ($this->formIdPeriode != "" || $this->formIdPeriode != $this->formIdPeriode_cache)
-                $periode->id = $this->formIdPeriode;
+                $periode->id_periode = $this->formIdPeriode;
 
             $periode->nama_periode = $this->formNamaPeriode;
             $periode->tgl_awal = $this->formTglAwal;
             $periode->tgl_akhir = $this->formTglAkhir;
             $periode->pesan_berjalan = $this->formPesanBerjalan;
             $periode->aktif = $this->formAktif;
+            $periode->kumpul_rekap = $this->formKumpulRekap;
+            $periode->kumpul_ukuran = $this->formKumpulUkuran;
 
             $periode->save();
 
             // jika aktif, nonaktifkan semua entry kecuali periode yang baru disimpan
             if ($this->formAktif)
-                PeriodeInputApd::where('id_periode', '!=', $periode->id)->where('aktif', true)->update(['aktif' => false]);
+                PeriodeInputApd::where('id_periode', '!=', $periode->id_periode)->where('aktif', true)->update(['aktif' => false]);
 
 
             if ($input = InputApdTemplate::where('id_periode', $this->formIdPeriode)->get()->first()) {
@@ -113,7 +128,7 @@ class FormPeriode extends Component
                         $input->save();
                     }
 
-                if ($periode->id != $input->id_periode) {
+                if ($periode->id_periode != $input->id_periode) {
                     $input->id_periode = $periode->id_periode;
                     $input->save();
                 }
@@ -129,10 +144,21 @@ class FormPeriode extends Component
                 $newTemplate->save();
             }
 
-            session()->flash("card_form_periode_success", "Data periode berhasil disimpan!");
+            $this->dispatchBrowserEvent('jsToast',[
+                "class"=>'bg-success',
+                "title"=>"Berhasil Simpan Data Periode!",
+                "subtitle"=>"Form Periode",
+                "body"=>"Data periode ".$this->formNamaPeriode." berhasil disimpan ke database!"
+            ]);
+
         } catch (Throwable $e) {
             error_log("Card Form Periode : Gagal dalam menyimpan periode " . $e);
-            session()->flash("card_form_periode_danger", "Data periode gagal disimpan!");
+            $this->dispatchBrowserEvent('jsToast',[
+                "class"=>'bg-danger',
+                "title"=>"Gagal Simpan Data Periode!",
+                "subtitle"=>"Form Periode",
+                "body"=>"Data periode ".$this->formNamaPeriode." gagal disimpan!"
+            ]);
         }
     }
 
@@ -144,6 +170,9 @@ class FormPeriode extends Component
         $this->formTglAkhir = $this->formTglAkhir_cache;
         $this->formPesanBerjalan = $this->formPesanBerjalan_cache;
         $this->formAktif = $this->formAktif_cache;
+        $this->formKumpulRekap = $this->formKumpulRekap_cache;
+        $this->formKumpulUkuran = $this->formKumpulUkuran_cache;
+        
     }
 
 }

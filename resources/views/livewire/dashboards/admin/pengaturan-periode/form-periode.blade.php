@@ -1,7 +1,7 @@
 <div class="card col-sm-12" id="card-form-periode">
     <div class="card-header">
         @if ($formEditMode)
-            <h5>Detil Periode (ID Periode : {{$formIdPeriode_cache}})</h5>
+            <h5>Detil Periode</h5>
         @else
             <h5>Buat Periode Baru</h5>
         @endif
@@ -36,7 +36,7 @@
         {{-- end alert status --}}
 
         {{-- ID Periode --}}
-        <div class="form-group">
+        {{-- <div class="form-group">
             <label for="input-id-periode">ID Periode</label>
             <div class="input-group">
                 <input type="text" class="form-control" id="input-id-periode" wire:model="formIdPeriode" @if(!$formEditId) disabled @endif >
@@ -45,7 +45,7 @@
                 </div>
             </div>
             <small class="form-text text-muted">Id periode akan di generate secara otomatis oleh sistem ketika disimpan. Namun jika anda ingin mengganti / membuat id baru untuk periode ini, silahkan klik ubah.</small>
-        </div>
+        </div> --}}
         {{-- Nama Periode --}}
         <div class="form-group">
             <label for="input-nama-periode">Nama Periode</label>
@@ -76,22 +76,40 @@
         {{-- Pesan Berjalan --}}
         <div class="form-group">
             <label for="input-pesan-berjalan">Pesan Berjalan</label>
-            <textarea type="textarea" class="form-control" id="input-pesan-berjalan" wire:model="formPesanBerjalan" wire:ignore.self></textarea>
+            <textarea type="textarea" class="form-control" id="input-pesan-berjalan" wire:model.defer="formPesanBerjalan" wire:ignore.self></textarea>
         </div>
-        {{-- switch Aktif --}}
+        {{-- switch Masa Input --}}
         <div class="form-group">
-            <label>Aktif ? </label>
+            <label>Buka Masa Input ? </label>
             <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="switch-periode-aktif" wire:model="formAktif" wire:ignore.self>
+                <input type="checkbox" class="custom-control-input" id="switch-periode-aktif" wire:model.defer="formAktif" wire:ignore.self>
                 <label class="custom-control-label" for="switch-periode-aktif"></label>
+            </div>
+        </div>
+        {{-- switch Masa Input --}}
+        <div class="form-group">
+            <label>Buka Masa Kumpul Data Ukuran ? </label>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="switch-periode-ukuran" wire:model.defer="formKumpulUkuran" wire:ignore.self>
+                <label class="custom-control-label" for="switch-periode-ukuran"></label>
+            </div>
+        </div>
+        {{-- switch Masa Input --}}
+        <div class="form-group">
+            <label>Buka Masa Rekapitulasi ? </label>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="switch-periode-rekap" wire:model.defer="formKumpulRekap" wire:ignore.self>
+                <label class="custom-control-label" for="switch-periode-rekap"></label>
             </div>
         </div>
     </div>
     <div class="card-footer">
         <div class="row">
-            <div class="col">
-                <button class="btn btn-info" wire:click='CardFormPeriodeAturTemplateInputanApd'>Atur Template Inputan APD</button>
-            </div>
+            @if ($formEditMode)
+                <div class="col">
+                    <button class="btn btn-info" wire:click='CardFormPeriodeAturTemplateInputanApd'>Atur Template Inputan APD</button>
+                </div>
+            @endif
             <div class="col text-right">
                 <button class="btn btn-primary" wire:click='CardFormPeriodeSimpan'>Simpan</button>
                 <button class="btn btn-secondary" wire:click='CardFormPeriodeReset'>Reset</button>

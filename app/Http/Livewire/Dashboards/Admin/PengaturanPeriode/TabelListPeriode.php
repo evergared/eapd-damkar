@@ -190,7 +190,17 @@ class TabelListPeriode extends DataTableComponent
 
     public function Detil($value)
     {
+        $this->dispatchBrowserEvent('hideTabelTemplate');
+        $this->dispatchBrowserEvent('hideFormPeriode');
         $this->emit('editPeriode',$value);
+    }
+
+    public function EditTemplate($id_periode)
+    {
+        $this->dispatchBrowserEvent('hideTabelTemplate');
+        $this->dispatchBrowserEvent('hideFormPeriode');
+        $this->emit('inisiasiTabelTemplate',$id_periode);
+        $this->dispatchBrowserEvent('tampilTabelTemplate');
     }
 
     public function Hapus($value)
