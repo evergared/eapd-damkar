@@ -7,8 +7,10 @@ use App\Models\ApdList;
 use App\Models\InputApdTemplate;
 use App\Models\Jabatan;
 use App\Models\PeriodeInputApd;
+use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -64,161 +66,186 @@ class PeriodeInputController extends Controller
         return $periode->id_periode;
         // where tanggal awal < $tanggal < tanggal akhir -> value('id')
     }
-
-    /**
-     * Memuat template input dari database ke bentuk array yang dapat ditampilkan pada tabel biasa (tabel html)
-     * @param string|int $id_periode id dari periode input apd, akan digunakan untuk mengambil data template dari database
-     */
-    public function muatTemplateSebagaiTabelDatasetArray($id_periode)
+    
+    public function muatTemplateUntukKolomDatatable($template_array)
     {
-        try {
+        try{
 
-            $data_template = InputApdTemplate::where("id_periode", $id_periode)->get()->first()->template;
+            $arranged_array = [];
 
-            $dataset = [];
+            foreach($template_array as $item)
+            {
+                $val_jenis_apd = $item['id_jenis'];
+                $val_opsi = $item['opsi_apd'];
 
-            // contoh : 
-            //     [0] => Array
-            // (
-            //     [id_jabatan] => L001
-            //     [id_jenis] => H002
-            //     [id_apd] => H-fir-0001
-            // )
+                $jenis = ApdJenis::find($val_jenis_apd);
 
-            foreach ($data_template as $jabatan => $template) {
+                if(is_null($jenis))
+                    continue;
 
-                foreach ($template as $apd) {
-                    $id_jenis = $apd["id_jenis"];
-                    foreach ($apd["opsi_apd"] as $opsi) {
-                        array_push($dataset, ["id_jabatan" => $jabatan, "id_jenis" => $id_jenis, "id_apd" => $opsi]);
+                // cek ada berapa template dengan jenis yang sama
+                $col_id_jenis = array_column($template_array, 'id_jenis');
+                $count_id_jenis = array_count_values($col_id_jenis);
+
+                $nama_jenis = $jenis->nama_jenis;
+            
+
+                // jika jenis ini lebih dari satu di template ini dan opsinya hanya satu,
+                // maka buat spt ini : Sepatu Rescue (Heritage)
+                if($count_id_jenis[$val_jenis_apd] > 1)
+                    if(count($val_opsi) == 1)
+                    {
+                        $apd = ApdList::find($val_opsi[0]);
+
+                        if(!is_null($apd))
+                            $nama_jenis += " (".$apd->nama_apd.")";
                     }
+
+                $opsi = [];
+
+                foreach($val_opsi as $a)
+                {
+                    $apd = ApdList::find($a);
+
+                    if(!is_null($apd))
+                        array_push($opsi, $apd->nama_apd);
                 }
+
+                $arranged_array[] = [
+                    "jenis" => $nama_jenis,
+                    "opsi" => $opsi
+                ];
+
             }
 
-            return $dataset;
-        } catch (Throwable $e) {
-            error_log("Gagal dalam memuat template sebagai dataset array " . $e);
-            return [];
+            return $arranged_array;
+
+        }
+        catch(Throwable $e)
+        {
+            error_log($e);
+            return null;
         }
     }
 
-    public function bangunDataTabelTemplateDariDataset(array $dataset)
+    public function buatTemplate(string $id_periode ,string|array $jabatan, string|array $jenis_apd, string|array $opsi_apd, bool $edit = false):bool|array
     {
-        try {
+        // buat template untuk input apd pegawai
+        /**
+         * new template akan seperti ini :
+         * [
+         *      ["id_jenis" => "A001", "opsi_apd"=> ["A-ari-0000", "A-ari-0001"]],
+         * ]
+         */
 
-            $table_data = [];
-            foreach ($dataset as $index => $data) {
-                $jabatan = Jabatan::find($data['id_jabatan'])->nama_jabatan;
-                $jenis_apd = ApdJenis::find($data['id_jenis'])->nama_jenis;
-                $opsi_apd = ApdList::find($data['id_apd'])->nama_apd;
+        $new_template = [];
 
-                array_push($table_data, [
-                    "index" => $index + 1,
-                    "jabatan" => "[" . $data["id_jabatan"] . "] " . $jabatan,
-                    "jenis_apd" => "[" . $data["id_jenis"] . "] " . $jenis_apd,
-                    "opsi_apd" => "[" . $data["id_apd"] . "] " . $opsi_apd,
-                ]);
+        if(is_string($jenis_apd))
+        {
+            if(is_string($opsi_apd))
+            {
+                $opsi = [$opsi_apd];
+            }
+            elseif(is_array($opsi_apd))
+            {
+                $opsi = $opsi_apd;
             }
 
-            return $table_data;
-        } catch (Throwable $e) {
-            error_log("Gagal membangun data tabel template dari dataset " . $e);
-            return [];
+            $new_template = [
+                "id_jenis" => $jenis_apd,
+                "opsi_apd" => $opsi
+            ];
         }
-    }
-
-    public function ubahDataTabelTemplateKeDataset(array $table_data)
-    {
-        try {
-
-            $dataset = [];
-            foreach ($table_data as $data) {
-                $id_jabatan = Str::between($data["jabatan"], '[', '] ');
-                $id_jenis = Str::between($data["jenis_apd"], '[', '] ');
-                $id_apd = Str::between($data["opsi_apd"], '[', '] ');
-
-                array_push($dataset, [
-                    "id_jabatan" => $id_jabatan,
-                    "id_jenis" => $id_jenis,
-                    "id_apd" => $id_apd
-                ]);
-            }
-
-            return $dataset;
-        } catch (Throwable $e) {
-            error_log("Gagal mengubah data table template kembali menjadi dataset " . $e);
-            return [];
-        }
-    }
-
-    public function ubahDatasetArrayTemplateKeTemplate(array $dataset)
-    {
-        try {
-
-            $template = [];
-
-            // list semua jabatan yang ada di dataset
-            $list_jabatan = [];
-            foreach ($dataset as $data) {
-                $id_jabatan = $data["id_jabatan"];
-
-                if (!in_array($id_jabatan, $list_jabatan))
-                    array_push($list_jabatan, $id_jabatan);
-            }
-
-            foreach ($list_jabatan as $jabatan) {
-                // list semua jenis apd yang ada di dataset jika jabatannya sesuai
-                $list_jenis = [];
-                foreach ($dataset as $data) {
-                    if ($data["id_jabatan"] != $jabatan)
+        elseif(is_array($jenis_apd))
+        {
+            foreach($jenis_apd as $jenis)
+            {
+                $opsi = [];
+                foreach($opsi_apd as $o)
+                {
+                    $cek = ApdList::find($o);
+                    if(is_null($cek))
                         continue;
-
-                    if (!in_array($data['id_jenis'], $list_jenis))
-                        array_push($list_jenis, $data['id_jenis']);
+                    if($cek->id_jenis != $jenis)
+                        continue;
+                    $opsi[] = $o;
                 }
 
-                // buat data template untuk jabatan
-                $data_template = [];
-                foreach ($list_jenis as $jenis) {
-                    // list semua apd yang memiliki jabatan dan jenis yang sesuai
-                    $list_apd = [];
-                    foreach ($dataset as $data) {
-                        if ($data["id_jabatan"] != $jabatan)
-                            continue;
+                $new_template[] = [
+                    "id_jenis" => $jenis,
+                    "opsi_apd" => $opsi
+                ];
+            }
+        }
 
-                        if ($data["id_jenis"] != $jenis)
-                            continue;
+        // mulai insert ke database
+        if(is_string($jabatan))
+        {
+            try{
 
-                        if (!in_array($data['id_apd'], $list_jenis))
-                            array_push($list_apd, $data['id_apd']);
+                if($edit)
+                {
+                    $template = InputApdTemplate::where('id_periode',$id_periode)->where('id_jabatan',$jabatan)->first();
+                    if(is_null($template))
+                        throw new Exception("Template dengan id periode ".$id_periode." dan jabatan ".$jabatan." tidak ditemukan.");
+                }
+                else
+                {
+                    $template = new InputApdTemplate;
+                    $template->id_periode = $id_periode;
+                    $template->id_jabatan = $jabatan;
+                }
+
+                $template->template = $new_template;
+                $template->save();
+                return true;
+
+            }
+            catch(Throwable $e)
+            {
+                error_log('Gagal insert template untuk satu jabatan '.$jabatan.' '.$e);
+                Log::error('Gagal insert template untuk satu jabatan '.$jabatan.' '.$e);
+                return false;
+            }
+        }
+        elseif(is_array($jabatan))
+        {
+            $report = [];
+
+            foreach($jabatan as $j)
+            {
+                try{
+
+                    if($edit)
+                    {
+                        $template = InputApdTemplate::where('id_periode',$id_periode)->where('id_jabatan',$jabatan)->first();
+                        if(is_null($template))
+                            throw new Exception("Template dengan id periode ".$id_periode." dan jabatan ".$jabatan." tidak ditemukan.");
+                    }
+                    else
+                    {
+                        $template = new InputApdTemplate;
+                        $template->id_periode = $id_periode;
+                        $template->id_jabatan = $jabatan;
                     }
 
-                    array_push($data_template, [
-                        "id_jenis" => $jenis,
-                        "opsi_apd" => $list_apd
-                    ]);
-                }
+                    $template->template = $new_template;
+                    $template->save();
+                    $report[] = ['jabatan' => $j, 'status' => true];
 
-                $template[$jabatan] = $data_template;
+                }
+                catch(Throwable $e)
+                {
+                    error_log('Gagal insert template untuk banyak jabatan '.$j.' '.$e);
+                    Log::error('Gagal insert template untuk banyak jabatan '.$j.' '.$e);
+                    $report[] = ['jabatan' => $j, 'status' => false];
+                }
             }
 
-            return $template;
-        } catch (Throwable $e) {
-            error_log("Gagal dalam mengubah dataset ke template " . $e);
-            return [];
+            return $report;
+            
         }
+
     }
 
-    #region untuk fitur pengaturan barang
-
-    /**
-     * Untuk menyesuaikan template ketika ada id jenis yang di hapus
-     */
-    public function sesuaikanTemplatePascaHapusJenisApd(string $id_jenis)
-    {
-        try {
-        } catch (Throwable $e) {
-        }
-    }
-    #endregion
 }

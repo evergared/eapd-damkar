@@ -83,8 +83,11 @@
                     <div class="card-title">
                         <h5>Atur Template Inputan APD</h5>
                     </div>
-                    <div class="card-tools text-right" style="cursor:pointer;" onclick="kembaliKeFormPeriode()">
-                        <a>&larr; <u>kembali</u></a>
+                    <div class="card-tools text-right">
+                        <button type="button" class="close" data-toggle="collapse"
+                                    data-target="#tabel-template" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                            </button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -135,7 +138,7 @@
                         </div>
                     @endif
 
-                    @livewire('dashboards.admin.pengaturan-periode.tabel-list-periode');
+                    @livewire('dashboards.admin.pengaturan-periode.tabel-template')
                     
                 </div>
                 <div class="card-footer">
@@ -172,6 +175,8 @@
 
 {{-- start Tempat untuk javascript --}}
     @push('stack-body')
+<div id="toastsContainerTopRight" class="toasts-top-right fixed"></div>
+ 
         {{-- untuk date picker --}}
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-k6/Bkb8Fxf/c1Tkyl39yJwcOZ1P4cRrJu77p83zJjN2Z55prbFHxPs9vN7q3l3+tSMGPDdoH51AEU8Vgo1cgAA==" crossorigin="anonymous"></script>
@@ -261,6 +266,19 @@
                 $("#tabel-template").collapse('hide')
             })
         </script>
+
+<script>
+    
+    window.addEventListener('jsToast', event=>{
+        $(document).Toasts('create', {
+        class: event.detail.class,
+        title: event.detail.title,
+        subtitle: event.detail.subtitle,
+        body: event.detail.body
+        })
+    })
+    
+</script>
     @endpush
 {{-- end Tempat untuk javascript --}}
 

@@ -8,7 +8,7 @@ class ModalUbahSatuTemplate extends Component
 {
 
     public
-        $modal_ubah_single_inputan_apd_mode = "";
+        $mode = "";
 
     protected $listeners = [
         'inisiasiModalSatuTemplate'
@@ -19,9 +19,9 @@ class ModalUbahSatuTemplate extends Component
         return view('livewire.dashboards.admin.pengaturan-periode.modal-ubah-satu-template');
     }
 
-    public function insiasiModalSatuTemplate($val)
+    public function insiasiModalSatuTemplate($mode)
     {
-        $this->modal_ubah_single_inputan_apd_mode = $val['mode'];
+        $this->mode = $mode;
         $this->emit("RefreshTabelAtributTemlateSingle", $val['id_jenis']);
     }
 
