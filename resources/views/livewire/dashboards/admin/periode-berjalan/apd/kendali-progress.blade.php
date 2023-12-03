@@ -1,55 +1,80 @@
 <div>
     <h4>Periode Berjalan : {{$nama_periode_berjalan}}</h4>  
-    <div class="row overlay-wrapper">
+    <div class="row">
         @if ($error_time_page)
-        <div class="overlay">
-            <strong>Terjadi kesalahan saat inisiasi halaman. ref : {{$error_time_page}}</strong>
+        <div>
+            <strong class="text-danger">Terjadi kesalahan saat inisiasi halaman. Silahkan refresh atau hubungin admin. ref : {{$error_time_page}}</strong>
         </div>
         @endif
-        <div class="col">
-            <div class="form-group">
-                <label>Wilayah</label>
-                <select class="form-control" id="wilayah" wire:model='model_dropdown_wilayah' wire:change='changeDropdownWilayah'>
-                  <option value="" disabled>Silahkan Pilih</option>
-                  @if ($opsi_dropdown_wilayah)
-                      @foreach ($opsi_dropdown_wilayah as $item)
-                          <option value="{{$item['value']}}">{{$item['text']}}</option>
-                      @endforeach
-                  @endif
-                </select>
-            </div>
-        </div>
-        <div class="col">
-            <div class="form-group">
-                <label>Penempatan</label>
-                <select class="form-control" id="wilayah" wire:model='model_dropdown_penempatan' wire:change='changeDropdownPenempatan'>
+        @if ($tampil_dropdown_wilayah)
+            <div class="col">
+                <div class="form-group">
+                    <label>Wilayah</label>
+                    <select class="form-control" id="wilayah" wire:model='model_dropdown_wilayah' wire:change='changeDropdownWilayah' >
                     <option value="" disabled>Silahkan Pilih</option>
-                    @if ($opsi_dropdown_penempatan)
-                        @foreach ($opsi_dropdown_penempatan as $item)
+                    @if ($opsi_dropdown_wilayah)
+                        @foreach ($opsi_dropdown_wilayah as $item)
                             <option value="{{$item['value']}}">{{$item['text']}}</option>
                         @endforeach
                     @endif
-                </select>
-              </div>
-        </div>
+                    </select>
+                </div>
+            </div>
+        @endif
+        
+            <div class="col" @if (!$tampil_dropdown_penempatan) style="visibility: hidden" @endif>
+                <div class="form-group">
+                    <label>Penempatan</label>
+                    <select class="form-control" id="wilayah" wire:model='model_dropdown_penempatan' wire:change='changeDropdownPenempatan'>
+                        <option value="" disabled>Silahkan Pilih</option>
+                        @if ($opsi_dropdown_penempatan)
+                            @foreach ($opsi_dropdown_penempatan as $item)
+                                <option value="{{$item['value']}}">{{$item['text']}}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+            </div>
+        
+        
     </div>
     {{-- loading dropdown start --}}
-    <div class="row" wire:loading wire:target='changeDropdownWilayah, changeDropdownPenempatan'>
-        <div class="spinner-grow text-info" role="status">
+    <div class="row" wire:loading wire:target='changeDropdownWilayah,changeDropdownPenempatan'>
+        <div class="spinner-grow text-info" role="status" >
             <span class="sr-only">Memuat...</span>
-        </div><span class="mx-2 text-info">Memuat data......</span>
+        </div><span class="mx-2 text-info">Memuat Data ......</span>
+    </div>
+    <div class="row" wire:loading wire:target='kueriPegawai'>
+        <div class="spinner-grow text-info" role="status" >
+            <span class="sr-only">Memuat...</span>
+        </div><span class="mx-2 text-info">Melakukan kueri pegawai ......</span>
+    </div>
+    <div class="row" wire:loading wire:target='hitungCapaian'>
+        <div class="spinner-grow text-info" role="status" >
+            <span class="sr-only">Memuat...</span>
+        </div><span class="mx-2 text-info">Menghitung Capaian.....</span>
+    </div>
+    <div class="row" wire:loading wire:target='hitungRangkumanKeberadaan'>
+        <div class="spinner-grow text-info" role="status" >
+            <span class="sr-only">Memuat...</span>
+        </div><span class="mx-2 text-info">Merangkum Keberadaan APD.....</span>
+    </div>
+    <div class="row" wire:loading wire:target='hitungRangkumanKerusakan'>
+        <div class="spinner-grow text-info" role="status" >
+            <span class="sr-only">Memuat...</span>
+        </div><span class="mx-2 text-info">Merangkum Kerusakan APD.....</span>
     </div>
     {{-- loading dropdown end --}}
-    @if ($model_dropdown_penempatan)
+    @if ($model_dropdown_penempatan || $model_dropdown_wilayah == "semua")
         <div class="row">
             <h4>Rangkuman Inputan</h4>
         </div>
-        <div class="row overlay-wrapper">
-            @if (!is_null($error_time_capaian))
-            <div class="overlay">
-                <strong>Terjadi kesalahan saat menghitung capaian.</strong>
-            </div>
-            @endif
+        @if (!is_null($error_time_capaian))
+        <div class="row text-danger">
+            <strong>Terjadi kesalahan saat menghitung capaian.</strong>
+        </div>
+        @endif
+        <div class="row">
             <div class="col">
                 <div class="form-group">
                     <label>Inputan </label>
@@ -88,9 +113,9 @@
                             </button>
                         </div>
                     </div>
-                    <div class="card-body overlay-wrapper">
+                    <div class="card-body">
                         @if ($error_time_keberadaan)
-                            <div class="overlay">
+                            <div class="row text-danger">
                                 <strong>Terjadi kesalahan saat menghitung rangkuman.</strong>
                             </div>
                         @endif
@@ -141,9 +166,9 @@
                             </button>
                         </div>
                     </div>
-                    <div class="card-body overlay-wrapper">
+                    <div class="card-body">
                         @if ($error_time_kerusakan)
-                            <div class="overlay">
+                            <div class="row text-danger">
                                 <strong>Terjadi kesalahan saat menghitung rangkuman.</strong>
                             </div>
                         @endif
@@ -203,7 +228,7 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    @if ($model_dropdown_penempatan)
+                    @if ($model_dropdown_penempatan || $model_dropdown_wilayah == "semua")
                         <div class="tab-content">
                             <div class="tab-pane active" id="by-anggota">
                                 @if ($pegawai_terakhir)

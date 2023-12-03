@@ -152,7 +152,12 @@ class ApdDataController extends Controller
             if ($id_periode == null)
                 $id_periode = PeriodeInputApd::where('aktif', true)->get()->first()->id_periode;
 
+            
+
             $list = [];
+
+            if(!(InputApd::where('id_pegawai',$id_pegawai)->where('id_periode',$id_periode)->exists()))
+                return $list;
 
             $template = $this->muatListInputApdDariTemplate($id_periode, $id_jabatan);
 

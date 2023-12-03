@@ -12,6 +12,7 @@ use App\Models\Penempatan;
 use App\Models\PeriodeInputApd;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Throwable;
 
 class TabelTerinputByPersonil extends DataTableComponent
 {
@@ -19,7 +20,8 @@ class TabelTerinputByPersonil extends DataTableComponent
     public array $Tabel_Terinput_By_Personil = [];
 
     public
-        $penempatan_terpilih = "";
+        $penempatan_terpilih = "",
+        $wilayah_terpilih = "";
     
     protected $listeners = [
         "tabelGantiPenempatan" => "gantiPenempatan",
@@ -62,7 +64,7 @@ class TabelTerinputByPersonil extends DataTableComponent
         
         $pegawai = Pegawai::query()->where('id_pegawai','kosong cuma untuk dummy');
         
-        if($this->penempatan_terpilih != '')
+        if($this->penempatan_terpilih != '' || $this->wilayah_terpilih != '')
         {
             
 
@@ -196,7 +198,16 @@ class TabelTerinputByPersonil extends DataTableComponent
 
     public function gantiPenempatan($value)
     {
-        $this->penempatan_terpilih = $value;
+        try{
+            $this->penempatan_terpilih = $value[1];
+            $this->wilayah_terpilih = $value[0];
+        }
+        catch(Throwable $e)
+        {
+            $this->penempatan_terpilih = "";
+            $this->wilayah_terpilih = "";
+        }        
+        
         $this->emitSelf('refreshDatatable');
     }
 

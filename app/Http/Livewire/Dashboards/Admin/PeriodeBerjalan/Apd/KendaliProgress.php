@@ -18,6 +18,11 @@ use Throwable;
 
 class KendaliProgress extends Component
 {
+
+    public
+        $tampil_dropdown_wilayah = true,
+        $tampil_dropdown_penempatan = true;
+
     public
         $opsi_dropdown_wilayah = [],
         $opsi_dropdown_penempatan = [];
@@ -25,6 +30,9 @@ class KendaliProgress extends Component
     public
         $model_dropdown_wilayah = '',
         $model_dropdown_penempatan = '';
+
+    public
+        $list_pegawai = [];
 
     public
         $error_time_page = null,
@@ -92,19 +100,33 @@ class KendaliProgress extends Component
             $target_penempatan = Auth::user()->id_penempatan;
             $tipe_admin = Auth::user()->tipe;
 
+            array_push($this->opsi_dropdown_wilayah, [
+                "value" => 'semua', "text" => 'Semua Wilayah'
+            ]);
+            array_push($this->opsi_dropdown_penempatan, [
+                "value" => 'semua', "text" => 'Semua Penempatan'
+            ]);
+
             if ($tipe_admin == "Admin Dinas") {
                 $fetch_wilayah = Wilayah::all();
+                $this->tampil_dropdown_penempatan = false;
             } elseif ($tipe_admin == "Admin Sudin") {
+                $this->tampil_dropdown_wilayah = false;
                 $fetch_penempatan = Penempatan::where('id_wilayah', Auth::user()->data->penempatan->id_wilayah)->get()->all();
             } elseif ($tipe_admin == "Admin Subcc") {
+                $this->tampil_dropdown_wilayah = false;
                 $fetch_penempatan = Penempatan::where('id_wilayah', Auth::user()->data->penempatan->id_wilayah)->get()->all();
             } elseif ($tipe_admin == "Admin Pusdik") {
+                $this->tampil_dropdown_wilayah = false;
                 $fetch_penempatan = Penempatan::where('id_wilayah', Auth::user()->data->penempatan->id_wilayah)->get()->all();
             } elseif ($tipe_admin == "Admin Lab") {
+                $this->tampil_dropdown_wilayah = false;
                 $fetch_penempatan = Penempatan::where('id_wilayah', Auth::user()->data->penempatan->id_wilayah)->get()->all();
             } elseif ($tipe_admin == "Admin Bidops") {
+                $this->tampil_dropdown_wilayah = false;
                 $fetch_penempatan = Penempatan::where('id_wilayah', Auth::user()->data->penempatan->id_wilayah)->get()->all();
             } elseif ($tipe_admin == "Admin Sektor") {
+                $this->tampil_dropdown_wilayah = false;
                 $fetch_penempatan = Penempatan::where('id_penempatan', 'like', $target_penempatan . '%')->get()->all();
             } else {
                 throw new Exception("Tidak ada kondisi yang sesuai dengan tipe admin untuk akun dengan id " . Auth::user()->id);
@@ -140,8 +162,43 @@ class KendaliProgress extends Component
     #endregion
 
     #region penghitungan rangkuman
+
+    public function kueriPegawai()
+    {
+        error_log('kueri pegawai start');
+
+        try{
+
+
+            $this->list_pegawai = [];
+
+            if($this->model_dropdown_wilayah == "semua")
+                $this->list_pegawai = Pegawai::get('id_pegawai')->all();
+            else
+            {
+                if ($this->model_dropdown_penempatan == "")
+                    return;
+
+                if($this->model_dropdown_penempatan == "semua")
+                    $this->list_pegawai = Pegawai::where('id_wilayah', $this->model_dropdown_wilayah)->get('id_pegawai')->all();
+                else
+                    $this->list_pegawai = Pegawai::where('id_penempatan', 'like', $this->model_dropdown_penempatan . '%')->get('id_pegawai')->all();
+            }
+
+
+        }
+        catch(Throwable $e)
+        {
+            error_log($e);
+        }
+        error_log('kueri pegawai end');
+
+    }
+
     public function hitungCapaian()
     {
+        error_log('capaian start');
+
         $this->error_time_capaian = null;
         $this->value_max_capaian = 0;
         $this->value_terinput_capaian = 0;
@@ -149,14 +206,12 @@ class KendaliProgress extends Component
 
         try {
 
-            if ($this->model_dropdown_penempatan == "")
+            if(count($this->list_pegawai) < 1)
                 return;
-
-            $list_pegawai = Pegawai::where('id_penempatan', 'like', $this->model_dropdown_penempatan . '%')->get()->all();
 
             $adc = new ApdDataController;
 
-            foreach ($list_pegawai as $pegawai) {
+            foreach ($this->list_pegawai as $pegawai) {
                 $maks = 0;
                 $terinput = 0;
                 $terverif = 0;
@@ -177,10 +232,15 @@ class KendaliProgress extends Component
             error_log('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_capaian . ') : Kesalahan saat hitung capaian ' . $e);
             Log::error('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_capaian . ') : Kesalahan saat hitung capaian ' . $e);
         }
+
+        error_log('capaian start');
+
     }
 
     public function hitungRangkumanKeberadaan()
     {
+        error_log('keberadaan start');
+
         $this->error_time_keberadaan = null;
         $this->value_keberadaan_ada = 0;
         $this->value_keberadaan_belum = 0;
@@ -188,14 +248,12 @@ class KendaliProgress extends Component
 
         try {
 
-            if ($this->model_dropdown_penempatan == "")
+            if(count($this->list_pegawai) < 1)
                 return;
-
-            $list_pegawai = Pegawai::where('id_penempatan', 'like', $this->model_dropdown_penempatan . '%')->get()->all();
 
             $adc = new ApdDataController;
 
-            foreach ($list_pegawai as $pegawai) {
+            foreach ($this->list_pegawai as $pegawai) {
                 $this->value_keberadaan_ada += $adc->hitungInputanBerdasarkanStatus($pegawai->id_pegawai);
                 $this->value_keberadaan_belum += $adc->hitungInputanBerdasarkanStatus($pegawai->id_pegawai, null, 'belumTerima');
                 $this->value_keberadaan_hilang += $adc->hitungInputanBerdasarkanStatus($pegawai->id_pegawai, null, 'hilang');
@@ -208,10 +266,14 @@ class KendaliProgress extends Component
             error_log('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_keberadaan . ') : Kesalahan saat hitung keberadaan ' . $e);
             Log::error('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_keberadaan . ') : Kesalahan saat hitung keberadaan ' . $e);
         }
+        error_log('keberadaan end');
+
     }
 
     public function hitungRangkumanKerusakan()
     {
+        error_log('rangkuman start');
+
         $this->error_time_kerusakan = null;
         $this->value_kerusakan_baik = 0;
         $this->value_kerusakan_ringan = 0;
@@ -220,14 +282,12 @@ class KendaliProgress extends Component
 
         try {
 
-            if ($this->model_dropdown_penempatan == "")
+            if(count($this->list_pegawai) < 1)
                 return;
-
-            $list_pegawai = Pegawai::where('id_penempatan', 'like', $this->model_dropdown_penempatan . '%')->get()->all();
 
             $adc = new ApdDataController;
 
-            foreach ($list_pegawai as $pegawai) {
+            foreach ($this->list_pegawai as $pegawai) {
                 $this->value_kerusakan_baik += $adc->hitungInputanBerdasarkanStatus($pegawai->id_pegawai, null, 'baik');
                 $this->value_kerusakan_ringan += $adc->hitungInputanBerdasarkanStatus($pegawai->id_pegawai, null, 'rusakRingan');
                 $this->value_kerusakan_sedang += $adc->hitungInputanBerdasarkanStatus($pegawai->id_pegawai, null, 'rusakSedang');
@@ -242,6 +302,8 @@ class KendaliProgress extends Component
             error_log('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_kerusakan . ') : Kesalahan saat hitung keberadaan ' . $e);
             Log::error('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_kerusakan . ') : Kesalahan saat hitung keberadaan ' . $e);
         }
+        error_log('rangkuman end');
+
     }
     #endregion
 
@@ -253,14 +315,27 @@ class KendaliProgress extends Component
             $this->opsi_dropdown_penempatan = [];
             $this->model_dropdown_penempatan = '';
 
-            $fetch_penempatan = Penempatan::where('id_wilayah', $this->model_dropdown_wilayah)->get()->all();
 
-            if (!is_null($fetch_penempatan))
-                foreach ($fetch_penempatan as $f) {
-                    array_push($this->opsi_dropdown_penempatan, [
-                        "value" => $f->id_penempatan, "text" => $f->nama_penempatan
-                    ]);
-                }
+            if($this->model_dropdown_wilayah == "semua")
+            {
+                $this->tampil_dropdown_penempatan = false;
+                $this->changeDropdownPenempatan();
+            }
+            else
+            {
+                $fetch_penempatan = Penempatan::where('id_wilayah', $this->model_dropdown_wilayah)->get()->all();
+                $this->tampil_dropdown_wilayah = true;
+                $this->tampil_dropdown_penempatan = true;
+
+                if (!is_null($fetch_penempatan))
+                    foreach ($fetch_penempatan as $f) {
+                        array_push($this->opsi_dropdown_penempatan, [
+                            "value" => $f->id_penempatan, "text" => $f->nama_penempatan
+                        ]);
+                    }
+            }
+
+            
         } catch (Throwable $e) {
             $this->error_time_alert = now();
             $this->opsi_dropdown_penempatan = [];
@@ -274,7 +349,9 @@ class KendaliProgress extends Component
 
     public function changeDropdownPenempatan()
     {
-        $this->emit('tabelGantiPenempatan', $this->model_dropdown_penempatan);
+       
+        $this->emit('tabelGantiPenempatan', [$this->model_dropdown_wilayah, $this->model_dropdown_penempatan]);
+        $this->kueriPegawai();
         $this->hitungCapaian();
         $this->hitungRangkumanKeberadaan();
         $this->hitungRangkumanKerusakan();

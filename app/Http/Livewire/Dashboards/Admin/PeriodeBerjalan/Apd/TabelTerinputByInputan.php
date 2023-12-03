@@ -44,6 +44,7 @@ class TabelTerinputByInputan extends DataTableComponent
     
 
     public $penempatan_terpilih = "";
+    public $wilayah_terpilih = "";
 
     public $opsi_dropdown_verifikasi = [
         ['value' => '3', 'text'=> 'Verifikasi'],
@@ -86,7 +87,7 @@ class TabelTerinputByInputan extends DataTableComponent
 
         $query = InputApd::where('id_inputan','ambil data kosong untuk dummy lalala');
 
-        if($this->penempatan_terpilih != '')
+        if($this->penempatan_terpilih != '' || $this->wilayah_terpilih != '')
         {
             
 
@@ -95,8 +96,17 @@ class TabelTerinputByInputan extends DataTableComponent
                         ->join('jabatan','pegawai.id_jabatan','=','jabatan.id_jabatan')
                         ->join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
                         ->join('periode_input_apd', 'input_apd.id_periode','=','periode_input_apd.id_periode')
-                        ->where('pegawai.aktif',true)
-                        ->where('pegawai.id_penempatan','like',$this->penempatan_terpilih.'%')
+                        ->where('pegawai.aktif',true);
+
+            if($this->wilayah_terpilih != 'semua')
+            {
+                if($this->penempatan_terpilih != 'semua')
+                $query = $query->where('pegawai.id_penempatan','like',$this->penempatan_terpilih.'%')
+                            ->where('penempatan.id_wilayah',$this->wilayah_terpilih);
+            }
+                
+                
+                $query = $query
                         ->where('input_apd.id_periode',$this->id_periode_berjalan)
                         ->when($this->columnSearch['size'] ?? null, function($query, $size){
                             return $query->where('size', 'like', '%'.$size.'%');
@@ -267,7 +277,24 @@ class TabelTerinputByInputan extends DataTableComponent
     #region Listener function
     public function gantiPenempatan($value)
     {
-        $this->penempatan_terpilih = $value;
+        try{
+            $this->penempatan_terpilih = $value[1];
+            $this->wilayah_terpilih = $value[0];
+        }
+        catch(Throwable $e)
+        {
+            $this->penempatan_terpilih = "";
+            $this->wilayah_terpilih = "";
+            $time = now();
+            $this->dispatchBrowserEvent('jsToast', [
+                "class" => 'bg-danger',
+                "title" => "Kesalahann Saat Inisiasi Tabel Inputan",
+                "subtitle" => "ref : ".$time,
+                "body" => "Silahkan ganti wilayah/penempatan atau refresh halaman. Hubungi admin jika kesalahan terus terjadi."
+            ]);
+            
+        }
+        
         $this->emitSelf('refreshDatatable');
     }
     #endregion
