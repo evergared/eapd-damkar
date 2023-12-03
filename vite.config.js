@@ -2,12 +2,9 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 
 export default defineConfig({
-    server: {
-        host: '0.0.0.0',
-        hmr: {
-            host: 'localhost'
-        }
-    },
+    // server: {
+    //     host: '103.157.146.122',
+    // },
     plugins: [
         laravel({
             input: [
@@ -15,13 +12,12 @@ export default defineConfig({
                 'resources/css/adminlte-auth.css',
                 'resources/js/adminlte-auth.js',
                 'resources/js/adminlte-dashboard.js',
+                'resources/js/jquery-3.7.1.min.js',
                 'resources/css/adminlte-dashboard.css',
-                'public/admin-lte/adminlte.min.js',
-                'public/admin-lte/demo.js',
-                'public/admin-lte/filter.js',
-                'public/admin-lte/ekko-lightbox.mis.js',
+                'resources/css/filter.css',
+
             ],
             refresh: true,
         }),
-    ],
+    ]
 });

@@ -9,11 +9,12 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{asset('jquery-3.7.1.min.js')}}"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.1/dist/cdn.min.js"></script>
 
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    @vite('resources/js/app.js')
     @vite('resources/css/adminlte-dashboard.css')
     @vite('resources/css/filter.css')
     @stack('stack-head')
@@ -51,18 +52,18 @@
     </script>
 
     @stack('stack-body')
-    @vite('resources/js/adminlte-dashboard.js')
-    @vite('public/admin-lte/adminlte.min.js')
-    @vite('public/admin-lte/demo.js')
 
   
-    @vite('public/admin-lte/ekko-lightbox.mis.js')
 
-    {{-- @vite('public/admin-lte/filter.js') --}}
+    <script src="{{asset('admin-lte/adminlte.min.js')}}"></script>
+    <script src="{{asset('admin-lte/ekko-lightbox.min.js')}}"></script>
+    <script src="{{asset('admin-lte/demo.js')}}"></script>
     <script src="{{asset('admin-lte/filter.js')}}"></script>
 
     @include('helper.script-modal')
     @livewireScripts
+
+
 </body>
 
 </html>
