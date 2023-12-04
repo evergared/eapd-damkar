@@ -12,7 +12,6 @@ export default defineConfig({
                 'resources/css/adminlte-auth.css',
                 'resources/js/adminlte-auth.js',
                 'resources/js/adminlte-dashboard.js',
-                'resources/js/jquery-3.7.1.min.js',
                 'resources/css/adminlte-dashboard.css',
                 'resources/css/filter.css',
 
