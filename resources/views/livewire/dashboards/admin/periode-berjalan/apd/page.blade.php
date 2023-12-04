@@ -56,7 +56,7 @@
     <livewire:dashboards.admin.periode-berjalan.apd.modal-kolom-profil>
     
     @push('stack-body')
-    <script>
+    <script type="module">
 
         window.addEventListener('jsAlert', event=>{
                 alert(event.detail.pesan);
@@ -119,7 +119,7 @@
     @endpush
     
     <div id="toastsContainerTopRight" class="toasts-top-right fixed"></div>
-    <script>
+    <script type="module">
         
         window.addEventListener('jsToast', event=>{
             $(document).Toasts('create', {

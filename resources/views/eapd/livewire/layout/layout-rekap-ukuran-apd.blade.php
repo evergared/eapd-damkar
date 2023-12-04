@@ -152,7 +152,7 @@
 
 
       {{-- Javascript --}}
-      <script>
+      <script type="module">
          //function untuk ukuran apd
   window.addEventListener('tampilJumlahUkuranApd',event=>{
     $("#tabel-list-ukuran-apd").hide(500)

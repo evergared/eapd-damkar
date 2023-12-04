@@ -51,7 +51,7 @@
                                     @if (is_array($entry_detail['image']) && count($entry_detail['image']) > 1)
                                         
                                         {{-- Script untuk preview gambar apd Start--}}
-                                        <script>
+                                        <script type="module">
                                             $(document).ready(function() {
                                         $('.apd-user.product-image-thumb').on('click', function () {
                                             var $image_element = $(this).find('img')
@@ -117,7 +117,7 @@
                                     @if (is_array($entry_sebelumnya['gambar_apd']) && count($entry_sebelumnya['gambar_apd']) > 1)
                                         
                                         {{-- Script untuk preview gambar apd Start--}}
-                                        <script>
+                                        <script type="module">
                                             $(document).ready(function() {
                                         $('.apd-sebelumnya.product-image-thumb').on('click', function () {
                                             var $image_element = $(this).find('img')
@@ -182,7 +182,7 @@
                                     @if (is_array($gambar_apd_template) && count($gambar_apd_template) > 1)
                                         
                                         {{-- Script untuk preview gambar apd Start--}}
-                                        <script>
+                                        <script type="module">
                                             $(document).ready(function() {
                                         $('.apd-template.product-image-thumb').on('click', function () {
                                             var $image_element = $(this).find('img')

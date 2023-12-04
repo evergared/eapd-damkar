@@ -36,7 +36,7 @@
 
         @push('stack-body')
         <script src="{{ asset('admin-lte/ekko-lightbox.min.js')}}"></script>
-            <script>
+            <script type="module">
 
           $(document).on('click', '[data-toggle="lightbox"]', function(event) {
             event.preventDefault();

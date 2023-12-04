@@ -177,7 +177,7 @@
                                     {{-- ketika ada lebih dari satu gambar --}}
                                     @elseif($gambar_terpilih_terisi && is_array($gambar_terpilih))
 
-                                    <script>
+                                    <script type="module">
                                         $(document).ready(function() {
                                         $('.apd.product-image-thumb').on('click', function () {
                                             var $image_element = $(this).find('img')
@@ -228,7 +228,7 @@
     </div>
     <!-- /.modal-dialog -->
 
-    <script>
+    <script type="module">
         window.addEventListener('kolapse',event => {
             $('#'+event.detail.id).collapse('show')
         })

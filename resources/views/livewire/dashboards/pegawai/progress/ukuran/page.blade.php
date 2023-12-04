@@ -137,7 +137,7 @@
     
     
     @push('stack-body')
-        <script>
+        <script type="module">
             window.addEventListener('tabel-ke-detail', event=>{
             $('#tabel-ukuran').hide(500)
             $('#detail-ukuran').show(500)

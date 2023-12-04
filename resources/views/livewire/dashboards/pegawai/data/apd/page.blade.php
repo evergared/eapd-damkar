@@ -234,7 +234,7 @@
                                                     @if (is_array($data_detail_inputan['gambar_apd']) && count($data_detail_inputan['gambar_apd']) > 1)
                                                         
                                                         {{-- Script untuk preview gambar apd Start--}}
-                                                        <script>
+                                                        <script type="module">
                                                             $(document).ready(function() {
                                                         $('.apd-user.product-image-thumb').on('click', function () {
                                                             var $image_element = $(this).find('img')
@@ -300,7 +300,7 @@
                                                     @if (is_array($gambar_apd_template) && count($gambar_apd_template) > 1)
                                                         
                                                         {{-- Script untuk preview gambar apd Start--}}
-                                                        <script>
+                                                        <script type="module">
                                                             $(document).ready(function() {
                                                         $('.apd-template.product-image-thumb').on('click', function () {
                                                             var $image_element = $(this).find('img')
@@ -537,7 +537,7 @@
                               <img class="product-image" src="{{asset($path_gambar . $gambar_detail)}}" alt="Gambar APD">
                             @elseif(is_array($gambar_detail))
                               {{-- Script untuk preview gambar terpilih Start--}}
-                                <script>
+                                <script type="module">
                                   $(document).ready(function() {
                               $('.gambar-multi.product-image-thumb').on('click', function () {
                                   var $image_element = $(this).find('img')
@@ -581,7 +581,7 @@
     </div>
 
     @push('stack-body')
-    <script>
+    <script type="module">
 
         window.addEventListener('jsAlert', event=>{
                 alert(event.detail.pesan);

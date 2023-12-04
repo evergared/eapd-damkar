@@ -625,7 +625,7 @@
 {{-- rekapitulasi --}}
 
 
-<script>
+<script type="module">
 
   function detailProgress(Id,Filter){
     

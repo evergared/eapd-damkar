@@ -168,7 +168,7 @@
                                                 @if (is_array($detail_gambar_user) && count($detail_gambar_user)>1)
 
                                                     {{-- Script untuk preview gambar apd Start--}}
-                                                    <script>
+                                                    <script type="module">
                                                         $(document).ready(function() {
                                                     $('.apd-user.product-image-thumb').on('click', function () {
                                                         var $image_element = $(this).find('img')
@@ -215,7 +215,7 @@
                                                 @if (is_array($gambar_template_apd) && count($gambar_template_apd)>1)
 
                                                     {{-- Script untuk preview gambar apd Start--}}
-                                                    <script>
+                                                    <script type="module">
                                                         $(document).ready(function() {
                                                     $('.apd-template.product-image-thumb').on('click', function () {
                                                         var $image_element = $(this).find('img')
@@ -359,7 +359,7 @@
 
                     <!-- /.card -->
 
-<script>
+<script type="module">
 window.addEventListener('kolapseShow',event => {
     // console.log('Kolapse Show '+event.detail.id)
     $('#'+event.detail.id).collapse('show')

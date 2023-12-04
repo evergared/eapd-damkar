@@ -60,7 +60,7 @@
                                         @if(count($gambar_apd_template)>1 && $userTelahMemilih)
 
                                         {{-- Script untuk preview gambar apd Start--}}
-                                        <script>
+                                        <script type="module">
                                             $(document).ready(function() {
                                         $('.apd-template.product-image-thumb').on('click', function () {
                                             var $image_element = $(this).find('img')
@@ -147,7 +147,7 @@
                                         @if (count($gambar_apd)>1)
 
                                         {{-- Script untuk preview gambar apd Start--}}
-                                        <script>
+                                        <script type="module">
                                             $(document).ready(function() {
                                         $('.apd-user.product-image-thumb').on('click', function () {
                                             var $image_element = $(this).find('img')
@@ -433,7 +433,7 @@
                                 pastikan anda menyimpan perubahan.</span>
 
                             {{-- Script untuk preview gambar apd Start--}}
-                            <script>
+                            <script type="module">
                                 $(document).ready(function() {
                                         $('.upload-preview.product-image-thumb').on('click', function () {
                                             var $image_element = $(this).find('img')

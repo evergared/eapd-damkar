@@ -658,7 +658,7 @@
                                         <img class="upload-preview product-image" src="{{ $detail_barang_gambar_upload[0]->temporaryUrl() }}"
                                         alt="APD">
                                     @endif
-                                    <script>
+                                    <script type="module">
                                         $(document).ready(function() {
                                                 $('.upload-preview.product-image-thumb').on('click', function () {
                                                     var $image_element = $(this).find('img')
@@ -695,7 +695,7 @@
                                                 @endif
                                             @endforeach
                                         </div>
-                                    <script>
+                                    <script type="module">
                                         $(document).ready(function() {
                                                 $('.gambar-sebelumnya.product-image-thumb').on('click', function () {
                                                     var $image_element = $(this).find('img')
@@ -727,7 +727,7 @@
 
     {{-- start javascript --}}
     @push('stack-body')
-        <script>
+        <script type="module">
             window.addEventListener('showModalTampilGambarApd',event=>{
                 $('#modal-tampil-gambar-apd').modal('show');
             })

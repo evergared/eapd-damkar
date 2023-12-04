@@ -191,7 +191,7 @@
                                                     @if (is_array($detail_by_personil_entry_detail['gambar_apd']) && count($detail_by_personil_entry_detail['gambar_apd']) > 1)
                                                         
                                                         {{-- Script untuk preview gambar apd Start--}}
-                                                        <script>
+                                                        <script type="module">
                                                             $(document).ready(function() {
                                                         $('.apd-user.product-image-thumb').on('click', function () {
                                                             var $image_element = $(this).find('img')
@@ -257,7 +257,7 @@
                                                     @if (is_array($gambar_apd_template) && count($gambar_apd_template) > 1)
                                                         
                                                         {{-- Script untuk preview gambar apd Start--}}
-                                                        <script>
+                                                        <script type="module">
                                                             $(document).ready(function() {
                                                         $('.apd-template.product-image-thumb').on('click', function () {
                                                             var $image_element = $(this).find('img')
@@ -547,7 +547,7 @@
                                     <img class="product-image" src="{{asset($path_gambar . $gambar_terpilih)}}" alt="Gambar APD">
                                     @elseif(is_array($gambar_terpilih))
                                     {{-- Script untuk preview gambar terpilih Start--}}
-                                        <script>
+                                        <script type="module">
                                         $(document).ready(function() {
                                     $('.gambar-multi.product-image-thumb').on('click', function () {
                                         var $image_element = $(this).find('img')
@@ -612,7 +612,7 @@
                             {{-- Start ketika gambar yang terpilih ada banyak --}}
                             @if(is_array($gambar_terpilih) && count($gambar_terpilih) > 1)
                                 {{-- Script untuk preview gambar terpilih Start--}}
-                                <script>
+                                <script type="module">
                                     $(document).ready(function() {
                                 $('.gambar-multi.product-image-thumb').on('click', function () {
                                     var $image_element = $(this).find('img')
@@ -726,7 +726,7 @@
                                         @if (is_array($detail_by_personil_entry_detail['gambar_apd']) && count($detail_by_personil_entry_detail['gambar_apd']) > 1)
                                             
                                             {{-- Script untuk preview gambar apd Start--}}
-                                            <script>
+                                            <script type="module">
                                                 $(document).ready(function() {
                                             $('.apd-user.product-image-thumb').on('click', function () {
                                                 var $image_element = $(this).find('img')
@@ -792,7 +792,7 @@
                                         @if (is_array($gambar_apd_template) && count($gambar_apd_template) > 1)
                                             
                                             {{-- Script untuk preview gambar apd Start--}}
-                                            <script>
+                                            <script type="module">
                                                 $(document).ready(function() {
                                             $('.apd-template.product-image-thumb').on('click', function () {
                                                 var $image_element = $(this).find('img')

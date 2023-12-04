@@ -8,13 +8,13 @@
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-
+    @vite('resources/js/app.js')
+        {{-- @vite('jquery') --}}
     <script src="{{asset('jquery-3.7.1.min.js')}}"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.1/dist/cdn.min.js"></script>
 
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    @vite('resources/js/app.js')
     @vite('resources/css/adminlte-dashboard.css')
     @vite('resources/css/filter.css')
     @stack('stack-head')
@@ -44,21 +44,21 @@
             {{ $slot }}
         </div>
 
+        @vite('resources/js/adminlte-dashboard.js')
 
         @include('layouts.footer.adminlte-dashboard-footer')
     </div>
-    <script>
+    <script type="module">
         $.widget.bridge('uibutton', $.ui.button)
     </script>
 
     @stack('stack-body')
 
-  
 
-    <script src="{{asset('admin-lte/adminlte.min.js')}}"></script>
-    <script src="{{asset('admin-lte/ekko-lightbox.min.js')}}"></script>
-    <script src="{{asset('admin-lte/demo.js')}}"></script>
-    <script src="{{asset('admin-lte/filter.js')}}"></script>
+    <script type="module" src="{{asset('admin-lte/adminlte.min.js')}}"></script>
+    <script type="module" src="{{asset('admin-lte/ekko-lightbox.min.js')}}"></script>
+    <script type="module" src="{{asset('admin-lte/demo.js')}}"></script>
+    <script type="module" src="{{asset('admin-lte/filter.js')}}"></script>
 
     @include('helper.script-modal')
     @livewireScripts

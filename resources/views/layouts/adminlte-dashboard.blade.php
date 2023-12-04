@@ -49,7 +49,7 @@
 
         @include('layouts.footer.adminlte-dashboard-footer')
     </div>
-    <script>
+    <script type="module">
         $.widget.bridge('uibutton', $.ui.button)
     </script>
 

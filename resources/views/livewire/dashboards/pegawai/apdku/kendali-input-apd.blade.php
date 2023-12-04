@@ -66,7 +66,7 @@
                                             @if ($id_apd_user != "")
                                                 @if(is_array($template_gambar_apd))
                                                     {{-- Script untuk preview gambar apd Start--}}
-                                                    <script>
+                                                    <script type="module">
                                                         $(document).ready(function() {
                                                     $('.apd-template.product-image-thumb').on('click', function () {
                                                         var $image_element = $(this).find('img')
@@ -187,7 +187,7 @@
 
                                                 @if(is_array($gambar_apd_user_sebelum))
                                                     {{-- Script untuk preview gambar apd Start--}}
-                                                    <script>
+                                                    <script type="module">
                                                         $(document).ready(function() {
                                                     $('.apd-user.product-image-thumb').on('click', function () {
                                                         var $image_element = $(this).find('img')
@@ -626,7 +626,7 @@
                                 <span class="text-warning">Gambar berikut merupakan preview gambar yang anda upload.</span>
 
                                 {{-- Script untuk preview gambar apd Start--}}
-                                <script>
+                                <script type="module">
                                     $(document).ready(function() {
                                             $('.upload-preview.product-image-thumb').on('click', function () {
                                                 var $image_element = $(this).find('img')
@@ -679,7 +679,7 @@
                                     pastikan anda menyimpan perubahan.</span>
 
                                 {{-- Script untuk preview gambar apd Start--}}
-                                <script>
+                                <script type="module">
                                     $(document).ready(function() {
                                             $('.upload-preview.product-image-thumb').on('click', function () {
                                                 var $image_element = $(this).find('img')
@@ -737,7 +737,7 @@
 
         @push('stack-body')
 
-        <script>
+        <script type="module">
             $(document).on('click', '[data-toggle="lightbox"]', function(event) {
             event.preventDefault();
             $(this).ekkoLightbox({
@@ -746,7 +746,7 @@
           });
         </script>
         
-        <script src="{{ asset('admin-lte/ekko-lightbox.min.js')}}">
+        <script type="module" src="{{ asset('admin-lte/ekko-lightbox.min.js')}}">
             
         </script>
         @endpush
