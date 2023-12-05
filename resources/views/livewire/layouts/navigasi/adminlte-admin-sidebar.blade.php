@@ -93,7 +93,7 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item {{ (Route::currentRouteName() == 'admin-aduan-barang')? 'menu-open' :''}}">
+                {{-- <li class="nav-item {{ (Route::currentRouteName() == 'admin-aduan-barang')? 'menu-open' :''}}">
                     <a href="{{route('admin-aduan-barang')}}"
                         class="nav-link {{ (Route::currentRouteName() == 'admin-aduan-barang')? 'active' :''}}">
                         <i class="nav-icon fab fa-stack-exchange"></i>
@@ -162,10 +162,10 @@
                           </a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
                 
                 <li class="nav-header border-bottom mb-3"></li>
-
+                @if (auth()->user()->tipe == 'Admin Dinas')
                 <li class="nav-item  {{ (Route::currentRouteName() =='admin-pengaturan-apd-barang' || Route::currentRouteName() =='admin-pengaturan-jenis-barang')? 'menu-open' :''}}">
                     <a class="nav-link {{ (Route::currentRouteName() =='admin-pengaturan-apd-barang' || Route::currentRouteName() =='admin-pengaturan-jenis-barang')? 'active' :''}}">
                         <i class="nav-icon fas fa-hard-hat"></i>
@@ -199,7 +199,8 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item  {{ (Route::currentRouteName() =='admin-pengaturan-kepegawaian')? 'menu-open' :''}}">
+                @endif
+                {{-- <li class="nav-item  {{ (Route::currentRouteName() =='admin-pengaturan-kepegawaian')? 'menu-open' :''}}">
                     <a href="{{route('admin-pengaturan-kepegawaian')}}"
                         class="nav-link {{ (Route::currentRouteName() =='admin-pengaturan-kepegawaian')? 'active' :''}}">
                         <i class="nav-icon fas fa-user-tie"></i>
@@ -207,7 +208,7 @@
                             Kepegawaian
                         </p>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item {{ (Route::currentRouteName() =='admin-pengaturan-user')? 'menu-open' :''}}">
                     <a href="{{route('admin-pengaturan-user')}}"
                         class="nav-link {{ (Route::currentRouteName() =='admin-pengaturan-user')? 'active' :''}}">

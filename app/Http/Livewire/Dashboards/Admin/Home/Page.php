@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Dashboards\Admin\Home;
 use App\Http\Controllers\ApdDataController;
 use App\Models\Pegawai;
 use App\Models\Penempatan;
+use App\Models\Wilayah;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -42,7 +43,7 @@ class Page extends Component
             $id_penempatan = null;
 
             if ($tipe_admin == "Admin Dinas") {
-                $id_wilayah = 'semua';
+                $id_wilayah = "semua";
             } elseif ($tipe_admin == "Admin Sudin") {
                 $id_wilayah = Auth::user()->data->penempatan->id_wilayah;
                 // $id_penempatan = Auth::user()->data->id_penempatan;
@@ -70,28 +71,45 @@ class Page extends Component
             $data_warna = [];
             $data_jumlah = [];
 
+            $adc = new ApdDataController;
+
             $fetch_penempatan = Penempatan::query();
 
             if($id_wilayah != "semua")
+            {
                 $fetch_penempatan = $fetch_penempatan->where('id_wilayah',$id_wilayah);
 
-            if(!is_null($id_penempatan))
-                $fetch_penempatan = $fetch_penempatan->where('id_penempatan','like',$id_penempatan.'%');
+                if(!is_null($id_penempatan))
+                    $fetch_penempatan = $fetch_penempatan->where('id_penempatan','like',$id_penempatan.'%');
 
-            $fetch_penempatan = $fetch_penempatan->get()->all();
+                $fetch_penempatan = $fetch_penempatan->get()->all();
 
-            $adc = new ApdDataController;
+            }
+            else
+            {
+                $fetch_penempatan = Wilayah::get()->all();
+            }
+                
+
 
             foreach($fetch_penempatan as $p)
             {
-                $label = $p->nama_penempatan;
-
                 $warna = sprintf('#%06X', mt_rand(0, 0xFFFFFF));
 
                 $total_max = 0;
                 $total_validasi = 0;
+                if($id_wilayah == "semua")
+                {
+                    $list_pegawai = Pegawai::join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
+                    ->where('pegawai.aktif',true)->where('penempatan.id_wilayah',$p->id_wilayah)->get()->all();
+                    $label = $p->nama_wilayah;
+                }
+                else
+                {
+                    $list_pegawai = Pegawai::where('id_penempatan',$p->id_penempatan)->where('aktif',true)->get()->all();
+                    $label = $p->nama_penempatan;
+                }
 
-                $list_pegawai = Pegawai::where('id_penempatan',$p->id_penempatan)->get()->all();
                 foreach($list_pegawai as $pegawai)
                 {
                     $max = 0;
@@ -115,6 +133,7 @@ class Page extends Component
                 $data_warna[] = $warna;
                 $data_jumlah[] = $total_validasi;
             }
+            
 
             $this->chart_labels = $data_label;
             $this->chart_warna = $data_warna;
