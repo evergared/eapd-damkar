@@ -48,8 +48,5 @@
 
             <button type="submit" class="login__button">Login</button>
 
-            <!-- <p class="login__register">
-               Don't have an account? <a href="#">Register</a>
-            </p> -->
     </form>
 @endsection

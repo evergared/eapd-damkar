@@ -354,25 +354,48 @@ class ApdRekapController extends Controller
                 $id_periode = $pic->ambilIdPeriodeInput();
             }
 
+            error_log($id_wilayah);
+            error_log($id_penempatan);
+            error_log($id_periode);
+
             // query semua pegawai
-            $list_pegawai = Pegawai::query()
-            ->join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
+            $list_pegawai = Pegawai::
+            join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
             ->where('pegawai.aktif',true);
             
             if($id_wilayah != "semua")
-            $list_pegawai = $list_pegawai->where('penempatan.id_wilayah',$id_wilayah);
+            {
+                $list_pegawai = $list_pegawai->where('penempatan.id_wilayah',$id_wilayah);
+                error_log('hit1');
+            }
 
             if($id_penempatan != "semua")
-            $list_pegawai = $list_pegawai->where('pegawai.id_penempatan','like',$id_penempatan.'%');
+            {
+                $list_pegawai = $list_pegawai->where('pegawai.id_penempatan','like',$id_penempatan.'%');
+                error_log('hit2');
+            }
+            // return dd($list_pegawai->where('id_pegawai','01he9jdt87830ve0wj4yq214d5')->get());
+            $list_pegawai = $list_pegawai->get()->toArray();
+
             
+
             $data_rekap = [];
 
             // ambil semua inputan dari db
             $semua_inputan = InputApd::where('id_periode',$id_periode)->where('verifikasi_status','3')->get();
 
+            // return dd($semua_inputan);
+
             // filter data tsb berdasarkan list pegawai
             $inputan_anggota = $semua_inputan->filter(function($value,$key) use($list_pegawai){
-                return $list_pegawai->where('id_pegawai',$value['id_pegawai'])->exists();
+                // $test = $list_pegawai->where('id_pegawai',$value['id_pegawai'])->exists();
+
+                $test = in_array($value['id_pegawai'],array_column($list_pegawai,'id_pegawai'));
+                error_log($test);
+                if($test)
+                    return true;
+                else
+                    return false;
             });
 
             // return dd($inputan_anggota);
