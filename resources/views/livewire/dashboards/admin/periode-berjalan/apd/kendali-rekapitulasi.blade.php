@@ -7,23 +7,26 @@
                 <strong>Terjadi kesalahan saat inisiasi halaman. ref : {{$error_time_page}}</strong>
             </div>
             @endif
-            <div class="col">
-                <div class="form-group">
-                    <label>Wilayah</label>
-                    <select class="form-control" id="wilayah" wire:model='model_dropdown_wilayah' wire:change='changeDropdownWilayah'>
-                      <option value="" disabled>Silahkan Pilih</option>
-                      @if ($opsi_dropdown_wilayah)
-                          @foreach ($opsi_dropdown_wilayah as $item)
-                              <option value="{{$item['value']}}">{{$item['text']}}</option>
-                          @endforeach
-                      @endif
-                    </select>
+            @if ($tampil_dropdown_wilayah)
+                <div class="col">
+                    <div class="form-group">
+                        <label>Wilayah</label>
+                        <select class="form-control" id="wilayah" wire:model='model_dropdown_wilayah' wire:change='changeDropdownWilayah'>
+                        <option value="" disabled>Silahkan Pilih</option>
+                        @if ($opsi_dropdown_wilayah)
+                            @foreach ($opsi_dropdown_wilayah as $item)
+                                <option value="{{$item['value']}}">{{$item['text']}}</option>
+                            @endforeach
+                        @endif
+                        </select>
+                    </div>
                 </div>
-            </div>
+            @endif
+            
             <div class="col">
                 <div class="form-group">
                     <label>Penempatan</label>
-                    <select class="form-control" id="wilayah" wire:model='model_dropdown_penempatan' wire:change='changeDropdownPenempatan'>
+                    <select class="form-control" id="wilayah" wire:model='model_dropdown_penempatan' wire:change='changeDropdownPenempatan' @if (!$tampil_dropdown_penempatan) style="visibility: hidden" @endif>
                         <option value="" disabled>Silahkan Pilih</option>
                         @if ($opsi_dropdown_penempatan)
                             @foreach ($opsi_dropdown_penempatan as $item)

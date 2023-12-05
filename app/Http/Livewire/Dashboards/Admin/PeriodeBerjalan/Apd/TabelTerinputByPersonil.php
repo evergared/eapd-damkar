@@ -25,7 +25,8 @@ class TabelTerinputByPersonil extends DataTableComponent
     
     protected $listeners = [
         "tabelGantiPenempatan" => "gantiPenempatan",
-        'sharePeriodeBerjalan' => 'terimaPeriodeBerjalan'
+        'sharePeriodeBerjalan' => 'terimaPeriodeBerjalan',
+        'test'
     ];
 
     public
@@ -54,6 +55,8 @@ class TabelTerinputByPersonil extends DataTableComponent
             ];
         });
 
+        // $this->setDebugEnabled();
+
         $this->setQueryStringDisabled();
         $this->setColumnSelectStatus(false);
 
@@ -66,16 +69,27 @@ class TabelTerinputByPersonil extends DataTableComponent
         
         if($this->penempatan_terpilih != '' || $this->wilayah_terpilih != '')
         {
-            
+            error_log($this->wilayah_terpilih);
+            error_log($this->penempatan_terpilih);
 
             $pegawai =  Pegawai::query()
                         ->distinct()
                         ->join('input_apd','input_apd.id_pegawai','=','pegawai.id_pegawai')
-                        ->where('pegawai.aktif',true)
-                        ->where('pegawai.id_penempatan','like',$this->penempatan_terpilih.'%')
+                        ->join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
+                        ->where('pegawai.aktif',true);
+                if($this->wilayah_terpilih != 'semua')
+                {
+                    if($this->penempatan_terpilih != 'semua')
+                        $pegawai = $pegawai->where('pegawai.id_penempatan','like',$this->penempatan_terpilih.'%')
+                                ->where('penempatan.id_wilayah',$this->wilayah_terpilih);
+                }
+            $pegawai = $pegawai
+                        // ->where('pegawai.id_penempatan','like',$this->penempatan_terpilih.'%')
                         ->where('input_apd.id_periode',$this->id_periode_berjalan);
                         
         }
+        else
+            error_log('ga ke trigger');
         
             
             return $pegawai;
@@ -207,8 +221,14 @@ class TabelTerinputByPersonil extends DataTableComponent
             $this->penempatan_terpilih = "";
             $this->wilayah_terpilih = "";
         }        
+        error_log('ganti penempatan ke trigger');
         
         $this->emitSelf('refreshDatatable');
+    }
+
+    public function test($args)
+    {
+        error_log('kena');
     }
 
     public function mount()

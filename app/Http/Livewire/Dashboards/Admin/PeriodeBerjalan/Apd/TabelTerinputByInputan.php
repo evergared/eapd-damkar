@@ -277,6 +277,7 @@ class TabelTerinputByInputan extends DataTableComponent
     #region Listener function
     public function gantiPenempatan($value)
     {
+        error_log('ganti penempatan ter terigger di tabel by inputan');
         try{
             $this->penempatan_terpilih = $value[1];
             $this->wilayah_terpilih = $value[0];

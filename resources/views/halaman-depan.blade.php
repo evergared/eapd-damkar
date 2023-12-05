@@ -14,7 +14,7 @@
                   <i class="ri-user-3-line login__icon"></i>
 
                   <div class="login__box-input">
-                     <input type="text" required class="login__input" id="nrk" name="nrk" :value="old('nrk')" placeholder="">
+                     <input type="text" autocomplete="off" required class="login__input" id="nrk" name="nrk" :value="old('nrk')" placeholder="">
                      <label for="nrk" class="login__label">NRK/NPJLP</label>
                   </div>
                </div>

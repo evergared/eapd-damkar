@@ -343,7 +343,7 @@ class ApdRekapController extends Controller
         }
     }
 
-    public function bangunDataTabelRekapPenempatan($id_penempatan, $id_periode = null)
+    public function bangunDataTabelRekapPenempatan($id_wilayah, $id_penempatan, $id_periode = null)
     {
         try
         {
@@ -355,7 +355,15 @@ class ApdRekapController extends Controller
             }
 
             // query semua pegawai
-            $list_pegawai = Pegawai::where('id_penempatan','like',$id_penempatan.'%');
+            $list_pegawai = Pegawai::query()
+            ->join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
+            ->where('pegawai.aktif',true);
+            
+            if($id_wilayah != "semua")
+            $list_pegawai = $list_pegawai->where('penempatan.id_wilayah',$id_wilayah);
+
+            if($id_penempatan != "semua")
+            $list_pegawai = $list_pegawai->where('pegawai.id_penempatan','like',$id_penempatan.'%');
             
             $data_rekap = [];
 

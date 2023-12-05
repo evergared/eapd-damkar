@@ -24,6 +24,10 @@ class KendaliRekapitulasi extends Component
 {
 
     public
+        $tampil_dropdown_wilayah = true,
+        $tampil_dropdown_penempatan = true;
+
+    public
         $opsi_dropdown_wilayah = [],
         $opsi_dropdown_penempatan = [];
 
@@ -69,19 +73,45 @@ class KendaliRekapitulasi extends Component
             $target_penempatan = Auth::user()->id_penempatan;
             $tipe_admin = Auth::user()->tipe;
 
+            array_push($this->opsi_dropdown_wilayah, [
+                "value" => 'semua', "text" => 'Semua Wilayah'
+            ]);
+            array_push($this->opsi_dropdown_penempatan, [
+                "value" => 'semua', "text" => 'Semua Penempatan'
+            ]);
+
+
             if ($tipe_admin == "Admin Dinas") {
                 $fetch_wilayah = Wilayah::all();
+                $this->tampil_dropdown_penempatan = false;
             } elseif ($tipe_admin == "Admin Sudin") {
+                $this->tampil_dropdown_wilayah = false;
+                $this->model_dropdown_wilayah = Auth::user()->data->penempatan->id_wilayah;
                 $fetch_penempatan = Penempatan::where('id_wilayah', Auth::user()->data->penempatan->id_wilayah)->get()->all();
             } elseif ($tipe_admin == "Admin Subcc") {
+                $this->tampil_dropdown_wilayah = false;
+                $this->model_dropdown_wilayah = Auth::user()->data->penempatan->id_wilayah;
+                $this->opsi_dropdown_penempatan = [];
                 $fetch_penempatan = Penempatan::where('id_wilayah', Auth::user()->data->penempatan->id_wilayah)->get()->all();
             } elseif ($tipe_admin == "Admin Pusdik") {
+                $this->tampil_dropdown_wilayah = false;
+                $this->model_dropdown_wilayah = Auth::user()->data->penempatan->id_wilayah;
+                $this->opsi_dropdown_penempatan = [];
                 $fetch_penempatan = Penempatan::where('id_wilayah', Auth::user()->data->penempatan->id_wilayah)->get()->all();
             } elseif ($tipe_admin == "Admin Lab") {
+                $this->tampil_dropdown_wilayah = false;
+                $this->model_dropdown_wilayah = Auth::user()->data->penempatan->id_wilayah;
+                $this->opsi_dropdown_penempatan = [];
                 $fetch_penempatan = Penempatan::where('id_wilayah', Auth::user()->data->penempatan->id_wilayah)->get()->all();
             } elseif ($tipe_admin == "Admin Bidops") {
+                $this->tampil_dropdown_wilayah = false;
+                $this->model_dropdown_wilayah = Auth::user()->data->penempatan->id_wilayah;
+                $this->opsi_dropdown_penempatan = [];
                 $fetch_penempatan = Penempatan::where('id_wilayah', Auth::user()->data->penempatan->id_wilayah)->get()->all();
             } elseif ($tipe_admin == "Admin Sektor") {
+                $this->tampil_dropdown_wilayah = false;
+                $this->model_dropdown_wilayah = Auth::user()->data->penempatan->id_wilayah;
+                $this->opsi_dropdown_penempatan = [];
                 $fetch_penempatan = Penempatan::where('id_penempatan', 'like', $target_penempatan . '%')->get()->all();
             } else {
                 throw new Exception("Tidak ada kondisi yang sesuai dengan tipe admin untuk akun dengan id " . Auth::user()->id);
@@ -130,7 +160,7 @@ class KendaliRekapitulasi extends Component
         }
         // error_log('test');
         $arc = new ApdRekapController;
-        $rekap = $arc->bangunDataTabelRekapPenempatan($this->model_dropdown_penempatan);
+        $rekap = $arc->bangunDataTabelRekapPenempatan($this->model_dropdown_wilayah,$this->model_dropdown_penempatan,);
 
 
         // return dd($tableyo);
@@ -154,14 +184,23 @@ class KendaliRekapitulasi extends Component
             $this->opsi_dropdown_penempatan = [];
             $this->model_dropdown_penempatan = '';
 
-            $fetch_penempatan = Penempatan::where('id_wilayah', $this->model_dropdown_wilayah)->get()->all();
+            if($this->model_dropdown_wilayah == "semua")
+            {
+                $this->tampil_dropdown_penempatan = false;
+                $this->changeDropdownPenempatan();
+        
+            }
+            else{
+                $fetch_penempatan = Penempatan::where('id_wilayah', $this->model_dropdown_wilayah)->get()->all();
 
-            if (!is_null($fetch_penempatan))
-                foreach ($fetch_penempatan as $f) {
-                    array_push($this->opsi_dropdown_penempatan, [
-                        "value" => $f->id_penempatan, "text" => $f->nama_penempatan
-                    ]);
-                }
+                if (!is_null($fetch_penempatan))
+                    foreach ($fetch_penempatan as $f) {
+                        array_push($this->opsi_dropdown_penempatan, [
+                            "value" => $f->id_penempatan, "text" => $f->nama_penempatan
+                        ]);
+                    }
+            }
+            
         } catch (Throwable $e) {
             $this->error_time_alert = now();
             $this->opsi_dropdown_penempatan = [];
@@ -215,7 +254,7 @@ class KendaliRekapitulasi extends Component
         try {
 
             $arc = new ApdRekapController;
-            $data = $arc->bangunDataTabelRekapPenempatan($this->model_dropdown_penempatan, $this->id_periode_berjalan);
+            $data = $arc->bangunDataTabelRekapPenempatan($this->model_dropdown_wilayah,$this->model_dropdown_penempatan, $this->id_periode_berjalan);
 
             if (is_bool($data) && $data == false)
                 throw new Exception('Data gagal di rekap oleh Apd Rekap Controller');
