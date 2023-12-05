@@ -623,7 +623,7 @@
 </section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-<script type="module">
+<script>
     $(function () {
     new Chart(document.getElementById("chart-dinas"), {
     type: 'pie',

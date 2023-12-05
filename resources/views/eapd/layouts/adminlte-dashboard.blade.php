@@ -49,7 +49,7 @@
 
         @include('eapd.layouts.footer.adminlte-dashboard-footer')
     </div>
-    <script type="module">
+    <script>
         $.widget.bridge('uibutton', $.ui.button)
     </script>
 

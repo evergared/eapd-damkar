@@ -45,7 +45,7 @@
 
     @push('stack-body')
     
-        <script type="module">
+        <script>
 
             window.addEventListener('kendali-ke-form-user', event=>{
                 $("#kendali").hide(500)
@@ -66,7 +66,7 @@
         </script>
 
 <div id="toastsContainerTopRight" class="toasts-top-right fixed"></div>
-<script type="module">
+<script>
       
     window.addEventListener('jsToast', event=>{
         $(document).Toasts('create', {

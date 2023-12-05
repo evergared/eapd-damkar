@@ -54,7 +54,7 @@
     <livewire:dashboards.pegawai.data.ukuran.modal-kolom-profil-tabel-anggota>
 
     @push('stack-body')
-        <script type="module">
+        <script>
             window.addEventListener('tabel-ke-detail', event=>{
             $('#tabel-ukuran').hide(500)
             $('#detail-ukuran').show(500)

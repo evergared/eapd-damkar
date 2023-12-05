@@ -103,7 +103,7 @@
     </div>
     </section>
 
-    <script type="module">
+    <script>
 
         window.addEventListener('butuh-input-ke-kendali-input', event=> {
             $('#butuh-input-apdku').hide(500)

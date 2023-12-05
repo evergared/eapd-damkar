@@ -48,17 +48,17 @@
 
         @include('layouts.footer.adminlte-dashboard-footer')
     </div>
-    <script type="module">
+    <script>
         $.widget.bridge('uibutton', $.ui.button)
     </script>
 
     @stack('stack-body')
 
 
-    <script type="module" src="{{asset('admin-lte/adminlte.min.js')}}"></script>
-    <script type="module" src="{{asset('admin-lte/ekko-lightbox.min.js')}}"></script>
-    <script type="module" src="{{asset('admin-lte/demo.js')}}"></script>
-    <script type="module" src="{{asset('admin-lte/filter.js')}}"></script>
+    <script src="{{asset('admin-lte/adminlte.min.js')}}"></script>
+    <script src="{{asset('admin-lte/ekko-lightbox.min.js')}}"></script>
+    <script src="{{asset('admin-lte/demo.js')}}"></script>
+    <script src="{{asset('admin-lte/filter.js')}}"></script>
 
     @include('helper.script-modal')
     @livewireScripts

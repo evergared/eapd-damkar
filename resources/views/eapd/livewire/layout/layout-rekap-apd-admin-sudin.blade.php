@@ -179,7 +179,7 @@
 
 
         {{-- Javascript --}}
-            <script type="module">
+            <script>
                 
 
                 window.addEventListener('showDetailProfil',event=>{

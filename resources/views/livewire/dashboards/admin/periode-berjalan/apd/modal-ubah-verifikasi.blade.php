@@ -83,7 +83,7 @@
         <!-- /.modal-dialog -->
     </div>
 
-        <script type="module">
+        <script>
             window.addEventListener('byInputanPanggilModalUbah', event=>{
                 console.log('modal terpanggil')
                 $("#modal-ubah-verifikasi").modal('show')

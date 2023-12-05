@@ -25,18 +25,25 @@ class TesJenisApdSeeder extends Seeder
          * A - Additionals
          */
         $dataJenisItem = [
-            ['id_jenis' => 'H001', 'nama_jenis' => 'Fire Helmet', 'keterangan' => null],
-            ['id_jenis' => 'H002', 'nama_jenis' => 'Rescue Helmet', 'keterangan' => null],
-            ['id_jenis' => 'T001', 'nama_jenis' => 'Fire Jacket', 'keterangan' => null],
-            ['id_jenis' => 'T002', 'nama_jenis' => 'Jumpsuit', 'keterangan' => null],
-            ['id_jenis' => 'G001', 'nama_jenis' => 'Fire Gloves', 'keterangan' => null],
-            ['id_jenis' => 'G002', 'nama_jenis' => 'Rescue Gloves', 'keterangan' => null],
-            ['id_jenis' => 'B001', 'nama_jenis' => 'Fire Boots', 'keterangan' => null],
-            ['id_jenis' => 'B002', 'nama_jenis' => 'Rescue Boots', 'keterangan' => null],
-            ['id_jenis' => 'A001', 'nama_jenis' => 'Respirator', 'keterangan' => null],
-            ['id_jenis' => 'A002', 'nama_jenis' => 'Fire Goggles', 'keterangan' => null],
-            ['id_jenis' => 'A003', 'nama_jenis' => 'Kapak', 'keterangan' => null],
-            ['id_jenis' => 'A004', 'nama_jenis' => 'Senter', 'keterangan' => null],
+            
+            ['id_jenis' => 'A001','nama_jenis' => 'Respirator','deleted_at' => null],
+            ['id_jenis' => 'A002','nama_jenis' => 'Fire Goggles','deleted_at' => null],
+            ['id_jenis' => 'A003','nama_jenis' => 'Kapak','deleted_at' => null],
+            ['id_jenis' => 'A004','nama_jenis' => 'Senter','deleted_at' => null],
+            ['id_jenis' => 'A005','nama_jenis' => 'Balaclava','deleted_at' => null],
+            ['id_jenis' => 'A006','nama_jenis' => 'Pelindung Lutut','deleted_at' => null],
+            ['id_jenis' => 'A007','nama_jenis' => 'Pelindung Siku','deleted_at' => null],
+            ['id_jenis' => 'A008','nama_jenis' => 'Tas Pemadam','deleted_at' => null],
+            ['id_jenis' => 'B001','nama_jenis' => 'Fire Boots','deleted_at' => null],
+            ['id_jenis' => 'B002','nama_jenis' => 'Rescue Boots','deleted_at' => null],
+            ['id_jenis' => 'B003','nama_jenis' => 'Water Rescue Boots','deleted_at' => null],
+            ['id_jenis' => 'G001','nama_jenis' => 'Fire Gloves','deleted_at' => null],
+            ['id_jenis' => 'G002','nama_jenis' => 'Rescue Gloves','deleted_at' => null],
+            ['id_jenis' => 'H001','nama_jenis' => 'Fire Helmet','deleted_at' => null],
+            ['id_jenis' => 'H002','nama_jenis' => 'Rescue Helmet','deleted_at' => null],
+            ['id_jenis' => 'T001','nama_jenis' => 'Fire Jacket','deleted_at' => null],
+            ['id_jenis' => 'T002','nama_jenis' => 'Jumpsuit','deleted_at' => null],
+
         ];
 
         $kondisiUmum = [
@@ -56,6 +63,8 @@ class TesJenisApdSeeder extends Seeder
         ];
 
         $sizeUmum = array(
+            'XXXL',
+            'XXL',
             'XL',
             'L',
             'M',
@@ -63,6 +72,7 @@ class TesJenisApdSeeder extends Seeder
         );
 
         $sizeSepatu = array(
+            '37',
             '38',
             '39',
             '40',

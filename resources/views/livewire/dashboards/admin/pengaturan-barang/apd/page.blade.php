@@ -125,7 +125,7 @@
     </section>
 
     @push('stack-body')
-        <script type="module">
+        <script>
             window.addEventListener('kendali-ke-form-apd', event=> {
                 $('#kendali').hide(500)
                 $('#form-apd').collapse('show')

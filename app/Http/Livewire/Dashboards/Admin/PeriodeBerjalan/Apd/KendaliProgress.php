@@ -80,9 +80,9 @@ class KendaliProgress extends Component
     #region Livewire
     public function render()
     {
-        $this->hitungCapaian();
-        $this->hitungRangkumanKeberadaan();
-        $this->hitungRangkumanKerusakan();
+        // $this->hitungCapaian();
+        // $this->hitungRangkumanKeberadaan();
+        // $this->hitungRangkumanKerusakan();
         return view('livewire.dashboards.admin.periode-berjalan.apd.kendali-progress');
     }
 
@@ -186,12 +186,14 @@ class KendaliProgress extends Component
             }
 
 
+
         }
         catch(Throwable $e)
         {
             error_log($e);
         }
         error_log('kueri pegawai end');
+        return;
 
     }
 
@@ -233,7 +235,9 @@ class KendaliProgress extends Component
             Log::error('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_capaian . ') : Kesalahan saat hitung capaian ' . $e);
         }
 
-        error_log('capaian start');
+        error_log('capaian end');
+        return;
+
 
     }
 
@@ -267,6 +271,8 @@ class KendaliProgress extends Component
             Log::error('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_keberadaan . ') : Kesalahan saat hitung keberadaan ' . $e);
         }
         error_log('keberadaan end');
+        return;
+
 
     }
 
@@ -303,6 +309,8 @@ class KendaliProgress extends Component
             Log::error('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_kerusakan . ') : Kesalahan saat hitung keberadaan ' . $e);
         }
         error_log('rangkuman end');
+        return;
+
 
     }
     #endregion
@@ -310,6 +318,7 @@ class KendaliProgress extends Component
     #region wire:change
     public function changeDropdownWilayah()
     {
+        
         $this->error_time_alert = null;
         try {
             $this->opsi_dropdown_penempatan = [];
@@ -319,10 +328,16 @@ class KendaliProgress extends Component
             if($this->model_dropdown_wilayah == "semua")
             {
                 $this->tampil_dropdown_penempatan = false;
-                $this->changeDropdownPenempatan();
+                // $this->changeDropdownPenempatan();
+                $this->emit('tabelGantiPenempatan', [$this->model_dropdown_wilayah, $this->model_dropdown_penempatan]);
+        $this->kueriPegawai();
+        $this->hitungCapaian();
+        $this->hitungRangkumanKeberadaan();
+        $this->hitungRangkumanKerusakan();
             }
             else
             {
+
                 $fetch_penempatan = Penempatan::where('id_wilayah', $this->model_dropdown_wilayah)->get()->all();
                 $this->tampil_dropdown_wilayah = true;
                 $this->tampil_dropdown_penempatan = true;
@@ -334,6 +349,8 @@ class KendaliProgress extends Component
                         ]);
                     }
             }
+
+            return;
 
             
         } catch (Throwable $e) {
@@ -349,12 +366,14 @@ class KendaliProgress extends Component
 
     public function changeDropdownPenempatan()
     {
-       
+        
         $this->emit('tabelGantiPenempatan', [$this->model_dropdown_wilayah, $this->model_dropdown_penempatan]);
         $this->kueriPegawai();
         $this->hitungCapaian();
         $this->hitungRangkumanKeberadaan();
         $this->hitungRangkumanKerusakan();
+        error_log('dropdown penempatan');
+        return;
     }
     #endregion
 

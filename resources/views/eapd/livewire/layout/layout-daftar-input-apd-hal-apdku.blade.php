@@ -78,7 +78,7 @@
         <!-- /.row -->
     </div>
 
-    <script type="module">
+    <script>
         window.addEventListener('testModal', event=> {
             modal('modal-input-apd-pegawai-hal-apdku',event.detail.id_jenis,'modalInputApdPegawai')
         })

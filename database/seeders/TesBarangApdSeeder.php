@@ -17,39 +17,23 @@ class TesBarangApdSeeder extends Seeder
     {
 
         $dataContohApd = [
-            ['id_apd' => 'H-bro-0000', 'nama_apd' => 'Protect Red', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' => null, 'id_kondisi' => "2", 'image' => 'fire-helmet-2021.png'],
-            ['id_apd' => 'H-bro-0001', 'nama_apd' => 'Alpha Head', 'merk' => 'Bronson', 'id_jenis' => 'H001', 'id_size' => null, 'id_kondisi' => "2", 'image' => 'firehelmet_4.jpg||firehelmet_5.jpg'],
-            ['id_apd' => 'H-fir-0000', 'nama_apd' => 'Helmet Fire', 'merk' => 'Fire Protect', 'id_jenis' => 'H001', 'id_size' => null, 'id_kondisi' => "2", 'image' => 'firehelmet_6.jpg'],
-
-            ['id_apd' => 'H-fir-0001', 'nama_apd' => 'Red Helmet', 'merk' => 'Fire Protect', 'id_jenis' => 'H002', 'id_size' => null, 'id_kondisi' => "2", 'image' => 'rescue-helmet-2021.png'],
-
-            ['id_apd' => 'G-glo-0000', 'nama_apd' => 'Red Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' => '1', 'id_kondisi' => '1', 'image' => 'fire-glove-2022.png'],
-            ['id_apd' => 'G-glo-0001', 'nama_apd' => 'Yellow Hand', 'merk' => 'Gloves Maker', 'id_jenis' => 'G001', 'id_size' => '1', 'id_kondisi' => '1', 'image' => 'firegloves_2.jpg'],
-            ['id_apd' => 'G-alt-0000', 'nama_apd' => 'Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G001', 'id_size' => '1', 'id_kondisi' => '1', 'image' => 'firegloves_1.jpg||firegloves_2.jpg'],
-
-            ['id_apd' => 'G-alt-0001', 'nama_apd' => 'Rescue Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' => '1', 'id_kondisi' => '1', 'image' => 'rescue-glove-2022.png'],
-            ['id_apd' => 'G-alt-0002', 'nama_apd' => 'Slightly More Safety Gloves', 'merk' => 'Altair Industries', 'id_jenis' => 'G002', 'id_size' => '1', 'id_kondisi' => '1', 'image' => 'rescuegloves_2.jpg'],
-
-
-            ['id_apd' => 'T-fir-0000', 'nama_apd' => 'Fire Jacket', 'merk' => 'Fire Protect', 'id_jenis' => 'T001', 'id_size' => '1', 'id_kondisi' => '1', 'image' => 'fire-jacket-2021.png||fire-jacket-back-2021.png'],
-            ['id_apd' => 'T-pol-0000', 'nama_apd' => 'Fire Suit', 'merk' => 'Poland Inc', 'id_jenis' => 'T001', 'id_size' => '1', 'id_kondisi' => '1', 'image' => null],
-
-            ['id_apd' => 'T-pol-0001', 'nama_apd' => 'Jump Suit Poland', 'merk' => 'Poland Inc', 'id_jenis' => 'T002', 'id_size' => '1', 'id_kondisi' => '1', 'image' => 'jumsuit-2022.jpg'],
-            ['id_apd' => 'T-yoh-0000', 'nama_apd' => 'Jump Suit', 'merk' => 'Yohanes Safety Accredited', 'id_jenis' => 'T002', 'id_size' => '1', 'id_kondisi' => '1', 'image' => null],
-
-            ['id_apd' => 'B-yoh-0000', 'nama_apd' => 'Fire Hazard Boots', 'merk' => 'Yohanes Safety Accredited', 'id_jenis' => 'B001', 'id_size' => "2", 'id_kondisi' => '1', 'image' => 'fire-boots-2022.png'],
-            ['id_apd' => 'B-ari-0000', 'nama_apd' => 'Fire Safety Boots', 'merk' => 'Arian Protection', 'id_jenis' => 'B001', 'id_size' => "2", 'id_kondisi' => '1', 'image' => null],
-
-            ['id_apd' => 'B-ari-0001', 'nama_apd' => 'Rescue Boots', 'merk' => 'Arian Protection', 'id_jenis' => 'B002', 'id_size' => "2", 'id_kondisi' => '1', 'image' => 'rescue-boots-2020.png'],
-
-            ['id_apd' => 'A-dar-0000', 'nama_apd' => 'Sandstorm', 'merk' => 'Darude', 'id_jenis' => 'A001', 'id_size' => null, 'id_kondisi' => '1', 'image' => 'respirator-2021.png'],
-
-            ['id_apd' => 'A-ari-0000', 'nama_apd' => 'Arian Visor', 'merk' => 'Arian Protection', 'id_jenis' => 'A002', 'id_size' => null, 'id_kondisi' => '1', 'image' => 'uvex.png'],
-
-            ['id_apd' => 'A-tho-0000', 'nama_apd' => 'Handaxe', 'merk' => 'Thorsson and Asgard Production', 'id_jenis' => 'A003', 'id_size' => null, 'id_kondisi' => '1', 'image' => 'kampak.png'],
-
-            ['id_apd' => 'A-uni-0000', 'nama_apd' => 'Flashlight', 'merk' => 'Universal Lightning', 'id_jenis' => 'A004', 'id_size' => null, 'id_kondisi' => '1', 'image' => null],
-
+            ['id_apd' => 'A001_Sun_0001','nama_apd' => 'Respirator','id_jenis' => 'A001','merk' => 'Sundstrom','id_size' => null,'id_kondisi' => '1','image' => 'A001_Sun_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'A002_Uve_0001','nama_apd' => 'Fire Google','id_jenis' => 'A002','merk' => 'Uvex','id_size' => null,'id_kondisi' => '1','image' => 'A002_Uve_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'A003_Sta_0001','nama_apd' => 'Kapak','id_jenis' => 'A003','merk' => 'Starkpro','id_size' => null,'id_kondisi' => '1','image' => 'A003_Sta_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'A004_Pel_0001','nama_apd' => 'Senter Kepala','id_jenis' => 'A004','merk' => 'Pelican','id_size' => null,'id_kondisi' => '1','image' => 'A004_Pel_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'A005_Nom_0001','nama_apd' => 'Balaclava','id_jenis' => 'A005','merk' => 'Nomex','id_size' => null,'id_kondisi' => '1','image' => 'A005_Nom_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'A006_Pem_0001','nama_apd' => 'Pelindung Lutut','id_jenis' => 'A006','merk' => 'Pemadam','id_size' => null,'id_kondisi' => '1','image' => 'A006_Pem_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'A007_Pem_0001','nama_apd' => 'Pelindung Siku','id_jenis' => 'A007','merk' => 'Pemadam','id_size' => null,'id_kondisi' => '1','image' => 'A007_Pem_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'A008_Pem_0001','nama_apd' => 'Tas Pemadam','id_jenis' => 'A008','merk' => 'Pemadam','id_size' => null,'id_kondisi' => '1','image' => 'A008_Pem_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'B001_Har_0001','nama_apd' => 'Fire Boots','id_jenis' => 'B001','merk' => 'Harvik','id_size' => '2','id_kondisi' => '1','image' => 'B001_Har_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'B002_Com_0001','nama_apd' => 'Rescue Boots','id_jenis' => 'B002','merk' => 'Comfy','id_size' => '2','id_kondisi' => '1','image' => 'B002_Com_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'B003_Her_0001','nama_apd' => 'Water Rescue Boots','id_jenis' => 'B003','merk' => 'Heritage','id_size' => '2','id_kondisi' => '1','image' => 'B003_Her_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'G001_Car_0001','nama_apd' => 'Fire Gloves','id_jenis' => 'G001','merk' => 'Carbon X','id_size' => '1','id_kondisi' => '1','image' => 'G001_Car_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'G002_Zhi_0001','nama_apd' => 'Rescue Gloves','id_jenis' => 'G002','merk' => 'Zhield','id_size' => '1','id_kondisi' => '1','image' => 'G002_Zhi_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'H001_Cal_0001','nama_apd' => 'Fire Helmet','id_jenis' => 'H001','merk' => 'Calisa Vulcan','id_size' => null,'id_kondisi' => '2','image' => 'H001_Cal_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'H002_Dra_0001','nama_apd' => 'Recue Helmet','id_jenis' => 'H002','merk' => 'Drager','id_size' => null,'id_kondisi' => '2','image' => 'H002_Dra_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'T001_Pem_0001','nama_apd' => 'Fire Jacket','id_jenis' => 'T001','merk' => 'Pemadam','id_size' => '1','id_kondisi' => '1','image' => 'T001_Pem_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
+            ['id_apd' => 'T002_Pem_0001','nama_apd' => 'Jumsuit','id_jenis' => 'T002','merk' => 'Pemadam','id_size' => '1','id_kondisi' => '1','image' => 'T002_Pem_0001.jpg','input_no_seri' => '0','strict_no_seri' => '0','id_referensi' => null,'sumber_id_referensi' => null,'deleted_at' => null],
         ];
 
         foreach($dataContohApd as $data)

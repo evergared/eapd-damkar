@@ -15,7 +15,7 @@
     @endif
 
     @push('head-js')
-    <script type="module">
+    <script>
         Echo.channel('tes').listen('.ContohEvent',(e)=>{
             console.log('contoh event triggered by pusher web');
         })

@@ -1,6 +1,6 @@
 <div>
     @isset($jsPath)
-        <script type="module">{!! file_get_contents($jsPath) !!}</script>
+        <script>{!! file_get_contents($jsPath) !!}</script>
     @endisset
     @isset($cssPath)
         <style>{!! file_get_contents($cssPath) !!}</style>

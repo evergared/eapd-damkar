@@ -183,7 +183,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg==" crossorigin="anonymous" />
 
         <div id="toastsContainerTopRight" class="toasts-top-right fixed"></div>
-        <script type="module">
+        <script>
             
             window.addEventListener('jsToast', event=>{
                 $(document).Toasts('create', {
@@ -196,7 +196,7 @@
             
         </script>
         
-        <script type="module">
+        <script>
             function keTabelInputanApd()
             {
                 $("#form-periode").hide(500);  
@@ -267,7 +267,7 @@
             })
         </script>
 
-<script type="module">
+<script>
     
     window.addEventListener('jsToast', event=>{
         $(document).Toasts('create', {

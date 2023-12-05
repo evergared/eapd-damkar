@@ -21,7 +21,7 @@ agar modal tidak hilang sendiri dan layar dapat diklik setelah modal dipanggil.
 --}}
 
 
-<script type="module">
+<script>
     //     $(document).on('hidden.bs.modal', '.modal',
 //   () => $('.modal:visible').length && $(document.body).addClass('modal-open'));
 

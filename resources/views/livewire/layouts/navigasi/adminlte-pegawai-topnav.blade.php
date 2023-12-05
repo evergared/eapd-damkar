@@ -52,7 +52,7 @@
     <!-- /.navbar -->
 
     @push('stack-body')
-        {{-- <script type="module">
+        {{-- <script>
             var serverTime = {{$server_time}};
             var localTime = Date.now();
             var timeDiff = serverTime - localTime;

@@ -26,7 +26,7 @@
     </section>
 
     @push('stack-body')
-        <script type="module">
+        <script>
             function tabelKeForm()
             {
                 $("#tabel-jenis").hide(500);

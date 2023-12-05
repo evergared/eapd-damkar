@@ -289,7 +289,7 @@
                     {{-- Start ketika gambar yang terpilih ada banyak --}}
                       @if(is_array($gambar_terpilih) && count($gambar_terpilih) > 1)
                           {{-- Script untuk preview gambar terpilih Start--}}
-                          <script type="module">
+                          <script>
                               $(document).ready(function() {
                           $('.gambar-multi.product-image-thumb').on('click', function () {
                               var $image_element = $(this).find('img')
@@ -403,7 +403,7 @@
                                   @if (is_array($data_detail_inputan['gambar_apd']) && count($data_detail_inputan['gambar_apd']) > 1)
                                       
                                       {{-- Script untuk preview gambar apd Start--}}
-                                      <script type="module">
+                                      <script>
                                           $(document).ready(function() {
                                       $('.apd-user.product-image-thumb').on('click', function () {
                                           var $image_element = $(this).find('img')
@@ -469,7 +469,7 @@
                                   @if (is_array($gambar_apd_template) && count($gambar_apd_template) > 1)
                                       
                                       {{-- Script untuk preview gambar apd Start--}}
-                                      <script type="module">
+                                      <script>
                                           $(document).ready(function() {
                                       $('.apd-template.product-image-thumb').on('click', function () {
                                           var $image_element = $(this).find('img')
@@ -687,7 +687,7 @@
 
 {{-- Javascript --}}
   @once
-      <script type="module">
+      <script>
 
         window.addEventListener('cardProfil',event=>{
           $('#collapse-card-profil').collapse('show')

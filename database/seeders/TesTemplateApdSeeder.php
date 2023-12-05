@@ -17,18 +17,23 @@ class TesTemplateApdSeeder extends Seeder
     public function run()
     {
         $template_anggota = [
-            ['id_jenis' => 'H002', 'opsi_apd' => ['H-fir-0001']],
-            ['id_jenis' => 'H001', 'opsi_apd' => ['H-bro-0000']],
-            ['id_jenis' => 'G001', 'opsi_apd' => ['G-glo-0000']],
-            ['id_jenis' => 'G002', 'opsi_apd' => ['G-alt-0001']],
-            ['id_jenis' => 'T001', 'opsi_apd' => ['T-fir-0000']],
-            ['id_jenis' => 'T002', 'opsi_apd' => ['T-yoh-0000']],
-            ['id_jenis' => 'B001', 'opsi_apd' => ['B-yoh-0000']],
-            ['id_jenis' => 'B002', 'opsi_apd' => ['B-ari-0001']],
-            ['id_jenis' => 'A001', 'opsi_apd' => ['A-dar-0000']],
-            ['id_jenis' => 'A002', 'opsi_apd' => ['A-ari-0000']],
-            ['id_jenis' => 'A003', 'opsi_apd' => ['A-tho-0000']],
-            ['id_jenis' => 'A004', 'opsi_apd' => ['A-uni-0000']]
+            ['id_jenis' => 'A001', 'opsi_apd' => ['A001_Sun_0001']],
+            ['id_jenis' => 'A002', 'opsi_apd' => ['A002_Uve_0001']],
+            ['id_jenis' => 'A003', 'opsi_apd' => ['A003_Sta_0001']],
+            ['id_jenis' => 'A004', 'opsi_apd' => ['A004_Pel_0001']],
+            ['id_jenis' => 'A005', 'opsi_apd' => ['A005_Nom_0001']],
+            ['id_jenis' => 'A006', 'opsi_apd' => ['A006_Pem_0001']],
+            ['id_jenis' => 'A007', 'opsi_apd' => ['A007_Pem_0001']],
+            ['id_jenis' => 'A008', 'opsi_apd' => ['A008_Pem_0001']],
+            ['id_jenis' => 'B001', 'opsi_apd' => ['B001_Har_0001']],
+            ['id_jenis' => 'B002', 'opsi_apd' => ['B002_Com_0001']],
+            ['id_jenis' => 'B003', 'opsi_apd' => ['B003_Her_0001']],
+            ['id_jenis' => 'G001', 'opsi_apd' => ['G001_Car_0001']],
+            ['id_jenis' => 'G002', 'opsi_apd' => ['G002_Zhi_0001']],
+            ['id_jenis' => 'H001', 'opsi_apd' => ['H001_Cal_0001']],
+            ['id_jenis' => 'H002', 'opsi_apd' => ['H002_Dra_0001']],
+            ['id_jenis' => 'T001', 'opsi_apd' => ['T001_Pem_0001']],
+            ['id_jenis' => 'T002', 'opsi_apd' => ['T002_Pem_0001']],
         ];
 
         $jabatan = Jabatan::all();
