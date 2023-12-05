@@ -10,6 +10,7 @@
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     @vite('resources/js/app.js')
         {{-- @vite('jquery') --}}
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="{{asset('jquery-3.7.1.min.js')}}"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.1/dist/cdn.min.js"></script>
 
@@ -56,7 +57,8 @@
 
 
     <script src="{{asset('admin-lte/adminlte.min.js')}}"></script>
-    <script src="{{asset('admin-lte/ekko-lightbox.min.js')}}"></script>
+      {{-- @vite('admin-lte/plugins/ekko-lightbox/ekko-lightbox') --}}
+      {{-- <script src="{{asset('admin-lte/ekko-lightbox.min.js')}}"></script> --}}
     <script src="{{asset('admin-lte/demo.js')}}"></script>
     <script src="{{asset('admin-lte/filter.js')}}"></script>
 

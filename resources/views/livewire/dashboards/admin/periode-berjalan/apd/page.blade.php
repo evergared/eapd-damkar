@@ -100,26 +100,29 @@
           $("#detail-rekapitulasi").collapse('hide')
         }
       
-        $(function () {
-          $(document).on('click', '[data-toggle="lightbox"]', function(event) {
-            event.preventDefault();
-            $(this).ekkoLightbox({
-              alwaysShowClose: true
-            });
-          });
-      
-          $('.filter-container').filterizr({gutterPixels: 3});
-          $('.btn[data-filter]').on('click', function() {
-            $('.btn[data-filter]').removeClass('active');
-            $(this).addClass('active');
-          });
-        })
+        
       </script>
-      <script src="{{ asset('admin-lte/ekko-lightbox.min.js')}}"></script>
+      <script type="module">
+            $(function () {
+            $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+                event.preventDefault();
+                $(this).ekkoLightbox({
+                alwaysShowClose: true
+                });
+            });
+        
+            $('.filter-container').filterizr({gutterPixels: 3});
+            $('.btn[data-filter]').on('click', function() {
+                $('.btn[data-filter]').removeClass('active');
+                $(this).addClass('active');
+            });
+            })
+      </script>
+      <script type="module" src="{{ asset('admin-lte/ekko-lightbox.min.js')}}"></script>
     @endpush
     
     <div id="toastsContainerTopRight" class="toasts-top-right fixed"></div>
-    <script>
+    <script type="application/javascript">
         
         window.addEventListener('jsToast', event=>{
             $(document).Toasts('create', {

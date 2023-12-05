@@ -52,10 +52,14 @@ export default defineConfig({
     optimizeDeps: {
         include: ["jquery"],
     },
-    // build: {
-    //     commonjsOptions: { include: [] },
-    //   },
-    //   optimizeDeps: {
-    //     disabled: false,
-    //   }
+    build : {
+        rollupOptions: {
+            output: {
+                globals: {
+                //    jquery: 'window.jQuery',
+                   jquery: 'window.$'
+                }
+            }
+        }
+    }
 });
