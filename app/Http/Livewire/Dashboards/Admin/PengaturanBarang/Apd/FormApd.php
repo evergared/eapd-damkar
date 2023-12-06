@@ -296,7 +296,8 @@ class FormApd extends Component
                 $apd->strict_no_seri = $this->model_no_seri_strict_apd;
                 $apd->id_referensi = $this->model_referensi_apd;
                 $apd->sumber_id_referensi = $this->model_sumber_referensi_apd;
-                $apd->image = $gambar;
+                if($gambar != '')
+                    $apd->image = $gambar;
 
                 $apd->save();
                 session()->flash('alert-success-form-apd','Berhasil menyimpan data.');
