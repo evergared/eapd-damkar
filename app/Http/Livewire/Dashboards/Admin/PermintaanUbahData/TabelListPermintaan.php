@@ -70,6 +70,7 @@ class TabelListPermintaan extends DataTableComponent
                         ->join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
                         // ->join('periode_input_apd', 'input_apd.id_periode','=','periode_input_apd.id_periode');
                         ->where('pegawai.aktif',true)
+                        ->where('pegawai.kalkulasi',true)
                         ->where('pegawai.id_penempatan','like',$penempatan_terpilih.'%')
                         ->where('input_apd.id_periode',$this->periode_terpilih)
                         ->where('input_apd_reupload.selesai',false)

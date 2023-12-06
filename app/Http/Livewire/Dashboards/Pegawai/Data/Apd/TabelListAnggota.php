@@ -48,6 +48,7 @@ class TabelListAnggota extends DataTableComponent
                         ->join('input_apd','input_apd.id_pegawai','=','pegawai.id_pegawai')
                         // ->join('periode_input_apd','input_apd.id_periode','=','periode_input_apd.id_periode')
                         ->where('pegawai.aktif',true)
+                        ->where('pegawai.kalkulasi',true)
                         ->where('id_periode',$this->periode_terpilih);
 
             $user = Auth::user()->data;

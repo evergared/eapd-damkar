@@ -76,7 +76,8 @@ class TabelTerinputByPersonil extends DataTableComponent
                         ->distinct()
                         ->join('input_apd','input_apd.id_pegawai','=','pegawai.id_pegawai')
                         ->join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
-                        ->where('pegawai.aktif',true);
+                        ->where('pegawai.aktif',true)
+                        ->where('pegawai.kalkulasi',true);
                 if($this->wilayah_terpilih != 'semua')
                 {
                     if($this->penempatan_terpilih != 'semua')

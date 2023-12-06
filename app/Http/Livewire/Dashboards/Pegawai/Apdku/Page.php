@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Dashboards\Pegawai\Apdku;
 
 use App\Http\Controllers\ApdDataController;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Throwable;
 
@@ -29,7 +30,9 @@ class Page extends Component
 
             $periode = $adc->ambilIdPeriodeInput(null, true);
 
-            $this->daftarApd =  $adc->bangunListInputApdDariTemplate($periode);
+            // jika pegawai masih aktif dan masuk dalam kalkulasi, maka buat daftar apd yang perlu diinput
+            if(Auth::user()->data->aktif && Auth::user()->data->kalkulasi)
+                $this->daftarApd =  $adc->bangunListInputApdDariTemplate($periode);
 
         } catch (Throwable $e) {
             $this->daftarApd = [];

@@ -85,6 +85,7 @@ class TabelDetailRekap extends DataTableComponent
             ->join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
             ->join('periode_input_apd', 'input_apd.id_periode','=','periode_input_apd.id_periode')
             ->where('pegawai.aktif',true)
+            ->where('pegawai.kalkulasi',true)
             ->where('pegawai.id_penempatan','like',$this->penempatan_detail.'%')
             ->where('input_apd.id_jenis',$this->jenis_detail)
             ->where('input_apd.kondisi',$this->kondisi_detail)

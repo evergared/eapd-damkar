@@ -96,7 +96,8 @@ class TabelTerinputByInputan extends DataTableComponent
                         ->join('jabatan','pegawai.id_jabatan','=','jabatan.id_jabatan')
                         ->join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
                         ->join('periode_input_apd', 'input_apd.id_periode','=','periode_input_apd.id_periode')
-                        ->where('pegawai.aktif',true);
+                        ->where('pegawai.aktif',true)
+                        ->where('pegawai.kalkulasi',true);
 
             if($this->wilayah_terpilih != 'semua')
             {

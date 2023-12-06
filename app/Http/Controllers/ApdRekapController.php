@@ -361,7 +361,8 @@ class ApdRekapController extends Controller
             // query semua pegawai
             $list_pegawai = Pegawai::
             join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
-            ->where('pegawai.aktif',true);
+            ->where('pegawai.aktif',true)
+            ->where('pegawai.kalkulasi',true);
             
             if($id_wilayah != "semua")
             {

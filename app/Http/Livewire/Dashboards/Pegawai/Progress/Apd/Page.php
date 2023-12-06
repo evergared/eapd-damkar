@@ -49,7 +49,7 @@ class Page extends Component
             $this->periode = $pic->ambilIdPeriodeInput();
 
             // query semua pegawai terkait
-            $pegawai = Pegawai::query()->where('aktif',true);
+            $pegawai = Pegawai::query()->where('aktif',true)->where('kalkulasi',true);
 
             if($user->isPengendali())
             {

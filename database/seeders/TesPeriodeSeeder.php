@@ -16,13 +16,13 @@ class TesPeriodeSeeder extends Seeder
     public function run()
     {
         PeriodeInputApd::create([
-            "nama_periode" => "Test Periode",
+            "nama_periode" => "Periode Input 2023",
             "tgl_awal" => "2023-09-01",
             "tgl_akhir" => "2024-01-01",
             "aktif"=> true,
             "kumpul_rekap"=> true,
             "kumpul_ukuran"=> false,
-            "pesan_berjalan" => "Sekarang periode testing sedang berlangsung, coba cek sistem anda."
+            "pesan_berjalan" => "Sekarang periode Input sedang berlangsung, coba cek Inputan Anda."
         ]);
     }
 }

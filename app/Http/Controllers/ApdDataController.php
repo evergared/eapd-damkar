@@ -301,6 +301,14 @@ class ApdDataController extends Controller
         $yang_harus_diinput = 0;
         $yang_telah_diinput = 0;
 
+        // jika pegawai sudah tidak aktif atau pegawai tidak dimasukan ke kalkulasi capaian, maka lewatkan
+        if( !$pegawai->aktif || !$pegawai->kalkulasi)
+        {
+            $maks = $yang_harus_diinput;
+            $capaian = $yang_telah_diinput;
+            return;
+        }
+
         // ambil apa saja yang harus diinput oleh pegawai
         $template =  $this->muatListInputApdDariTemplate($id_periode, $pegawai->id_jabatan);
 

@@ -21,7 +21,7 @@ class TabelProgressApdAnggota extends DataTableComponent
 
     public function builder(): Builder
     {
-        $pegawai =  Pegawai::query()->where('aktif',true);
+        $pegawai =  Pegawai::query()->where('aktif',true)->where('kalkulasi',true);
 
         $user = Auth::user()->data;
 

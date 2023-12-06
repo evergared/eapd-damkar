@@ -186,7 +186,7 @@ class KendaliProgress extends Component
             // query semua pegawai
             $list_pegawai = Pegawai::query()
             ->join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
-            ->where('pegawai.aktif',true);
+            ->where('pegawai.aktif',true)->where('pegawai.kalkulasi',true);
             
             if($this->model_dropdown_wilayah != "semua")
             $list_pegawai = $list_pegawai->where('penempatan.id_wilayah',$this->model_dropdown_wilayah);

@@ -101,12 +101,12 @@ class Page extends Component
                 if($id_wilayah == "semua")
                 {
                     $list_pegawai = Pegawai::join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
-                    ->where('pegawai.aktif',true)->where('penempatan.id_wilayah',$p->id_wilayah)->get()->all();
+                    ->where('pegawai.aktif',true)->where('pegawai.kalkulasi',true)->where('penempatan.id_wilayah',$p->id_wilayah)->get()->all();
                     $label = $p->nama_wilayah;
                 }
                 else
                 {
-                    $list_pegawai = Pegawai::where('id_penempatan',$p->id_penempatan)->where('aktif',true)->get()->all();
+                    $list_pegawai = Pegawai::where('id_penempatan',$p->id_penempatan)->where('aktif',true)->where('pegawai.kalkulasi',true)->get()->all();
                     $label = $p->nama_penempatan;
                 }
 

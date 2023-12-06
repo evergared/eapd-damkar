@@ -42,6 +42,8 @@ class TabelListPegawaiNonUser extends DataTableComponent
                 ->sortable(),
             Column::make("Aktif", "aktif")
                 ->sortable(),
+            Column::make("Ikut Kalkulasi Capaian?", "kalkulasi")
+                ->sortable(),
             Column::make("Created at", "created_at")
                 ->sortable(),
             Column::make("Updated at", "updated_at")

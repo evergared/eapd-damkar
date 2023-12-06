@@ -29,6 +29,7 @@ return new class extends Migration
                 $t->string('grup')->nullable();
                 $t->string('penanggung_jawab')->nullable()->comment('siapa atasannya');
                 $t->boolean('aktif')->default(true);
+                $t->boolean('kalkulasi')->default(true)->comment('Pegawai ini ikut dihitung saat kalkulasi capaian inputan APD');
                 $t->softDeletes();
                 $t->timestamps();
             });
