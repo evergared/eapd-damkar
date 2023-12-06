@@ -23,10 +23,10 @@
                 </div>
             @endif
             
-            <div class="col">
+            <div class="col" @if (!$tampil_dropdown_penempatan) style="visibility: hidden" @endif>
                 <div class="form-group">
                     <label>Penempatan</label>
-                    <select class="form-control" id="wilayah" wire:model='model_dropdown_penempatan' wire:change='changeDropdownPenempatan' @if (!$tampil_dropdown_penempatan) style="visibility: hidden" @endif>
+                    <select class="form-control" id="wilayah" wire:model='model_dropdown_penempatan' wire:change='changeDropdownPenempatan' >
                         <option value="" disabled>Silahkan Pilih</option>
                         @if ($opsi_dropdown_penempatan)
                             @foreach ($opsi_dropdown_penempatan as $item)

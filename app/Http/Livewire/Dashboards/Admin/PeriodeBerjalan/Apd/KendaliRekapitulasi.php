@@ -192,6 +192,7 @@ class KendaliRekapitulasi extends Component
             }
             else{
                 $fetch_penempatan = Penempatan::where('id_wilayah', $this->model_dropdown_wilayah)->get()->all();
+                $this->tampil_dropdown_penempatan = true;
 
                 if (!is_null($fetch_penempatan))
                     foreach ($fetch_penempatan as $f) {
