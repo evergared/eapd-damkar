@@ -467,15 +467,18 @@ class KendaliInputApd extends Component
             $kondisi = null;
             $gambar = null;
 
-            if ($this->status_keberadaan_apd_user == 'ada') {
+            if ($this->status_keberadaan_apd_user == 'Ada') {
 
                 $kondisi = StatusApd::tryFrom($this->kondisi_apd_user)->value;
                 $gambar = $this->prosesGambar();
-            } else if ($this->status_keberadaan_apd_user == 'hilang') {
+                error_log('hit ada');
+            } else if ($this->status_keberadaan_apd_user == 'Hilang') {
                 $kondisi = StatusApd::hilang()->value;
-            } else if ($this->status_keberadaan_apd_user == 'belum terima') {
+            } else if ($this->status_keberadaan_apd_user == 'Belum Terima') {
                 $kondisi = StatusApd::belumTerima()->value;
             }
+
+            error_log("status keberadaan apd user saat diupdate : ".$this->status_keberadaan_apd_user);
 
             $inputan->id_apd = $this->id_apd_user;
             $inputan->size = $this->size_apd_user;
@@ -488,8 +491,10 @@ class KendaliInputApd extends Component
 
             $inputan->save();
             $this->inisiasiKendaliInput($this->template_id_jenis_apd);
+
             $this->emit('refreshComponent');
             session()->flash('alert-success', 'Inputan berhasil diupdate!');
+
         } catch (Throwable $e) {
             $this->error_time_simpan_inputan = now();
             error_log("Kendali Input Apd @ Dashboard Apdku Pegawai Error (" . $this->error_time_simpan_inputan . "): Kesalahan saat update inputan " . $e);
