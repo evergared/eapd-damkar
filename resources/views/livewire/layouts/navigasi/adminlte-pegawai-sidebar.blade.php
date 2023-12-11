@@ -92,7 +92,7 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item {{ (Route::currentRouteName() =='ganti-barang' || Route::currentRouteName() =='lapor-hilang')? 'menu-open' :''}}">
+                {{-- <li class="nav-item {{ (Route::currentRouteName() =='ganti-barang' || Route::currentRouteName() =='lapor-hilang')? 'menu-open' :''}}">
                     <a 
                         class="nav-link">
                         <i class="nav-icon fab fa-stack-exchange"></i>
@@ -115,7 +115,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
                 @if (auth()->user()->data->jabatan->level_user == 'admin_sektor' || auth()->user()->data->jabatan->level_user == 'admin_sudin' || auth()->user()->data->jabatan->level_user == 'admin_dinas')
                 <li class="nav-item {{ (Route::currentRouteName() =='print-laporan' || Route::currentRouteName() =='progress-apd' || Route::currentRouteName() =='data-ukuran' || Route::currentRouteName() =='data-distribusi')? 'menu-open' :''}}">
                     <a 

@@ -245,10 +245,7 @@
                                 </div>
 
                             {{-- Status Start --}}
-                            <div wire:loading wire:target='gambar_apd_user'>
-                                <div class="spinner-border spinner-border-sm text-info" role="status"></div>
-                                <small class="text-info"> apd sedang di unggah...</small>
-                            </div>
+                            
                             {{-- Status End --}}
                         </div>
                     </div>
@@ -522,7 +519,10 @@
                                             wire:model='komentar_apd_user'></textarea>
                                     </div>
                                 @endif
-                                
+                                <div wire:loading wire:target='gambar_apd_user'>
+                                    <div class="spinner-border spinner-border-sm text-info" role="status"></div>
+                                    <small class="text-info"> apd sedang di unggah...</small>
+                                </div>
                                 
                                 {{-- bagian input Form Input end --}}
                         @if ($status_verifikasi == $enum_verifikasi_apd_terverifikasi)

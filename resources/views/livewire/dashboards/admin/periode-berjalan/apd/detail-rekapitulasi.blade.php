@@ -5,6 +5,7 @@
             <div class="col-sm-6">
             <h5>Jenis :</h5>
             <h5>{{$nama_jenis_detail}}</h5>
+            <button class="btn btn-sm btn-default mx-1" wire:click="printPdf">Export ke PDF</button>
             </div>
             <div class="col-sm-6 text-right">
             <button class="btn-primary btn-sm" onclick="backToRekapitulasi()">
