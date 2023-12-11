@@ -487,7 +487,7 @@ class KendaliInputApd extends Component
             $inputan->image = $gambar;
             $inputan->komentar_pengupload = $this->komentar_apd_user;
             $inputan->data_diupdate = now();
-            $inputan->verifikasi_status = $this->enum_verifikasi_apd_input;
+            $inputan->verifikasi_status = $this->enum_verifikasi_apd_verifikasi;
 
             $inputan->save();
             $this->inisiasiKendaliInput($this->template_id_jenis_apd);
