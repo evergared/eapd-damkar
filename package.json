@@ -7,7 +7,6 @@
     "devDependencies": {
         "@popperjs/core": "^2.11.6",
         "@rollup/plugin-inject": "^5.0.5",
-        "adminlte": "^2.4.1",
         "autoprefixer": "^10.4.13",
         "axios": "^1.1.2",
         "bootstrap": "^5.2.3",
@@ -21,6 +20,7 @@
     },
     "dependencies": {
         "admin-lte": "3.2",
+        "bootstrap4": "npm:bootstrap@^4.6.1",
         "jquery": "^3.7.1",
         "moment": "^2.29.4",
         "sweetalert2": "^11.10.1"

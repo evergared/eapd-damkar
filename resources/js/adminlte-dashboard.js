@@ -1,4 +1,7 @@
 
+import 'bootstrap4/dist/js/bootstrap.bundle';
+import 'admin-lte';
+
 import 'admin-lte/plugins/inputmask/jquery.inputmask.min.js';
 import 'admin-lte/plugins/jquery-ui/jquery-ui.min.js';
 import 'admin-lte/plugins/bootstrap/js/bootstrap.bundle.min';
@@ -22,4 +25,20 @@ import 'admin-lte/plugins/bs-stepper/js/bs-stepper.min.js';
 
 
 $.widget.bridge('uibutton',$.ui.button);
+
+
+
+$(document).on('click', '[data-toggle="lightbox"]', function(event) {
+    event.preventDefault();
+    $(this).ekkoLightbox({
+    alwaysShowClose: true
+    });
+});
+
+$('.filter-container').filterizr({gutterPixels: 3});
+
+$('.btn[data-filter]').on('click', function() {
+    $('.btn[data-filter]').removeClass('active');
+    $(this).addClass('active');
+});
 

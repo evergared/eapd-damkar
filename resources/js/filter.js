@@ -32,7 +32,11 @@ function w3RemoveClass(element, name) {
 }
 
 // event untuk livewire start
-// @todo #12
+
+$(".filter-apd").on("click", function(e){
+  filterSelection($(this).data('filter'));
+})
+
 window.addEventListener('jsShowDetail',event =>{
     $("#vert-tabs-home").hide(500)
     $("#userdetail").show(500)

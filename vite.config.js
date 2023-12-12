@@ -14,14 +14,14 @@ export default defineConfig({
         }),
         laravel({
             input: [
-                'jquery',
                 'resources/js/app.js',
                 'resources/css/adminlte-auth.css',
                 'resources/js/adminlte-auth.js',
                 'resources/js/adminlte-dashboard.js',
                 'resources/css/adminlte-dashboard.css',
                 'resources/css/filter.css',
-                // 'jquery/dist/jquery.min.js',
+                'resources/js/filter.js',
+                'resources/js/demo.js',
 
                 'admin-lte/plugins/jquery-ui/jquery-ui.min.js',
                 'admin-lte/plugins/bootstrap/js/bootstrap.bundle.min',

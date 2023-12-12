@@ -155,23 +155,19 @@
                 $('#kendali').show(500)
             }
 
-            $(function () {
-                    $(document).on('click', '[data-toggle="lightbox"]', function(event) {
-                        event.preventDefault();
-                        $(this).ekkoLightbox({
-                        alwaysShowClose: true
-                        });
-                    });
-        
-            $('.filter-container').filterizr({gutterPixels: 3});
+        </script>
 
-            $('.btn[data-filter]').on('click', function() {
-                    $('.btn[data-filter]').removeClass('active');
-                    $(this).addClass('active');
+        <script type="module">
+            $(function(){
+                $(document).ready(function(){console.log('ready');})
+                $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+                    event.preventDefault();
+                    $(this).ekkoLightbox({
+                    alwaysShowClose: true
+                    });
                 });
             })
         </script>
-      <script src="{{ asset('admin-lte/ekko-lightbox.min.js')}}"></script>
     @endpush
 
 </div>

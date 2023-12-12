@@ -39,15 +39,15 @@
                 
                                         <h3 class="card-title">Filter APD</h3> <br>
                                         <div id="myBtnContainer">
-                                            <button class="btn btn-primary" onclick="filterSelection('all')" type="submit">All</button>
-                                            <button class="btn btn-primary" onclick="filterSelection('proses-input')" type="submit">Input</button>
-                                            <button class="btn btn-primary" onclick="filterSelection('proses-validasi')" type="submit">Validasi</button>
-                                            <button class="btn btn-primary" onclick="filterSelection('telah-di-verif')" type="submit">Tervalidasi</button>
-                                            <button class="btn btn-primary" onclick="filterSelection('baik')" type="submit">Baik</button>
-                                            <button class="btn btn-primary" onclick="filterSelection('rusak')" type="submit">Rusak</button>
-                                            <button class="btn btn-primary" onclick="filterSelection('rusak-ringan')" type="submit">Ringan</button>
-                                            <button class="btn btn-primary" onclick="filterSelection('rusak-sedang')" type="submit">Sedang</button>
-                                            <button class="btn btn-primary" onclick="filterSelection('rusak-berat')" type="submit">Berat</button>
+                                            <button class="btn btn-primary filter-apd" data-filter="all" type="submit">All</button>
+                                            <button class="btn btn-primary filter-apd" data-filter="proses-input" type="submit">Input</button>
+                                            <button class="btn btn-primary filter-apd" data-filter="proses-validasi" type="submit">Validasi</button>
+                                            <button class="btn btn-primary filter-apd" data-filter="telah-di-verif" type="submit">Tervalidasi</button>
+                                            <button class="btn btn-primary filter-apd" data-filter="baik" type="submit">Baik</button>
+                                            <button class="btn btn-primary filter-apd" data-filter="rusak" type="submit">Rusak</button>
+                                            <button class="btn btn-primary filter-apd" data-filter="rusak-ringan" type="submit">Ringan</button>
+                                            <button class="btn btn-primary filter-apd" data-filter="rusak-sedang" type="submit">Sedang</button>
+                                            <button class="btn btn-primary filter-apd" data-filter="rusak-berat" type="submit">Berat</button>
                                         </div>
                                     </div>
 
@@ -121,21 +121,6 @@
                     $(this).filterSelection('all')
         })
 
-        $(function () {
-            $(document).on('click', '[data-toggle="lightbox"]', function(event) {
-                event.preventDefault();
-                $(this).ekkoLightbox({
-                alwaysShowClose: true
-                });
-            });
-  
-      $('.filter-container').filterizr({gutterPixels: 3});
-
-      $('.btn[data-filter]').on('click', function() {
-            $('.btn[data-filter]').removeClass('active');
-            $(this).addClass('active');
-        });
-    })
     </script>
 
 </div>
