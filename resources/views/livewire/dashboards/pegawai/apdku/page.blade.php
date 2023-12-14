@@ -123,4 +123,18 @@
 
     </script>
 
+    <div id="toastsContainerTopRight" class="toasts-top-right fixed"></div>
+    <script type="application/javascript">
+        
+        window.addEventListener('jsToast', event=>{
+            $(document).Toasts('create', {
+            class: event.detail.class,
+            title: event.detail.title,
+            subtitle: event.detail.subtitle,
+            body: event.detail.body
+            })
+        })
+        
+    </script>
+
 </div>

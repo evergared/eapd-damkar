@@ -582,6 +582,13 @@
 
                     </div>
                     {{-- Form Input End --}}
+
+                    <div wire:loading>
+                        <div class="spinner-border text-info" role="status">
+                            <span class="sr-only">Memuat...</span>
+                        </div><span class="mx-2 text-info">Memuat...</span>
+                    </div>
+
                 </div>
             </div>
 

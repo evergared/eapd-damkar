@@ -437,11 +437,23 @@ class KendaliInputApd extends Component
             $this->inisiasiKendaliInput($this->template_id_jenis_apd);
             $this->emit('refreshComponent');
             session()->flash('alert-success', 'Inputan berhasil disimpan!');
+            $this->dispatchBrowserEvent('jsToast', [
+                "class" => 'bg-success',
+                "title" => "Inputan berhasil disimpan!",
+                "subtitle" => "",
+                "body" => "Data inputan APD anda berhasil disimpan."
+            ]);
         } catch (Throwable $e) {
             $this->error_time_simpan_inputan = now();
             error_log("Kendali Input Apd @ Dashboard Apdku Pegawai Error (" . $this->error_time_simpan_inputan . "): Kesalahan saat menyimpan inputan " . $e);
             Log::error("Kendali Input Apd @ Dashboard Apdku Pegawai Error (" . $this->error_time_simpan_inputan . "): Kesalahan saat menyimpan inputan " . $e);
             session()->flash('alert-danger', 'Gagal menyimpan data inputan APD (ref : ' . $this->error_time_simpan_inputan . ')');
+            $this->dispatchBrowserEvent('jsToast', [
+                "class" => 'bg-danger',
+                "title" => "Gagal menyimpan data inputan APD!",
+                "subtitle" => "",
+                "body" => "Terjadi kesalahan saat menyimpan data inputan APD! (ref : ".$this->error_time_simpan_inputan.")"
+            ]);
         }
     }
 
@@ -494,12 +506,24 @@ class KendaliInputApd extends Component
 
             $this->emit('refreshComponent');
             session()->flash('alert-success', 'Inputan berhasil diupdate!');
+            $this->dispatchBrowserEvent('jsToast', [
+                "class" => 'bg-success',
+                "title" => "Inputan berhasil diupdate!",
+                "subtitle" => "",
+                "body" => "Data inputan APD anda berhasil diupdate."
+            ]);
 
         } catch (Throwable $e) {
             $this->error_time_simpan_inputan = now();
             error_log("Kendali Input Apd @ Dashboard Apdku Pegawai Error (" . $this->error_time_simpan_inputan . "): Kesalahan saat update inputan " . $e);
             Log::error("Kendali Input Apd @ Dashboard Apdku Pegawai Error (" . $this->error_time_simpan_inputan . "): Kesalahan saat update inputan " . $e);
             session()->flash('alert-danger', 'Gagal mengupdate data inputan APD (ref : ' . $this->error_time_simpan_inputan . ')');
+            $this->dispatchBrowserEvent('jsToast', [
+                "class" => 'bg-danger',
+                "title" => "Gagal mengupdate data inputan APD!",
+                "subtitle" => "",
+                "body" => "Terjadi kesalahan saat melakukan update data inputan APD! (ref : ".$this->error_time_simpan_inputan.")"
+            ]);
         }
     }
 
@@ -557,11 +581,23 @@ class KendaliInputApd extends Component
             $this->inisiasiKendaliInput($this->template_id_jenis_apd);
             $this->emit('refreshComponent');
             session()->flash('alert-success', 'Inputan berhasil diupdate! Tunggu verifikasi Admin untuk perubahan yang dilakukan.');
+            $this->dispatchBrowserEvent('jsToast', [
+                "class" => 'bg-success',
+                "title" => "Inputan berhasil diupdate!",
+                "subtitle" => "",
+                "body" => "Tunggu verifikasi Admin untuk perubahan yang dilakukan."
+            ]);
         } catch (Throwable $e) {
             $this->error_time_simpan_inputan = now();
             error_log("Kendali Input Apd @ Dashboard Apdku Pegawai Error (" . $this->error_time_simpan_inputan . "): Kesalahan saat update inputan pasca verifikasi diterima " . $e);
             Log::error("Kendali Input Apd @ Dashboard Apdku Pegawai Error (" . $this->error_time_simpan_inputan . "): Kesalahan saat update inputan pasca verifikasi diterima " . $e);
             session()->flash('alert-danger', 'Gagal mengupdate data inputan APD (ref : ' . $this->error_time_simpan_inputan . ')');
+            $this->dispatchBrowserEvent('jsToast', [
+                "class" => 'bg-danger',
+                "title" => "Gagal mengupdate data inputan APD!",
+                "subtitle" => "",
+                "body" => "Terjadi kesalahan saat melakukan update data inputan APD! (ref : ".$this->error_time_simpan_inputan.")"
+            ]);
         }
     }
     #endregion
