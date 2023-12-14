@@ -19,13 +19,13 @@
                 {{-- end collapse-list-periode-loading --}}
 
                 {{-- start bagian untuk tabel --}}
-                @if ($modal_ubah_single_inputan_apd_mode == "jabatan")
+                @if ($mode == "jabatan")
                     @livewire("eapd.datatable.tabel-jabatan-template-single")
                     
-                @elseif($modal_ubah_single_inputan_apd_mode == "jenis_apd")
+                @elseif($mode == "jenis_apd")
                     @livewire("eapd.datatable.tabel-jenis-apd-template-single")
 
-                @elseif($modal_ubah_single_inputan_apd_mode == "opsi_apd")
+                @elseif($mode == "opsi_apd")
                     @livewire("eapd.datatable.tabel-apd-template-single")
 
                 @else
@@ -37,4 +37,13 @@
             </div>
         </div>
     </div>
+
+    @push('stack-body')
+    <script>
+        window.addEventListener('panggilModalSatuTemplate', function(){
+            $("#modal-ubah-single-template-inputan-apd").modal('show');
+        })
+    </script>
+    @endpush
 </div>
+

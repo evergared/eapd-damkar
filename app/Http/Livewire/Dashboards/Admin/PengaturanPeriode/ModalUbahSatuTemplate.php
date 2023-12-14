@@ -23,6 +23,7 @@ class ModalUbahSatuTemplate extends Component
     {
         $this->mode = $mode;
         $this->emit("RefreshTabelAtributTemlateSingle", $val['id_jenis']);
+        $this->dispatchBrowserEvent('panggilModalSatuTemplate');
     }
 
     public function TabelJabatanTemplateSinglePilih($value)

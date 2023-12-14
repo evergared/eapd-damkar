@@ -19,43 +19,9 @@ class Page extends Component
         return view('livewire.dashboards.admin.pengaturan-periode.page')->layout("livewire.layouts.adminlte-dashboard", ["page_title" => "Pengaturan Periode Input APD"]);
     }
 
-    // variabel untuk card single template inputan apd
-
-
-    // variabel untuk card multi template inputan apd
-
-
-    // variabel untuk modal ubah single template inputan apd
-
-
-    // variabel untuk modal ubah multi template inputan apd
     public
-        $modal_ubah_multi_inputan_apd_mode = "";
+        $mode = "";
 
-
-    protected $listeners = [
-        // card list periode
-        'TabelListPeriodeClone',
-        'TabelListPeriodeTesPesanBerjalan',
-        'TabelListPeriodeAktifkanKumpulRekap',
-        'TabelListPeriodeAktifkanKumpulUkuran',
-        'TabelListPeriodeAktifkan',
-        'TabelListPeriodeNonAktifkanKumpulRekap',
-        'TabelListPeriodeNonAktifkanKumpulUkuran',
-        'TabelListPeriodeNonAktifkan',
-        'TabelListPeriodeDetil',
-        'TabelListPeriodeHapus',
-
-        // card multi template inputan apd
-        'CardMultiTemplateTerimaJabatan',
-        'CardMultiTemplateTerimaJenisApd',
-        'CardMultiTemplateTerimaApd',
-
-        // modal ubah single template inputan apd
-        'TabelJabatanTemplateSinglePilih',
-        'TabelApdTemplateSinglePilih',
-        'TabelJenisApdTemplateSinglePilih',
-    ];
 
     #region livewire function
     public function mount()
@@ -64,15 +30,7 @@ class Page extends Component
         // $this->card_form_periode_formIdPeriode_cache = $pic->ambilIdPeriodeInput();
         // $this->InisiasiTabelTemplate();
     }
-    #endregion
 
-    #region card list periode
-
-    #endregion
-
-    #region card form periode
-
-    #endregion
 
 
     public function CardTabelInputanApdSimpan()

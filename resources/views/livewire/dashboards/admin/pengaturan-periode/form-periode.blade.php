@@ -49,7 +49,7 @@
         {{-- Nama Periode --}}
         <div class="form-group">
             <label for="input-nama-periode">Nama Periode</label>
-            <input type="text" class="form-control" id="input-nama-periode" wire:model="formNamaPeriode" wire:ignore.self>
+            <input type="text" class="form-control" id="input-nama-periode" wire:model.defer="formNamaPeriode" wire:ignore.self>
         </div>
         {{-- Tanggal Awal --}}
         <div class="form-group">
