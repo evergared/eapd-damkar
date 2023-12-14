@@ -49,7 +49,7 @@
                 {{-- tombol export --}}
                 <div class="row my-2">
                     <button class="btn btn-sm btn-default mx-1" wire:click="printPdf">Export ke PDF</button>
-                    <button class="btn btn-sm btn-default mx-1">Export ke XLS</button>
+                    {{-- <button class="btn btn-sm btn-default mx-1">Export ke XLS</button> --}}
                 </div>
                 {{-- tabel rekap --}}
                 <div class="row">
