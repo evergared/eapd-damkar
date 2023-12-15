@@ -129,16 +129,16 @@
                 $("#tabel-template").collapse("show");
             }
 
-            function keSingleTemplate()
+            function keFormBuatSatuTemplate()
             {
                 $("#tabel-template").hide(500)
-                $("#collapse-card-single-template-inputan-apd").collapse("show")
+                $("#form-buat-satu-template").collapse("show")
             }
 
-            function keMultiTemplate()
+            function keFormBuatBanyakTemplate()
             {
                 $("#tabel-template").hide(500)
-                $("#collapse-card-multi-template-inputan-apd").collapse("show")
+                $("#form-buat-banyak-template").collapse("show")
             }
 
             function kembaliKeFormPeriode()
@@ -147,16 +147,16 @@
                 $("#tabel-template").collapse("hide");
             }
 
-            function kembaliKeTabelInputanApdDariSingle()
+            function kembaliKeTabelTemplateDariFormBuatSatuTemplate()
             {
                 $("#tabel-template").show(500)
-                $("#collapse-card-single-template-inputan-apd").collapse("hide")
+                $("#form-buat-satu-template").collapse("hide")
             }
 
-            function kembaliKeTabelInputanApdDariMulti()
+            function kembaliKeTabelTemplateDariFormBuatBanyakTemplate()
             {
                 $("#tabel-template").show(500)
-                $("#collapse-card-multi-template-inputan-apd").collapse("hide")
+                $("#form-buat-banyak-template").collapse("hide")
             }
 
 
@@ -168,12 +168,12 @@
                 keTabelInputanApd()
             })
 
-            window.addEventListener("card_single_template_inputan_apd_tampil", event=> {
-                keSingleTemplate()
+            window.addEventListener("ke_form_buat_satu_template", event=> {
+                keFormBuatSatuTemplate()
             })
 
-            window.addEventListener("card_multi_template_inputan_apd_tampil", event=> {
-                keMultiTemplate()
+            window.addEventListener("ke_form_buat_banyak_template", event=> {
+                keFormBuatBanyakTemplate()
             })
 
             window.addEventListener("tampilFormPeriode",event=>{

@@ -11,7 +11,7 @@ class ModalUbahSatuTemplate extends Component
         $mode = "";
 
     protected $listeners = [
-        'inisiasiModalSatuTemplate'
+        'inisiasiModalUbahSatuTemplate'
     ];
 
     public function render()
@@ -19,9 +19,10 @@ class ModalUbahSatuTemplate extends Component
         return view('livewire.dashboards.admin.pengaturan-periode.modal-ubah-satu-template');
     }
 
-    public function insiasiModalSatuTemplate($mode)
+    public function insiasiModalUbahSatuTemplate($args)
     {
-        $this->mode = $mode;
+        $this->mode = $args['mode'];
+        $id = $args['id'];
         $this->emit("RefreshTabelAtributTemlateSingle", $val['id_jenis']);
         $this->dispatchBrowserEvent('panggilModalSatuTemplate');
     }

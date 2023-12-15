@@ -29,9 +29,17 @@ class FormBuatSatuTemplate extends Component
         return view('livewire.dashboards.admin.pengaturan-periode.form-buat-satu-template');
     }
 
-    public function ubah()
+    public function ubah($mode)
     {
-        $this->emit('inisiasiModalSatuTemplate',['mode'=>'opsi_apd', 'id_jenis' => $this->formJenisApd_id]);
+        $id = null;
+        switch($mode){
+            case 'jabatan' : $id = $this->formJabatan_id;break;
+            case 'jenis_apd' : $id = $this->formJenisApd_id ;break;
+            case 'opsi_apd' : $id = $this->formApd_id ;break;
+            default : return; break;
+        }
+
+        $this->emit('inisiasiModalUbahSatuTemplate',['mode'=>$mode, 'id' => $id]);
     }
 
     public function inisiasiSatuTemplate($args)
@@ -64,7 +72,7 @@ class FormBuatSatuTemplate extends Component
 
         $this->formEditMode = $editmode;
 
-        $this->dispatchBrowserEvent('')
+        $this->dispatchBrowserEvent('ke_form_buat_satu_template');
 
     }
 
