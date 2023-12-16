@@ -79,16 +79,25 @@ class FileController extends Controller
      * 
      * @return String nama file baru untuk di simpan di database
      */
-    public function prosesNamaFileApdUpload($id_pegawai, $id_item = 'item', $tipe_file = null, $urutan = null)
+    public function prosesNamaFileApdUpload($id_pegawai, $id_item = 'item', $tipe_file = null, $urutan = null, $id_periode = null)
     {
         if($tipe_file == null)
             $tipe_file = self::$extUploadFile;
 
+        if(is_null($id_periode))
+        {
+            $periode = PeriodeInputApd::where('aktif',true)->first();
+            if(!is_null($periode))
+                $id_periode = $periode->id_periode;
+            else
+                $id_periode = "tanpa-periode";
+        }
+
         try {
             if (is_null($urutan))
-                return $id_pegawai . '_' . $id_item . '.' . $tipe_file;
+                return $id_periode . '_' . $id_pegawai . '_' . $id_item . '.' . $tipe_file;
             else
-                return $id_pegawai . '_' . $id_item . '_' . $urutan . '.' . $tipe_file;
+                return $id_periode . '_' . $id_pegawai . '_' . $id_item . '_' . $urutan . '.' . $tipe_file;
         } catch (Throwable $e) {
             Log::error('Gagal memproses nama file apd upload, ' . $e);
             return;
@@ -146,16 +155,18 @@ class FileController extends Controller
      */
     public function buatPathFileApdUpload($id_pegawai, $id_jenis, $id_periode, $reupload = false)
     {
-        if($id_periode === 1 || $id_periode == null)
-        $id_periode = PeriodeInputApd::get()->first()->id_periode;
+        // if($id_periode === 1 || $id_periode == null)
+        // $id_periode = PeriodeInputApd::get()->first()->id_periode;
 
-        $periode = Str::slug($id_periode);
+        // $periode = Str::slug($id_periode);
         // $periode = Str::slug(PeriodeInputApd::where('id_periode', '=', $id_periode)->first()->nama_periode);
 
         if($reupload)
-            return self::$apdReuploadBasePath . '/' . $periode . '/' . $id_pegawai . '/' . $id_jenis;
+            return self::$apdReuploadBasePath;
+            // return self::$apdReuploadBasePath . '/' . $periode . '/' . $id_pegawai . '/' . $id_jenis;
 
-        return self::$apdUploadBasePath . '/' . $periode . '/' . $id_pegawai . '/' . $id_jenis;
+        return self::$apdUploadBasePath;
+        // return self::$apdUploadBasePath . '/' . $periode . '/' . $id_pegawai . '/' . $id_jenis;
     }
 
     /**
