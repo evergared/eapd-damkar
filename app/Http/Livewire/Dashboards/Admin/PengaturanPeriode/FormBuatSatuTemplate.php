@@ -3,6 +3,10 @@
 namespace App\Http\Livewire\Dashboards\Admin\PengaturanPeriode;
 
 use App\Http\Controllers\PeriodeInputController;
+use App\Models\ApdJenis;
+use App\Models\ApdList;
+use App\Models\Jabatan;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Throwable;
 
@@ -21,7 +25,8 @@ class FormBuatSatuTemplate extends Component
     $formApd_id = "";
 
     public $listeners = [
-        'inisiasiSatuTemplate'
+        'inisiasiSatuTemplate',
+        'ubahSatuValue'
     ];
 
     public function render()
@@ -106,5 +111,27 @@ class FormBuatSatuTemplate extends Component
             ]);
             error_log("Card Single Template Inputan Apd : Gagal dalam menyimpan " . $e);
         }
+    }
+
+    public function ubahSatuValue($val)
+    {
+        try{
+
+            $mode = $val['mode'];
+
+            switch($mode){
+                case 'jabatan' : $this->formJabatan_id= $val['value']; $this->formJabatan = Jabatan::find($val['value'])->nama_jabatan; break;
+                case 'jenis_apd' : $this->formJenisApd_id = $val['value']; $this->formJenisApd = ApdJenis::find($val['value'])->nama_jenis; break;
+                case 'opsi_apd' : $this->formApd_id = $val['value']; $this->formApd = ApdList::find($val['value'])->nama_apd; break;
+                default : return; break;
+            }
+
+        }
+        catch(Throwable $e)
+        {
+            error_log('form buat satu template : gagal menerima value dari tabel '.$e);
+            Log::error('Form Buat Satu Template @ Admin Dashboard Error : Kesalahan saat menerima satu value dari tabel at ubahSatuValue() '.$e);
+        }
+        
     }
 }

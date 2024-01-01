@@ -22,8 +22,7 @@ class ModalUbahSatuTemplate extends Component
     public function insiasiModalUbahSatuTemplate($args)
     {
         $this->mode = $args['mode'];
-        $id = $args['id'];
-        $this->emit("RefreshTabelAtributTemlateSingle", $val['id_jenis']);
+        $this->emit("RefreshTabelSatu", $args);
         $this->dispatchBrowserEvent('panggilModalSatuTemplate');
     }
 
