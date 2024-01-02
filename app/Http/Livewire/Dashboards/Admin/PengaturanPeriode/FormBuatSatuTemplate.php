@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Dashboards\Admin\PengaturanPeriode;
 use App\Http\Controllers\PeriodeInputController;
 use App\Models\ApdJenis;
 use App\Models\ApdList;
+use App\Models\InputApdTemplate;
 use App\Models\Jabatan;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -16,13 +17,21 @@ class FormBuatSatuTemplate extends Component
     public
     $formEditMode = false,
     $formIndex = "",
-
+    $id_periode = "",
     $formJabatan = "",
     $formJabatan_id = "",
     $formJenisApd = "",
     $formJenisApd_id = "",
     $formApd = "",
     $formApd_id = "";
+
+    public
+    $jabatanCek = false,
+    $jenisCek = false,
+    $jenisDuplikatCek = false,
+    $opsiCek = false,
+    $modeTimpa = 0;
+
 
     public $listeners = [
         'inisiasiSatuTemplate',
@@ -49,22 +58,14 @@ class FormBuatSatuTemplate extends Component
 
     public function inisiasiSatuTemplate($args)
     {
-        $editmode = $args[0];
+        $this->id_periode = $args;
 
-        if($editmode)
-        {
-            $item = $args[1];
-            $this->formIndex = $item['index'];
+        $this->jabatanCek = false;
+    $this->jenisCek = false;
+    $this->jenisDuplikatCek = false;
+    $this->opsiCek = false;
+    $this->modeTimpa = 0;
 
-            $this->formJabatan = $item['nama_jabatan'];
-            $this->formJabatan_id = $item['id_jabatan'];
-            $this->formJenisApd = $item['nama_jenis'];
-            $this->formJenisApd_id = $item['id_jenis'];
-            $this->formApd = $item['nama_apd'];
-            $this->formApd_id = $item['id_apd'];
-        }
-        else
-        {
             $this->formIndex = "";
 
             $this->formJabatan = "";
@@ -73,9 +74,8 @@ class FormBuatSatuTemplate extends Component
             $this->formJenisApd_id = "";
             $this->formApd = "";
             $this->formApd_id = "";
-        }
+        
 
-        $this->formEditMode = $editmode;
 
         $this->dispatchBrowserEvent('ke_form_buat_satu_template');
 
@@ -134,4 +134,60 @@ class FormBuatSatuTemplate extends Component
         }
         
     }
+
+    #region on change untuk input
+    public function jabatanOnChange()
+    {
+        try{
+
+            if($this->formJabatan_id == "")
+                return;
+
+            $cek = InputApdTemplate::where('id_periode',$this->id_periode)
+                    ->where('id_jabatan',$this->formJabatan_id)
+                    ->first();
+
+
+            if(!is_null($cek))
+                $this->jabatanCek = true;
+
+        }
+        catch(Throwable $e)
+        {
+            $this->jabatanCek = false;
+        }
+    }
+
+    public function jenisApdOnChange()
+    {
+        try{
+
+            if($this->formJenisApd_id == "")
+                return;
+
+            $template = InputApdTemplate::where('id_periode',$this->id_periode)
+                ->where('id_jabatan',$this->formJabatan_id)
+                ->first()->template;
+
+            
+            $cek = array_filter($template, function($val){
+                return $val['id_jenis'] == $this->formJenisApd_id;                
+            });
+
+            $this->jenisCek = count($cek) > 0;
+            $this->jenisDuplikatCek = count($cek) > 1;
+
+        }
+        catch(Throwable $e)
+        {
+            $this->jenisCek = false;
+            $this->jenisDuplikatCek = false;
+        }
+    }
+
+    public function opsiApdOnChange()
+    {
+        
+    }
+    #endregion
 }

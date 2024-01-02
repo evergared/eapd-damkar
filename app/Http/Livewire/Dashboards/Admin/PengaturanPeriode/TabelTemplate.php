@@ -74,7 +74,15 @@ class TabelTemplate extends DataTableComponent
 
     public function edit($id_template)
     {
-        
+        try{
+
+            
+
+        }
+        catch(Throwable $e)
+        {
+            error_log($e);
+        }
     }
 
     public function hapus($id_template)

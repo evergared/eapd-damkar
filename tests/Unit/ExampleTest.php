@@ -25,10 +25,19 @@ class ExampleTest extends TestCase
      */
     public function test_that_true_is_true()
     {
-        $fetch_penempatan = StatusApd::tryFrom('baik')->label;
+        $template = InputApdTemplate::where('id_periode','1')
+                ->where('id_jabatan','AAMD001')
+                ->first()->template;
+
+            
+
+            $cek = array_filter($template, function($val){
+                error_log($val['id_jenis']);
+                return $val['id_jenis'] == 'A001';                
+            });
 
 
-            print_r($fetch_penempatan);
+            print_r(count($cek));
             $this->assertTrue(true);
 
     }
