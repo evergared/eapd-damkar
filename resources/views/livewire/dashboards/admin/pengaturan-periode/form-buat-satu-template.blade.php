@@ -59,6 +59,41 @@
                 <div class="form-text text-muted">ID APD : <strong>{{$formApd_id}}</strong></div>
             @endif
         </div>
+        {{-- Radio1 opsi penyimpanan --}}
+        <br>
+        <h6>Untuk jenis apd yang diinput sudah termasuk ke dalam template inputan, pilih opsi dibawah untuk tindakan yang akan diterapkan oleh sistem : </h6>
+        <div class="form-group">
+            <div class="custom-control custom-radio my-1">
+                <input class="custom-control-input" type="radio" name="0" id="0" wire:model='radio1' value="0">
+                <label for="0" class="custom-control-label">Tambahkan APD sebagai opsi untuk Jenis</label>
+            </div>
+            <div class="custom-control custom-radio my-1">
+                <input class="custom-control-input" type="radio" name="1" id="1" wire:model='radio1' value="1">
+                <label for="1" class="custom-control-label">Buat perlu template inputan baru untuk Jenis dengan APD sebagai opsi</label>
+            </div>
+            <div class="custom-control custom-radio my-1">
+                <input class="custom-control-input" type="radio" name="2" id="2" wire:model='radio1' value="2">
+                <label for="2" class="custom-control-label">Ganti opsi APD pada Jenis dengan APD</label>
+            </div>
+        </div>
+        {{-- Radio2 opsi target jenis apd --}}
+        <br>
+        {{-- @if ($tampilListDuplikat) --}}
+        @if (true)
+        <h6>Target jenis apd untuk APD</h6>
+        <small class="text-muted">Terdapat duplikasi untuk jenis APD Jenis, silahkan pilih target untuk diterapkannya pilihan diatas</small>
+        {{-- <h6>Target jenis apd untuk {{$formApd}}</h6> --}}
+            <div class="form-group">
+                @forelse ($listJenisDuplikat as $i => $item)
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name='r2-{{$i}}' id='r2-{{$i}}' wire:model='radio2' value="{{$item['index']}}">
+                        <label for='r2-{{$i}}' class="custom-control-label">{{$item['nama_jenis']}}</label>
+                    </div>
+                @empty
+                    <h6>Tidak ada opsi yang dapat ditampilkan.</h6>
+                @endforelse
+            </div>
+        @endif
     </div>
     <div class="card-footer text-right">
         <button class="btn btn-primary" wire:click="simpan">Simpan</button>

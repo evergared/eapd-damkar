@@ -29,8 +29,16 @@ class FormBuatSatuTemplate extends Component
     $jabatanCek = false,
     $jenisCek = false,
     $jenisDuplikatCek = false,
-    $opsiCek = false,
-    $modeTimpa = 0;
+    $opsiCek = false;
+
+    public
+    $radio1 = null,
+    $radio2 = null,
+    $tampilListDuplikat = false,
+    $listJenisDuplikat = [];
+
+    public
+    $simpanEnabled = false;
 
 
     public $listeners = [
@@ -60,22 +68,7 @@ class FormBuatSatuTemplate extends Component
     {
         $this->id_periode = $args;
 
-        $this->jabatanCek = false;
-    $this->jenisCek = false;
-    $this->jenisDuplikatCek = false;
-    $this->opsiCek = false;
-    $this->modeTimpa = 0;
-
-            $this->formIndex = "";
-
-            $this->formJabatan = "";
-            $this->formJabatan_id = "";
-            $this->formJenisApd = "";
-            $this->formJenisApd_id = "";
-            $this->formApd = "";
-            $this->formApd_id = "";
-        
-
+        $this->kosongkan();
 
         $this->dispatchBrowserEvent('ke_form_buat_satu_template');
 
@@ -89,11 +82,58 @@ class FormBuatSatuTemplate extends Component
         $this->formJabatan_id = "";
         $this->formJenisApd = "";
         $this->formJenisApd_id = "";
+
+        $this->jabatanCek = false;
+        $this->jenisCek = false;
+        $this->jenisDuplikatCek = false;
+        $this->opsiCek = false;
+
+        $this->formIndex = "";
+
+        $this->formJabatan = "";
+        $this->formJabatan_id = "";
+        $this->formJenisApd = "";
+        $this->formJenisApd_id = "";
+        $this->formApd = "";
+        $this->formApd_id = "";
+    
+        $this->listJenisDuplikat = [
+            ['index'=>'0','nama_jenis'=>'Sempak (opsi : a, bn, c)'],
+            ['index'=>'2','nama_jenis'=>'Kalung (opsi : test, a, test)'],
+            ['index'=>'6','nama_jenis'=>'Clurit (opsi : bece, be be, ee)'],
+        ];
+
+        $this->tampilListDuplikat = false;
+        $this->radio1 = null;
+        $this->radio2 = null;
     }
 
     public function simpan()
     {
         try {
+
+            $target_template = InputApdTemplate::where('id_periode',$this->id_periode)
+            ->where('id_jabatan',$this->formJabatan_id)
+            ->first();
+
+            $template = $target_template->template;
+
+            if($this->radio1 == "0")
+            {
+                // 0 : tambahkan apd sebagai opsi baru pada jenis apd yang sudah ada
+                
+            }
+            else if($this->radio1 == "1")
+            {
+                // 1 : buat perlu input baru untuk jenis apd dengan apd sebagai opsinya
+            }
+            else if($this->radio1 == "2")
+            {
+                // 2 : ganti opsi apd pada jenis apd dengan apd
+            }
+
+            $target_template->template = $template;
+            $target_template->save();
 
             $this->dispatchBrowserEvent('jsToast', [
                 "class" => 'bg-success',
@@ -140,7 +180,23 @@ class FormBuatSatuTemplate extends Component
     {
         try{
 
-            if($this->formJabatan_id == "")
+            $this->jabatanCek = false;
+            $this->jenisCek = false;
+            $this->jenisDuplikatCek = false;
+            $this->opsiCek = false;
+
+            $this->listJenisDuplikat = [];
+
+            $this->formJenisApd_id == "";
+            $this->formJenisApd == "";
+            $this->formOpsiApd_id == "";
+            $this->formOpsiApd == "";
+
+            $this->tampilListDuplikat = false;
+            $this->radio1 = null;
+            $this->radio2 = null;
+
+            if($this->formJabatan_id == "" || ($this->id_periode == "" || is_null($this->id_periode)))
                 return;
 
             $cek = InputApdTemplate::where('id_periode',$this->id_periode)
@@ -162,7 +218,20 @@ class FormBuatSatuTemplate extends Component
     {
         try{
 
-            if($this->formJenisApd_id == "")
+            $this->jenisCek = false;
+            $this->jenisDuplikatCek = false;
+            $this->opsiCek = false;
+
+            $this->listJenisDuplikat = [];
+
+            $this->formOpsiApd_id == "";
+            $this->formOpsiApd == "";
+
+            $this->tampilListDuplikat = false;
+            $this->radio1 = null;
+            $this->radio2 = null;
+
+            if($this->formJenisApd_id == "" || ($this->id_periode == "" || is_null($this->id_periode)))
                 return;
 
             $template = InputApdTemplate::where('id_periode',$this->id_periode)
@@ -177,6 +246,21 @@ class FormBuatSatuTemplate extends Component
             $this->jenisCek = count($cek) > 0;
             $this->jenisDuplikatCek = count($cek) > 1;
 
+            foreach($cek as $c)
+            {
+                try{
+
+                    $opsi = [];
+                    foreach($c['opsi_apd'] as $o)
+                        $opsi[] = ApdList::find($o)->nama_apd;
+                    $this->listJenisDuplikat[] = ['index' => $c['index_duplikat'], 'nama_jenis' => ApdJenis::find($c['id_jenis'])->nama_jenis." (opsi : ".implode(",",$opsi).")"];
+
+                }
+                catch(Throwable $e)
+                {
+                    continue;
+                }
+            }
         }
         catch(Throwable $e)
         {
@@ -187,7 +271,46 @@ class FormBuatSatuTemplate extends Component
 
     public function opsiApdOnChange()
     {
+        try{
+            $this->opsiCek = false;
+
+            $this->tampilListDuplikat = false;
+            $this->radio1 = null;
+            $this->radio2 = null;
+
+            if(($this->formOpsiApd_id == "" || $this->formJenisApd_id == "") || ($this->id_periode == "" || is_null($this->id_periode)))
+            return;
+
+            $template = InputApdTemplate::where('id_periode',$this->id_periode)
+                ->where('id_jabatan',$this->formJabatan_id)
+                ->first()->template;
+
+            $cek = array_filter($template, function($val){
+                if($val['id_jenis'] == $this->formJenisApd_id)
+                    return in_array( $this->formApd_id, $val['opsi_apd']);
+            });
+
+            $this->opsiCek = count($cek) > 0;
+
+        }
+        catch(Throwable $e)
+        {
+            $this->opsiCek = false;
+        }
+    }
+    #endregion
+
+    #region on change untuk radio
+    public function onChangeRadio1()
+    {
+        if($this->radio1 == 2 || $this->radio1 == 0)
+            if($this->jenisDuplikatCek)
+                $this->tampilListDuplikat = true;
+    }
+    public function onChangeRadio2()
+    {
         
     }
     #endregion
+
 }
