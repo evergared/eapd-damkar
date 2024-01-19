@@ -674,11 +674,9 @@ class ApdDataController extends Controller
                 $id_periode = $periode->id_periode;
             }
 
-            error_log("id_periode : " . $id_periode);
-
             // ambil template input apd dari database berdasarkan pivot table yang telah dibuat di model
             $list = $this->muatListInputApdDariTemplate($id_periode, $id_jabatan);
-            // return dd($list);
+
             // panggil controller untuk membantu menampilkan status di bootstrap
             $sdc = new StatusDisplayController;
 
@@ -692,7 +690,25 @@ class ApdDataController extends Controller
                 $warnaVerifikasi = $sdc->ubahVerifikasiApdKeWarnaBootstrap($statusVerifikasi->value);
                 $statusKerusakan = $this->ambilStatusKerusakan($item['id_jenis'], "", $id_periode);
                 $warnaKerusakan = $sdc->ubahKondisiApdKeWarnaBootstrap($statusKerusakan);
-                $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
+
+                // untuk jenis sama, namun apd nya beda
+                // tambahkan kata-kata baru untuk di tambahkan pada jenis apd saat ditampilkan di apdku
+                if(array_key_exists('index_duplikat',$item))
+                {
+                    // ambil merk apd pada urutan pertama
+                    try{
+                        $tambah = ApdList::where('id_apd',$item['opsi_apd'][0])->first()->merk;
+                    }
+                    catch(Throwable $e)
+                    {
+                        $tambah = $item['index_duplikat'];
+                    }
+
+                    // tambahkan nama tersebut
+                    $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis . " (".$tambah.")";
+                }
+                else
+                    $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
 
                 array_push($template, [
                     'id_jenis' => $item['id_jenis'],
@@ -729,7 +745,6 @@ class ApdDataController extends Controller
             foreach ($opsi_apd as $apd) {
                 // ambil id apd yang akan dijadikan template dan diambil data yang telah diatur oleh admin
                 $id_apd = $apd;
-                error_log('id dari opsi yang dicari : ' . $id_apd);
 
                 // ambil data tersebut
                 $model = ApdList::where('id_apd', '=', $id_apd)->first();
@@ -829,20 +844,15 @@ class ApdDataController extends Controller
 
         try {
 
-            error_log('id wilayah ' . $id_wilayah);
 
-            error_log('buat list sektor');
             // buat daftar seluruh sektor yang ada di id_wilayah tsb
             $list_sektor = Penempatan::where('id_wilayah', '=', $id_wilayah)->where('keterangan', '=', 'sektor')->pluck('id_penempatan')->toArray();
-            error_log('list sektor = ' . count($list_sektor));
 
             // siapkan array untuk menampung data yang akan di return
             $data = array();
 
-            error_log('pengulangan untuk mengambil data di tiap pos');
             // pengulangan untuk menghitung berapa data inputan setiap sektor
             foreach ($list_sektor as $sektor) {
-                error_log('pengulangan untuk sektor ' . $sektor);
                 // ambil nama sektor sebagai judul tabel
                 $nama_sektor = Penempatan::find($sektor)->nama_penempatan;
                 $nomor_sektor = "";
@@ -856,11 +866,9 @@ class ApdDataController extends Controller
                 $list_pos = Penempatan::where('id_penempatan', 'like', $sektor . '.%')->where('keterangan', '=', 'pos')->pluck('id_penempatan')->toArray();
                 array_push($list_pos, $sektor);
                 $data_pos = array();
-                error_log('jumlah pos ' . count($list_pos));
 
                 #region hitung jumlah karyawan yang perlu melakukan input apd pada tiap pos
                 foreach ($list_pos as $pos) {
-                    error_log('pengulangan untuk pos ' . $pos);
                     $nama_pos = ($pos == $sektor) ? 'Staff / Non-Pos' : Penempatan::find($pos)->nama_penempatan;
                     $jumlah_asn = 0;
                     $jumlah_pjlp = 0;
@@ -868,26 +876,21 @@ class ApdDataController extends Controller
                     $yang_telah_diinput = 0;
                     $yang_telah_diverif = 0;
                     $seluruh_pegawai = Pegawai::where('id_penempatan', '=', $pos)->get();
-                    error_log('jumlah pegawai di pos ' . $pos . ' ' . count($seluruh_pegawai));
+
                     foreach ($seluruh_pegawai as $pegawai) {
-                        error_log('mulai menghitung untuk pegawai ' . $pegawai->nama_pegawai . ' dengan jabatan ' . $pegawai->id_jabatan);
                         try {
                             $template = $this->muatListInputApdDariTemplate($id_periode, $pegawai->id_jabatan);
-                            error_log('template is empty ' . is_null($template));
                         } catch (Throwable $e) {
                             $template = null;
-                            error_log('template kosong');
                         }
 
                         if (!is_null($template)) {
                             // jika pegawai tsb merupakan pjlp
                             if ($pegawai->id_jabatan == 'L001') {
-                                error_log('pegawai pjlp');
                                 $jumlah_pjlp++;
                             }
                             // jika pegawi tsb bukan pjlp
                             else {
-                                error_log('pegawai asn');
                                 $jumlah_asn++;
                             }
 
@@ -907,14 +910,8 @@ class ApdDataController extends Controller
                             }
                         }
 
-                        error_log('jumlah asn : ' . $jumlah_asn);
-                        error_log('jumlah pjlp : ' . $jumlah_pjlp);
-                        error_log('yang harus diinput : ' . $yang_harus_diinput);
-                        error_log('yang telah diinput : ' . $yang_telah_diinput);
-                        error_log('yang telah diverif : ' . $yang_telah_diverif);
                     }
 
-                    error_log('masukan list ke data pos');
                     // masukan data tersebut kedalam array untuk di push ke array data pos
                     array_push($data_pos, array(
                         'id_pos' => $pos,
@@ -928,7 +925,6 @@ class ApdDataController extends Controller
                 }
                 #endregion
 
-                error_log('rangkum semua data tersebut');
                 array_push($data, [
                     'nama_sektor' => $nama_sektor,
                     'nomor_sektor' => $nomor_sektor,
@@ -998,7 +994,6 @@ class ApdDataController extends Controller
 
         try {
             // ambil id penempatan berdasarkan tingkat yang setara
-            error_log('ambil id penempatan');
             $tingkat_penempatan = Penempatan::find($penempatan)->keterangan;
 
             $penempatan_ids = null;
@@ -1013,8 +1008,6 @@ class ApdDataController extends Controller
             } elseif ($tingkat_penempatan == "dinas") {
                 $penempatan_ids = Penempatan::where('id_penempatan', 'like', '#' . filter_var($penempatan, FILTER_SANITIZE_NUMBER_INT) . '%')->get()->pluck('id_penempatan');
             }
-            error_log('tingkat penempatan : ' . $tingkat_penempatan);
-            error_log('id penempatan yang dikumpulkan : ' . $penempatan_ids);
             /**
              * Data ukuran untuk di return, struktur :
              *  collection $data_ukuran =>[
@@ -1049,20 +1042,16 @@ class ApdDataController extends Controller
                             $pegawai->push($result);
                 }
             }
-            error_log('jumlah pegawai yang di dapat : ' . $pegawai->count());
 
             // cek setiap data ukuran pada model pegawai dari tiap pegawai yang diambil
             foreach ($pegawai as $p) {
-                error_log('cek pegawai');
                 // jika mereka belum pernah mengisi
                 if (is_null($p->ukuran))
                     continue;
 
-                error_log('pegawai pernah mengisi dengan nama ' . $p->nama);
 
                 // jika pegawai pernah mengisi inputan ukuran, lakukan pengulangan untuk setiap ukuran yang diinput
                 foreach ($p->ukuran as $key => $ukuran_apd_pegawai) {
-                    error_log('mulai cek inputan untuk key ' . $key);
                     // jika key pada inputan berupa tanggal, lewati
                     if ($key == "tanggal")
                         continue;
@@ -1196,7 +1185,6 @@ class ApdDataController extends Controller
     {
         if ($tanggal == null) {
             if ($test) {
-                error_log('test true');
                 return PeriodeInputApd::get()->first()->id_periode;
             }
 
