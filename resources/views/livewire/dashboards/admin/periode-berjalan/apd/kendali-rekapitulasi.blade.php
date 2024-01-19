@@ -44,7 +44,7 @@
             </div><span class="mx-2 text-info">Memuat data......</span>
         </div>
         {{-- loading dropdown end --}}
-        @if ($model_dropdown_penempatan != '')
+        @if ($model_dropdown_penempatan != '' || $model_dropdown_wilayah == "semua")
             @if (!is_null($data_rekap) && is_array($data_rekap))
                 {{-- tombol export --}}
                 <div class="row my-2">
