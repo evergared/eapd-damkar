@@ -122,6 +122,16 @@ class FormBuatSatuTemplate extends Component
             {
                 // 0 : tambahkan apd sebagai opsi baru pada jenis apd yang sudah ada
                 
+                if($this->jenisDuplikatCek)
+                {
+                    $target_jenis = array_filter($template, function($v){
+                        return $v['id_jenis'] == $this->formJenisApd_id && $v['index_duplikat'] == $this->radio2;
+                    });
+                }
+                else
+                {
+
+                }
             }
             else if($this->radio1 == "1")
             {

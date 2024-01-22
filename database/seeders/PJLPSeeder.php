@@ -1082,7 +1082,7 @@ class PJLPSeeder extends Seeder
         Pegawai::create(['nama' => 'Dedi', 'id_penempatan' => '4.11', 'nip' => '3174042812930001', 'nrk' => '80191692', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdt9yr1zyg6250ttrzwfe']);
         Pegawai::create(['nama' => 'Ahmad Jauhari', 'id_penempatan' => '4.11', 'nip' => '3201200501950003', 'nrk' => '80191461', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdt9z9dytkhm75vwc0eea']);
         Pegawai::create(['nama' => 'Janrussel A.H.', 'id_penempatan' => '4.12', 'nip' => '3174011706910004', 'nrk' => '80182647', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdta1jkzm6neff65114x5']);
-        Pegawai::create(['nama' => 'Hari Prasyetyo', 'id_penempatan' => '4.12', 'nip' => '31750092509800002', 'nrk' => '80182419', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdta2fgkm5taayqgvmd78']);
+        Pegawai::create(['nama' => 'Hari Prasetyo', 'id_penempatan' => '4.12', 'nip' => '31750092509800002', 'nrk' => '80182419', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdta2fgkm5taayqgvmd78']);
         Pegawai::create(['nama' => 'M Fahrezy', 'id_penempatan' => '4.12', 'nip' => '3174010405980003', 'nrk' => '80183211', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdta4myf72nrsahygh3ze']);
         Pegawai::create(['nama' => 'Riski Salis Komar', 'id_penempatan' => '4.12', 'nip' => '3174010612990009', 'nrk' => '80246088', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdta5bgnwzfjxkmbg1e1z']);
         Pegawai::create(['nama' => 'M. Ramdani', 'id_penempatan' => '4.12', 'nip' => '3175090504900007', 'nrk' => '80171588', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdta7ppss4njv6ws59pss']);
@@ -1151,7 +1151,7 @@ class PJLPSeeder extends Seeder
         Pegawai::create(['nama' => 'Ario Oktavia', 'id_penempatan' => '4.14', 'nip' => '3174040810880001', 'nrk' => '80180036', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdtcztdzgyr40n4dw5sgg']);
         Pegawai::create(['nama' => 'Arya Setiawan', 'id_penempatan' => '4.14', 'nip' => '1601202105970002', 'nrk' => '80180075', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdtd07qcpgqa4b2q7dm7w']);
         Pegawai::create(['nama' => 'Asep Maulana', 'id_penempatan' => '4.14', 'nip' => '3175050905860010', 'nrk' => '80245825', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdtd2vva7ec3tg5xjtbta']);
-        Pegawai::create(['nama' => 'Budi P Sihaloho ', 'id_penempatan' => '4.14', 'nip' => '3175050710740003', 'nrk' => '80182151', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdtd3j52jveg6y3jqrfc7']);
+        Pegawai::create(['nama' => 'Budi Pandapotan Sihaloho ', 'id_penempatan' => '4.14', 'nip' => '3175050710740003', 'nrk' => '80182151', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdtd3j52jveg6y3jqrfc7']);
         Pegawai::create(['nama' => 'Dera Aliardi Putra', 'id_penempatan' => '4.14', 'nip' => '3175101305990001', 'nrk' => '80301357', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdtd4re2raxm2jsh1nw9q']);
         Pegawai::create(['nama' => 'Dianda Riberto Brascor', 'id_penempatan' => '4.14', 'nip' => '3174092409930003', 'nrk' => '80188422', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdtd6n0t6k89dhr9htazw']);
         Pegawai::create(['nama' => 'Dicky Apriyadi', 'id_penempatan' => '4.14', 'nip' => '3174090804910003', 'nrk' => '80181120', 'id_jabatan' => 'PJLPK', 'id_pegawai' => '01he9jdtd7mgnn5nrqyb1mj4ak']);
