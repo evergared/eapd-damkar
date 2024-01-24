@@ -130,13 +130,25 @@ class AdminltePegawaiSidebar extends Component
             foreach($template as $t)
             {
                 $id_jenis_target = $t['id_jenis'];
+                $index_duplikat = null;
+                if(array_key_exists('index_duplikat',$t))
+                    $index_duplikat = $t['index_duplikat'];
                 
                 $index = false;
                 foreach($inputan_terisi as $i => $inputan)
                 {
                     if(is_bool($index))
                         if($inputan['id_jenis'] == $id_jenis_target)
-                            $index = $i;
+                        {
+                            if(is_null($index_duplikat))
+                                $index = $i;
+                            else
+                            {
+                                if($inputan['index_duplikat'] == $index_duplikat)
+                                    $index = $i;
+                            }
+
+                        }
                 }
 
                 if(is_bool($index))

@@ -23,6 +23,7 @@ class InputApd extends Model
         'id_periode',
         'id_jenis',
         'id_apd',
+        'index_duplikat',
         'size',
         'kondisi',
         'no_seri',
@@ -33,7 +34,8 @@ class InputApd extends Model
         'jabatan_verifikator',
         'verifikasi_status',
         'komentar_verifikator',
-        'verifikasi_diupdate'
+        'verifikasi_diupdate',
+        'keterangan_jenis_apd_template'
     ];
 
     public function pegawai()

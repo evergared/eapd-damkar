@@ -127,6 +127,9 @@ class TabelDetailRekap extends DataTableComponent
             Column::make("Id apd", "id_apd")
                 ->sortable()
                 ->hideIf(true),
+            Column::make("duplikat", "index_duplikat")
+                ->sortable()
+                ->hideIf(true),
             Column::make('Nama Pegawai', 'pegawai.nama')
                 ->sortable()
                 ->searchable(),

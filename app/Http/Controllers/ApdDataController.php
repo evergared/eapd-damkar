@@ -80,15 +80,35 @@ class ApdDataController extends Controller
     #endregion
 
 
-    public function muatOpsiApd(string $id_jenis, $id_periode = null, $id_jabatan = "")
+    public function muatOpsiApd(string $id_jenis, $index_duplikat = null, $id_periode = null, $id_jabatan = "")
     {
         try {
 
             $list = $this->muatListInputApdDariTemplate($id_periode, $id_jabatan);
-            $index = array_search($id_jenis, array_column($list, 'id_jenis'));
+            if(!is_null($index_duplikat))
+            {
+                $index = null;
+                foreach($list as $i => $v)
+                {
+                    if($v['id_jenis'] == $id_jenis && $v['index_duplikat'] == $index_duplikat)
+                    {
+                        $index = $i;
+                    }
+                }
+                    
+
+                if(is_null($index))
+                    throw new Exception('Terjadi kesalahan saat mencari opsi apd untuk jenis apd dengan index duplikat yang dimaksud ('.$index_duplikat.')');
+
+            }
+            else
+                $index = array_search($id_jenis, array_column($list, 'id_jenis'));
+
             return $list[$index];
+
         } catch (Throwable $e) {
             error_log('Gagal memuat daftar input apd ' . $e);
+
         }
     }
 
@@ -164,8 +184,9 @@ class ApdDataController extends Controller
 
             foreach ($template as $item) {
                 $id_jenis = $item['id_jenis'];
+                $index_duplikat = (array_key_exists('index_duplikat',$item)) ? $item['index_duplikat'] : null;
 
-                $inputan = $this->muatSatuInputanPegawai($id_jenis, $id_periode, $id_pegawai, $target_verifikasi);
+                $inputan = $this->muatSatuInputanPegawai($id_jenis, $id_periode, $id_pegawai, $index_duplikat, $target_verifikasi);
 
                 if (is_null($inputan))
                     continue;
@@ -180,7 +201,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function muatSatuInputanPegawai($id_jenis, $id_periode = null, $id_pegawai = "", $target_verifikasi = 0): array|bool|null
+    public function muatSatuInputanPegawai($id_jenis, $id_periode = null, $id_pegawai = "",$index_duplikat = null, $target_verifikasi = 0): array|bool|null
     {
         try {
             // jika parameter id pegawai kosong
@@ -192,17 +213,18 @@ class ApdDataController extends Controller
             if ($id_periode == null)
                 $id_periode = $this->ambilIdPeriodeInput();
 
+            $input = InputApd::query()
+                ->where('id_pegawai', '=', $id_pegawai)
+                ->where('id_jenis', '=', $id_jenis)
+                ->where('id_periode', '=', $id_periode);
+            
+            if(!is_null($index_duplikat))
+                $input = $input->where('index_duplikat', $index_duplikat);
+
             if ($target_verifikasi != 0)
-                $input = InputApd::where('id_pegawai', '=', $id_pegawai)
-                    ->where('id_jenis', '=', $id_jenis)
-                    ->where('id_periode', '=', $id_periode)
-                    ->where('verifikasi_status', $target_verifikasi)
-                    ->first();
-            else
-                $input = InputApd::where('id_pegawai', '=', $id_pegawai)
-                    ->where('id_jenis', '=', $id_jenis)
-                    ->where('id_periode', '=', $id_periode)
-                    ->first();
+                $input = $input->where('verifikasi_status', $target_verifikasi);
+
+            $input = $input->first();
 
 
             if (!is_null($input)) {
@@ -214,6 +236,7 @@ class ApdDataController extends Controller
                 // panggil untuk mambantu mengubah warna status
                 $sdc = new StatusDisplayController;
                 $nama_apd = (is_null(ApdList::where('id_apd', $input->id_apd)->first())) ? '-' : ApdList::where('id_apd', $input->id_apd)->first()->nama_apd;
+                
 
                 return [
                     'id_inputan' => $input->id_inputan,
@@ -221,7 +244,7 @@ class ApdDataController extends Controller
                     'nama_jenis' => ApdJenis::where('id_jenis', '=', $id_jenis)->first()->nama_jenis,
                     'id_apd' => $input->id_apd,
                     'nama_apd' => $nama_apd,
-                    'no_seri' => $input->no_seri,
+                    'no_seri' => ($input->no_seri) ? $input->no_seri : '-',
                     'size_apd' => ($input->size) ? $input->size : "-",
                     'data_terakhir_update' => $input->data_diupdate,
                     'verifikasi_terakhir_update' => (is_null($input->verifikasi_diupdate)) ? '-' : $input->verifikasi_diupdate,
@@ -231,12 +254,14 @@ class ApdDataController extends Controller
                     'enum_verifikasi' => $input->verifikasi_status,
                     'status_verifikasi' => $verifikasi_label,
                     'warna_verifikasi' => $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status),
-                    'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode),
-                    'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis, $id_pegawai, $id_periode)),
+                    'status_kerusakan' => $this->ambilStatusKerusakan($id_jenis, $index_duplikat, $id_pegawai, $id_periode),
+                    'warna_kerusakan' => $sdc->ubahKondisiApdKeWarnaBootstrap($this->ambilStatusKerusakan($id_jenis,$index_duplikat, $id_pegawai, $id_periode)),
                     'komentar_pengupload' => $input->komentar_pengupload,
                     'nama_verifikator' => $input->verifikasi_oleh,
                     'jabatan_verifikator' => $input->jabatan_verifikator,
-                    'komentar_verifikator' => $input->komentar_verifikator
+                    'komentar_verifikator' => $input->komentar_verifikator,
+                    'index_duplikat' => $input->index_duplikat,
+                    'keterangan_jenis_apd_template' => $input->keterangan_jenis_apd_template
                 ];
             }
 
@@ -686,11 +711,6 @@ class ApdDataController extends Controller
             // pengulangan untuk mengisi template beserta isinya yang akan ditampilkan
             foreach ($list as $item) {
 
-                $statusVerifikasi = $this->ambilStatusVerifikasi($item['id_jenis'], "", $id_periode);
-                $warnaVerifikasi = $sdc->ubahVerifikasiApdKeWarnaBootstrap($statusVerifikasi->value);
-                $statusKerusakan = $this->ambilStatusKerusakan($item['id_jenis'], "", $id_periode);
-                $warnaKerusakan = $sdc->ubahKondisiApdKeWarnaBootstrap($statusKerusakan);
-
                 // untuk jenis sama, namun apd nya beda
                 // tambahkan kata-kata baru untuk di tambahkan pada jenis apd saat ditampilkan di apdku
                 if(array_key_exists('index_duplikat',$item))
@@ -706,9 +726,20 @@ class ApdDataController extends Controller
 
                     // tambahkan nama tersebut
                     $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis . " (".$tambah.")";
+
+                    // ingat indexnya
+                    $index = $item['index_duplikat'];
                 }
                 else
+                {
                     $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
+                    $index = null;
+                }
+
+                $statusVerifikasi = $this->ambilStatusVerifikasi($item['id_jenis'], $index,"", $id_periode);
+                $warnaVerifikasi = $sdc->ubahVerifikasiApdKeWarnaBootstrap($statusVerifikasi->value);
+                $statusKerusakan = $this->ambilStatusKerusakan($item['id_jenis'], $index, "", $id_periode);
+                $warnaKerusakan = $sdc->ubahKondisiApdKeWarnaBootstrap($statusKerusakan);
 
                 array_push($template, [
                     'id_jenis' => $item['id_jenis'],
@@ -717,7 +748,8 @@ class ApdDataController extends Controller
                     'status_verifikasi' => $statusVerifikasi->label,
                     'warna_verifikasi' => $warnaVerifikasi,
                     'status_kerusakan' => $statusKerusakan,
-                    'warna_kerusakan' => $warnaKerusakan
+                    'warna_kerusakan' => $warnaKerusakan,
+                    'index_duplikat' => $index
                 ]);
             }
             // return dd([$template, $list]);
@@ -757,7 +789,6 @@ class ApdDataController extends Controller
 
 
 
-                // gambar apd harus berupa array untuk mempermudah pengecekan
                 // saat admin tidak memberikan stock gambar apd
                 if (is_null($gambar_apd)) {
                     $gambar_apd = null;
@@ -1272,7 +1303,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function ambilStatusVerifikasi($id_jenis, $id_pegawai = "", $id_periode = null)
+    public function ambilStatusVerifikasi($id_jenis, $index_duplikat = null, $id_pegawai = "", $id_periode = null)
     {
         try {
 
@@ -1284,7 +1315,17 @@ class ApdDataController extends Controller
                 $id_periode = PeriodeInputApd::where('aktif', true)->get()->first()->id_periode;
             }
 
-            return verif::tryFrom(InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first()->verifikasi_status);
+            $input = InputApd::query()
+                ->where('id_pegawai', '=', $id_pegawai)
+                ->where('id_jenis', '=', $id_jenis)
+                ->where('id_periode', '=', $id_periode);
+            
+            if(!is_null($index_duplikat))
+                $input = $input->where('index_duplikat', $index_duplikat);
+
+            $input = $input->first();
+
+            return verif::tryFrom($input->verifikasi_status);
         } catch (Throwable $e) {
             // error_log("Gagal mengambil status verifikasi untuk id jenis  '" . $id_jenis . "' " . $e);
             // report("Gagal mengambil status verifikasi untuk id jenis  '" . $id_jenis . "' " . $e);
@@ -1292,7 +1333,7 @@ class ApdDataController extends Controller
         }
     }
 
-    public function ambilStatusKerusakan($id_jenis, $id_pegawai = "", $id_periode = null)
+    public function ambilStatusKerusakan($id_jenis, $index_duplikat = null, $id_pegawai = "", $id_periode = null)
     {
         try {
 
@@ -1304,12 +1345,29 @@ class ApdDataController extends Controller
                 $id_periode = PeriodeInputApd::where('aktif', true)->get()->first()->id_periode;
             }
 
-            $inputan = InputApd::where('id_pegawai', '=', $id_pegawai)->where('id_jenis', '=', $id_jenis)->where('id_periode', '=', $id_periode)->first();
+            $input = InputApd::query()
+                ->where('id_pegawai', '=', $id_pegawai)
+                ->where('id_jenis', '=', $id_jenis)
+                ->where('id_periode', '=', $id_periode);
 
-            if (is_null($inputan))
+                error_log('pegawai '.$id_pegawai);
+                error_log('jenis '.$id_jenis);
+                error_log('periode '.$id_periode);
+                error_log('index duplikat'.$index_duplikat.'|');
+            
+            if(!is_null($index_duplikat))
+            {
+                error_log('cek duplikat ter trigger');
+                $input = $input->where('index_duplikat', $index_duplikat);
+
+            }
+
+            $input = $input->first();
+
+            if (is_null($input))
                 throw new Exception("data yang dicari tidak ada atau user belum input apd tersebut");
 
-            $status = status::tryFrom($inputan->kondisi);
+            $status = status::tryFrom($input->kondisi);
 
             if (is_null($status))
                 throw new Exception("status apd yang dicari tidak ada");

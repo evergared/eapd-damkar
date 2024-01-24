@@ -29,7 +29,8 @@ class KendaliInputApd extends Component
         $template_nama_apd = "",
         $template_data_apd = [],
         $template_opsi_apd = [],
-        $template_gambar_apd = [];
+        $template_gambar_apd = [],
+        $template_index_duplikat = null;
 
     // untuk dropdown keberadaan apd
     public
@@ -121,6 +122,10 @@ class KendaliInputApd extends Component
         $error_time_inisiasi_modal = '',
         $error_time_simpan_inputan = '';
 
+    // untuk case jika terdapat duplikasi jenis pada template
+    public
+        $keterangan_jenis_apd_template = "";
+
     protected $listeners = [
         'panggilKendaliInput'
     ];
@@ -152,13 +157,14 @@ class KendaliInputApd extends Component
 
     public function panggilKendaliInput($value)
     {
-        $this->inisiasiKendaliInput($value["id_jenis"]);
+        $this->inisiasiKendaliInput($value);
         $this->dispatchBrowserEvent('butuh-input-ke-kendali-input');
     }
 
-    public function inisiasiKendaliInput($id_jenis_apd)
+    public function inisiasiKendaliInput($value)
     {
         try {
+
 
             $this->error_time_inisiasi_modal = '';
 
@@ -169,8 +175,20 @@ class KendaliInputApd extends Component
             $this->placeholder_path = $fc::$apdPlaceholderBasePath;
             $this->upload_path = 'storage/';
 
-            $this->template_id_jenis_apd = $id_jenis_apd;
+            $this->template_id_jenis_apd = $value['id_jenis'];
             $this->template_nama_jenis_apd = ApdJenis::where('id_jenis', $this->template_id_jenis_apd)->first()->nama_jenis;
+            if(array_key_exists('index_duplikat',$value))
+            {
+                $this->template_index_duplikat = $value['index_duplikat'];
+                $this->keterangan_jenis_apd_template = $value['nama_jenis'];
+            }
+            else
+            {
+                $this->template_index_duplikat = null;
+                $this->keterangan_jenis_apd_template = "";
+            }
+
+            // return dd($value);
 
             // kosongkan data sebelumnya (jika ada)
             $this->template_nama_apd = "";
@@ -232,8 +250,11 @@ class KendaliInputApd extends Component
             $this->error_time_simpan_inputan = '';
             $this->show_data_perubahan_pending = false;
 
+
+            error_log($this->template_index_duplikat);
+
             // bangun data template apd untuk modal
-            $list_apd_terkait = $adc->muatOpsiApd($this->template_id_jenis_apd);
+            $list_apd_terkait = $adc->muatOpsiApd($this->template_id_jenis_apd, $this->template_index_duplikat);
 
             $this->template_opsi_apd = $list_apd_terkait['opsi_apd'];
             $this->template_data_apd = $adc->bangunItemModalInputApd($this->template_opsi_apd);
@@ -242,7 +263,7 @@ class KendaliInputApd extends Component
             $this->refreshDropdownSizeApd();
 
             // sesuaikan data dengan inputan sebelumnya (jika ada)
-            $inputan_sebelumnya = $adc->muatSatuInputanPegawai($this->template_id_jenis_apd);
+            $inputan_sebelumnya = $adc->muatSatuInputanPegawai($this->template_id_jenis_apd,null,"",$this->template_index_duplikat);
 
             // jika terjadi error saat memuat
             if (is_bool($inputan_sebelumnya)) {
@@ -256,13 +277,16 @@ class KendaliInputApd extends Component
             // jika sudah input
             else {
 
+                $this->template_index_duplikat = $inputan_sebelumnya['index_duplikat'];
+
+
                 $this->status_keberadaan_apd_user = $this->status_keberadaan_apd_user_sebelum = $inputan_sebelumnya['status_keberadaan'];
                 $this->terakhir_diisi = $inputan_sebelumnya['data_terakhir_update'];
                 $this->terakhir_diverif = $inputan_sebelumnya['verifikasi_terakhir_update'];
                 $this->id_apd_user = $this->id_apd_user_sebelum = $inputan_sebelumnya['id_apd'];
                 $this->size_apd_user = $this->size_apd_user_sebelum = ($inputan_sebelumnya['size_apd'] == '-') ? "" : $inputan_sebelumnya['size_apd'];
                 $this->no_seri_apd_user = $this->no_seri_apd_user_sebelum = $inputan_sebelumnya['no_seri'];
-                $this->kondisi_apd_user = $this->kondisi_apd_user_sebelum = StatusApd::tryFrom($inputan_sebelumnya['status_kerusakan'])->value;
+                $this->kondisi_apd_user = $this->kondisi_apd_user_sebelum =  StatusApd::tryFrom($inputan_sebelumnya['status_kerusakan'])->value;
                 $this->gambar_apd_user_sebelum = $inputan_sebelumnya['gambar_apd'];
                 $this->komentar_apd_user = $this->komentar_apd_user_sebelum = $inputan_sebelumnya['komentar_pengupload'];
                 $this->komentar_verifikator = $inputan_sebelumnya['komentar_verifikator'];
@@ -297,6 +321,7 @@ class KendaliInputApd extends Component
                     $this->data_diupdate_reupload = $reupload['data_diupdate'];
                 }
 
+                
 
                 $this->refreshDropdownListApd();
                 $this->refreshGambarTemplate();
@@ -353,7 +378,13 @@ class KendaliInputApd extends Component
         $adc = new ApdDataController;
 
         try {
-            $this->template_gambar_apd = $adc->siapkanGambarTemplateBesertaPathnya($this->template_data_apd[array_search($this->id_apd_user, $this->template_data_apd, true)]['gambar_apd'], $this->template_id_jenis_apd, $this->id_apd_user);
+
+            $string_gambar = $this->template_data_apd[array_search($this->id_apd_user, $this->template_data_apd, true)];
+            // return dd($this->template_data_apd);
+            // error_log(implode("|",$string_gambar));
+            error_log($this->id_apd_user);
+
+            $this->template_gambar_apd = $adc->siapkanGambarTemplateBesertaPathnya($string_gambar['gambar_apd'], $this->template_id_jenis_apd, $this->id_apd_user);
         } catch (Throwable $e) {
             $this->error_time_gambar_template = now();
             $this->template_gambar_apd = false;
@@ -431,10 +462,12 @@ class KendaliInputApd extends Component
                 'no_seri' => $this->no_seri_apd_user,
                 'komentar_pengupload' => $this->komentar_apd_user,
                 'data_diupdate' => now(),
-                'verifikasi_status' => VerifikasiApd::verifikasi()->value
+                'verifikasi_status' => VerifikasiApd::verifikasi()->value,
+                'index_duplikat' => $this->template_index_duplikat,
+                'keterangan_jenis_apd_template' => $this->keterangan_jenis_apd_template
             ]);
 
-            $this->inisiasiKendaliInput($this->template_id_jenis_apd);
+            $this->inisiasiKendaliInput(["id_jenis"=>$this->template_id_jenis_apd,"index_duplikat"=>$this->template_index_duplikat,'nama_jenis'=>$this->keterangan_jenis_apd_template]);
             $this->emit('refreshComponent');
             session()->flash('alert-success', 'Inputan berhasil disimpan!');
             $this->dispatchBrowserEvent('jsToast', [
@@ -468,10 +501,14 @@ class KendaliInputApd extends Component
             $id_pegawai = Auth::user()->data->id_pegawai;
             $periode = $pic->ambilIdPeriodeInput();
 
-            $inputan = InputApd::where('id_pegawai', $id_pegawai)
+            $inputan = InputApd::query()->where('id_pegawai', $id_pegawai)
                 ->where('id_periode', $periode)
-                ->where('id_jenis', $this->template_id_jenis_apd)
-                ->first();
+                ->where('id_jenis', $this->template_id_jenis_apd);
+
+            if(!is_null($this->template_index_duplikat))
+                $inputan = $inputan->where('index_duplikat',$this->template_index_duplikat);
+
+            $inputan = $inputan->first();
 
             if (is_null($inputan))
                 throw new Exception('Tidak ditemukan inputan dengan parameter id_pegawai : ' . $id_pegawai . ", id_periode : " . $periode . ", id_jenis : " . $this->template_id_jenis_apd . " pada tabel input_apd.");
@@ -500,9 +537,10 @@ class KendaliInputApd extends Component
             $inputan->komentar_pengupload = $this->komentar_apd_user;
             $inputan->data_diupdate = now();
             $inputan->verifikasi_status = $this->enum_verifikasi_apd_verifikasi;
+            $inputan->keterangan_jenis_apd_template = $this->keterangan_jenis_apd_template;
 
             $inputan->save();
-            $this->inisiasiKendaliInput($this->template_id_jenis_apd);
+            $this->inisiasiKendaliInput(["id_jenis"=>$this->template_id_jenis_apd,"index_duplikat"=>$this->template_index_duplikat,'nama_jenis'=>$this->keterangan_jenis_apd_template]);
 
             $this->emit('refreshComponent');
             session()->flash('alert-success', 'Inputan berhasil diupdate!');
@@ -538,10 +576,14 @@ class KendaliInputApd extends Component
             $id_pegawai = Auth::user()->data->id_pegawai;
             $periode = $pic->ambilIdPeriodeInput();
 
-            $inputan = InputApd::where('id_pegawai', $id_pegawai)
+            $inputan = InputApd::query()->where('id_pegawai', $id_pegawai)
                 ->where('id_periode', $periode)
-                ->where('id_jenis', $this->template_id_jenis_apd)
-                ->first();
+                ->where('id_jenis', $this->template_id_jenis_apd);
+
+            if(!is_null($this->template_index_duplikat))
+                $inputan = $inputan->where('index_duplikat',$this->template_index_duplikat);
+
+            $inputan = $inputan->first();
 
             if (is_null($inputan))
                 throw new Exception('Tidak ditemukan inputan dengan parameter id_pegawai : ' . $id_pegawai . ", id_periode : " . $periode . ", id_jenis : " . $this->template_id_jenis_apd . " pada tabel input_apd.");
@@ -576,9 +618,11 @@ class KendaliInputApd extends Component
             $inputan->no_seri = $this->no_seri_apd_user;
             $inputan->komentar_pengupload = $this->komentar_apd_user;
             $inputan->data_diupdate = now();
+            $inputan->keterangan_jenis_apd_template = $this->keterangan_jenis_apd_template;
+
 
             $inputan->save();
-            $this->inisiasiKendaliInput($this->template_id_jenis_apd);
+            $this->inisiasiKendaliInput(["id_jenis"=>$this->template_id_jenis_apd,"index_duplikat"=>$this->template_index_duplikat,'nama_jenis'=>$this->keterangan_jenis_apd_template]);
             $this->emit('refreshComponent');
             session()->flash('alert-success', 'Inputan berhasil diupdate! Tunggu verifikasi Admin untuk perubahan yang dilakukan.');
             $this->dispatchBrowserEvent('jsToast', [
@@ -605,6 +649,8 @@ class KendaliInputApd extends Component
     #region Proses Inputan
     public function validasiInputan()
     {
+
+        error_log('validasi trigger');
 
         $this->validate(
             [

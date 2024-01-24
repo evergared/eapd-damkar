@@ -54,7 +54,20 @@
                                         <tr>
                                         
                                         <td class="text-center text-wrap my-auto align-middle">{{$index + 1}}</td>
-                                        <td class="text-center text-wrap my-auto align-middle"><strong>{{$item['nama_jenis']}}</strong></td>
+                                        <td class="text-center text-wrap my-auto align-middle">
+                                            <strong>
+                                                @if (is_null($item['index_duplikat']))
+                                                    {{$item['nama_jenis']}}
+                                                @else
+                                                    @if (is_null($item['keterangan_jenis_apd_template']))
+                                                        {{$item['nama_jenis']}}
+                                                    @else
+                                                        {{$item['keterangan_jenis_apd_template']}}
+                                                    @endif
+                                                    
+                                                @endif
+                                            </strong>
+                                        </td>
                                         <td class="text-center my-auto align-middle">
                                             {{-- Start tampilan gambar inputan pegawai --}}
                                             @if(is_array($item['gambar_apd']) && count($item['gambar_apd']))
@@ -275,11 +288,11 @@
                                                             @foreach ($gambar_apd_template as $key => $gbr)
                                                                 @if($key === array_key_first($gambar_apd_template))
                                                                 <div class="apd-template product-image-thumb active"><img
-                                                                        src="{{asset($gbr)}}" alt="APD">
+                                                                        src="{{asset($path_gambar . $gbr)}}" alt="APD">
                                                                 </div>
                                                                 @else
                                                                 <div class="apd-template product-image-thumb"><img
-                                                                        src="{{asset($gbr)}}" alt="APD">
+                                                                        src="{{asset($path_gambar . $gbr)}}" alt="APD">
                                                                 </div>
                                                                 @endif
                                                             @endforeach
@@ -288,7 +301,7 @@
                                                     
                                                     {{-- Start jika hanya ada satu gambar --}}
                                                     @elseif(is_string($gambar_apd_template) && $gambar_apd_template != "")
-                                                        <img src="{{asset($gambar_apd_template)}}" class="img-thumbnail" alt="APD">
+                                                        <img src="{{asset($path_gambar . $gambar_apd_template)}}" class="img-thumbnail" alt="APD">
                                                     {{-- End jika hanya ada satu gambar --}}
                 
                                                     {{-- Start antisipasi gambar tidak null tetapi tidak ada gambar --}}

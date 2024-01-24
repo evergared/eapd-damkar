@@ -66,7 +66,7 @@ class DetailPermintaan extends Component
 
             $adc = new ApdDataController;
 
-            $this->entry_sebelumnya = $adc->muatSatuInputanPegawai($inputan->id_jenis,null,$inputan->id_pegawai);
+            $this->entry_sebelumnya = $adc->muatSatuInputanPegawai($inputan->id_jenis,null,$inputan->id_pegawai,$inputan->index_duplikat);
             $this->entry_detail = $adc->muatSatuInputanReupload($this->id_inputan);
             $this->gambar_apd_template = $adc->siapkanGambarTemplateBesertaPathnya((is_null($inputan->apd))? '' : $inputan->apd->image,$inputan->id_jenis, $inputan->id_apd);
 

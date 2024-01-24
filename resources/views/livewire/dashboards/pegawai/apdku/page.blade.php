@@ -53,9 +53,9 @@
 
                                     <div class="card-body" wire:ignore.self>
                                         <div class="row">
-                                            @foreach ($daftarApd as $item)
+                                            @foreach ($daftarApd as $i => $item)
                                             <div class="column {{Str::slug($item['status_verifikasi'],'-')}} {{Str::slug($item['status_kerusakan'],'-')}} small-box col-sm-3"
-                                                wire:click="panggilModal('{{$item['id_jenis']}}')" wire:ignore.self>
+                                                wire:click="panggilModal({{$i}})" wire:ignore.self>
                                                 <div class="position-relative p-3 bg-{{$item['warna_verifikasi']}}"
                                                     style="height: 180px">
                                                     <div class="ribbon-wrapper">

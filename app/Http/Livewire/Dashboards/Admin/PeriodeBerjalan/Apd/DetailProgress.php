@@ -90,17 +90,18 @@ class DetailProgress extends Component
 
 
     #region detail by personil
-    public function detailByPersonilLihatDetail($value)
+    public function detailByPersonilLihatDetail($index)
     {
         try {
             $this->error_time_alert = null;
             $this->admin_action_komentar = '';
             $this->admin_action_verifikasi = '';
             $this->detail_by_personil_entry_detail = null;
-            if (array_key_exists($value, $this->detail_by_personil_data_inputan)) {
-                $this->detail_by_personil_entry_detail = $this->detail_by_personil_data_inputan[$value];
+            if (array_key_exists($index, $this->detail_by_personil_data_inputan)) {
+                $this->detail_by_personil_entry_detail = $this->detail_by_personil_data_inputan[$index];
                 $this->detail_by_personil_entry_nama_apd = $this->detail_by_personil_entry_detail['nama_jenis'];
 
+                // untuk gambar apd dari template
                 $apd = ApdList::where('id_apd', $this->detail_by_personil_entry_detail['id_apd'])->first();
                 if (!is_null($apd)) {
                     $adc = new ApdDataController;

@@ -27,7 +27,7 @@ class TesTemplateApdSeeder extends Seeder
             ['id_jenis' => 'A008', 'opsi_apd' => ['A008_Pem_0001']],
             ['id_jenis' => 'B001', 'opsi_apd' => ['B001_Har_0001']],
             ['id_jenis' => 'B002', 'opsi_apd' => ['B002_Com_0001'], 'index_duplikat'=>0],
-            ['id_jenis' => 'B002', 'opsi_apd' => ['B002_Com_0001'], 'index_duplikat'=>1],
+            ['id_jenis' => 'B002', 'opsi_apd' => ['B002_Her_0001'], 'index_duplikat'=>1],
             ['id_jenis' => 'B003', 'opsi_apd' => ['B003_Her_0001']],
             ['id_jenis' => 'G001', 'opsi_apd' => ['G001_Car_0001']],
             ['id_jenis' => 'G002', 'opsi_apd' => ['G002_Zhi_0001']],

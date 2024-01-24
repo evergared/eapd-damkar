@@ -19,6 +19,7 @@ return new class extends Migration
                 $t->string('id_pegawai');
                 $t->unsignedBigInteger('id_periode');
                 $t->string('id_jenis')->nullable();
+                $t->smallInteger('index_duplikat')->nullable()->comment('Pada template, jika jenis apd ada lebih dr satu; gunakan ini sbg workaround identifikasi');
                 $t->string('id_apd')->nullable();
                 $t->string('size')->nullable();
                 $t->string('kondisi')->nullable();
@@ -31,6 +32,7 @@ return new class extends Migration
                 $t->text('jabatan_verifikator')->nullable();
                 $t->text('komentar_verifikator')->nullable();
                 $t->string('verifikasi_status')->nullable();
+                $t->string('keterangan_jenis_apd_template')->nullable()->comment('jika duplikat, gunakan ini untuk dapat nama jenis dan merk apd di detail progress');
             });
         }
 

@@ -40,8 +40,9 @@ class Page extends Component
         }
     }
 
-    public function panggilModal($id_jenis)
+    public function panggilModal($index)
     {
-        $this->emit('panggilKendaliInput', ['id_jenis' => $id_jenis]);
+        // return dd($this->daftarApd);
+        $this->emit('panggilKendaliInput', $this->daftarApd[$index]);
     }
 }

@@ -519,10 +519,7 @@
                                             wire:model='komentar_apd_user'></textarea>
                                     </div>
                                 @endif
-                                <div wire:loading wire:target='gambar_apd_user'>
-                                    <div class="spinner-border spinner-border-sm text-info" role="status"></div>
-                                    <small class="text-info"> apd sedang di unggah...</small>
-                                </div>
+                                
                                 
                                 {{-- bagian input Form Input end --}}
                         @if ($status_verifikasi == $enum_verifikasi_apd_terverifikasi)
@@ -593,24 +590,31 @@
             </div>
 
             <div class="card-footer">
-                @if($status_verifikasi == $enum_verifikasi_apd_terverifikasi)
-                    @if ($show_ajukan_perubahan)
-                        <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='updateTerverifikasi' style="cursor: pointer;">
+
+                <div wire:loading wire:target='gambar_apd_user'>
+                    <div class="spinner-border spinner-border-sm text-info" role="status"></div>
+                    <small class="text-info">Mohon tunggu gambar apd anda sedang di unggah...</small>
+                </div>
+                <div wire:loading.remove wire:target='gambar_apd_user'>
+                    @if($status_verifikasi == $enum_verifikasi_apd_terverifikasi)
+                        @if ($show_ajukan_perubahan)
+                            <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='updateTerverifikasi' style="cursor: pointer;">
+                                <i class="fas fa-save fa-lg mr-2"></i>
+                                Ajukan Perubahan
+                            </a> 
+                        @endif
+                    @elseif($status_verifikasi == $enum_verifikasi_apd_verifikasi)
+                        <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='update' style="cursor: pointer;">
                             <i class="fas fa-save fa-lg mr-2"></i>
-                            Ajukan Perubahan
-                        </a> 
+                            Update Data APD
+                        </a>
+                    @else
+                        <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='simpan' style="cursor: pointer;">
+                            <i class="fas fa-save fa-lg mr-2"></i>
+                            Simpan Data APD
+                        </a>
                     @endif
-                @elseif($status_verifikasi == $enum_verifikasi_apd_verifikasi)
-                    <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='update' style="cursor: pointer;">
-                        <i class="fas fa-save fa-lg mr-2"></i>
-                        Update Data APD
-                    </a>
-                @else
-                    <a class="btn btn-primary btn-m btn-flat rounded-pill" wire:click='simpan' style="cursor: pointer;">
-                        <i class="fas fa-save fa-lg mr-2"></i>
-                        Simpan Data APD
-                    </a>
-                @endif
+                </div>
             </div>
 
 

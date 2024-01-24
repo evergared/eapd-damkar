@@ -66,7 +66,13 @@ class Statbox extends Component
             } else {
                 $tertolak = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id_pegawai)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->first()) {
+                    
+                    $input = InputApd::query()->where('id_pegawai', '=', Auth::user()->id_pegawai)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan);
+
+                    if((array_key_exists('index_duplikat',$item)))
+                        $input = $input->where('index_duplikat',$item['index_duplikat']);
+
+                    if ($input = $input->first()) {
                         if (verif::tryFrom($input->verifikasi_status) == verif::tertolak()) {
                             $tertolak++;
 
@@ -105,7 +111,13 @@ class Statbox extends Component
             } else {
                 $rusak = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id_pegawai)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->where('kondisi', 'like', 'rusak %')->first()) {
+
+                    $input = InputApd::query()->where('id_pegawai', '=', Auth::user()->id_pegawai)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan);
+
+                    if((array_key_exists('index_duplikat',$item)))
+                        $input = $input->where('index_duplikat',$item['index_duplikat']);
+
+                    if ($input = $input->where('kondisi', 'like', 'rusak %')->first()) {
                         $rusak++;
                         $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
                         $kondisi = $input->kondisi;
@@ -140,7 +152,12 @@ class Statbox extends Component
             } else {
                 $terisi = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id_pegawai)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->first()) {
+                    $input = InputApd::query()->where('id_pegawai', '=', Auth::user()->id_pegawai)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan);
+
+                    if((array_key_exists('index_duplikat',$item)))
+                        $input = $input->where('index_duplikat',$item['index_duplikat']);
+
+                    if ($input = $input->first()) {
                         $terisi++;
 
                         $nama_jenis = ApdJenis::where('id_jenis', '=', $item['id_jenis'])->first()->nama_jenis;
@@ -176,7 +193,13 @@ class Statbox extends Component
             } else {
                 $tervalidasi = 0;
                 foreach ($butuhInput as $item) {
-                    if ($input = InputApd::where('id_pegawai', '=', Auth::user()->id_pegawai)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan)->first()) {
+
+                    $input = InputApd::query()->where('id_pegawai', '=', Auth::user()->id_pegawai)->where('id_jenis', '=', $item['id_jenis'])->where('id_periode', '=', $this->periode_inputan);
+
+                    if((array_key_exists('index_duplikat',$item)))
+                        $input = $input->where('index_duplikat',$item['index_duplikat']);
+
+                    if ($input = $input->first()) {
                         if (verif::tryFrom($input->verifikasi_status) == verif::terverifikasi()) {
                             $tervalidasi++;
 

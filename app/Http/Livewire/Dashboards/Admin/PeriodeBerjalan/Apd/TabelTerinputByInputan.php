@@ -143,6 +143,9 @@ class TabelTerinputByInputan extends DataTableComponent
             Column::make("Id jenis", "id_jenis")
                 ->sortable()
                 ->hideIf(true),
+            Column::make("duplikat", "index_duplikat")
+                ->sortable()
+                ->hideIf(true),
             Column::make("Id apd", "id_apd")
                 ->sortable()
                 ->hideIf(true),
