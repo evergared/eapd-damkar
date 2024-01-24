@@ -9,6 +9,7 @@ use App\Models\Admin;
 use App\Models\ApdJenis;
 use App\Models\ApdList;
 use App\Models\InputApd;
+use App\Models\InputApdTemplate;
 use App\Models\Pegawai;
 use App\Models\Penempatan;
 use App\Models\PeriodeInputApd;
@@ -367,13 +368,11 @@ class ApdRekapController extends Controller
             if($id_wilayah != "semua")
             {
                 $list_pegawai = $list_pegawai->where('penempatan.id_wilayah',$id_wilayah);
-                error_log('hit1');
             }
 
             if($id_penempatan != "semua")
             {
                 $list_pegawai = $list_pegawai->where('pegawai.id_penempatan','like',$id_penempatan.'%');
-                error_log('hit2');
             }
             // return dd($list_pegawai->where('id_pegawai','01he9jdt87830ve0wj4yq214d5')->get());
             $list_pegawai = $list_pegawai->get()->toArray();
@@ -399,10 +398,38 @@ class ApdRekapController extends Controller
                     return false;
             });
 
-            // return dd($inputan_anggota);
+            $list_jabatan_unique = $list_pegawai->unique('id_jabatan');
 
-            // dapatkan list jenis apd apa saja yang telah diinput
-            $list_jenis_apd = $inputan_anggota->unique('id_jenis');
+            // dapatkan list jenis apd apa saja yang harus diinput
+            $list_jenis_apd = [];
+
+            foreach($list_jabatan_unique->id_jabatan as $jabatan)
+            {
+                $template = InputApdTemplate::where('id_jabatan',$jabatan)->first()->template;
+
+                foreach($template as $t)
+                {
+                    $index_duplikat = null;
+                    $id_jenis = $t['id_jenis'];
+                    if(array_key_exists('index_duplikat',$t))
+                    {
+                        $index_duplikat = $t['index_duplikat'];
+                    }
+
+                    if(array_search($t['id_jenis'],array_column($list_jenis_apd,'id_jenis')))
+                    {
+                        if(!is_null($index_duplikat))
+                        {
+                            $i = null;
+                            
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
             
             // pengulangan untuk ambil rangkuman data berdasarkan list jenis apd yang telah diambil
             foreach($list_jenis_apd as $apd)
@@ -439,5 +466,21 @@ class ApdRekapController extends Controller
             error_log('gagal membuat datatable rekap admin '.$e);
             return false;
         }
+    }
+
+    public function renameJenisDuplikat($id_jenis, string|array $opsi_apd)
+    {
+        $apd = null;
+
+        if(is_array($opsi_apd))
+            $apd = ApdList::where('id_apd',$opsi_apd[0])->first()->nama_apd;
+        else
+            $apd = ApdList::where('id_apd',$opsi_apd)->first()->nama_apd;
+
+        $nama = ApdJenis::where('id_jenis',$id_jenis)->first()->nama_jenis;
+
+        $nama = $nama ." (".$apd.")";
+
+        return $nama;
     }
 }
