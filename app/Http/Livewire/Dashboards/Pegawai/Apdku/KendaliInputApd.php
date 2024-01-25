@@ -321,7 +321,11 @@ class KendaliInputApd extends Component
                     $this->data_diupdate_reupload = $reupload['data_diupdate'];
                 }
 
-                
+                $apd = ApdList::find($this->id_apd_user);
+                if (!is_null($apd)) {
+                    $this->show_input_no_seri = $apd->input_no_seri;
+                    $this->show_input_no_seri_strict = $apd->strict_no_seri;
+                }
 
                 $this->refreshDropdownListApd();
                 $this->refreshGambarTemplate();
