@@ -1350,10 +1350,6 @@ class ApdDataController extends Controller
                 ->where('id_jenis', '=', $id_jenis)
                 ->where('id_periode', '=', $id_periode);
 
-                error_log('pegawai '.$id_pegawai);
-                error_log('jenis '.$id_jenis);
-                error_log('periode '.$id_periode);
-                error_log('index duplikat'.$index_duplikat.'|');
             
             if(!is_null($index_duplikat))
             {

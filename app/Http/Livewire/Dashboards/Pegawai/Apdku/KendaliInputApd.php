@@ -14,8 +14,12 @@ use App\Models\InputApdReupload;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\AutoEncoder;
 use Throwable;
 
 class KendaliInputApd extends Component
@@ -251,7 +255,6 @@ class KendaliInputApd extends Component
             $this->show_data_perubahan_pending = false;
 
 
-            error_log($this->template_index_duplikat);
 
             // bangun data template apd untuk modal
             $list_apd_terkait = $adc->muatOpsiApd($this->template_id_jenis_apd, $this->template_index_duplikat);
@@ -386,7 +389,6 @@ class KendaliInputApd extends Component
             $string_gambar = $this->template_data_apd[array_search($this->id_apd_user, $this->template_data_apd, true)];
             // return dd($this->template_data_apd);
             // error_log(implode("|",$string_gambar));
-            error_log($this->id_apd_user);
 
             $this->template_gambar_apd = $adc->siapkanGambarTemplateBesertaPathnya($string_gambar['gambar_apd'], $this->template_id_jenis_apd, $this->id_apd_user);
         } catch (Throwable $e) {
@@ -524,14 +526,12 @@ class KendaliInputApd extends Component
 
                 $kondisi = StatusApd::tryFrom($this->kondisi_apd_user)->value;
                 $gambar = $this->prosesGambar();
-                error_log('hit ada');
             } else if ($this->status_keberadaan_apd_user == 'Hilang') {
                 $kondisi = StatusApd::hilang()->value;
             } else if ($this->status_keberadaan_apd_user == 'Belum Terima') {
                 $kondisi = StatusApd::belumTerima()->value;
             }
 
-            error_log("status keberadaan apd user saat diupdate : ".$this->status_keberadaan_apd_user);
 
             $inputan->id_apd = $this->id_apd_user;
             $inputan->size = $this->size_apd_user;
@@ -709,14 +709,14 @@ class KendaliInputApd extends Component
             }
 
 
-            $this->validate(
-                [
-                    'gambar_apd_user' => 'required'
-                ],
-                [
-                    'gambar_apd_user.required' => 'Harap upload gambar APD'
-                ]
-            );
+            // $this->validate(
+            //     [
+            //         'gambar_apd_user' => 'required'
+            //     ],
+            //     [
+            //         'gambar_apd_user.required' => 'Harap upload gambar APD'
+            //     ]
+            // );
         }
     }
 
@@ -725,6 +725,8 @@ class KendaliInputApd extends Component
         $fc = new FileController;
         $pic = new PeriodeInputController;
         $adc = new ApdDataController;
+
+        $manager = ImageManager::gd();
 
         $id_pegawai = Auth::user()->data->id_pegawai;
         $periode = $pic->ambilIdPeriodeInput();
@@ -751,10 +753,11 @@ class KendaliInputApd extends Component
 
                         $gbr_temp = $fc->prosesNamaFileApdUpload($id_pegawai, $this->id_apd_user, null, $i);
 
-                        $this->gambar_apd_user[$i]->storeAs(
-                            $fc->buatPathFileApdUpload($id_pegawai, $this->template_id_jenis_apd, $periode, $reupload),
-                            $gbr_temp
-                        );
+                        $path = $fc->buatPathFileApdUpload($id_pegawai, $this->template_id_jenis_apd, $periode, $reupload);
+                        $uploaded = $this->gambar_apd_user[$i];
+                        
+                        $image = $manager->read($uploaded->getRealPath());
+                        $image->save(public_path('storage/'.$path.'/'.$gbr_temp),40);
 
                         array_push($list_gbr, $gbr_temp);
                     }
@@ -763,11 +766,13 @@ class KendaliInputApd extends Component
                 else {
 
                     $gbr_temp = $fc->prosesNamaFileApdUpload($id_pegawai, $this->id_apd_user, null, 0);
+                    $path = $fc->buatPathFileApdUpload($id_pegawai, $this->template_id_jenis_apd, $periode, $reupload);
 
-                    $this->gambar_apd_user[0]->storeAs(
-                        $fc->buatPathFileApdUpload($id_pegawai, $this->template_id_jenis_apd, $periode, $reupload),
-                        $gbr_temp
-                    );
+                    $path = $fc->buatPathFileApdUpload($id_pegawai, $this->template_id_jenis_apd, $periode, $reupload);
+                    $uploaded = $this->gambar_apd_user[0];
+
+                    $image = $manager->read($uploaded->getRealPath());
+                    $image->save(public_path('storage/'.$path.'/'.$gbr_temp),40);
 
                     array_push($list_gbr, $gbr_temp);
                 }
