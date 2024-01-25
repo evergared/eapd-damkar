@@ -20,13 +20,13 @@
                 <img src="{{ (auth()->user()->data->profile_img ?? null )? asset('storage/img/avatar/user/'. auth()->user()->data->profile_img) : asset('storage/img/avatar/placeholder/avatar.jpg')}}"
                     class="img-circle elevation-2" alt="User Image">
             </div>
-            <div class="info">
+            <div class="info text-wrap">
                 <a class="d-block">{{ (auth()->user()->data->nama ?? null ) ? : 'Anonim' }}</a>
             </div>
         </div>
 
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="info">
+            <div class="info text-wrap">
                 <a class="d-block">
                     {{ (auth()->user()->data->jabatan->nama_jabatan ?? null) ? : 'Guest' }}
                 </a>
