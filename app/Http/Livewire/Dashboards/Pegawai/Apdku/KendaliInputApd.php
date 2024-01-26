@@ -13,6 +13,7 @@ use App\Models\InputApd;
 use App\Models\InputApdReupload;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
@@ -142,19 +143,18 @@ class KendaliInputApd extends Component
 
     public function updated($property)
     {
-        $this->validateOnly(
-            $property,
-            [
-                'gambar_apd_user.*' => ['image', 'size:256'], //5120 //256
-                'gambar_apd_user' => ['max:3'] //5120 //256
-            ],
-            [
-                'gambar_apd_user.*.image' => 'File harus berupa gambar.',
-                'gambar_apd_user.*.size' => 'Ukuran melebihi batas maksimal (5 Mb).',
-                // 'gambar_apd_user.image' => 'File harus berupa gambar.',
-                'gambar_apd_user.max' => 'Jumlah file terlalu banyak (maks :max).',
-                'gambar_apd_user.required' => 'Gambar belum dimasukan.'
-            ]
+        $this->validateOnly($property,
+        [
+            'gambar_apd_user.*' => ['image', 'size:256'], //5120 //256
+            'gambar_apd_user' => ['max:3'] //5120 //256
+        ],
+        [
+            'gambar_apd_user.*.image' => 'File harus berupa gambar.',
+            'gambar_apd_user.*.size' => 'Ukuran melebihi batas maksimal (5 Mb).',
+            // 'gambar_apd_user.image' => 'File harus berupa gambar.',
+            'gambar_apd_user.max' => 'Jumlah file terlalu banyak (maks :max).',
+            'gambar_apd_user.required' => 'Gambar belum dimasukan.'
+        ]
         );
     }
     #endregion
@@ -757,7 +757,10 @@ class KendaliInputApd extends Component
                         $uploaded = $this->gambar_apd_user[$i];
                         
                         $image = $manager->read($uploaded->getRealPath());
-                        $image->save(public_path('storage/'.$path.'/'.$gbr_temp),40);
+                        $image->save(public_path('storage/'.$path.'/'.$gbr_temp),2);
+
+                        if(File::exists($uploaded->getRealPath()))
+                        File::delete($uploaded->getRealPath());
 
                         array_push($list_gbr, $gbr_temp);
                     }
@@ -772,7 +775,10 @@ class KendaliInputApd extends Component
                     $uploaded = $this->gambar_apd_user[0];
 
                     $image = $manager->read($uploaded->getRealPath());
-                    $image->save(public_path('storage/'.$path.'/'.$gbr_temp),40);
+                    $image->save(public_path('storage/'.$path.'/'.$gbr_temp),2);
+                    
+                    if(File::exists($uploaded->getRealPath()))
+                        File::delete($uploaded->getRealPath());
 
                     array_push($list_gbr, $gbr_temp);
                 }
