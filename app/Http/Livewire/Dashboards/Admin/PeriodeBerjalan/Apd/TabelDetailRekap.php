@@ -80,6 +80,8 @@ class TabelDetailRekap extends DataTableComponent
         $query = InputApd::where('id_inputan', 'saya lapar');
 
         if (!is_null($this->jenis_detail)) {
+
+            // query dasar
             $query = InputApd::query()
                 ->join('pegawai', 'input_apd.id_pegawai', '=', 'pegawai.id_pegawai')
                 ->join('jabatan', 'pegawai.id_jabatan', '=', 'jabatan.id_jabatan')
@@ -87,10 +89,25 @@ class TabelDetailRekap extends DataTableComponent
                 ->join('periode_input_apd', 'input_apd.id_periode', '=', 'periode_input_apd.id_periode')
                 ->where('pegawai.aktif', true)
                 ->where('pegawai.kalkulasi', true)
-                ->where('pegawai.id_penempatan', 'like', $this->penempatan_detail . '%')
-                ->where('input_apd.id_jenis', $this->jenis_detail)
-                ->where('input_apd.kondisi', $this->kondisi_detail)
-                ->where('input_apd.verifikasi_status', '3')
+                ->where('pegawai.id_penempatan', $this->penempatan_detail)
+                ->where('input_apd.keterangan_jenis_apd_template', $this->jenis_detail);
+            
+            // ubah kondisi yang dicari
+            if($this->kondisi_detail == 'ada')
+                $query = $query->where(function($query){
+
+                        return $query->where('input_apd.kondisi', '!=', 'Belum Terima')
+                        ->where('input_apd.kondisi', '!=', 'Hilang');
+
+                    });
+
+            elseif($this->kondisi_detail == 'total')
+                $query = $query;
+            else
+                $query = $query->where('input_apd.kondisi', $this->kondisi_detail);
+                
+            $query = $query
+                ->where('input_apd.verifikasi_status', '3') // telah di verif
                 ->where('input_apd.id_periode', $this->id_periode_berjalan)
                 ->when($this->columnSearch['size'] ?? null, function ($query, $size) {
                     return $query->where('size', 'like', '%' . $size . '%');
