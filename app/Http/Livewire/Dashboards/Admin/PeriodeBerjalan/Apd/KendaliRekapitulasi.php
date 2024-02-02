@@ -152,12 +152,14 @@ class KendaliRekapitulasi extends Component
         if ($tipe_admin == "Admin Dinas" || $tipe_admin == "Admin Bidops" || $tipe_admin == "Admin Lab" || $tipe_admin == "Admin Pusdik") {
             $tipe_penempatan = 'Dinas ';
             $mengetahui = Pegawai::where('id_jabatan', 'KD01')->first();
-            $penandatangan = Auth::user()->data;
         } elseif ($tipe_admin == "Admin Sudin" || $tipe_admin == "Admin Sektor" || $tipe_admin == "Admin Subcc") {
-            $tipe_penempatan = 'Suku Dinas ';
-            $mengetahui = Pegawai::join('penempatan', 'pegawai.id_penempatan', '=', 'penempatan.id_penempatan')->where('id_jabatan', 'KSUD001')->where('penempatan.id_wilayah', Auth::user()->data->penempatan->id_wilayah)->first();
-            $penandatangan = Auth::user()->data;
+            $tipe_penempatan = 'Suku Dinas';
+            $id_kasudin='KSUD00'.Auth::user()->data->penempatan->id_wilayah;
+            $mengetahui = Pegawai::join('penempatan', 'pegawai.id_penempatan', '=', 'penempatan.id_penempatan')->where('id_jabatan', $id_kasudin)->where('penempatan.id_wilayah', Auth::user()->data->penempatan->id_wilayah)->first();
+            
         }
+        $penandatangan = Auth::user()->data;
+
         // error_log('test');
         $arc = new ApdRekapController;
         $rekap = $arc->bangunDataTabelRekapPenempatan($this->model_dropdown_wilayah,$this->model_dropdown_penempatan,null);
