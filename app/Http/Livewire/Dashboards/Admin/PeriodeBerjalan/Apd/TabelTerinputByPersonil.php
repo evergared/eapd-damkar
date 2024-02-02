@@ -29,6 +29,8 @@ class TabelTerinputByPersonil extends DataTableComponent
         'test'
     ];
 
+    public $feedback_pencarian = "";
+
     public
         $id_periode_berjalan = null,
         $nama_periode_berjalan = null;
@@ -42,7 +44,8 @@ class TabelTerinputByPersonil extends DataTableComponent
         $this->setRefreshVisible();
 
         $this->setConfigurableAreas([
-            'before-tools' => 'livewire.komponen.table-loading'
+            'before-tools' => 'livewire.komponen.table-loading',
+
         ]);
 
         $this->setTableAttributes([
@@ -69,29 +72,37 @@ class TabelTerinputByPersonil extends DataTableComponent
         
         if($this->penempatan_terpilih != '' || $this->wilayah_terpilih != '')
         {
-            error_log($this->wilayah_terpilih);
-            error_log($this->penempatan_terpilih);
+            try{
 
-            $pegawai =  Pegawai::query()
+                $pegawai =  Pegawai::query()
                         ->distinct()
-                        ->join('input_apd','input_apd.id_pegawai','=','pegawai.id_pegawai')
+                        // ->join('input_apd','input_apd.id_pegawai','=','pegawai.id_pegawai')
                         ->join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
                         ->where('pegawai.aktif',true)
                         ->where('pegawai.kalkulasi',true);
                 if($this->wilayah_terpilih != 'semua')
                 {
                     if($this->penempatan_terpilih != 'semua')
+                    {
+
                         $pegawai = $pegawai->where('pegawai.id_penempatan','like',$this->penempatan_terpilih.'%')
                                 ->where('penempatan.id_wilayah',$this->wilayah_terpilih);
+                    }
+                        
                 }
-            $pegawai = $pegawai
-                        // ->where('pegawai.id_penempatan','like',$this->penempatan_terpilih.'%')
-                        ->where('input_apd.id_periode',$this->id_periode_berjalan);
+                $pegawai = $pegawai;
+                // ->where('pegawai.id_penempatan','like',$this->penempatan_terpilih.'%')
+                // ->where('input_apd.id_periode',$this->id_periode_berjalan);
+
+            }
+            catch(Throwable $e)
+            {
+
+            }
+
+            
                         
         }
-        else
-            error_log('ga ke trigger');
-        
             
             return $pegawai;
     }
@@ -109,6 +120,11 @@ class TabelTerinputByPersonil extends DataTableComponent
             Column::make("id_jabatan")
                 ->sortable()
                 ->hideIf(true),
+            Column::make("NRK / ID PJLP", "nrk")
+                ->sortable()
+                ->searchable(function (Builder $query, $pencarian){
+                    $query->orWhere('nrk','like','%'.$pencarian.'%');
+                }),
             Column::make("Nama", "nama")
                 ->sortable()
                 ->searchable(function (Builder $query, $pencarian){
@@ -121,7 +137,7 @@ class TabelTerinputByPersonil extends DataTableComponent
                 ->searchable( function($query,$search){
                     $ids = Jabatan::where('nama_jabatan','like','%'.$search.'%')->get()->pluck('id_jabatan');
                     foreach($ids as $id)
-                        $query->orWhere('id_jabatan',$id);
+                        $query->orWhere('pegawai.id_jabatan',$id);
                 })
                 ->sortable(),
             Column::make("Penempatan", "id_penempatan")
@@ -131,7 +147,7 @@ class TabelTerinputByPersonil extends DataTableComponent
                 ->searchable(function($query,$search){
                     $ids = Penempatan::where('nama_penempatan','like','%'.$search.'%')->get()->pluck('id_penempatan');
                     foreach($ids as $id)
-                        $query->orWhere('id_penempatan',$id);
+                        $query->orWhere('pegawai.id_penempatan',$id);
                 })
                 ->sortable(),
             Column::make("Terinput")
@@ -225,11 +241,6 @@ class TabelTerinputByPersonil extends DataTableComponent
         error_log('ganti penempatan ke trigger');
         
         $this->emitSelf('refreshDatatable');
-    }
-
-    public function test($args)
-    {
-        error_log('kena');
     }
 
     public function mount()
