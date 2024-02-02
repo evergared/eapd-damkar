@@ -160,7 +160,7 @@ class KendaliRekapitulasi extends Component
         }
         // error_log('test');
         $arc = new ApdRekapController;
-        $rekap = $arc->bangunDataTabelRekapPenempatan($this->model_dropdown_wilayah,$this->model_dropdown_penempatan,);
+        $rekap = $arc->bangunDataTabelRekapPenempatan($this->model_dropdown_wilayah,$this->model_dropdown_penempatan,null);
 
 
         // return dd($tableyo);
@@ -225,10 +225,16 @@ class KendaliRekapitulasi extends Component
         try {
 
             $jenis = $param[0];
-            $kondisi = StatusApd::tryFrom($param[1]);
+
+            $status = $param[1];
+
+            if($status == 'ada' || $status == 'total')
+                $kondisi = $status;
+            else
+                $kondisi = StatusApd::tryFrom($status);
 
             if (is_null($kondisi))
-                throw new Exception('kondisi ' . $param[1] . ' tidak dapat ditemukan.');
+                throw new Exception('kondisi ' . $status . ' tidak dapat ditemukan.');
 
             $paket = [
                 'id_jenis' => $jenis,
