@@ -452,8 +452,10 @@ class KendaliInputApd extends Component
                 $kondisi = StatusApd::tryFrom($this->kondisi_apd_user)->value;
                 $gambar = $this->prosesGambar();
             } else if ($this->status_keberadaan_apd_user == 'Hilang') {
+                $gambar = null;
                 $kondisi = StatusApd::hilang()->value;
             } else if ($this->status_keberadaan_apd_user == 'Belum Terima') {
+                $gambar = null;
                 $kondisi = StatusApd::belumTerima()->value;
             }
 
@@ -528,8 +530,10 @@ class KendaliInputApd extends Component
                 $gambar = $this->prosesGambar();
             } else if ($this->status_keberadaan_apd_user == 'Hilang') {
                 $kondisi = StatusApd::hilang()->value;
+                $gambar = null;
             } else if ($this->status_keberadaan_apd_user == 'Belum Terima') {
                 $kondisi = StatusApd::belumTerima()->value;
+                $gambar = null;
             }
 
 
@@ -609,8 +613,10 @@ class KendaliInputApd extends Component
                 $kondisi = StatusApd::tryFrom($this->kondisi_apd_user)->value;
                 $gambar = $this->prosesGambar(true);
             } else if ($this->status_keberadaan_apd_user == 'Hilang') {
+                $gambar = null;
                 $kondisi = StatusApd::hilang()->value;
             } else if ($this->status_keberadaan_apd_user == 'Belum Terima') {
+                $gambar = null;
                 $kondisi = StatusApd::belumTerima()->value;
             }
 
@@ -707,16 +713,6 @@ class KendaliInputApd extends Component
                     ]
                 );
             }
-
-
-            // $this->validate(
-            //     [
-            //         'gambar_apd_user' => 'required'
-            //     ],
-            //     [
-            //         'gambar_apd_user.required' => 'Harap upload gambar APD'
-            //     ]
-            // );
         }
     }
 
