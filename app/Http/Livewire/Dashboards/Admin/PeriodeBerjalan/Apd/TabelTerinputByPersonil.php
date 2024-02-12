@@ -90,6 +90,11 @@ class TabelTerinputByPersonil extends DataTableComponent
                     }
                         
                 }
+                else
+                {
+                    if(Auth::user()->tipe != "Admin Dinas")
+                    $pegawai = $pegawai->where('penempatan.id_wilayah',$this->wilayah_terpilih);
+                }
                 $pegawai = $pegawai;
                 // ->where('pegawai.id_penempatan','like',$this->penempatan_terpilih.'%')
                 // ->where('input_apd.id_periode',$this->id_periode_berjalan);

@@ -13,6 +13,7 @@ use App\Models\InputApd;
 use App\Models\PeriodeInputApd;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 use Throwable;
 
@@ -104,6 +105,11 @@ class TabelTerinputByInputan extends DataTableComponent
                 if($this->penempatan_terpilih != 'semua')
                 $query = $query->where('pegawai.id_penempatan','like',$this->penempatan_terpilih.'%')
                             ->where('penempatan.id_wilayah',$this->wilayah_terpilih);
+            }
+            else
+            {
+                if(Auth::user()->tipe != "Admin Dinas")
+                    $query = $query->where('penempatan.id_wilayah',$this->wilayah_terpilih);
             }
                 
                 

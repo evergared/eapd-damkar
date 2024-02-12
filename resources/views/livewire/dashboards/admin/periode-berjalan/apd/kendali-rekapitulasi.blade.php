@@ -91,10 +91,10 @@
                                                 <a onclick="#" href="javascript:" wire:click="detailJumlah(['{{$item['id_jenis']}}','rusak berat'])">{{$item['rusak_berat']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="#" href="javascript:" wire:click="detailJumlah(['{{$item['id_jenis']}}','belum terima'])">{{$item['belum_terima']}}</a>
+                                                <a onclick="#" href="javascript:" wire:click="detailJumlah(['{{$item['id_jenis']}}','Belum Terima'])">{{$item['belum_terima']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a onclick="#" href="javascript:" wire:click="detailJumlah(['{{$item['id_jenis']}}','hilang'])">{{$item['hilang']}}</a>
+                                                <a onclick="#" href="javascript:" wire:click="detailJumlah(['{{$item['id_jenis']}}','Hilang'])">{{$item['hilang']}}</a>
                                             </td>
                                             <td class="text-center align-middle">
                                                 <a onclick="#" href="javascript:" wire:click="detailJumlah(['{{$item['id_jenis']}}','ada'])">{{$item['ada']}}</a>
