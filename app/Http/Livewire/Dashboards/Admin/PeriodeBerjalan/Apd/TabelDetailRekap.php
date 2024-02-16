@@ -294,9 +294,9 @@ class TabelDetailRekap extends DataTableComponent
     public function export()
     {
         $users = $this->getBuilder();
-        $print = $users->select(['pegawai.id_pegawai', 'pegawai.nrk', 'pegawai.nip', 'pegawai.nama', 'input_apd.kondisi', 'penempatan.nama_penempatan', 'jabatan.nama_jabatan', 'pegawai.id_jabatan']);
+        $print = $users->select(['pegawai.id_pegawai', 'pegawai.nrk', 'pegawai.nip', 'pegawai.nama', 'input_apd.keterangan_jenis_apd_template','input_apd.image', 'input_apd.kondisi', 'penempatan.nama_penempatan', 'jabatan.nama_jabatan', 'pegawai.id_jabatan']);
         // return dd($print);
-        return Excel::download(new DataRekap($print), 'users.xlsx');
+        return Excel::download(new DataRekap($print), 'Exported Data APD.xlsx');
     }
 
     #region bulk actions

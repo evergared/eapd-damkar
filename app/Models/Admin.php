@@ -35,7 +35,10 @@ class Admin extends Authenticatable
 
     public function data()
     {
-        return $this->belongsTo(Pegawai::class, 'id_pegawai', 'id_pegawai');
+        if(is_null($this->id_pegawai))
+            return $this->belongsTo(Pegawai::class, 'id_pegawai_plt', 'id_pegawai');
+        else
+            return $this->belongsTo(Pegawai::class, 'id_pegawai', 'id_pegawai');
     }
 
     public function plt()

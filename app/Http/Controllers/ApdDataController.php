@@ -695,8 +695,12 @@ class ApdDataController extends Controller
             if ($id_periode == null) {
                 $periode = PeriodeInputApd::where('aktif', true)->get()->first();
                 if (is_null($periode))
+                {
+                    error_log('tidak ada periode yang aktif');
                     return [];
+                }
                 $id_periode = $periode->id_periode;
+                error_log('periode : '.$periode->nama_periode);
             }
 
             // ambil template input apd dari database berdasarkan pivot table yang telah dibuat di model

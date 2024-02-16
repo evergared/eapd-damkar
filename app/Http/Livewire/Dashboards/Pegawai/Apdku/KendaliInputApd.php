@@ -459,7 +459,7 @@ class KendaliInputApd extends Component
                 $kondisi = StatusApd::belumTerima()->value;
             }
 
-            InputApd::create([
+            $input = InputApd::create([
                 'id_pegawai' => $id_pegawai,
                 'id_periode' => $periode,
                 'id_jenis' => $this->template_id_jenis_apd,
@@ -484,6 +484,15 @@ class KendaliInputApd extends Component
                 "subtitle" => "",
                 "body" => "Data inputan APD anda berhasil disimpan."
             ]);
+
+            $terinput = InputApd::where('id_pegawai',$id_pegawai)->where('id_periode',$periode)->where('keterangan_jenis_apd_template',$this->keterangan_jenis_apd_template)->get();
+
+            foreach($terinput as $t)
+            {
+                if($t->id_inputan != $input->id_inputan)
+                    InputApd::find($t->id_inputan)->delete();
+            }   
+
         } catch (Throwable $e) {
             $this->error_time_simpan_inputan = now();
             error_log("Kendali Input Apd @ Dashboard Apdku Pegawai Error (" . $this->error_time_simpan_inputan . "): Kesalahan saat menyimpan inputan " . $e);
@@ -531,9 +540,11 @@ class KendaliInputApd extends Component
             } else if ($this->status_keberadaan_apd_user == 'Hilang') {
                 $kondisi = StatusApd::hilang()->value;
                 $gambar = null;
+                $this->id_apd_user = null;
             } else if ($this->status_keberadaan_apd_user == 'Belum Terima') {
                 $kondisi = StatusApd::belumTerima()->value;
                 $gambar = null;
+                $this->id_apd_user = null;
             }
 
 
@@ -613,9 +624,11 @@ class KendaliInputApd extends Component
                 $kondisi = StatusApd::tryFrom($this->kondisi_apd_user)->value;
                 $gambar = $this->prosesGambar(true);
             } else if ($this->status_keberadaan_apd_user == 'Hilang') {
+                $this->id_apd_user = null;
                 $gambar = null;
                 $kondisi = StatusApd::hilang()->value;
             } else if ($this->status_keberadaan_apd_user == 'Belum Terima') {
+                $this->id_apd_user = null;
                 $gambar = null;
                 $kondisi = StatusApd::belumTerima()->value;
             }

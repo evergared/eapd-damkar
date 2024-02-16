@@ -26,7 +26,7 @@ class Page extends Component
 
     public function mount()
     {
-        $this->fetchJumlahInputan();
+        //$this->fetchJumlahInputan();
     }
 
     public function fetchJumlahInputan()

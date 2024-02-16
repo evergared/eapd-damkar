@@ -114,12 +114,7 @@ class KendaliProgress extends Component
                 $this->tampil_dropdown_wilayah = false;
                 $this->model_dropdown_wilayah = Auth::user()->data->penempatan->id_wilayah;
                 $fetch_penempatan = Penempatan::where('id_wilayah', Auth::user()->data->penempatan->id_wilayah)->get()->all();
-            } elseif ($tipe_admin == "Admin Subcc") {
-                $this->tampil_dropdown_wilayah = false;
-                $this->model_dropdown_wilayah = Auth::user()->data->penempatan->id_wilayah;
-                $this->opsi_dropdown_penempatan = [];
-                $fetch_penempatan = Penempatan::where('id_wilayah', Auth::user()->data->penempatan->id_wilayah)->get()->all();
-            } elseif ($tipe_admin == "Admin Pusdik") {
+            }  elseif ($tipe_admin == "Admin Pusdik") {
                 $this->tampil_dropdown_wilayah = false;
                 $this->model_dropdown_wilayah = Auth::user()->data->penempatan->id_wilayah;
                 $this->opsi_dropdown_penempatan = [];
@@ -133,12 +128,18 @@ class KendaliProgress extends Component
                 $this->tampil_dropdown_wilayah = false;
                 $this->model_dropdown_wilayah = Auth::user()->data->penempatan->id_wilayah;
                 $this->opsi_dropdown_penempatan = [];
-                $fetch_penempatan = Penempatan::where('id_wilayah', Auth::user()->data->penempatan->id_wilayah)->get()->all();
+                $penempatan = Auth::user()->data->id_penempatan;
+                $fetch_penempatan = Penempatan::where('id_penempatan', $penempatan)->orWhere('id_parent_penempatan',$penempatan)->get()->all();
             } elseif ($tipe_admin == "Admin Sektor") {
                 $this->tampil_dropdown_wilayah = false;
                 $this->model_dropdown_wilayah = Auth::user()->data->penempatan->id_wilayah;
                 $this->opsi_dropdown_penempatan = [];
                 $fetch_penempatan = Penempatan::where('id_penempatan', 'like', $target_penempatan . '%')->get()->all();
+            } elseif ($tipe_admin == "Admin Subcc") {
+                $this->tampil_dropdown_wilayah = false;
+                $this->model_dropdown_wilayah = Auth::user()->data->penempatan->id_wilayah;
+                $this->opsi_dropdown_penempatan = [];
+                $fetch_penempatan = Penempatan::where('id_penempatan', '=', $target_penempatan )->get()->all();
             } else {
                 throw new Exception("Tidak ada kondisi yang sesuai dengan tipe admin untuk akun dengan id " . Auth::user()->id);
             }
@@ -252,7 +253,6 @@ class KendaliProgress extends Component
 
     public function hitungRangkumanKeberadaan()
     {
-        error_log('keberadaan start');
 
         $this->error_time_keberadaan = null;
         $this->value_keberadaan_ada = 0;

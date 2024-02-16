@@ -88,6 +88,8 @@ class Page extends Component
 
     public function simpanPerubahan()
     {
+        error_log('simpan perubahan');
+
         $this->validate(
             ['password' => 'same:ulangiPassword', 'ulangiPassword' => 'same:password'],
             ['password' => 'Password yang dimasukan tidak sama', 'ulangiPassword' => 'Password yang dimasukan tidak sama']
@@ -126,5 +128,10 @@ class Page extends Component
         $this->email = $this->cacheEmail;
         $this->noTelp = $this->cacheNoTelp;
         $this->foto = $this->cacheFoto;
+    }
+
+    public function test()
+    {
+        error_log('biji');
     }
 }

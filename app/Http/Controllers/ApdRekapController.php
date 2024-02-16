@@ -56,6 +56,36 @@ class ApdRekapController extends Controller
         }
     }
 
+    public function buatDataDokumenDetailRekap($id_wilayah, $id_penempatan, $id_periode = null)
+    {
+        try
+        {
+            // query semua pegawai
+            $list_pegawai = Pegawai::
+            join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
+            ->where('pegawai.aktif',true)
+            ->where('pegawai.kalkulasi',true);
+            
+            if($id_wilayah != "semua")
+            {
+                $list_pegawai = $list_pegawai->where('penempatan.id_wilayah',$id_wilayah);
+            }
+
+            if($id_penempatan != "semua")
+            {
+                $list_pegawai = $list_pegawai->where('pegawai.id_penempatan','like',$id_penempatan.'%');
+            }
+
+            return $this->rekapDetail($list_pegawai,$id_periode);
+            
+        }
+        catch(Throwable $e)
+        {
+            error_log('gagal membuat datatable rekap detail admin '.$e);
+            return false;
+        }
+    }
+
     public function rekap(Builder $query_pegawai, $id_periode = null)
     {
         try{
@@ -135,8 +165,93 @@ class ApdRekapController extends Controller
         {
             // ambil waktu saat ini untuk dijadikan referensi 
             $time = now();
-            error_log("ApdRekapController error (".$time.") : Terjadi kesalahan saat merekap ".$e);
-            Log::error("ApdRekapController error (".$time.") : Terjadi kesalahan saat merekap ".$e);
+            error_log("ApdRekapController error (".$time.") : Terjadi kesalahan saat merekap @rekap ".$e);
+            Log::error("ApdRekapController error (".$time.") : Terjadi kesalahan saat merekap @rekap ".$e);
+            return false;
+        }
+    }
+
+    public function rekapDetail(Builder $query_pegawai, $id_periode = null)
+    {
+        try{
+
+            // pengecekan id periode
+            if(is_null($id_periode))
+            {
+                $pic = new PeriodeInputController;
+                $id_periode = $pic->ambilIdPeriodeInput();
+            }
+            else{
+
+                $cek = PeriodeInputApd::find($id_periode);
+
+                if(is_null($cek))
+                    throw new Exception("Id periode ".$id_periode."tidak ditemukan!");
+            }
+
+            // memuat queri pegawai yang diberikan
+            $list_pegawai = $query_pegawai->get()->toArray();
+
+            $data_rekap = [];
+
+            // ambil semua inputan yang sudah di verifikasi dari db
+            $semua_inputan = InputApd::where('id_periode',$id_periode)->where('verifikasi_status','3')->get();
+
+
+            // filter data tsb berdasarkan list pegawai
+            $inputan_anggota = $semua_inputan->filter(function($value,$key) use($list_pegawai){
+
+                $test = in_array($value['id_pegawai'],array_column($list_pegawai,'id_pegawai'));
+                if($test)
+                    return true;
+                else
+                    return false;
+            });
+
+            // ambil semua jenis apd yang sudah diinput pada periode ini
+            $list_jenis_apd = $inputan_anggota->unique('keterangan_jenis_apd_template');
+            
+            
+            // pengulangan untuk ambil rangkuman data berdasarkan list jenis apd yang telah diambil
+            foreach($list_jenis_apd as $apd)
+            {
+
+                // nama_jenis_apd adalah nama yang akan ditampilkan pada tabel rekap di view kendaliRekapitulasi
+                $nama_jenis_apd = $apd->keterangan_jenis_apd_template;
+                    
+                $baik = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->where('kondisi','=',StatusApd::baik()->value)->get()->toArray();
+                $rusak_ringan = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->where('kondisi','=',StatusApd::rusakRingan()->value)->get()->toArray();
+                $rusak_sedang = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->where('kondisi','=',StatusApd::rusakSedang()->value)->get()->toArray();
+                $rusak_berat = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->where('kondisi','=',StatusApd::rusakBerat()->value)->get()->toArray();
+                $belum_terima = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->where('kondisi','=',KeberadaanApd::belumTerima()->value)->get()->toArray();
+                $hilang = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->where('kondisi','=',KeberadaanApd::hilang()->value)->get()->toArray();
+                $ada = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->where('kondisi','!=',KeberadaanApd::hilang()->value)->where('kondisi','!=',KeberadaanApd::belumTerima()->value)->get()->toArray();
+                $total = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->get()->toArray();
+
+                // id_jenis untuk value wire:click pada view kendaliRekapitulasi, berfungsi sebagai referensi untuk TabelDetailRekap
+                array_push($data_rekap,[
+                    //"id_jenis" => $apd->id_jenis,
+                    "id_jenis" => $nama_jenis_apd,
+                    "jenis_apd" => $nama_jenis_apd,
+                    "baik" => $baik,
+                    "rusak_ringan" => $rusak_ringan,
+                    "rusak_sedang" => $rusak_sedang,
+                    "rusak_berat" => $rusak_berat,
+                    "belum_terima" => $belum_terima,
+                    "hilang" => $hilang,
+                    "ada" => $ada,
+                    "total" => $total,
+                ]);
+            }
+
+            return $data_rekap;
+        }
+        catch(Throwable $e)
+        {
+            // ambil waktu saat ini untuk dijadikan referensi 
+            $time = now();
+            error_log("ApdRekapController error (".$time.") : Terjadi kesalahan saat merekap @detaiRekap ".$e);
+            Log::error("ApdRekapController error (".$time.") : Terjadi kesalahan saat merekap @detaiRekap ".$e);
             return false;
         }
     }

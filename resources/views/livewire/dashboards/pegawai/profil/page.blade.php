@@ -8,7 +8,7 @@
             <div class="col-lg-12 mt-2">
                 <div class="card">
                     <div class="card-body">
-                        <form wire:submit.prevent='simpanPerubahan'>
+                        <form wire:submit.prevent='test'>
                             <h2>Ubah Data Profil</h2>
                             @if (session()->has('sukses'))
                             <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -78,8 +78,8 @@
                                         <label for="showPassword" class="form-check-label">Tampil Password</label>
                                     </div>
                                     <div class="form-group mt-4">
-                                        <button class="btn btn-primary btn-md" type="submit">Simpan Perubahan</button>
-                                        <button class="btn btn-secondary btn-md" type="button" wire:click='resetData'>Reset Input</button>
+                                        <button class="btn btn-primary btn-md" wire:click='test'>Simpan Perubahan</button>
+                                        <button class="btn btn-secondary btn-md" wire:click='resetData'>Reset Input</button>
                                     </div>
                                 </div>
                     

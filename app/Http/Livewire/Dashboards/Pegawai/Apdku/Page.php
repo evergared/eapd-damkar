@@ -28,7 +28,7 @@ class Page extends Component
         try {
             $adc = new ApdDataController;
 
-            $periode = $adc->ambilIdPeriodeInput(null, true);
+            $periode = $adc->ambilIdPeriodeInput(null, false);
 
             // jika pegawai masih aktif dan masuk dalam kalkulasi, maka buat daftar apd yang perlu diinput
             if(Auth::user()->data->aktif && Auth::user()->data->kalkulasi)
