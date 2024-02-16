@@ -94,7 +94,7 @@ class ApdRekapController extends Controller
             if(is_null($id_periode))
             {
                 $pic = new PeriodeInputController;
-                $id_periode = $pic->ambilIdPeriodeInput();
+                $id_periode = $pic->ambilIdPeriodeInput(null,true);
             }
             else{
 
@@ -179,7 +179,7 @@ class ApdRekapController extends Controller
             if(is_null($id_periode))
             {
                 $pic = new PeriodeInputController;
-                $id_periode = $pic->ambilIdPeriodeInput();
+                $id_periode = $pic->ambilIdPeriodeInput(null,true);
             }
             else{
 
@@ -208,39 +208,22 @@ class ApdRekapController extends Controller
                     return false;
             });
 
-            // ambil semua jenis apd yang sudah diinput pada periode ini
-            $list_jenis_apd = $inputan_anggota->unique('keterangan_jenis_apd_template');
             
             
-            // pengulangan untuk ambil rangkuman data berdasarkan list jenis apd yang telah diambil
-            foreach($list_jenis_apd as $apd)
+            // pengulangan untuk ambil rangkuman data berdasarkan pegawai
+            foreach($list_pegawai as $p)
             {
 
-                // nama_jenis_apd adalah nama yang akan ditampilkan pada tabel rekap di view kendaliRekapitulasi
-                $nama_jenis_apd = $apd->keterangan_jenis_apd_template;
                     
-                $baik = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->where('kondisi','=',StatusApd::baik()->value)->get()->toArray();
-                $rusak_ringan = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->where('kondisi','=',StatusApd::rusakRingan()->value)->get()->toArray();
-                $rusak_sedang = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->where('kondisi','=',StatusApd::rusakSedang()->value)->get()->toArray();
-                $rusak_berat = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->where('kondisi','=',StatusApd::rusakBerat()->value)->get()->toArray();
-                $belum_terima = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->where('kondisi','=',KeberadaanApd::belumTerima()->value)->get()->toArray();
-                $hilang = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->where('kondisi','=',KeberadaanApd::hilang()->value)->get()->toArray();
-                $ada = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->where('kondisi','!=',KeberadaanApd::hilang()->value)->where('kondisi','!=',KeberadaanApd::belumTerima()->value)->get()->toArray();
-                $total = $inputan_anggota->where('keterangan_jenis_apd_template','=',$nama_jenis_apd)->get()->toArray();
+                $belum_terima = $inputan_anggota->where('id_pegawai','=',$p['id_pegawai'])->where('kondisi','=',KeberadaanApd::belumTerima()->value)->toArray();
+                $ada = $inputan_anggota->where('id_pegawai','=',$p['id_pegawai'])->where('kondisi','!=',KeberadaanApd::hilang()->value)->where('kondisi','!=',KeberadaanApd::belumTerima()->value)->toArray();
 
-                // id_jenis untuk value wire:click pada view kendaliRekapitulasi, berfungsi sebagai referensi untuk TabelDetailRekap
                 array_push($data_rekap,[
-                    //"id_jenis" => $apd->id_jenis,
-                    "id_jenis" => $nama_jenis_apd,
-                    "jenis_apd" => $nama_jenis_apd,
-                    "baik" => $baik,
-                    "rusak_ringan" => $rusak_ringan,
-                    "rusak_sedang" => $rusak_sedang,
-                    "rusak_berat" => $rusak_berat,
+                    "nama" => $p['nama'],
+                    "nrk" => $p['nrk'],
+                    "penempatan" => ($tempat = Penempatan::find($p['id_penempatan']) ?? null)? $tempat->nama_penempatan : '-' ,
                     "belum_terima" => $belum_terima,
-                    "hilang" => $hilang,
                     "ada" => $ada,
-                    "total" => $total,
                 ]);
             }
 
