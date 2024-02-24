@@ -119,7 +119,7 @@ class DataRekap implements FromArray, WithColumnFormatting,WithHeadings,ShouldAu
         ->setVertical(Alignment::VERTICAL_CENTER)
         ->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-        // gabungkan baris 4 untuk timestamp
+        // gabungkan baris ke4 untuk timestamp
         $sheet->mergeCells("A4:D4");
 
 
@@ -150,6 +150,7 @@ class DataRekap implements FromArray, WithColumnFormatting,WithHeadings,ShouldAu
             'alignment'=>['vertical'=>'center']
         ];
 
+        // pengaturan untuk isi tabel
         $content = [
             'alignment'=>['vertical'=>'center'],
             
@@ -162,7 +163,6 @@ class DataRekap implements FromArray, WithColumnFormatting,WithHeadings,ShouldAu
         $sheet->getStyle('A'.$this->start.':I'.$this->start)->applyFromArray($heading,false);
         $sheet->getStyle('A'.$this->start.':I'.($this->start+count($this->kueri)))->applyFromArray($border,false);
         $sheet->getStyle('A'.($this->start+1).':I'.($this->start+count($this->kueri)+1))->applyFromArray($content,false);
-        $sheet->getStyle('A'.($this->start+1).':I'.($this->start+count($this->kueri)+1));
 
         // untuk penyesuaian height row terhadap height gambar
         $row_index = $this->start+1;
