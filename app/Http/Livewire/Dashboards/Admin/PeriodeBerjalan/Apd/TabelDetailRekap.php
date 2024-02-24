@@ -294,8 +294,16 @@ class TabelDetailRekap extends DataTableComponent
     public function export()
     {
         $users = $this->getBuilder();
-        // return dd($print);
-        return Excel::download(new DataRekap($users), 'Exported Data APD.xlsx');
+
+
+        if($this->kondisi_detail == 'ada')
+            $c = " Dengan Status Keberadaan ADA";
+        elseif($this->kondisi_detail == 'total')
+            $c = " Keseluruhan";
+        else
+            $c = " Dengan Status ".StatusApd::tryFrom($this->kondisi_detail)->label;
+
+        return Excel::download(new DataRekap($users,"Laporan Data APD ".$this->jenis_detail.$c), 'Exported Data APD.xlsx');
     }
 
     #region bulk actions
