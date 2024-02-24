@@ -5,7 +5,7 @@ namespace App\Http\Livewire\Dashboards\Admin\PeriodeBerjalan\Apd;
 use App\Enum\StatusApd;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Enum\VerifikasiApd;
-use App\Http\Controllers\Export\DataRekap;
+use App\Http\Controllers\Export\XlsxTabelDetailRekap;
 use App\Http\Controllers\ApdDataController;
 use App\Http\Controllers\PeriodeInputController;
 use App\Http\Controllers\StatusDisplayController;
@@ -303,7 +303,7 @@ class TabelDetailRekap extends DataTableComponent
         else
             $c = " Dengan Status ".StatusApd::tryFrom($this->kondisi_detail)->label;
 
-        return Excel::download(new DataRekap($users,"Laporan Data APD ".$this->jenis_detail.$c), 'Exported Data APD.xlsx');
+        return Excel::download(new XlsxTabelDetailRekap($users,"Laporan Data APD ".$this->jenis_detail.$c), 'Exported Data APD.xlsx');
     }
 
     #region bulk actions

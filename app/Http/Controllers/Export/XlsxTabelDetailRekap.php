@@ -22,7 +22,7 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class DataRekap implements FromArray, WithColumnFormatting,WithHeadings,ShouldAutoSize,WithStyles,WithDrawings
+class XlsxTabelDetailRekap implements FromArray, WithColumnFormatting,WithHeadings,ShouldAutoSize,WithStyles,WithDrawings
 {
     use Exportable;
 
