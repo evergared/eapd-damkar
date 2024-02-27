@@ -238,6 +238,13 @@ class KendaliRekapitulasi extends Component
             if (is_null($kondisi))
                 throw new Exception('kondisi ' . $status . ' tidak dapat ditemukan.');
 
+            if(!$this->tampil_dropdown_penempatan && $this->model_dropdown_wilayah == "semua")
+                $paket = [
+                    'id_jenis' => $jenis,
+                    'enum_kondisi' => $kondisi,
+                    'penempatan' => "semua"
+                ];
+            else
             $paket = [
                 'id_jenis' => $jenis,
                 'enum_kondisi' => $kondisi,

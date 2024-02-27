@@ -89,8 +89,10 @@ class TabelDetailRekap extends DataTableComponent
                 ->join('periode_input_apd', 'input_apd.id_periode', '=', 'periode_input_apd.id_periode')
                 ->where('pegawai.aktif', true)
                 ->where('pegawai.kalkulasi', true)
-                ->where('pegawai.id_penempatan', $this->penempatan_detail)
                 ->where('input_apd.keterangan_jenis_apd_template', $this->jenis_detail);
+
+                if($this->penempatan_detail != "semua")
+                    $query = $query->where('pegawai.id_penempatan', $this->penempatan_detail);
             
             // ubah kondisi yang dicari
             if($this->kondisi_detail == 'ada')

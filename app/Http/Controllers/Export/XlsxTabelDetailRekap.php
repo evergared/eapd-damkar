@@ -49,7 +49,7 @@ class XlsxTabelDetailRekap implements FromArray, WithColumnFormatting,WithHeadin
             $jenis = $q->keterangan_jenis_apd_template;
             $path = public_path('storage/'.$fc::$apdUploadBasePath .'/' . $q->image);
 
-            if(File::exists($path))
+            if(File::exists($path) && !File::isDirectory($path))
             {
                 $gambar = new Drawing();
                 $gambar->setName($jenis.' '.$nama);
