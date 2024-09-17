@@ -19,10 +19,10 @@
         "vite": "^3.0.4"
     },
     "dependencies": {
-        "admin-lte": "3.2",
+        "admin-lte": "^4.0.0-beta1",
         "bootstrap4": "npm:bootstrap@^4.6.1",
         "jquery": "^3.7.1",
         "moment": "^2.29.4",
-        "sweetalert2": "^11.10.1"
+        "sweetalert2": "^11.6.13"
     }
 }

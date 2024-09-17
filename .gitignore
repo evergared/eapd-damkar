@@ -5,6 +5,7 @@ vendor/laravel/framework/src/Illuminate/Validation/Rules/!Password.php
 /public/hot
 /public/storage
 /storage/*.key
+.env
 .env.backup
 .env.production
 .phpunit.result.cache

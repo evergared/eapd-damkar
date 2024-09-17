@@ -23,6 +23,7 @@ return new class extends Migration
                 $t->string('kondisi')->nullable();
                 $t->longText('image')->nullable();
                 $t->text('komentar_pengupload')->nullable();
+                $t->string('verifikasi_status')->nullable();
                 $t->string('data_diupdate')->nullable();
                 $t->boolean('terima')->default(false);
                 $t->boolean('selesai')->default(false);

@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Sanctum\HasApiTokens;
 
 class Pegawai extends Model
 {
     use HasUlids;
     use SoftDeletes;
+    use HasApiTokens;
 
     protected   $table = 'pegawai',
                 $primaryKey = 'id_pegawai';

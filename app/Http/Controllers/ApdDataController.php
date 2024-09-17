@@ -6,6 +6,7 @@ use App\Enum\KeberadaanApd;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use App\Models\ApdList;
 use App\Models\InputApdTemplate;
 use App\Models\Jabatan;
@@ -25,6 +26,7 @@ use Carbon\Carbon;
 use Error;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 /**
@@ -272,11 +274,11 @@ class ApdDataController extends Controller
         }
     }
 
-    public function muatSatuInputanReupload($id_inputan)
+    public function muatSatuInputanReupload($id_reupload)
     {
         try {
 
-            $reupload = InputApdReupload::where('id_inputan', $id_inputan)->first();
+            $reupload = InputApdReupload::where('id_reupload', $id_reupload)->first();
 
             if (!is_null($reupload)) {
                 $kondisi = status::tryFrom($reupload->kondisi);
@@ -290,8 +292,13 @@ class ApdDataController extends Controller
                     $kondisi_warna = $sdc->ubahKondisiApdKeWarnaBootstrap($kondisi);
                 }
 
-                $inputan = InputApd::where('id_inputan', $id_inputan)->first();
-                $apd = ApdList::where('id_apd', $inputan->id_apd)->first();
+                $verifikasi_status = "";
+                $verifikasi_label = "";
+                $verifikasi_warna = "";
+                $this->ekstrakStatusVerifikasi(verif::tryFrom($reupload->verifikasi_status)->value, $verifikasi_label, $verifikasi_status);
+                $verifikasi_warna = $sdc->ubahVerifikasiApdKeWarnaBootstrap($verifikasi_status);
+
+                $apd = $reupload->inputan->apd;
                 if (!is_null($apd))
                     $nama_apd = $apd->nama_apd;
 
@@ -304,8 +311,11 @@ class ApdDataController extends Controller
                     'kondisi_enum' => $kondisi,
                     'kondisi_label' => $kondisi_label,
                     "kondisi_warna" => $kondisi_warna,
+                    'verifikasi_status' => $verifikasi_status,
+                    'verifikasi_warna' => $verifikasi_warna,
+                    'verifikasi_label' => $verifikasi_label,
                     "no_seri" => $reupload->no_seri,
-                    "image" => $this->siapkanGambarInputanBesertaPathnya($reupload->image, $inputan->id_pegawai, $inputan->id_jenis, $inputan->id_periode, true),
+                    "image" => $this->siapkanGambarInputanBesertaPathnya($reupload->image, $reupload->inputan->id_pegawai, $reupload->inputan->id_jenis, $reupload->inputan->id_periode, true),
                     "komentar_pengupload" => $reupload->komentar_pengupload,
                     "data_diupdate" => $reupload->data_diupdate
                 ];
@@ -696,11 +706,9 @@ class ApdDataController extends Controller
                 $periode = PeriodeInputApd::where('aktif', true)->get()->first();
                 if (is_null($periode))
                 {
-                    error_log('tidak ada periode yang aktif');
                     return [];
                 }
                 $id_periode = $periode->id_periode;
-                error_log('periode : '.$periode->nama_periode);
             }
 
             // ambil template input apd dari database berdasarkan pivot table yang telah dibuat di model
@@ -1452,6 +1460,92 @@ class ApdDataController extends Controller
             $time = now();
             error_log('Apd Data Controller error (' . $time . ') : kesalahan saat admin verifikasi inputan ' . $e);
             Log::error('Apd Data Controller error (' . $time . ') : kesalahan saat admin verifikasi inputan ' . $e);
+            return false;
+        }
+    }
+
+    public function adminVerifikasiInputanReupload($id_reupload, $komentar = '', $id_admin = null) : bool
+    {
+        try{
+
+            if (is_null($id_admin))
+                $admin = Auth::user();
+            else
+                $admin = Admin::find($id_admin);
+
+            if (is_null($admin))
+                throw new Exception("Admin tidak dapat ditemukan");
+
+            $reupload = InputApdReupload::where('id_reupload',$id_reupload)->where('selesai',null)->first();
+
+            if (is_null($reupload))
+                throw new Exception('Tidak ditemukan inputan dengan id ' . $id_reupload);
+
+            $time = now();
+
+            $verifikator = '';
+            $jabatan = '';
+
+            if (!is_null($admin->id_pegawai) || !is_null($admin->id_pegawai_plt)) {
+                $verifikator = (!is_null($admin->id_pegawai_plt)) ? $admin->plt->nama : $admin->data->nama;
+                $jabatan = (!is_null($admin->id_pegawai_plt)) ? $admin->plt->jabatan->nama_jabatan : $admin->data->jabatan->nama_jabatan;
+            }
+
+            //cari inputan
+            $inputan = InputApd::find($reupload->id_inputan);
+
+            $inputan->id_apd = $reupload->id_apd;
+            $inputan->size = $reupload->size;
+            $inputan->no_seri = $reupload->no_seri;
+            $inputan->kondisi = $reupload->kondisi;
+            $inputan->komentar_pengupload = $reupload->komentar_pengupload;
+            $inputan->data_diupdate = $time;
+            $inputan->id_apd = $reupload->id_apd;
+            $inputan->data_diupdate = $reupload->terima;
+            $inputan->verifikasi_diupdate = $time;
+            $inputan->verifikasi_oleh = $verifikator;
+            $inputan->jabatan_verifikator = $jabatan;
+            $inputan->komentar_verifikator = $komentar;
+            $inputan->verifikasi_status = verif::terverikasi()->value;
+
+            if(!is_null($reupload->image))
+            {
+                $fc = new FileController;
+                // hapus gambar inputan sebelumnya
+                $gambar_inputan = explode("||",$inputan->image);
+                $path = $fc->buatPathFileApdUpload($inputan->id_pegawai,$inputan->id_jenis,$inputan->id_periode);
+                $path_reupload = $fc->buatPathFileApdUpload($inputan->id_pegawai,$inputan->id_jenis,$inputan->id_periode,true);
+
+                foreach($gambar_inputan as $gbr)
+                {
+                    File::delete(public_path('storage/'.$path.'/'.$gbr));
+                }
+
+                // masukan gambar dari folder reupload
+                $gambar_reupload = explode("||",$reupload->image);
+
+                foreach($gambar_reupload as $gbr)
+                {
+                    Storage::move($path_reupload.'/'.$gbr, $path.'/'.$gbr,);
+                }
+
+                $inputan->image = $reupload->image;
+                
+            }
+            
+            $inputan->save();
+            $reupload->selesai = $time;
+            $reupload->status_verifikasi = Verif::terverifikasi()->value;
+            $reupload->save();
+
+            return true;
+
+        }
+        catch(Throwable $e)
+        {
+            $time = now();
+            error_log('Apd Data Controller error (' . $time . ') : kesalahan saat admin verifikasi inputan reupload ' . $e);
+            Log::error('Apd Data Controller error (' . $time . ') : kesalahan saat admin verifikasi inputan reupload ' . $e);
             return false;
         }
     }
