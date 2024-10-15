@@ -330,6 +330,87 @@ class ApdDataController extends Controller
 
     #region Method hitung capaian inputan
 
+    /**
+     * Hanya untuk ambil data yang nantinya data tsb akan dihitung oleh JS
+     */
+    public function kueriCapaianInputPegawaiSektoralUntukJS($id_periode = null, $id_penempatan = null, $id_wilayah = null)
+    {
+        try{
+
+            if ($id_periode == null)
+                $id_periode = PeriodeInputApd::where('aktif', true)->get()->first()->id_periode;
+
+            if($id_periode == null)
+                return response()->json([
+                    "status" => false,
+                    "message" => "Saat ini sedang tidak ada periode inputan APD.",
+                ]);
+
+            // fetch pegawai dengan id penempatan yang sama
+            $list_pegawai = Pegawai::query()
+                            ->join('penempatan','pegawai.id_penempatan','=','penempatan.id_penempatan')
+                            ->where('pegawai.aktif',true)
+                            ->where('pegawai.kalkulasi',true);
+
+            if(!is_null($id_penempatan))
+                $list_pegawai = $list_pegawai->where('pegawai.id_penempatan','like',$id_penempatan.'%');
+
+            if(!is_null($id_wilayah) && $id_wilayah != "semua")
+                $list_pegawai = $list_pegawai->where('penempatan.id_wilayah',$id_wilayah);
+
+            // fetch semua jabatan dari pegawai tsb untuk mengambil template
+            $list_jabatan = $list_pegawai->distinct('pegawai.id_jabatan')->pluck('pegawai.id_jabatan');
+
+            // untuk pegawai hanya ambil id nya saja untuk kalkulasi
+            $pegawais = $list_pegawai->pluck('pegawai.id_pegawai');
+            // $pegawais = $list_pegawai->pluck('pegawai.id_pegawai');
+
+            // fetch template terkait untuk di gunakan saat kalkulasi
+            $list_template = [];
+            foreach($list_jabatan as $j)
+            {
+                $list_template[] = [
+                    "jabatan" => $j,
+                    "template"=>$this->muatListInputApdDariTemplate($id_periode,$j)
+                ];
+            }
+
+            $list_inputan = InputApd::where('id_periode',$id_periode)
+                            ->whereIn('id_pegawai',$pegawais)
+                            ->get([
+                                'id_pegawai as pegawai',
+                                'id_jenis as jenis',
+                                'id_apd as apd',
+                                'verifikasi_status as verifikasi',
+                                'keterangan_jenis_apd_template as nama_jenis',
+                                'index_duplikat',
+                                'kondisi'
+                            ])
+                            ->toArray();
+
+            $list_pegawai = $list_pegawai->get(['pegawai.id_pegawai as id','pegawai.id_jabatan as jabatan'])->toArray();
+            
+            // return json agar bisa di tembak langsung oleh livewire component dan digunakan oleh js
+            return response()->json([
+                "status" => true,
+                "pegawai" => $list_pegawai,
+                "template" => $list_template,
+                "inputan" => $list_inputan,
+            ]);
+                                        
+
+        }
+        catch(Throwable $e)
+        {
+            error_log($e);
+            return response()->json([
+                "status" => false,
+                "message" => "Kesalahan saat memuat data dari database",
+                "error" => $e
+            ]);
+        }
+    }
+
     public function hitungCapaianInputPegawai($id_pegawai, int|array &$maks, int|array &$capaian, $id_periode = null, $target_verifikasi = 0)
     {
         $pegawai = Pegawai::find($id_pegawai);
@@ -1365,7 +1446,6 @@ class ApdDataController extends Controller
             
             if(!is_null($index_duplikat))
             {
-                error_log('cek duplikat ter trigger');
                 $input = $input->where('index_duplikat', $index_duplikat);
 
             }

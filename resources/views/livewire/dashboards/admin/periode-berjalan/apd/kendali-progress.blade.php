@@ -38,52 +38,38 @@
         
         
     </div>
-    {{-- loading dropdown start --}}
-    <div class="row" wire:loading wire:target='changeDropdownWilayah,changeDropdownPenempatan'>
-        <div class="spinner-grow text-info" role="status" >
+
+    <div class="row" wire:loading='hitungCapaian'>
+        <div class="spinner-border text-info" role="status" >
             <span class="sr-only">Memuat...</span>
-        </div><span class="mx-2 text-info">Memuat Data ......</span>
+        </div><span class="mx-2 text-info">Memuat data dari server . . .</span>
     </div>
-    <div class="row" wire:loading wire:target='kueriPegawai'>
-        <div class="spinner-grow text-info" role="status" >
-            <span class="sr-only">Memuat...</span>
-        </div><span class="mx-2 text-info">Melakukan kueri pegawai ......</span>
-    </div>
-    <div class="row" wire:loading wire:target='hitungCapaian'>
-        <div class="spinner-grow text-info" role="status" >
-            <span class="sr-only">Memuat...</span>
-        </div><span class="mx-2 text-info">Menghitung Capaian.....</span>
-    </div>
-    <div class="row" wire:loading wire:target='hitungRangkumanKeberadaan'>
-        <div class="spinner-grow text-info" role="status" >
-            <span class="sr-only">Memuat...</span>
-        </div><span class="mx-2 text-info">Merangkum Keberadaan APD.....</span>
-    </div>
-    <div class="row" wire:loading wire:target='hitungRangkumanKerusakan'>
-        <div class="spinner-grow text-info" role="status" >
-            <span class="sr-only">Memuat...</span>
-        </div><span class="mx-2 text-info">Merangkum Kerusakan APD.....</span>
-    </div>
-    {{-- loading dropdown end --}}
+
     @if ($model_dropdown_penempatan || $model_dropdown_wilayah == "semua")
         <div class="row">
             <h4>Rangkuman Inputan</h4>
         </div>
-        @if (!is_null($error_time_capaian))
-        <div class="row text-danger">
-            <strong>Terjadi kesalahan saat menghitung capaian.</strong>
+        {{-- rangkuman progress --}}
+        <div class="row" id="progress-basic">
+            <div class="jumbotron text-center">
+                <strong id="progress-basic-text">Silahkan pilih penempatan terlebih dahulu</strong>
+            </div>
         </div>
-        @endif
-        <div class="row">
+        <div class="row" id="progress-spinner" style="display:none;">
+            <div class="spinner-grow text-info" role="status" >
+                <span class="sr-only">Memuat...</span>
+            </div><span class="mx-2 text-info" id="progress-spinner-text">Memuat Data ......</span>
+        </div>
+        <div class="row" id="progress-tampil" style="display:none;">
             <div class="col">
                 <div class="form-group">
                     <label>Inputan </label>
                     <a href="#"><div class="progress progress-sm">
-                    <div class="progress-bar bg-green" role="progressbar" aria-valuenow="{{$value_terinput_capaian}}" aria-valuemin="0" aria-valuemax="{{$value_max_capaian}}" style="width: {{($value_terinput_capaian > 0 && $value_max_capaian > 0)? round(($value_terinput_capaian/$value_max_capaian)*100,2) : 0}}%">
+                    <div class="progress-bar bg-green" id="progress-bar-inputan" role="progressbar" aria-valuemin="0">
                     </div>
                     </div></a>
                     <small>
-                        {{($value_terinput_capaian > 0 && $value_max_capaian > 0)? round(($value_terinput_capaian/$value_max_capaian)*100,2) : 0}}% Tercapai
+                        <span id="progress-bar-inputan-val"></span>% Tercapai
                     </small>
                 </div>
             </div>
@@ -91,15 +77,16 @@
                 <div class="form-group">
                     <label>Validasi</label>
                     <a href="#"><div class="progress progress-sm">
-                        <div class="progress-bar bg-info" role="progressbar" aria-valuenow="{{$value_terverif_capaian}}" aria-valuemin="0" aria-valuemax="{{$value_max_capaian}}" style="width: {{($value_terverif_capaian > 0 && $value_max_capaian > 0)? round(($value_terverif_capaian/$value_max_capaian)*100,2) : 0}}%">
+                        <div class="progress-bar bg-info" role="progressbar" id="progress-bar-validasi" aria-valuemin="0">
                         </div>
                     </div></a>
                     <small>
-                        {{($value_terverif_capaian > 0 && $value_max_capaian > 0)? round(($value_terverif_capaian/$value_max_capaian)*100,2) : 0}}% Tercapai
+                        <span id="progress-bar-validasi-val"></span>% Tercapai
                     </small>
                 </div>
             </div>
         </div>
+        {{-- Rangkuman Keberadaan --}}
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-info">
@@ -114,19 +101,23 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        @if ($error_time_keberadaan)
-                            <div class="row text-danger">
-                                <strong>Terjadi kesalahan saat menghitung rangkuman.</strong>
+                        <div class="row" id="keberadaan-basic" style="display : block;">
+                            <div class="jumbotron text-center">
+                                <strong id="keberadaan-basic-text">Silahkan pilih penempatan terlebih dahulu.</strong>
                             </div>
-                        @endif
-                        
-                        <div class="row">
+                        </div>
+                        <div class="row" id="keberadaan-spinner" style="display:none;">
+                            <div class="spinner-grow text-info" role="status" >
+                                <span class="sr-only">Memuat...</span>
+                            </div><span class="mx-2 text-info" id="keberadaan-spinner-text">Memuat Data ......</span>
+                        </div>
+                        <div class="row" id="keberadaan-tampil" style="display: none;">
                             <div class="col">
                                 <div class="info-box">
                                     <span class="info-box-icon bg-success"><i class="fas fa-check-double"></i></span>
                                     <div class="info-box-content">
                                         <span class="info-box-text">Ada</span>
-                                        <span class="info-box-number">{{$value_keberadaan_ada}}</span>
+                                        <span class="info-box-number" id="keberadaan-val-ada"></span>
                                     </div>
                                 </div>
                             </div>
@@ -135,7 +126,7 @@
                                     <span class="info-box-icon bg-warning"><i class="fas fa-box-open"></i></span>
                                     <div class="info-box-content">
                                         <span class="info-box-text">Belum Dapat</span>
-                                        <span class="info-box-number">{{$value_keberadaan_belum}}</span>
+                                        <span class="info-box-number" id="keberadaan-val-belum"></span>
                                     </div>
                                 </div>
                             </div>
@@ -144,7 +135,7 @@
                                     <span class="info-box-icon bg-danger"><i class="fas fa-question-circle"></i></span>
                                     <div class="info-box-content">
                                         <span class="info-box-text">Hilang</span>
-                                        <span class="info-box-number">{{$value_keberadaan_hilang}}</span>
+                                        <span class="info-box-number" id="keberadaan-val-hilang"></span>
                                     </div>
                                 </div>
                             </div>
@@ -153,6 +144,7 @@
                 </div>
             </div>
         </div>
+        {{-- Rangkuman Kondisi APD --}}
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-info">
@@ -167,19 +159,23 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        @if ($error_time_kerusakan)
-                            <div class="row text-danger">
-                                <strong>Terjadi kesalahan saat menghitung rangkuman.</strong>
+                        <div class="row" id="kondisi-basic" style="display : block;">
+                            <div class="jumbotron text-center">
+                                <strong id="kondisi-basic-text">Silahkan pilih penempatan terlebih dahulu.</strong>
                             </div>
-                        @endif
-                        
-                        <div class="row">
+                        </div>
+                        <div class="row" id="kondisi-spinner" style="display:none;">
+                            <div class="spinner-grow text-info" role="status" >
+                                <span class="sr-only">Memuat...</span>
+                            </div><span class="mx-2 text-info" id="kondisi-spinner-text">Memuat Data ......</span>
+                        </div>
+                        <div class="row" id="kondisi-tampil" style="display:none;">
                             <div class="col">
                                 <div class="info-box">
                                     <span class="info-box-icon bg-info"><i class="fas fa-thumbs-up"></i></span>
                                     <div class="info-box-content">
                                         <span class="info-box-text">Baik</span>
-                                        <span class="info-box-number">{{$value_kerusakan_baik}}</span>
+                                        <span class="info-box-number" id="kondisi-val-baik"></span>
                                     </div>
                                 </div>
                             </div>
@@ -188,7 +184,7 @@
                                     <span class="info-box-icon bg-yellow"><i class="fas fa-feather-alt"></i></span>
                                     <div class="info-box-content">
                                         <span class="info-box-text">Rusak Ringan</span>
-                                        <span class="info-box-number">{{$value_kerusakan_ringan}}</span>
+                                        <span class="info-box-number" id="kondisi-val-rusak-ringan"></span>
                                     </div>
                                 </div>
                             </div>
@@ -197,7 +193,7 @@
                                     <span class="info-box-icon bg-orange"><i class="fas fa-battery-half"></i></span>
                                     <div class="info-box-content">
                                         <span class="info-box-text">Rusak Sedang</span>
-                                        <span class="info-box-number">{{$value_kerusakan_sedang}}</span>
+                                        <span class="info-box-number" id="kondisi-val-rusak-sedang"></span>
                                     </div>
                                 </div>
                             </div>
@@ -206,7 +202,7 @@
                                     <span class="info-box-icon bg-danger"><i class="fas fa-window-close"></i></span>
                                     <div class="info-box-content">
                                         <span class="info-box-text">Rusak Berat</span>
-                                        <span class="info-box-number">{{$value_kerusakan_berat}}</span>
+                                        <span class="info-box-number" id="kondisi-val-rusak-berat"></span>
                                     </div>
                                 </div>
                             </div>
@@ -254,3 +250,284 @@
         </div>
     </div>
 </div>
+
+@push('stack-body')
+
+{{-- 
+    Untuk penghitungan rangkuman, memiliki 3 elemen yakni :
+    - basic
+    - spinner
+    - tampil
+
+    1. basic adalah komponen yang menampilkan text awal ketika user belum memilih penempatan dan menampilkan text ketika terjadi error
+    saat terjadi penghitungan
+
+    2. spinner adalah komponen yang menampilkan animasi loading saat penghitungan dilakukan
+
+    3. tampil adalah komponen yang menampilkan data hasil penghitungan
+
+
+    Jenis Rangkuman : 
+    1. progress : untuk capaian inputan pegawai dan validasi yang di setujui oleh admin
+    2. keberadaan : untuk status keberadaan apd yang dimiliki oleh pegawai
+    3. kondisi : untuk kondisi apd yang dimiliki oleh pegawai
+--}}
+
+{{-- JS untuk penghitungan progress inputan pegawai --}}
+    <script>
+        let wProgress;
+
+        function mulaiKalkulasiProgress(e){
+            if(typeof(Worker) !== "undefined")
+            {
+                if(typeof(wProgress) != "undefined")
+                {
+                    wProgress.postMessage(e)
+
+                    document.getElementById('progress-basic').style.display = "none"
+                    document.getElementById('progress-spinner-text').innerHTML = "Kalkulasi.."
+                    document.getElementById('progress-spinner').style.display = 'block'
+
+                    wProgress.addEventListener("message", (e) => {
+                        switch(e.data.status){
+                            case 'process' : prosesKalkulasiProgress(e);break;
+                            case 'fail' : gagalkanKalkulasiProgress(e);break;
+                            case 'success' : terimaKalkulasiProgress(e);break;
+                            default : break;
+                        }
+                    })
+                }   
+            }
+            else
+            {
+                alert('Proses penghitungan kalkulasi gagal! Silahkan update browser anda ke versi terbaru')
+            }
+        }
+
+        function stopKalkulasiProgress()
+        {
+            wProgress.terminate();
+            wProgress = undefined;
+        }
+
+        function prosesKalkulasiProgress(e)
+        {
+            document.getElementById('progress-spinner-text').innerHTML = e.data.message
+        }
+
+        function gagalkanKalkulasiProgress(e)
+        {
+
+            document.getElementById('progress-basic-text').innerHTML = e.data.message
+            document.getElementById('progress-spinner').style.display = "none";
+            document.getElementById('progress-basic').style.display = "block";
+            stopKalkulasi();
+        }
+
+        function terimaKalkulasiProgress(e)
+        {
+            let max_inputan = e.data.max_inputan;
+            let curr_inputan = e.data.curr_inputan;
+            let max_validasi = e.data.max_validasi;
+            let curr_validasi = e.data.curr_validasi;
+
+            let inputan_val = (max_inputan > 0 && curr_inputan > 0)? Math.round(Number(curr_inputan/max_inputan) * 100) : 0
+            let validasi_val = (max_validasi > 0 && curr_validasi > 0)? Math.round(Number(curr_validasi/max_validasi) * 100) : 0
+
+
+            document.getElementById('progress-bar-inputan').setAttribute('aria-valuemax',max_inputan)
+            document.getElementById('progress-bar-inputan').setAttribute('aria-valuenow',curr_inputan)
+            document.getElementById('progress-bar-inputan').style.width = inputan_val + "%"
+            document.getElementById('progress-bar-inputan-val').innerHTML = inputan_val
+
+            document.getElementById('progress-bar-validasi').setAttribute('aria-valuemax',max_validasi)
+            document.getElementById('progress-bar-validasi').setAttribute('aria-valuenow',curr_validasi)
+            document.getElementById('progress-bar-validasi').style.width = validasi_val + "%"
+            document.getElementById('progress-bar-validasi-val').innerHTML = validasi_val
+
+            document.getElementById('progress-spinner').style.display = "none";
+            document.getElementById('progress-tampil').style.display = "";
+            stopKalkulasiProgress()
+        }
+    </script>
+    {{-- JS untuk penghitungan keberadaan apd pegawai --}}
+    <script>
+        let wKeberadaan;
+
+        function mulaiKalkulasiKeberadaan(e){
+            if(typeof(Worker) !== "undefined")
+            {
+                if(typeof(wKeberadaan) != "undefined")
+                {
+                    wKeberadaan.postMessage(e)
+
+                    document.getElementById('keberadaan-basic').style.display = "none"
+                    document.getElementById('keberadaan-spinner-text').innerHTML = "Kalkulasi.."
+                    document.getElementById('keberadaan-spinner').style.display = 'block'
+
+                    wKeberadaan.addEventListener("message", (e) => {
+                        switch(e.data.status){
+                            case 'process' : prosesKalkulasiKeberadaan(e);break;
+                            case 'fail' : gagalkanKalkulasiKeberadaan(e);break;
+                            case 'success' : terimaKalkulasiKeberadaan(e);break;
+                            default : break;
+                        }
+                    })
+                }   
+            }
+            else
+            {
+                alert('Proses penghitungan keberadaan apd gagal! Silahkan update browser anda ke versi terbaru')
+            }
+        }
+
+        function stopKalkulasiKeberadaan()
+        {
+            wKeberadaan.terminate();
+            wKeberadaan = undefined;
+        }
+
+        function prosesKalkulasiKeberadaan(e)
+        {
+            document.getElementById('keberadaan-spinner-text').innerHTML = e.data.message
+        }
+
+        function gagalkanKalkulasiKeberadaan(e)
+        {
+
+            document.getElementById('keberadaan-basic-text').innerHTML = e.data.message
+            document.getElementById('keberadaan-spinner').style.display = "none";
+            document.getElementById('keberadaan-basic').style.display = "block";
+            stopKalkulasiKeberadaan();
+        }
+
+        function terimaKalkulasiKeberadaan(e)
+        {
+
+            let ada = e.data.ada;
+            let belum = e.data.belum;
+            let hilang = e.data.hilang;
+
+            document.getElementById('keberadaan-val-ada').innerHTML = ada;
+            document.getElementById('keberadaan-val-belum').innerHTML = belum;
+            document.getElementById('keberadaan-val-hilang').innerHTML = hilang;
+            
+
+            document.getElementById('keberadaan-spinner').style.display = "none";
+            document.getElementById('keberadaan-tampil').style.display = "";
+            stopKalkulasiKeberadaan()
+        }
+    </script>
+
+    {{-- JS untuk penghitungan Kondisi apd pegawai --}}
+    <script>
+        let wKondisi;
+
+        function mulaiKalkulasiKondisi(e){
+            if(typeof(Worker) !== "undefined")
+            {
+                if(typeof(wKondisi) != "undefined")
+                {
+                    wKondisi.postMessage(e)
+
+                    document.getElementById('kondisi-basic').style.display = "none"
+                    document.getElementById('kondisi-spinner-text').innerHTML = "Kalkulasi.."
+                    document.getElementById('kondisi-spinner').style.display = 'block'
+
+                    wKondisi.addEventListener("message", (e) => {
+                        switch(e.data.status){
+                            case 'process' : prosesKalkulasiKondisi(e);break;
+                            case 'fail' : gagalkanKalkulasiKondisi(e);break;
+                            case 'success' : terimaKalkulasiKondisi(e);break;
+                            default : break;
+                        }
+                    })
+                }   
+            }
+            else
+            {
+                alert('Proses penghitungan Kondisi apd gagal! Silahkan update browser anda ke versi terbaru')
+            }
+        }
+
+        function stopKalkulasiKondisi()
+        {
+            wKondisi.terminate();
+            wKondisi = undefined;
+        }
+
+        function prosesKalkulasiKondisi(e)
+        {
+            document.getElementById('kondisi-spinner-text').innerHTML = e.data.message
+        }
+
+        function gagalkanKalkulasiKondisi(e)
+        {
+
+            document.getElementById('kondisi-basic-text').innerHTML = e.data.message
+            document.getElementById('kondisi-spinner').style.display = "none";
+            document.getElementById('kondisi-basic').style.display = "block";
+            stopKalkulasiKondisi();
+        }
+
+        function terimaKalkulasiKondisi(e)
+        {
+
+            let baik = e.data.baik;
+            let rusak_ringan = e.data.rusak_ringan;
+            let rusak_sedang = e.data.rusak_sedang;
+            let rusak_berat = e.data.rusak_berat;
+
+            document.getElementById('kondisi-val-baik').innerHTML = baik;
+            document.getElementById('kondisi-val-rusak-ringan').innerHTML = rusak_ringan;
+            document.getElementById('kondisi-val-rusak-sedang').innerHTML = rusak_sedang;
+            document.getElementById('kondisi-val-rusak-berat').innerHTML = rusak_berat;
+            
+
+            document.getElementById('kondisi-spinner').style.display = "none";
+            document.getElementById('kondisi-tampil').style.display = "";
+            stopKalkulasiKondisi()
+        }
+    </script>
+
+    <script>
+        window.addEventListener('JSWorkerCall-progress',e => {
+            var data = e.detail.data.original
+            if(data.status)
+            {
+                    wProgress = new Worker("{{asset('worker/progress.js')}}");
+                    mulaiKalkulasiProgress(data)
+                    wKeberadaan = new Worker("{{asset('worker/keberadaan.js')}}");
+                    mulaiKalkulasiKeberadaan(data)
+                    wKondisi = new Worker("{{asset('worker/kondisi.js')}}");
+                    mulaiKalkulasiKondisi(data)
+                
+            }
+            else
+            alert('Terjadi kesalahan saat kalkulasi data apd')
+        })
+
+        function showRangkumanKembali()
+        {
+            if(typeof(wProgress) != "undefined" )
+            {
+                document.getElementById('progress-basic').style.display = "none"
+                document.getElementById('progress-spinner').style.display = 'block'
+            }
+
+            if(typeof(wKeberadaan) != "undefined" )
+            {
+                document.getElementById('keberadaan-basic').style.display = "none"
+                document.getElementById('keberadaan-spinner').style.display = 'block'
+            }
+            
+
+            if(typeof(wKondisi) != "undefined" )
+            {
+                document.getElementById('kondisi-basic').style.display = "none"
+                document.getElementById('kondisi-spinner').style.display = 'block'
+            }
+                
+        }
+    </script>
+@endpush

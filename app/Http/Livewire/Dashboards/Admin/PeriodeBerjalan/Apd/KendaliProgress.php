@@ -177,8 +177,6 @@ class KendaliProgress extends Component
 
     public function kueriPegawai()
     {
-        error_log('kueri pegawai start');
-
         try{
 
 
@@ -202,51 +200,19 @@ class KendaliProgress extends Component
         {
             error_log($e);
         }
-        error_log('kueri pegawai end');
         return;
 
     }
 
     public function hitungCapaian()
     {
-        error_log('capaian start');
 
-        $this->error_time_capaian = null;
-        $this->value_max_capaian = 0;
-        $this->value_terinput_capaian = 0;
-        $this->value_terverif_capaian = 0;
-
-        try {
-
-            if(count($this->list_pegawai) < 1)
-                return;
 
             $adc = new ApdDataController;
 
-            foreach ($this->list_pegawai as $pegawai) {
-                $maks = 0;
-                $terinput = 0;
-                $terverif = 0;
-                $adc->hitungCapaianInputPegawai($pegawai->id_pegawai, $maks, $terinput, null);
-                $adc->hitungCapaianInputPegawai($pegawai->id_pegawai, $maks, $terverif, null, 3);
+            $data = $adc->kueriCapaianInputPegawaiSektoralUntukJS($this->id_periode_berjalan,$this->model_dropdown_penempatan,$this->model_dropdown_wilayah);
 
-                $this->value_max_capaian += $maks;
-                $this->value_terinput_capaian += $terinput;
-                $this->value_terverif_capaian += $terverif;
-            }
-
-            error_log('value max ' . $this->value_max_capaian);
-        } catch (Throwable $e) {
-            $this->error_time_capaian = now();
-            $this->value_max_capaian = 0;
-            $this->value_terinput_capaian = 0;
-            $this->value_terverif_capaian = 0;
-            error_log('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_capaian . ') : Kesalahan saat hitung capaian ' . $e);
-            Log::error('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_capaian . ') : Kesalahan saat hitung capaian ' . $e);
-        }
-
-        error_log('capaian end');
-        return;
+            $this->dispatchBrowserEvent('JSWorkerCall-progress', ['data'=>$data]);
 
 
     }
@@ -258,7 +224,7 @@ class KendaliProgress extends Component
         $this->value_keberadaan_ada = 0;
         $this->value_keberadaan_belum = 0;
         $this->value_keberadaan_hilang = 0;
-
+        return;
         try {
 
             if(count($this->list_pegawai) < 1)
@@ -279,7 +245,6 @@ class KendaliProgress extends Component
             error_log('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_keberadaan . ') : Kesalahan saat hitung keberadaan ' . $e);
             Log::error('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_keberadaan . ') : Kesalahan saat hitung keberadaan ' . $e);
         }
-        error_log('keberadaan end');
         return;
 
 
@@ -287,14 +252,13 @@ class KendaliProgress extends Component
 
     public function hitungRangkumanKerusakan()
     {
-        error_log('rangkuman start');
 
         $this->error_time_kerusakan = null;
         $this->value_kerusakan_baik = 0;
         $this->value_kerusakan_ringan = 0;
         $this->value_kerusakan_sedang = 0;
         $this->value_kerusakan_berat = 0;
-
+        return;
         try {
 
             if(count($this->list_pegawai) < 1)
@@ -317,7 +281,6 @@ class KendaliProgress extends Component
             error_log('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_kerusakan . ') : Kesalahan saat hitung keberadaan ' . $e);
             Log::error('Page @ Dashboard Progress APD Admin ref (' . $this->error_time_kerusakan . ') : Kesalahan saat hitung keberadaan ' . $e);
         }
-        error_log('rangkuman end');
         return;
 
 
@@ -373,11 +336,7 @@ class KendaliProgress extends Component
     {
         
         $this->emit('tabelGantiPenempatan', [$this->model_dropdown_wilayah, $this->model_dropdown_penempatan]);
-        $this->kueriPegawai();
         $this->hitungCapaian();
-        $this->hitungRangkumanKeberadaan();
-        $this->hitungRangkumanKerusakan();
-        error_log('dropdown penempatan');
         return;
     }
     #endregion

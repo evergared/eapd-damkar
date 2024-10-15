@@ -1,67 +1,46 @@
-<section class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>Home</h1>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Admin Dinas</li>
-          </ol>
-        </div>
+<div>
+  @include('komponen.breadcrumbs',[ 'halamanJudul'=>'Dashboard','halaman'=>'admin-dashboard'])
+  <livewire:komponen.marquee>
+  <section class="content">
+      
+    
+
+    @if ($tipe_admin == "Admin Dinas")
+      <div class="chart-dinas">
+        <canvas id="chart-dinas" width="860" height="371" style="display: block; width: 660px; height: 371px;"></canvas>
       </div>
-    </div>
-</section>
-<section class="content">
-      
-    <div class="chart-dinas">
-      <canvas id="chart-dinas" width="860" height="371" style="display: block; width: 660px; height: 371px;"></canvas>
-    </div>
-      
-    <div class="row">
-      
-    </div>
-</section>
+    @elseif($tipe_admin == "Admin Sudin")
+        
+    @else
+        
+    @endif
+  </section>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-<script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script>
 
-$(function () {
+  $(function () {
   new Chart(document.getElementById("chart-dinas"), {
-      type: 'pie',
+      type: 'bar',
       data: {
         labels: [
-          @php
-            foreach($chart_labels as $i => $c)
-            {
-                echo "'" . $c . "'";
-                if($i !== array_key_last($chart_labels))
-                echo ',';
-            }
-          @endphp
+          'Jakarta Utara',
+          'Jakarta Pusat',
+          'Jakarta Barat',
+          'Jakarta Selatan',
+          'Jakarta Timur',
         ],
         datasets: [{
           label: "Total Inputan",
           backgroundColor:[
-            @php
-              foreach($chart_warna as $i => $c)
-              {
-                  echo "'" . $c . "'";
-                  if($i !== array_key_last($chart_warna))
-                  echo ',';
-              }
-            @endphp
+            'rgba(255, 99, 132, 0.2)',
+      'rgba(255, 159, 64, 0.2)',
+      'rgba(255, 205, 86, 0.2)',
+      'rgba(75, 192, 192, 0.2)',
+      'rgba(54, 162, 235, 0.2)'
           ] ,
           data: [
-            @php
-              foreach($chart_data as $i => $c)
-              {
-                  echo "'" . $c . "'";
-                  if($i !== array_key_last($chart_data))
-                  echo ',';
-              }
-            @endphp
+            65, 59, 80, 81, 56
           ]
           }]
         },
@@ -72,6 +51,7 @@ $(function () {
           }
         }
       });
-})
+  })
 
-</script>
+  </script>
+</div>

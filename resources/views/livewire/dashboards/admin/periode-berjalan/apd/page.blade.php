@@ -68,14 +68,14 @@
             })
 
                 window.addEventListener('list-inputan-ke-detail-inputan', event=>{
-                    console.log('test');
-                        $("#list-inputan").hide(500)
-                        $("#detail-inputan").collapse('show')
+                    $("#list-inputan").hide(500)
+                    $("#detail-inputan").collapse('show')
                 })
       
         function detailProgressKeKendali(){
           $("#kendali").show(500)
           $("#detail-progress").collapse('hide')
+          showRangkumanKembali()
         }
 
         window.addEventListener('rekap-kendali-ke-detail', event=>{
@@ -103,22 +103,23 @@
         
       </script>
       <script type="module">
-            $(function () {
-            $(document).on('click', '[data-toggle="lightbox"]', function(event) {
-                event.preventDefault();
-                $(this).ekkoLightbox({
-                alwaysShowClose: true
-                });
-            });
+            // $(function () {
+            // $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+            //     event.preventDefault();
+            //     $(this).ekkoLightbox({
+            //     alwaysShowClose: true
+            //     });
+            // });
         
             $('.filter-container').filterizr({gutterPixels: 3});
             $('.btn[data-filter]').on('click', function() {
                 $('.btn[data-filter]').removeClass('active');
                 $(this).addClass('active');
             });
-            })
       </script>
       <script type="module" src="{{ asset('admin-lte/ekko-lightbox.min.js')}}"></script>
+
+      
     @endpush
     
     <div id="toastsContainerTopRight" class="toasts-top-right fixed"></div>
