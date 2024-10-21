@@ -388,7 +388,7 @@ class ApdDataController extends Controller
                             ])
                             ->toArray();
 
-            $list_pegawai = $list_pegawai->get(['pegawai.id_pegawai as id','pegawai.id_jabatan as jabatan'])->toArray();
+            $list_pegawai = $list_pegawai->get(['pegawai.id_pegawai as id','pegawai.id_jabatan as jabatan','pegawai.id_penempatan as penempatan','penempatan.id_wilayah as wilayah'])->toArray();
             
             // return json agar bisa di tembak langsung oleh livewire component dan digunakan oleh js
             return response()->json([

@@ -15,6 +15,9 @@ class Page extends Component
 {
 
     public $tipe_admin = null;
+    protected $listeners = [
+      'mulaiKalkulasi' => 'fetchJumlahInputan'  
+    ];
 
     public function render()
     {
@@ -23,15 +26,13 @@ class Page extends Component
 
     public function mount()
     {
-        $this->fetchJumlahInputan();
+        $admin = Auth::user();
+        $this->tipe_admin = $admin->tipe;
     }
 
     public function fetchJumlahInputan()
     {
         try{
-
-            $admin = Auth::user();
-            $this->tipe_admin = $admin->tipe;
             $id_penempatan = null;
 
             if ($this->tipe_admin == "Admin Dinas") {
@@ -62,7 +63,7 @@ class Page extends Component
 
             $data = $adc->kueriCapaianInputPegawaiSektoralUntukJS(null,$id_penempatan,$id_wilayah);
 
-            $this->dispatchBrowserEvent('JSWorkerCall-dashboard', ['data'=>$data]);
+            $this->dispatchBrowserEvent('JSWorkerCall-dashboard', ['tipe' => $this->tipe_admin,'data'=>$data]);
 
         }
         catch(Throwable $e)
